@@ -43,4 +43,4 @@ Or to run a test (debug) job (-o option will be ignored and will output to ```de
 
 Example:
 
-    ./doAnalysis -i /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root -d -n -1 -t trackingNtuple/tree -n 1
+    ./doAnalysis -i /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root -d -n -1 -t trackingNtuple/tree -n 10 # Running 10 events only
