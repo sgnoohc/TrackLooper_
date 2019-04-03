@@ -77,9 +77,9 @@ Example output running over the first event (the first event happens to have onl
     RooUtil::
     Warning in <TClass::Init>: no dictionary for class ROOT::TIOFeatures is available
     RooUtil:: Total Events in this Chain to process = 1
-    RooUtil:: Cut name                                                                                                                                                 |pass|weight|systs
-    RooUtil:: ===================================================================================================================================================================================================================================================
-    RooUtil:: Root                                                                                                                                                     | 0 | 0.000000|
+    RooUtil:: Cut name                         |pass|weight|systs
+    RooUtil:: ====================================================
+    RooUtil:: Root                             | 0 | 0.000000|
     RooUtil:: TTreeCache enabled
     RooUtil:: Looping /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root/TTree:tree
     SDL::
