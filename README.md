@@ -43,4 +43,83 @@ Or to run a test (debug) job (-o option will be ignored and will output to ```de
 
 Example:
 
-    ./doAnalysis -i /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root -d -n -1 -t trackingNtuple/tree -n 10 # Running 10 events only
+    ./doAnalysis -i /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root -d -n -1 -t trackingNtuple/tree -n 1 # Running 1 event only
+
+Example output running over the first event (the first event happens to have only 4 hits in the event)
+
+    $ ./doAnalysis -i /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root -d -n -1 -t trackingNtuple/tree -n 1
+    =========================================================
+     Setting of the analysis job based on provided arguments
+    ---------------------------------------------------------
+     ana.input_file_list_tstring: /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
+     ana.output_tfile: debug.root
+     ana.n_events: 1
+    =========================================================
+    RooUtil:: Adding /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
+    RooUtil:: Start EventLooping
+    RooUtil:: System info:
+    uaf-10.t2.ucsd.edu
+    Linux uaf-10.t2.ucsd.edu 2.6.32-754.3.5.el6.x86_64 #1 SMP Tue Aug 14 20:46:41 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+    Wed Apr  3 11:52:27 PDT 2019
+    phchang
+    /home/users/phchang/public_html/analysis/sdl/TrackLooper
+    RooUtil::  _
+    RooUtil:: /\\
+    RooUtil:: \ \\  \__/ \__/
+    RooUtil::  \ \\ (oo) (oo)  Here we come!
+    RooUtil::   \_\\/~~\_/~~\_
+    RooUtil::  _.-~===========~-._
+    RooUtil:: (___________________)
+    RooUtil::       \_______/
+    RooUtil::
+    RooUtil::  Your friendly aliens
+    RooUtil::      Surf & Turf
+    RooUtil::
+    Warning in <TClass::Init>: no dictionary for class ROOT::TIOFeatures is available
+    RooUtil:: Total Events in this Chain to process = 1
+    RooUtil:: Cut name                                                                                                                                                 |pass|weight|systs
+    RooUtil:: ===================================================================================================================================================================================================================================================
+    RooUtil:: Root                                                                                                                                                     | 0 | 0.000000|
+    RooUtil:: TTreeCache enabled
+    RooUtil:: Looping /hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root/TTree:tree
+    SDL::
+    SDL::  ==============
+    SDL::  Printing Event
+    SDL::  ==============
+    SDL::
+    SDL::  ==============================
+    SDL::  Module(detId=412361801, subdet=4, side=1, layer=5, rod=0, ring=2, module=18, isLower=1)
+    SDL::  ==============================
+    SDL::  Hit(x=3.98759e-34, y=0, z=3.98754e-34, r3=0, rt=38.1901, phi=3.91586)
+    SDL::
+    SDL::  ==============================
+    SDL::  Module(detId=412361802, subdet=4, side=1, layer=5, rod=0, ring=2, module=18, isLower=0)
+    SDL::  ==============================
+    SDL::  Hit(x=-27.1477, y=-26.5467, z=-264.43, r3=267.142, rt=37.9701, phi=3.9158)
+    SDL::
+    SDL::  ==============================
+    SDL::  Module(detId=420746257, subdet=4, side=2, layer=5, rod=0, ring=1, module=4, isLower=1)
+    SDL::  ==============================
+    SDL::  Hit(x=27.8826, y=24.5097, z=265.97, r3=268.548, rt=37.1236, phi=0.721109)
+    SDL::
+    SDL::  ==============================
+    SDL::  Module(detId=420746258, subdet=4, side=2, layer=5, rod=0, ring=1, module=4, isLower=0)
+    SDL::  ==============================
+    SDL::  Hit(x=27.4123, y=24.0464, z=265.57, r3=268.062, rt=36.4646, phi=0.720083)
+    SDL::
+    RooUtil:: Wrote output to debug.root
+    RooUtil::
+    RooUtil::    \__/    \__/
+    RooUtil::  S (oo)    (oo)
+    RooUtil:: (\//~~\\  //~~\\
+    RooUtil::  \/\__//  \\__//\T
+    RooUtil::    ||||    ||\\ Who cares!
+    RooUtil:: __ |||| __ |||| ___
+    RooUtil::   (_)(_)  (_)(_)
+    RooUtil::
+    
+    ------------------------------
+    CPU  Time:      0.2
+    Real Time:      0.3
+
+
