@@ -3,6 +3,7 @@
 #include "cxxopts.h"
 
 #include "SDL/Event.h" // SDL::Event
+#include "SDL/Module.h" // SDL::Module
 #include "SDL/PrintUtil.h" // SDL::out
 
 class AnalysisConfig {
