@@ -90,7 +90,7 @@ Example output running over the first event (the first event happens to have onl
     SDL::  ==============================
     SDL::  Module(detId=412361801, subdet=4, side=1, layer=5, rod=0, ring=2, module=18, isLower=1)
     SDL::  ==============================
-    SDL::  Hit(x=3.98759e-34, y=0, z=3.98754e-34, r3=0, rt=38.1901, phi=3.91586)
+    SDL::  Hit(x=-27.3033, y=-26.7023, z=-264.03, r3=266.778, rt=38.1901, phi=3.91586)
     SDL::
     SDL::  ==============================
     SDL::  Module(detId=412361802, subdet=4, side=1, layer=5, rod=0, ring=2, module=18, isLower=0)
