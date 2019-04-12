@@ -450,6 +450,78 @@ def rz_upper():
     c1.SaveAs("plots/lin/rz_upper.pdf")
     c1.SaveAs("plots/lin/rz_upper.png")
 
+def rz_oddmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_module%2==1", "same")
+    c1.SaveAs("plots/lin/rz_oddmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_oddmodule_isLower.png")
+
+def rz_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_module%2==0", "same")
+    c1.SaveAs("plots/lin/rz_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_evenmodule_isLower.png")
+
+def rz_side3_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_side==3")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_module%2==0&&ph2_side==3", "same")
+    c1.SaveAs("plots/lin/rz_side3_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_side3_evenmodule_isLower.png")
+
+def rz_layerleq3_side3_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_side==3&&ph2_layer<=3")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_module%2==0&&ph2_side==3&&ph2_layer<=3", "same")
+    c1.SaveAs("plots/lin/rz_layerleq3_side3_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_layerleq3_side3_evenmodule_isLower.png")
+
+def rz_layergeq4_side3_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_side==3&&ph2_layer>=4")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_module%2==0&&ph2_side==3&&ph2_layer>=4", "same")
+    c1.SaveAs("plots/lin/rz_layergeq4_side3_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_layergeq4_side3_evenmodule_isLower.png")
+
+def rz_layerleq3_side1_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_side==1&&ph2_layer<=3")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_module%2==0&&ph2_side==1&&ph2_layer<=3", "same")
+    c1.SaveAs("plots/lin/rz_layerleq3_side1_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_layerleq3_side1_evenmodule_isLower.png")
+
+def rz_side1_subdet4_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_side==1&&ph2_subdet==4")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_subdet==4&&ph2_module%2==0&&ph2_side==1", "same")
+    c1.SaveAs("plots/lin/rz_side1_subdet4_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_side1_subdet4_evenmodule_isLower.png")
+
+def rz_side2_subdet4_evenmodule_isLower():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_side==2&&ph2_subdet==4")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==1&&ph2_subdet==4&&ph2_module%2==0&&ph2_side==2", "same")
+    c1.SaveAs("plots/lin/rz_side2_subdet4_evenmodule_isLower.pdf")
+    c1.SaveAs("plots/lin/rz_side2_subdet4_evenmodule_isLower.png")
+
+def rz_side3_specific_detId():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_detId==437530645", "same")
+    c1.SaveAs("plots/lin/rz_side3_specific_detId.pdf")
+    c1.SaveAs("plots/lin/rz_side3_specific_detId.png")
+
 if __name__ == "__main__":
 
     # rz_side1_layer1_order0_moduleall()
@@ -480,6 +552,15 @@ if __name__ == "__main__":
     # rz_layergeq4_evenmodules()
     # xy_layergeq4_evenmodules()
     # rz_layer1_side1_evenmodules()
-    rz_lower()
-    rz_upper()
-
+    # rz_lower()
+    # rz_upper()
+    # rz_oddmodule_isLower()
+    # rz_evenmodule_isLower()
+    # rz_side3_evenmodule_isLower()
+    # rz_layerleq3_side3_evenmodule_isLower()
+    # rz_layergeq4_side3_evenmodule_isLower()
+    # rz_layerleq3_side1_evenmodule_isLower()
+    # rz_side1_evenmodule_isLower()
+    # rz_side1_subdet4_evenmodule_isLower()
+    # rz_side2_subdet4_evenmodule_isLower()
+    rz_side3_specific_detId()
