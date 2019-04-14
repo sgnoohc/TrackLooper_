@@ -522,6 +522,22 @@ def rz_side3_specific_detId():
     c1.SaveAs("plots/lin/rz_side3_specific_detId.pdf")
     c1.SaveAs("plots/lin/rz_side3_specific_detId.png")
 
+def rz_simhit():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(simhit_x**2+simhit_y**2):simhit_z", "simhit_subdet==5")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(simhit_x**2+simhit_y**2):simhit_z", "simhit_subdet==5", "same")
+    c1.SaveAs("plots/lin/rz_simhit.pdf")
+    c1.SaveAs("plots/lin/rz_simhit.png")
+
+def rz_side3_pixel():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_isLower==0", "same")
+    c1.SaveAs("plots/lin/rz_side3_pixel.pdf")
+    c1.SaveAs("plots/lin/rz_side3_pixel.png")
+
 if __name__ == "__main__":
 
     # rz_side1_layer1_order0_moduleall()
@@ -563,4 +579,6 @@ if __name__ == "__main__":
     # rz_side1_evenmodule_isLower()
     # rz_side1_subdet4_evenmodule_isLower()
     # rz_side2_subdet4_evenmodule_isLower()
-    rz_side3_specific_detId()
+    # rz_side3_specific_detId()
+    # rz_simhit()
+    rz_side3_pixel()
