@@ -359,7 +359,7 @@ int main(int argc, char** argv)
             } );
 
     // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_z_strip_center", 180, -1, 1, [&]()
+    ana.histograms.addVecHistogram("hit_res_phi_pixel_center", 180, -1, 1, [&]()
             {
                 std::vector<float> rtn;
                 for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
@@ -367,7 +367,55 @@ int main(int argc, char** argv)
                     if (trk.ph2_side()[ihit] == 3)
                     {
                         SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Strip)
+                        if (module.moduleLayerType() == SDL::Module::Pixel)
+                        {
+                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
+                                continue;
+                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
+                            SDL::Hit rechit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit]);
+                            SDL::Hit simhit(trk.simhit_x()[simhit_idx], trk.simhit_y()[simhit_idx], trk.simhit_z()[simhit_idx]);
+                            float dphi = rechit.deltaPhi(simhit);
+                            rtn.push_back(dphi);
+                        }
+                    }
+                }
+                return rtn;
+            } );
+
+    // Histogram utility object that is used to define the histograms
+    ana.histograms.addVecHistogram("hit_res_z_strip_center_PS", 180, -5, 5, [&]()
+            {
+                std::vector<float> rtn;
+                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
+                {
+                    if (trk.ph2_side()[ihit] == 3)
+                    {
+                        SDL::Module module(trk.ph2_detId()[ihit]);
+                        if (module.moduleLayerType() == SDL::Module::Strip and module.moduleType() == SDL::Module::PS)
+                        {
+                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
+                                continue;
+                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
+                            // trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
+                            // trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
+                            float dz = trk.ph2_z()[ihit] - trk.simhit_z()[simhit_idx];
+                            rtn.push_back(dz);
+                        }
+                    }
+                }
+                return rtn;
+            } );
+
+    // Histogram utility object that is used to define the histograms
+    ana.histograms.addVecHistogram("hit_res_z_strip_center_2S", 180, -5, 5, [&]()
+            {
+                std::vector<float> rtn;
+                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
+                {
+                    if (trk.ph2_side()[ihit] == 3)
+                    {
+                        SDL::Module module(trk.ph2_detId()[ihit]);
+                        if (module.moduleLayerType() == SDL::Module::Strip and module.moduleType() == SDL::Module::TwoS)
                         {
                             if (trk.ph2_simHitIdx()[ihit].size() == 0)
                                 continue;
@@ -402,6 +450,30 @@ int main(int argc, char** argv)
                             float dy = trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
                             float dr = sqrt(pow(dx, 2) + pow(dy, 2));
                             rtn.push_back(dr);
+                        }
+                    }
+                }
+                return rtn;
+            } );
+
+    // Histogram utility object that is used to define the histograms
+    ana.histograms.addVecHistogram("hit_res_phi_strip_center", 180, -1, 1, [&]()
+            {
+                std::vector<float> rtn;
+                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
+                {
+                    if (trk.ph2_side()[ihit] == 3)
+                    {
+                        SDL::Module module(trk.ph2_detId()[ihit]);
+                        if (module.moduleLayerType() == SDL::Module::Strip)
+                        {
+                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
+                                continue;
+                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
+                            SDL::Hit rechit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit]);
+                            SDL::Hit simhit(trk.simhit_x()[simhit_idx], trk.simhit_y()[simhit_idx], trk.simhit_z()[simhit_idx]);
+                            float dphi = rechit.deltaPhi(simhit);
+                            rtn.push_back(dphi);
                         }
                     }
                 }
@@ -449,100 +521,38 @@ int main(int argc, char** argv)
                     );
         }
 
-        // Loop over lower modules
-        for (auto& lowerModulePtr : event.getLowerModulePtrs())
+        // Create mini doublets
+        event.createMiniDoublets();
+
+        // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
+        SDL::Event simevent;
+
+        // Adding hits to modules
+        for (unsigned int ihit = 0; ihit < trk.simhit_x().size(); ++ihit)
         {
-            // Get reference to the lower Module
-            SDL::Module& lowerModule = *lowerModulePtr;
-
-            // Get reference to the upper Module
-            SDL::Module& upperModule = event.getModule(lowerModule.partnerDetId());
-
-            // Double nested loops
-            // Loop over lower module hits
-            for (auto& lowerHitPtr : lowerModule.getHitPtrs())
+            if (trk.simhit_subdet()[ihit] == 4 or trk.simhit_subdet()[ihit] == 5)
             {
-
-                // Get reference to lower Hit
-                SDL::Hit& lowerHit = *lowerHitPtr;
-
-                // Loop over upper module hits
-                for (auto& upperHitPtr : upperModule.getHitPtrs())
-                {
-
-                    // Get reference to upper Hit
-                    SDL::Hit& upperHit = *upperHitPtr;
-
-                    // <-------------------------------
-                    // <-------------------------------
-                    // <-------------------------------
-
-                    // ********************************
-                    // Mini Doublet Linking Logic
-                    // ********************************
-
-                    //
-                    // Case 1: Working with barrel and flat PS modules only
-                    //
-                    // if (lowerModule.subdet() == SDL::Module::Barrel and lowerModule.side() == SDL::Module::Center and lowerModule.moduleType() == SDL::Module::PS)
-                    if (lowerModule.subdet() == SDL::Module::Barrel and lowerModule.side() == SDL::Module::Center)
-                    {
-                        // The dphi change going from lower Hit to upper Hit
-                        float dphi = lowerHit.deltaPhiChange(upperHit);
-
-                        // =================================================================
-                        // Various constants
-                        // =================================================================
-                        const float kRinv1GeVf = (2.99792458e-3 * 3.8);
-                        const float k2Rinv1GeVf = kRinv1GeVf / 2.;
-                        const float ptCut = 1.0;
-                        const float sinAlphaMax = 0.95;
-                        // p2Sim.directionT-r2Sim.directionT smearing around the mean computed with ptSim,rSim
-                        // (1 sigma based on 95.45% = 2sigma at 2 GeV)
-                        std::array<float, 6> miniMulsPtScaleBarrel {0.0052, 0.0038, 0.0034, 0.0034, 0.0032, 0.0034};
-                        std::array<float, 5> miniMulsPtScaleEndcap {0.006, 0.006, 0.006, 0.006, 0.006}; //inter/extra-polated from L11 and L13 both roughly 0.006 [larger R have smaller value by ~50%]
-                        //mean of the horizontal layer position in y; treat this as R below
-                        std::array<float, 6> miniRminMeanBarrel {21.8, 34.6, 49.6, 67.4, 87.6, 106.8};
-                        std::array<float, 5> miniRminMeanEndcap {131.4, 156.2, 185.6, 220.3, 261.5};// use z for endcaps
-
-                        // =================================================================
-                        // Computing cut threshold
-                        // =================================================================
-                        float rt = lowerHit.rt();
-                        unsigned int iL = lowerModule.layer() - 1;
-                        const float miniSlope = std::asin(std::min(rt * k2Rinv1GeVf / ptCut, sinAlphaMax));
-                        const float rLayNominal = miniRminMeanBarrel[iL];
-                        const float miniPVoff = 0.1 / rLayNominal;
-                        const float miniMuls = miniMulsPtScaleBarrel[iL] * 3.f / ptCut;
-                        const bool isTilted = false;
-                        const bool tiltedOT123 = false;
-                        const float pixelPSZpitch = 0.15;
-                        const float miniTilt = isTilted && tiltedOT123 ? /*0.5f * pixelPSZpitch * drdz / sqrt(1.f + drdz * drdz) / miniDelta[iL]*/ : 0;
-                        const float miniCut = miniSlope + sqrt(pow(miniMuls, 2) + pow(miniPVoff, 2) + pow(miniTilt * miniSlope, 2));
-
-                        if (dphi < miniCut)
-                        {
-                            event.addMiniDoubletToLowerModule(SDL::MiniDoublet(lowerHitPtr, upperHitPtr), lowerModule.detId());
-                        }
-
-                    }
-
-                    // the fabs(dphi) must be less than the curvature of min pt threshold
-
-                    // <-------------------------------
-                    // <-------------------------------
-                    // <-------------------------------
-
-                }
-
+                // Takes two arguments, SDL::Hit, and detId
+                // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
+                simevent.addHitToModule(
+                        // a hit
+                        SDL::Hit(trk.simhit_x()[ihit], trk.simhit_y()[ihit], trk.simhit_z()[ihit]),
+                        // add to module with "detId"
+                        trk.simhit_detId()[ihit]
+                        );
             }
-
         }
+
+        // Create mini doublets
+        simevent.createMiniDoublets();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 10) // Print for the first 10 events only
+        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
             SDL::cout << event;
+
+        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
+            SDL::cout << simevent;
 
         // <--------------------------
         // <--------------------------
