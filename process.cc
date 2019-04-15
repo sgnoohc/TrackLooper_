@@ -515,7 +515,7 @@ int main(int argc, char** argv)
             // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
             event.addHitToModule(
                     // a hit
-                    SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit]),
+                    SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit, trk.ph2_simHitIdx()[ihit]),
                     // add to module with "detId"
                     trk.ph2_detId()[ihit]
                     );
@@ -536,7 +536,7 @@ int main(int argc, char** argv)
                 // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
                 simevent.addHitToModule(
                         // a hit
-                        SDL::Hit(trk.simhit_x()[ihit], trk.simhit_y()[ihit], trk.simhit_z()[ihit]),
+                        SDL::Hit(trk.simhit_x()[ihit], trk.simhit_y()[ihit], trk.simhit_z()[ihit], ihit, trk.simhit_hitIdx()[ihit]),
                         // add to module with "detId"
                         trk.simhit_detId()[ihit]
                         );
