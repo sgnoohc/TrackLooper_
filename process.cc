@@ -480,6 +480,12 @@ int main(int argc, char** argv)
                 return rtn;
             } );
 
+    // Histogram utility object that is used to define the histograms
+    std::vector<float> matched;
+    std::vector<float> all;
+    ana.histograms.addVecHistogram("matched", 1, 0, 1, [&]() { return matched; } );
+    ana.histograms.addVecHistogram("all", 1, 0, 1, [&]() { return all; } );
+
     // Book cutflows
     // ana.cutflow.bookCutflows();
 
@@ -545,6 +551,24 @@ int main(int argc, char** argv)
 
         // Create mini doublets
         simevent.createMiniDoublets();
+
+        // Truth matching
+        all.clear();
+        matched.clear();
+        for (auto& lowerModulePtr : simevent.getLowerModulePtrs())
+        {
+            for (auto& truthMiniDoubletPtr : lowerModulePtr->getMiniDoubletPtrs())
+            {
+                all.push_back(0);
+                for (auto& miniDoubletPtr : event.getModule(lowerModulePtr->detId()).getMiniDoubletPtrs())
+                {
+                    if (miniDoubletPtr->isMatched(*truthMiniDoubletPtr))
+                    {
+                        matched.push_back(0);
+                    }
+                }
+            }
+        }
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
