@@ -481,10 +481,14 @@ int main(int argc, char** argv)
             } );
 
     // Histogram utility object that is used to define the histograms
-    std::vector<float> matched;
-    std::vector<float> all;
-    ana.histograms.addVecHistogram("matched", 1, 0, 1, [&]() { return matched; } );
-    ana.histograms.addVecHistogram("all", 1, 0, 1, [&]() { return all; } );
+    std::vector<float> md_matched_track_pt;
+    std::vector<float> md_all_track_pt;
+    ana.histograms.addVecHistogram("md_matched_track_pt", 50, 0, 50, [&]() { return md_matched_track_pt; } );
+    ana.histograms.addVecHistogram("md_all_track_pt", 50, 0, 50, [&]() { return md_all_track_pt; } );
+    std::vector<float> md_matched_track_eta;
+    std::vector<float> md_all_track_eta;
+    ana.histograms.addVecHistogram("md_matched_track_eta", 20, -1, 1, [&]() { return md_matched_track_eta; } );
+    ana.histograms.addVecHistogram("md_all_track_eta", 20, -1, 1, [&]() { return md_all_track_eta; } );
 
     // Book cutflows
     // ana.cutflow.bookCutflows();
@@ -530,53 +534,86 @@ int main(int argc, char** argv)
         // Create mini doublets
         event.createMiniDoublets();
 
-        // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
-        SDL::Event simevent;
-
-        // Adding hits to modules
-        for (unsigned int ihit = 0; ihit < trk.simhit_x().size(); ++ihit)
+        // Efficiency measurement
+        for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
         {
-            if (trk.simhit_subdet()[ihit] == 4 or trk.simhit_subdet()[ihit] == 5)
-            {
-                // Takes two arguments, SDL::Hit, and detId
-                // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
-                simevent.addHitToModule(
-                        // a hit
-                        SDL::Hit(trk.simhit_x()[ihit], trk.simhit_y()[ihit], trk.simhit_z()[ihit], ihit, trk.simhit_hitIdx()[ihit]),
-                        // add to module with "detId"
-                        trk.simhit_detId()[ihit]
-                        );
-            }
-        }
 
-        // Create mini doublets
-        simevent.createMiniDoublets();
+            // event just for this track
+            SDL::Event trackevent;
 
-        // Truth matching
-        all.clear();
-        matched.clear();
-        for (auto& lowerModulePtr : simevent.getLowerModulePtrs())
-        {
-            for (auto& truthMiniDoubletPtr : lowerModulePtr->getMiniDoubletPtrs())
+            // Select only muon tracks
+            if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+                continue;
+
+            // loop over the simulated hits
+            for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
             {
-                all.push_back(0);
-                for (auto& miniDoubletPtr : event.getModule(lowerModulePtr->detId()).getMiniDoubletPtrs())
+                for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit) // list of reco hit matched to this sim hit
                 {
-                    if (miniDoubletPtr->isMatched(*truthMiniDoubletPtr))
+
+                    // Get the recohit type
+                    int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+
+                    // Consider only ph2 hits
+                    if (recohittype == 4)
                     {
-                        matched.push_back(0);
+                        int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+
+                        trackevent.addHitToModule(
+                                // a hit
+                                SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit, trk.ph2_simHitIdx()[ihit]),
+                                // add to module with "detId"
+                                trk.ph2_detId()[ihit]
+                                );
                     }
                 }
             }
+
+            trackevent.createMiniDoublets(SDL::AllComb_MDAlgo);
+
+            // Efficiency calculation
+            md_matched_track_pt.clear();
+            md_all_track_pt.clear();
+            md_matched_track_eta.clear();
+            md_all_track_eta.clear();
+            for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
+            {
+                // Modules with true mini-doublets
+                if (lowerModulePtr_Track->side() == SDL::Module::Center and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                {
+
+                    bool match = false;
+                    for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                    {
+                        for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
+                        {
+                            if (
+                                    (*(md_Track->lowerHit())) == (*(md->lowerHit())) and
+                                    (*(md_Track->upperHit())) == (*(md->upperHit()))
+                               )
+                            {
+                                match = true;
+                            }
+                        }
+                    }
+
+                    md_all_track_pt.push_back(trk.sim_pt()[isimtrk]);
+                    md_all_track_eta.push_back(trk.sim_eta()[isimtrk]);
+
+                    if (match)
+                    {
+                        md_matched_track_pt.push_back(trk.sim_pt()[isimtrk]);
+                        md_matched_track_eta.push_back(trk.sim_eta()[isimtrk]);
+                    }
+                }
+            }
+
         }
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
-            SDL::cout << event;
-
-        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
-            SDL::cout << simevent;
+        // if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
+        //     SDL::cout << event;
 
         // <--------------------------
         // <--------------------------
