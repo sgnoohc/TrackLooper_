@@ -308,187 +308,37 @@ int main(int argc, char** argv)
     // Print cut structure
     ana.cutflow.printCuts();
 
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_z_pixel_center", 180, -1, 1, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Pixel)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            // trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            // trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dz = trk.ph2_z()[ihit] - trk.simhit_z()[simhit_idx];
-                            rtn.push_back(dz);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_r_pixel_center", 180, -1, 1, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Pixel)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            // trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            // trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dx = trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            float dy = trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dr = sqrt(pow(dx, 2) + pow(dy, 2));
-                            rtn.push_back(dr);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_phi_pixel_center", 180, -1, 1, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Pixel)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            SDL::Hit rechit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit]);
-                            SDL::Hit simhit(trk.simhit_x()[simhit_idx], trk.simhit_y()[simhit_idx], trk.simhit_z()[simhit_idx]);
-                            float dphi = rechit.deltaPhi(simhit);
-                            rtn.push_back(dphi);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_z_strip_center_PS", 180, -5, 5, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Strip and module.moduleType() == SDL::Module::PS)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            // trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            // trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dz = trk.ph2_z()[ihit] - trk.simhit_z()[simhit_idx];
-                            rtn.push_back(dz);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_z_strip_center_2S", 180, -5, 5, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Strip and module.moduleType() == SDL::Module::TwoS)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            // trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            // trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dz = trk.ph2_z()[ihit] - trk.simhit_z()[simhit_idx];
-                            rtn.push_back(dz);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_r_strip_center", 180, -1, 1, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Strip)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            // trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            // trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dx = trk.ph2_x()[ihit] - trk.simhit_x()[simhit_idx];
-                            float dy = trk.ph2_y()[ihit] - trk.simhit_y()[simhit_idx];
-                            float dr = sqrt(pow(dx, 2) + pow(dy, 2));
-                            rtn.push_back(dr);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
-    ana.histograms.addVecHistogram("hit_res_phi_strip_center", 180, -1, 1, [&]()
-            {
-                std::vector<float> rtn;
-                for (unsigned int ihit = 0; ihit < trk.ph2_side().size(); ++ihit)
-                {
-                    if (trk.ph2_side()[ihit] == 3)
-                    {
-                        SDL::Module module(trk.ph2_detId()[ihit]);
-                        if (module.moduleLayerType() == SDL::Module::Strip)
-                        {
-                            if (trk.ph2_simHitIdx()[ihit].size() == 0)
-                                continue;
-                            int simhit_idx = trk.ph2_simHitIdx()[ihit][0];
-                            SDL::Hit rechit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit]);
-                            SDL::Hit simhit(trk.simhit_x()[simhit_idx], trk.simhit_y()[simhit_idx], trk.simhit_z()[simhit_idx]);
-                            float dphi = rechit.deltaPhi(simhit);
-                            rtn.push_back(dphi);
-                        }
-                    }
-                }
-                return rtn;
-            } );
-
-    // Histogram utility object that is used to define the histograms
     std::vector<float> md_matched_track_pt;
     std::vector<float> md_all_track_pt;
-    ana.histograms.addVecHistogram("md_matched_track_pt", 50, 0, 50, [&]() { return md_matched_track_pt; } );
-    ana.histograms.addVecHistogram("md_all_track_pt", 50, 0, 50, [&]() { return md_all_track_pt; } );
+    ana.histograms.addVecHistogram("md_matched_track_pt", 50, 0, 125, [&]() { return md_matched_track_pt; } );
+    ana.histograms.addVecHistogram("md_all_track_pt", 50, 0, 125, [&]() { return md_all_track_pt; } );
     std::vector<float> md_matched_track_eta;
     std::vector<float> md_all_track_eta;
-    ana.histograms.addVecHistogram("md_matched_track_eta", 20, -1, 1, [&]() { return md_matched_track_eta; } );
-    ana.histograms.addVecHistogram("md_all_track_eta", 20, -1, 1, [&]() { return md_all_track_eta; } );
+    ana.histograms.addVecHistogram("md_matched_track_eta", 10, -2, 2, [&]() { return md_matched_track_eta; } );
+    ana.histograms.addVecHistogram("md_all_track_eta", 10, -2, 2, [&]() { return md_all_track_eta; } );
+
+    const int nlayers = 6;
+    std::array<std::vector<float>, nlayers> md_matched_track_pt_by_layer;
+    std::array<std::vector<float>, nlayers> md_all_track_pt_by_layer;
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_matched_track_pt_by_layer%d", ii), 50, 0, 125, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_all_track_pt_by_layer%d", ii), 50, 0, 125, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
+    }
+    std::array<std::vector<float>, nlayers> md_matched_track_eta_by_layer;
+    std::array<std::vector<float>, nlayers> md_all_track_eta_by_layer;
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_matched_track_eta_by_layer%d", ii), 10, -2, 2, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_all_track_eta_by_layer%d", ii), 10, -2, 2, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
+    }
+
+    std::vector<float> matched_dphi;
+    ana.histograms.addVecHistogram("matched_dphi", 180, -3, 3, [&]() { return matched_dphi; } );
+    std::vector<float> not_matched_dphi;
+    ana.histograms.addVecHistogram("not_matched_dphi", 180, -3, 3, [&]() { return not_matched_dphi; } );
+    std::vector<float> all_dphi;
+    ana.histograms.addVecHistogram("all_dphi", 180, -3, 3, [&]() { return all_dphi; } );
 
     // Book cutflows
     // ana.cutflow.bookCutflows();
@@ -525,11 +375,14 @@ int main(int argc, char** argv)
             // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
             event.addHitToModule(
                     // a hit
-                    SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit, trk.ph2_simHitIdx()[ihit]),
+                    SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
                     // add to module with "detId"
                     trk.ph2_detId()[ihit]
                     );
         }
+
+        // Set debug mode
+        event.setDebug();
 
         // Create mini doublets
         event.createMiniDoublets();
@@ -538,16 +391,27 @@ int main(int argc, char** argv)
         for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
         {
 
-            // event just for this track
-            SDL::Event trackevent;
-
             // Select only muon tracks
             if (abs(trk.sim_pdgId()[isimtrk]) != 13)
                 continue;
 
+            // if (trk.sim_pt()[isimtrk] < 1.)
+            //     continue;
+
+            // event just for this track
+            SDL::Event trackevent;
+
             // loop over the simulated hits
             for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
             {
+                float simhit_pt = sqrt(trk.simhit_px()[simhitidx] * trk.simhit_px()[simhitidx] + trk.simhit_py()[simhitidx] * trk.simhit_py()[simhitidx]);
+
+                int simhit_particle = trk.simhit_particle()[simhitidx];
+
+                // if (simhit_pt < 0.1 * trk.sim_pt()[isimtrk])
+                if (abs(simhit_particle) != 13)
+                    continue;
+                    
                 for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit) // list of reco hit matched to this sim hit
                 {
 
@@ -557,15 +421,18 @@ int main(int argc, char** argv)
                     // Consider only ph2 hits
                     if (recohittype == 4)
                     {
+
                         int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
 
                         trackevent.addHitToModule(
                                 // a hit
-                                SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit, trk.ph2_simHitIdx()[ihit]),
+                                SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
                                 // add to module with "detId"
                                 trk.ph2_detId()[ihit]
                                 );
                     }
+
+                    break;
                 }
             }
 
@@ -576,25 +443,59 @@ int main(int argc, char** argv)
             md_all_track_pt.clear();
             md_matched_track_eta.clear();
             md_all_track_eta.clear();
+            for (int ii = 0; ii < nlayers; ++ii)
+            {
+                md_matched_track_pt_by_layer[ii].clear();
+                md_all_track_pt_by_layer[ii].clear();
+                md_matched_track_eta_by_layer[ii].clear();
+                md_all_track_eta_by_layer[ii].clear();
+            }
+            matched_dphi.clear();
+            not_matched_dphi.clear();
+            all_dphi.clear();
+
             for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
             {
+
+                // Consider only simtrack of pt > 50
+                // if (trk.sim_pt()[isimtrk] < 50.)
+                //     continue;
+
                 // Modules with true mini-doublets
                 if (lowerModulePtr_Track->side() == SDL::Module::Center and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
                 {
 
+                    int layer_idx = lowerModulePtr_Track->layer() - 1;
+
+                    // Consider only the innermost layer
+                    // if (layer_idx != 0)
+                    //     continue;
+
                     bool match = false;
                     for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
                     {
+
+                        // Compute "truth" MD's dphi
+                        SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
+                        SDL::Hit* upperHitPtr = md_Track->upperHitPtr();
+                        float dphi = lowerHitPtr->deltaPhiChange(*upperHitPtr);
+
+                        all_dphi.push_back(dphi);
+
+                        bool thismdmatched = false;
                         for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
                         {
-                            if (
-                                    (*(md_Track->lowerHit())) == (*(md->lowerHit())) and
-                                    (*(md_Track->upperHit())) == (*(md->upperHit()))
-                               )
+                            if (md_Track->isIdxMatched(*md))
                             {
                                 match = true;
+                                thismdmatched = true;
                             }
                         }
+
+                        if (thismdmatched)
+                            matched_dphi.push_back(dphi);
+                        else
+                            not_matched_dphi.push_back(dphi);
                     }
 
                     md_all_track_pt.push_back(trk.sim_pt()[isimtrk]);
@@ -605,6 +506,46 @@ int main(int argc, char** argv)
                         md_matched_track_pt.push_back(trk.sim_pt()[isimtrk]);
                         md_matched_track_eta.push_back(trk.sim_eta()[isimtrk]);
                     }
+
+                    md_all_track_pt_by_layer[layer_idx].push_back(trk.sim_pt()[isimtrk]);
+                    md_all_track_eta_by_layer[layer_idx].push_back(trk.sim_eta()[isimtrk]);
+
+                    if (match)
+                    {
+                        md_matched_track_pt_by_layer[layer_idx].push_back(trk.sim_pt()[isimtrk]);
+                        md_matched_track_eta_by_layer[layer_idx].push_back(trk.sim_eta()[isimtrk]);
+                    }
+                    else
+                    {
+                        if (layer_idx == 0 and trk.sim_pt()[isimtrk] > 50.)
+                        {
+                            SDL::Module& lowerModule = event.getModule(lowerModulePtr_Track->detId());
+                            SDL::Module& upperModule = event.getModule(lowerModulePtr_Track->partnerDetId());
+                            for (auto& lowerHitPtr : lowerModule.getHitPtrs())
+                            {
+                                for (auto& upperHitPtr : upperModule.getHitPtrs())
+                                {
+                                    float rt = lowerHitPtr->rt();
+                                }
+                            }
+                            // float rt = lowerHit.rt();
+                            // unsigned int iL = lowerModule.layer() - 1;
+                            // float miniCut = MiniDoublet::dPhiThresholdBarrel(rt, iL);
+                            SDL::cout << lowerModulePtr_Track;
+                            SDL::cout << trackevent.getModule(lowerModulePtr_Track->partnerDetId());
+                            SDL::cout << event.getModule(lowerModulePtr_Track->detId());
+                            SDL::cout << event.getModule(event.getModule(lowerModulePtr_Track->detId()).partnerDetId());
+                            // SDL::cout << miniCut << std::endl;
+
+                            for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                            {
+                                SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
+                                SDL::Hit* upperHitPtr = md_Track->upperHitPtr();
+                                float dphi = lowerHitPtr->deltaPhiChange(*upperHitPtr);
+                            }
+                        }
+                    }
+
                 }
             }
 
@@ -612,8 +553,8 @@ int main(int argc, char** argv)
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        // if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
-        //     SDL::cout << event;
+        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
+            SDL::cout << event;
 
         // <--------------------------
         // <--------------------------
