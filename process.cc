@@ -308,29 +308,30 @@ int main(int argc, char** argv)
     // Print cut structure
     ana.cutflow.printCuts();
 
+    std::vector<float> pt_boundaries = {0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50};
     std::vector<float> md_matched_track_pt;
     std::vector<float> md_all_track_pt;
-    ana.histograms.addVecHistogram("md_matched_track_pt", 50, 0, 125, [&]() { return md_matched_track_pt; } );
-    ana.histograms.addVecHistogram("md_all_track_pt", 50, 0, 125, [&]() { return md_all_track_pt; } );
+    ana.histograms.addVecHistogram("md_matched_track_pt", pt_boundaries, [&]() { return md_matched_track_pt; } );
+    ana.histograms.addVecHistogram("md_all_track_pt", pt_boundaries, [&]() { return md_all_track_pt; } );
     std::vector<float> md_matched_track_eta;
     std::vector<float> md_all_track_eta;
-    ana.histograms.addVecHistogram("md_matched_track_eta", 10, -2, 2, [&]() { return md_matched_track_eta; } );
-    ana.histograms.addVecHistogram("md_all_track_eta", 10, -2, 2, [&]() { return md_all_track_eta; } );
+    ana.histograms.addVecHistogram("md_matched_track_eta", 50, -4, 4, [&]() { return md_matched_track_eta; } );
+    ana.histograms.addVecHistogram("md_all_track_eta", 50, -4, 4, [&]() { return md_all_track_eta; } );
 
     const int nlayers = 6;
     std::array<std::vector<float>, nlayers> md_matched_track_pt_by_layer;
     std::array<std::vector<float>, nlayers> md_all_track_pt_by_layer;
     for (int ii = 0; ii < nlayers; ++ii)
     {
-        ana.histograms.addVecHistogram(TString::Format("md_matched_track_pt_by_layer%d", ii), 50, 0, 125, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_all_track_pt_by_layer%d", ii), 50, 0, 125, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_matched_track_pt_by_layer%d", ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_all_track_pt_by_layer%d", ii), pt_boundaries, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
     }
     std::array<std::vector<float>, nlayers> md_matched_track_eta_by_layer;
     std::array<std::vector<float>, nlayers> md_all_track_eta_by_layer;
     for (int ii = 0; ii < nlayers; ++ii)
     {
-        ana.histograms.addVecHistogram(TString::Format("md_matched_track_eta_by_layer%d", ii), 10, -2, 2, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_all_track_eta_by_layer%d", ii), 10, -2, 2, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_matched_track_eta_by_layer%d", ii), 50, -4, 4, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_all_track_eta_by_layer%d", ii), 50, -4, 4, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
     }
 
     std::vector<float> matched_dphi;
@@ -339,6 +340,26 @@ int main(int argc, char** argv)
     ana.histograms.addVecHistogram("not_matched_dphi", 180, -3, 3, [&]() { return not_matched_dphi; } );
     std::vector<float> all_dphi;
     ana.histograms.addVecHistogram("all_dphi", 180, -3, 3, [&]() { return all_dphi; } );
+
+    std::vector<float> rt_v_phim__rt;
+    std::vector<float> rt_v_phim__phim;
+    ana.histograms.add2DVecHistogram("rt", 50, 20, 120, "phim", 50, 0., 1., [&]() { return rt_v_phim__rt; }, [&]() { return rt_v_phim__phim; } );
+    std::array<std::vector<float>, nlayers> rt_v_phim__rt_by_layer;
+    std::array<std::vector<float>, nlayers> rt_v_phim__phim_by_layer;
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.add2DVecHistogram("rt", 50, 20, 120, TString::Format("phim_by_layer%d", ii), 50, 0., 1., [&, ii]() { return rt_v_phim__rt_by_layer[ii]; }, [&, ii]() { return rt_v_phim__phim_by_layer[ii]; } );
+    }
+
+    std::vector<float> rt_v_dphi__rt;
+    std::vector<float> rt_v_dphi__dphi;
+    ana.histograms.add2DVecHistogram("rt", 50, 20, 120, "dphi", 50, 0., 1., [&]() { return rt_v_dphi__rt; }, [&]() { return rt_v_dphi__dphi; } );
+    std::array<std::vector<float>, nlayers> rt_v_dphi__rt_by_layer;
+    std::array<std::vector<float>, nlayers> rt_v_dphi__dphi_by_layer;
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.add2DVecHistogram("rt", 50, 20, 120, TString::Format("dphi_by_layer%d", ii), 50, 0., 1., [&, ii]() { return rt_v_dphi__rt_by_layer[ii]; }, [&, ii]() { return rt_v_dphi__dphi_by_layer[ii]; } );
+    }
 
     // Book cutflows
     // ana.cutflow.bookCutflows();
@@ -367,6 +388,7 @@ int main(int argc, char** argv)
 
         // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
         SDL::Event event;
+        SDL::Event simevent;
 
         // Adding hits to modules
         for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
@@ -379,13 +401,41 @@ int main(int argc, char** argv)
                     // add to module with "detId"
                     trk.ph2_detId()[ihit]
                     );
+
+            for (auto& simhitidx : trk.ph2_simHitIdx()[ihit])
+            {
+                SDL::Hit(trk.simhit_x()[simhitidx], trk.simhit_y()[simhitidx], trk.simhit_z()[simhitidx], simhitidx);
+                simevent.addHitToModule(
+                        // a hit
+                        SDL::Hit(trk.simhit_x()[simhitidx], trk.simhit_y()[simhitidx], trk.simhit_z()[simhitidx], simhitidx),
+                        // add to module with "detId"
+                        trk.simhit_detId()[simhitidx]
+                        );
+            }
+
         }
 
-        // Set debug mode
-        event.setDebug();
+        // Set log level
+        // event.setLogLevel(SDL::Log_Debug2);
 
         // Create mini doublets
         event.createMiniDoublets();
+
+        rt_v_phim__rt.clear();
+        rt_v_phim__phim.clear();
+        for (int ii = 0; ii < nlayers; ++ii)
+        {
+            rt_v_phim__rt_by_layer[ii].clear();
+            rt_v_phim__phim_by_layer[ii].clear();
+        }
+
+        rt_v_dphi__rt.clear();
+        rt_v_dphi__dphi.clear();
+        for (int ii = 0; ii < nlayers; ++ii)
+        {
+            rt_v_dphi__rt_by_layer[ii].clear();
+            rt_v_dphi__dphi_by_layer[ii].clear();
+        }
 
         // Efficiency measurement
         for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
@@ -404,7 +454,7 @@ int main(int argc, char** argv)
             // loop over the simulated hits
             for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
             {
-                float simhit_pt = sqrt(trk.simhit_px()[simhitidx] * trk.simhit_px()[simhitidx] + trk.simhit_py()[simhitidx] * trk.simhit_py()[simhitidx]);
+                // float simhit_pt = sqrt(trk.simhit_px()[simhitidx] * trk.simhit_px()[simhitidx] + trk.simhit_py()[simhitidx] * trk.simhit_py()[simhitidx]);
 
                 int simhit_particle = trk.simhit_particle()[simhitidx];
 
@@ -431,12 +481,47 @@ int main(int argc, char** argv)
                                 trk.ph2_detId()[ihit]
                                 );
                     }
-
-                    break;
                 }
+
             }
 
             trackevent.createMiniDoublets(SDL::AllComb_MDAlgo);
+
+            for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
+            {
+
+                float pt = trk.sim_pt()[isimtrk];
+
+                if (pt > 1.)
+                    continue;
+
+                if (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() == SDL::Module::Center)
+                {
+
+                    for (auto& lowerHitPtr : lowerModulePtr_Track->getHitPtrs())
+                    {
+                        rt_v_phim__rt.push_back(lowerHitPtr->rt());
+                        rt_v_phim__phim.push_back(SDL::MiniDoublet::dPhiThreshold(*lowerHitPtr, *lowerModulePtr_Track));
+                        int layer_idx = lowerModulePtr_Track->layer() - 1;
+                        rt_v_phim__rt_by_layer[layer_idx].push_back(lowerHitPtr->rt());
+                        rt_v_phim__phim_by_layer[layer_idx].push_back(SDL::MiniDoublet::dPhiThreshold(*lowerHitPtr, *lowerModulePtr_Track));
+                    }
+
+                    for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                    {
+                        SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
+                        float rt = lowerHitPtr->rt();
+                        float dphi = lowerHitPtr->deltaPhiChange(*(md_Track->upperHitPtr()));
+                        rt_v_dphi__rt.push_back(rt);
+                        rt_v_dphi__dphi.push_back(dphi);
+                        int layer_idx = lowerModulePtr_Track->layer() - 1;
+                        rt_v_dphi__rt_by_layer[layer_idx].push_back(rt);
+                        rt_v_dphi__dphi_by_layer[layer_idx].push_back(dphi);
+                    }
+
+                }
+
+            }
 
             // Efficiency calculation
             md_matched_track_pt.clear();
@@ -456,97 +541,66 @@ int main(int argc, char** argv)
 
             for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
             {
+                int layer_idx = lowerModulePtr_Track->layer() - 1;
 
-                // Consider only simtrack of pt > 50
-                // if (trk.sim_pt()[isimtrk] < 50.)
-                //     continue;
-
-                // Modules with true mini-doublets
-                if (lowerModulePtr_Track->side() == SDL::Module::Center and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                bool match = false;
+                for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
                 {
 
-                    int layer_idx = lowerModulePtr_Track->layer() - 1;
+                    // Compute "truth" MD's dphi
+                    SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
+                    SDL::Hit* upperHitPtr = md_Track->upperHitPtr();
+                    float dphi = lowerHitPtr->deltaPhiChange(*upperHitPtr);
 
-                    // Consider only the innermost layer
-                    // if (layer_idx != 0)
-                    //     continue;
+                    all_dphi.push_back(dphi);
 
-                    bool match = false;
-                    for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                    bool thismdmatched = false;
+                    for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
                     {
-
-                        // Compute "truth" MD's dphi
-                        SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
-                        SDL::Hit* upperHitPtr = md_Track->upperHitPtr();
-                        float dphi = lowerHitPtr->deltaPhiChange(*upperHitPtr);
-
-                        all_dphi.push_back(dphi);
-
-                        bool thismdmatched = false;
-                        for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
+                        if (md_Track->isIdxMatched(*md))
                         {
-                            if (md_Track->isIdxMatched(*md))
-                            {
-                                match = true;
-                                thismdmatched = true;
-                            }
+                            match = true;
+                            thismdmatched = true;
                         }
-
-                        if (thismdmatched)
-                            matched_dphi.push_back(dphi);
-                        else
-                            not_matched_dphi.push_back(dphi);
                     }
 
-                    md_all_track_pt.push_back(trk.sim_pt()[isimtrk]);
-                    md_all_track_eta.push_back(trk.sim_eta()[isimtrk]);
-
-                    if (match)
-                    {
-                        md_matched_track_pt.push_back(trk.sim_pt()[isimtrk]);
-                        md_matched_track_eta.push_back(trk.sim_eta()[isimtrk]);
-                    }
-
-                    md_all_track_pt_by_layer[layer_idx].push_back(trk.sim_pt()[isimtrk]);
-                    md_all_track_eta_by_layer[layer_idx].push_back(trk.sim_eta()[isimtrk]);
-
-                    if (match)
-                    {
-                        md_matched_track_pt_by_layer[layer_idx].push_back(trk.sim_pt()[isimtrk]);
-                        md_matched_track_eta_by_layer[layer_idx].push_back(trk.sim_eta()[isimtrk]);
-                    }
+                    if (thismdmatched)
+                        matched_dphi.push_back(dphi);
                     else
-                    {
-                        if (layer_idx == 0 and trk.sim_pt()[isimtrk] > 50.)
-                        {
-                            SDL::Module& lowerModule = event.getModule(lowerModulePtr_Track->detId());
-                            SDL::Module& upperModule = event.getModule(lowerModulePtr_Track->partnerDetId());
-                            for (auto& lowerHitPtr : lowerModule.getHitPtrs())
-                            {
-                                for (auto& upperHitPtr : upperModule.getHitPtrs())
-                                {
-                                    float rt = lowerHitPtr->rt();
-                                }
-                            }
-                            // float rt = lowerHit.rt();
-                            // unsigned int iL = lowerModule.layer() - 1;
-                            // float miniCut = MiniDoublet::dPhiThresholdBarrel(rt, iL);
-                            SDL::cout << lowerModulePtr_Track;
-                            SDL::cout << trackevent.getModule(lowerModulePtr_Track->partnerDetId());
-                            SDL::cout << event.getModule(lowerModulePtr_Track->detId());
-                            SDL::cout << event.getModule(event.getModule(lowerModulePtr_Track->detId()).partnerDetId());
-                            // SDL::cout << miniCut << std::endl;
+                        not_matched_dphi.push_back(dphi);
+                }
 
-                            for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
-                            {
-                                SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
-                                SDL::Hit* upperHitPtr = md_Track->upperHitPtr();
-                                float dphi = lowerHitPtr->deltaPhiChange(*upperHitPtr);
-                            }
-                        }
+                float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
+                float eta = trk.sim_eta()[isimtrk];
+
+                // Modules with true mini-doublets
+                if (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                {
+
+                    md_all_track_pt.push_back(pt);
+                    if (trk.sim_pt()[isimtrk] > 1.)
+                        md_all_track_eta.push_back(eta);
+
+                    if (match)
+                    {
+                        md_matched_track_pt.push_back(pt);
+                        if (trk.sim_pt()[isimtrk] > 1.)
+                            md_matched_track_eta.push_back(eta);
+                    }
+
+                    md_all_track_pt_by_layer[layer_idx].push_back(pt);
+                    if (trk.sim_pt()[isimtrk] > 1.)
+                        md_all_track_eta_by_layer[layer_idx].push_back(eta);
+
+                    if (match)
+                    {
+                        md_matched_track_pt_by_layer[layer_idx].push_back(pt);
+                        if (trk.sim_pt()[isimtrk] > 1.)
+                            md_matched_track_eta_by_layer[layer_idx].push_back(eta);
                     }
 
                 }
+
             }
 
         }
@@ -554,7 +608,10 @@ int main(int argc, char** argv)
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
         if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
+        {
             SDL::cout << event;
+            SDL::cout << simevent;
+        }
 
         // <--------------------------
         // <--------------------------
