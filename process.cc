@@ -413,10 +413,17 @@ int main(int argc, char** argv)
                         );
             }
 
+            // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
+            SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
+            if (module.moduleType() == SDL::Module::PS and module.moduleLayerType() == SDL::Module::Strip and module.subdet() == SDL::Module::Endcap)
+            {
+                std::cout <<  " 'stripendcap': " << "stripendcap" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  std::endl;
+            }
+
         }
 
         // Set log level
-        // event.setLogLevel(SDL::Log_Debug2);
+        event.setLogLevel(SDL::Log_Debug2);
 
         // Create mini doublets
         event.createMiniDoublets();
@@ -574,7 +581,9 @@ int main(int argc, char** argv)
                 float eta = trk.sim_eta()[isimtrk];
 
                 // Modules with true mini-doublets
-                if (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                // if (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                // if (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                if (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() == SDL::Module::Center and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
                 {
 
                     md_all_track_pt.push_back(pt);
@@ -598,6 +607,14 @@ int main(int argc, char** argv)
                         if (trk.sim_pt()[isimtrk] > 1.)
                             md_matched_track_eta_by_layer[layer_idx].push_back(eta);
                     }
+
+                    // for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                    // {
+                    //     const SDL::Hit& lowerHit = *md_Track->lowerHitPtr();
+                    //     const SDL::Hit& upperHit = *md_Track->upperHitPtr();
+                    //     if (not SDL::MiniDoublet::isMiniDoubletPair(lowerHit, upperHit, *lowerModulePtr_Track, SDL::Default_MDAlgo))
+                    //         SDL::MiniDoublet::isMiniDoubletPair(lowerHit, upperHit, *lowerModulePtr_Track, SDL::Default_MDAlgo, SDL::Log_Debug2);
+                    // }
 
                 }
 

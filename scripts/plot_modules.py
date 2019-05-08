@@ -3,10 +3,13 @@
 import ROOT as r
 import sys
 
+r.gROOT.SetBatch(True)
+
 tf = r.TFile("/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root")
 ttree = tf.Get("trackingNtuple/tree")
 
 c1 = r.TCanvas()
+print "here"
 
 def plot(cuts, color, same):
     ttree.Draw("ph2_y:ph2_x", cuts, same)
@@ -337,6 +340,7 @@ def xy_layerleq3_side2_order0_moduleall():
         c1.SaveAs("plots/lin/xy_layerleq3_side2_order0_module{}.png".format(i))
 
 def xy_side1_order1_moduleall():
+    print "here"
     # xy layer 1 barrel
     colors = [1, 2, 4, 8]
     for i in xrange(1, 13):
@@ -538,6 +542,17 @@ def rz_side3_pixel():
     c1.SaveAs("plots/lin/rz_side3_pixel.pdf")
     c1.SaveAs("plots/lin/rz_side3_pixel.png")
 
+def xy_side1_order1_moduleall_individ():
+    print "here"
+    # xy layer 1 barrel
+    colors = [1, 2, 4, 8]
+    for i in xrange(1, 13):
+        ttree.SetMarkerColor(1)
+        ttree.Draw("ph2_y:ph2_x", "ph2_order==1&&ph2_side==1&&ph2_module=={}".format(i))
+        c1.SaveAs("plots/lin/xy_layerleq3_side1_order1_module{}.pdf".format(i))
+        c1.SaveAs("plots/lin/xy_layerleq3_side1_order1_module{}.png".format(i))
+
+
 if __name__ == "__main__":
 
     # rz_side1_layer1_order0_moduleall()
@@ -581,4 +596,5 @@ if __name__ == "__main__":
     # rz_side2_subdet4_evenmodule_isLower()
     # rz_side3_specific_detId()
     # rz_simhit()
-    rz_side3_pixel()
+    # rz_side3_pixel()
+    xy_side1_order1_moduleall_individ()
