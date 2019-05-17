@@ -299,6 +299,9 @@ int main(int argc, char** argv)
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffAll));
+    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPS));
+    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneff2S));
 
     // book the studies
     for (auto& study : studies)
@@ -607,7 +610,7 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
 {
     // Each do study is performed per event
 
-    First clear all the output variables that will be used to fill the histograms for this event
+    // First clear all the output variables that will be used to fill the histograms for this event
     md_matched_track_pt.clear();
     md_all_track_pt.clear();
     md_matched_track_eta.clear();
@@ -629,20 +632,6 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
     // Loop over track events
     for (auto& simtrkevent : simtrkevents)
     {
-
-        // md_matched_track_pt.clear();
-        // md_all_track_pt.clear();
-        // md_matched_track_eta.clear();
-        // md_all_track_eta.clear();
-        // for (int ii = 0; ii < NLAYERS; ++ii)
-        // {
-        //     md_matched_track_pt_by_layer[ii].clear();
-        //     md_all_track_pt_by_layer[ii].clear();
-        //     md_matched_track_eta_by_layer[ii].clear();
-        //     md_all_track_eta_by_layer[ii].clear();
-        // }
-        // md_lower_hit_only_track_pt.clear();
-        // md_lower_hit_only_track_eta.clear();
 
         // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
         unsigned int& isimtrk = std::get<0>(simtrkevent);
@@ -867,6 +856,140 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
             // Failed tracks for specific layers
             else
             {
+            }
+
+        }
+
+    }
+
+}
+
+StudyEndcapInefficiency::StudyEndcapInefficiency(const char* studyName, StudyEndcapInefficiency::StudyEndcapInefficiencyMode mode_)
+{
+
+    studyname = studyName;
+    mode = mode_;
+    switch (mode)
+    {
+        case kStudyEndcapIneffAll: modename = "all"; break;
+        case kStudyEndcapIneffPS: modename = "PS"; break;
+        case kStudyEndcapIneff2S: modename = "2S"; break;
+        default: modename = "UNDEFINED"; break;
+    }
+}
+
+void StudyEndcapInefficiency::bookStudy()
+{
+
+    // Book histograms to study the mini-doublet candidate either passing or failing
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzs_passed"             , modename) , 50 , 0  , 2    , [&]() { return dzs_passed              ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_drts_passed"            , modename) , 50 , 0  , 20   , [&]() { return drts_passed             ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhis_passed"       , modename) , 50 , -1 , 1    , [&]() { return fabsdPhis_passed        ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzfracs_passed"         , modename) , 50 , 0  , 0.05 , [&]() { return dzfracs_passed          ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_zs_passed"              , modename) , 50 , 0  , 0.05 , [&]() { return zs_passed               ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiMods_passed"    , modename) , 50 , -1 , 5    , [&]() { return fabsdPhiMods_passed     ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiModDiffs_passed", modename) , 50 , -1 , 5    , [&]() { return fabsdPhiModDiffs_passed ; } );
+
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzs_failed"             , modename) , 50 , 0  , 2    , [&]() { return dzs_failed              ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_drts_failed"            , modename) , 50 , 0  , 20   , [&]() { return drts_failed             ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhis_failed"       , modename) , 50 , -1 , 1    , [&]() { return fabsdPhis_failed        ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzfracs_failed"         , modename) , 50 , 0  , 0.05 , [&]() { return dzfracs_failed          ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_zs_failed"              , modename) , 50 , 0  , 0.05 , [&]() { return zs_failed               ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiMods_failed"    , modename) , 50 , -1 , 5    , [&]() { return fabsdPhiMods_failed     ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiModDiffs_failed", modename) , 50 , -1 , 5    , [&]() { return fabsdPhiModDiffs_failed ; } );
+
+}
+
+void StudyEndcapInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+{
+
+    dzs_passed.clear();
+    drts_passed.clear();
+    fabsdPhis_passed.clear();
+    zs_passed.clear();
+    dzfracs_passed.clear();
+    fabsdPhiMods_passed.clear();
+    fabsdPhiModDiffs_passed.clear();
+
+    dzs_failed.clear();
+    drts_failed.clear();
+    fabsdPhis_failed.clear();
+    zs_failed.clear();
+    dzfracs_failed.clear();
+    fabsdPhiMods_failed.clear();
+    fabsdPhiModDiffs_failed.clear();
+
+    //*******************
+    // Inefficiency study
+    //*******************
+
+    // Loop over track events
+    for (auto& simtrkevent : simtrkevents)
+    {
+
+        // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
+        unsigned int& isimtrk = std::get<0>(simtrkevent);
+        SDL::Event& trackevent = *(std::get<1>(simtrkevent));
+
+        // Loop over the lower modules that contains hits for this track
+        for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
+        {
+
+            // Depending on the mode, only run a subset of interested modules
+            switch (mode)
+            {
+                case kStudyEndcapIneffAll: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap)) { continue; } break;
+                case kStudyEndcapIneffPS: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS)) { continue; } break;
+                case kStudyEndcapIneff2S: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS)) { continue; } break;
+                default: /* skip everything should not be here anyways...*/ continue; break;
+            }
+
+            // Loop over the md "candidate" from the module that a sim-track passed through and left at least one hit in each module
+            for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+            {
+
+                SDL::Module& lowerModule = *lowerModulePtr_Track;
+                SDL::Hit& lowerHit = *(md_Track->lowerHitPtr());
+                SDL::Hit& upperHit = *(md_Track->upperHitPtr());
+
+                // These are the individual component for mini-doublet calculation
+                // Copied from SDL::MiniDoublet code
+                float z = fabs(lowerHit.z());
+                float dz = std::abs(lowerHit.z() - upperHit.z());
+                float drt = std::abs(lowerHit.rt() - upperHit.rt());
+                float fabsdPhi = (lowerModule.moduleType() == SDL::Module::PS) ?
+                    SDL::MiniDoublet::fabsdPhiPixelShift(lowerHit, upperHit, lowerModule) : std::abs(lowerHit.deltaPhi(upperHit));
+                float dzfrac = dz / fabs(lowerHit.z());
+                float fabsdPhiMod = fabsdPhi / dzfrac * (1.f + dzfrac);
+                float miniCut = SDL::MiniDoublet::dPhiThreshold(lowerHit, lowerModule);
+                float fabsdPhiModDiff = fabsdPhiMod - miniCut;
+
+                // Actually use the static function to perform the calculation
+                if (SDL::MiniDoublet::isMiniDoubletPair(lowerHit, upperHit, lowerModule, SDL::Default_MDAlgo, SDL::Log_Nothing))
+                {
+                    // Passed
+                    dzs_passed.push_back(dz);
+                    drts_passed.push_back(drt);
+                    fabsdPhis_passed.push_back(fabsdPhi);
+                    zs_passed.push_back(z);
+                    dzfracs_passed.push_back(dzfrac);
+                    fabsdPhiMods_passed.push_back(fabsdPhiMod);
+                    fabsdPhiModDiffs_passed.push_back(fabsdPhiModDiff);
+
+                }
+                else
+                {
+                    // Failed
+                    dzs_failed.push_back(dz);
+                    drts_failed.push_back(drt);
+                    fabsdPhis_failed.push_back(fabsdPhi);
+                    zs_failed.push_back(z);
+                    dzfracs_failed.push_back(dzfrac);
+                    fabsdPhiMods_failed.push_back(fabsdPhiMod);
+                    fabsdPhiModDiffs_failed.push_back(fabsdPhiModDiff);
+
+                }
+
             }
 
         }
