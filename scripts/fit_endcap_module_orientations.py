@@ -16,6 +16,7 @@ for line in lines:
     hits[detid].append(hit)
 
 # Computing two groups of hits
+print "# detid average_r2s y_intercept_low_hits slope_low_hits y_intercept_high_hits slope_high_hits"
 for detid in hits:
 
     # Number of events
@@ -66,8 +67,8 @@ for detid in hits:
     yh = r.gROOT.FindObject("pol1").GetParameter(0)
     sh = r.gROOT.FindObject("pol1").GetParameter(1)
 
+    if abs(sl - sh) > 0.005:
+        print "ERROR"
+
     print detid, avgr2s, yl, sl, yh, sh
-
-# detid average_r2s y_intercept_low_hits slope_low_hits y_intercept_high_hits slope_high_hits
-
 

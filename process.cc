@@ -1,43 +1,4 @@
-#include "trktree.h"
-#include "rooutil.h"
-#include "cxxopts.h"
-
-#include "SDL/Event.h" // SDL::Event
-#include "SDL/Module.h" // SDL::Module
-#include "SDL/PrintUtil.h" // SDL::out
-
-class AnalysisConfig {
-
-public:
-
-    // TString that holds the input file list (comma separated)
-    TString input_file_list_tstring;
-
-    // TString that holds the name of the TTree to open for each input files
-    TString input_tree_name;
-
-    // Output TFile
-    TFile* output_tfile;
-
-    // Number of events to loop over
-    int n_events;
-
-    // Debug boolean
-    bool debug;
-
-    // TChain that holds the input TTree's
-    TChain* events_tchain;
-
-    // Custom Looper object to facilitate looping over many files
-    RooUtil::Looper<trktree> looper;
-
-    // Custom Cutflow framework
-    RooUtil::Cutflow cutflow;
-
-    // Custom Histograms object compatible with RooUtil::Cutflow framework
-    RooUtil::Histograms histograms;
-
-};
+#include "process.h"
 
 AnalysisConfig ana;
 
@@ -308,61 +269,42 @@ int main(int argc, char** argv)
     // Print cut structure
     ana.cutflow.printCuts();
 
-    std::vector<float> pt_boundaries = {0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50};
-    std::vector<float> md_matched_track_pt;
-    std::vector<float> md_all_track_pt;
-    ana.histograms.addVecHistogram("md_matched_track_pt", pt_boundaries, [&]() { return md_matched_track_pt; } );
-    ana.histograms.addVecHistogram("md_all_track_pt", pt_boundaries, [&]() { return md_all_track_pt; } );
-    std::vector<float> md_matched_track_eta;
-    std::vector<float> md_all_track_eta;
-    ana.histograms.addVecHistogram("md_matched_track_eta", 50, -4, 4, [&]() { return md_matched_track_eta; } );
-    ana.histograms.addVecHistogram("md_all_track_eta", 50, -4, 4, [&]() { return md_all_track_eta; } );
+    std::vector<float> dzs;
+    std::vector<float> dzFracs;
+    std::vector<float> drts;
+    std::vector<float> fabsdPhiDiffs;
+    std::vector<float> fabsdPhiModDiffs;
+    ana.histograms.addVecHistogram("md_failed_dzs", 50, 0, 2, [&]() { return dzs; } );
+    ana.histograms.addVecHistogram("md_failed_dzFracs", 50, 0, 0.05, [&]() { return dzFracs; } );
+    ana.histograms.addVecHistogram("md_failed_drts", 50, 0, 20, [&]() { return drts; } );
+    ana.histograms.addVecHistogram("md_failed_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs; } );
+    ana.histograms.addVecHistogram("md_failed_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs; } );
 
-    const int nlayers = 6;
-    std::array<std::vector<float>, nlayers> md_matched_track_pt_by_layer;
-    std::array<std::vector<float>, nlayers> md_all_track_pt_by_layer;
-    for (int ii = 0; ii < nlayers; ++ii)
+    std::vector<float> dzs_matched;
+    std::vector<float> dzFracs_matched;
+    std::vector<float> drts_matched;
+    std::vector<float> fabsdPhiDiffs_matched;
+    std::vector<float> fabsdPhiModDiffs_matched;
+    ana.histograms.addVecHistogram("md_matched_dzs", 50, 0, 2, [&]() { return dzs_matched; } );
+    ana.histograms.addVecHistogram("md_matched_dzFracs", 50, 0, 0.05, [&]() { return dzFracs_matched; } );
+    ana.histograms.addVecHistogram("md_matched_drts", 50, 0, 20, [&]() { return drts_matched; } );
+    ana.histograms.addVecHistogram("md_matched_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs_matched; } );
+    ana.histograms.addVecHistogram("md_matched_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs_matched; } );
+
+    // List of studies to perform
+    std::vector<Study*> studies;
+    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+
+    // book the studies
+    for (auto& study : studies)
     {
-        ana.histograms.addVecHistogram(TString::Format("md_matched_track_pt_by_layer%d", ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_all_track_pt_by_layer%d", ii), pt_boundaries, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
+        study->bookStudy();
     }
-    std::array<std::vector<float>, nlayers> md_matched_track_eta_by_layer;
-    std::array<std::vector<float>, nlayers> md_all_track_eta_by_layer;
-    for (int ii = 0; ii < nlayers; ++ii)
-    {
-        ana.histograms.addVecHistogram(TString::Format("md_matched_track_eta_by_layer%d", ii), 50, -4, 4, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_all_track_eta_by_layer%d", ii), 50, -4, 4, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
-    }
-
-    std::vector<float> matched_dphi;
-    ana.histograms.addVecHistogram("matched_dphi", 180, -3, 3, [&]() { return matched_dphi; } );
-    std::vector<float> not_matched_dphi;
-    ana.histograms.addVecHistogram("not_matched_dphi", 180, -3, 3, [&]() { return not_matched_dphi; } );
-    std::vector<float> all_dphi;
-    ana.histograms.addVecHistogram("all_dphi", 180, -3, 3, [&]() { return all_dphi; } );
-
-    std::vector<float> rt_v_phim__rt;
-    std::vector<float> rt_v_phim__phim;
-    ana.histograms.add2DVecHistogram("rt", 50, 20, 120, "phim", 50, 0., 1., [&]() { return rt_v_phim__rt; }, [&]() { return rt_v_phim__phim; } );
-    std::array<std::vector<float>, nlayers> rt_v_phim__rt_by_layer;
-    std::array<std::vector<float>, nlayers> rt_v_phim__phim_by_layer;
-    for (int ii = 0; ii < nlayers; ++ii)
-    {
-        ana.histograms.add2DVecHistogram("rt", 50, 20, 120, TString::Format("phim_by_layer%d", ii), 50, 0., 1., [&, ii]() { return rt_v_phim__rt_by_layer[ii]; }, [&, ii]() { return rt_v_phim__phim_by_layer[ii]; } );
-    }
-
-    std::vector<float> rt_v_dphi__rt;
-    std::vector<float> rt_v_dphi__dphi;
-    ana.histograms.add2DVecHistogram("rt", 50, 20, 120, "dphi", 50, 0., 1., [&]() { return rt_v_dphi__rt; }, [&]() { return rt_v_dphi__dphi; } );
-    std::array<std::vector<float>, nlayers> rt_v_dphi__rt_by_layer;
-    std::array<std::vector<float>, nlayers> rt_v_dphi__dphi_by_layer;
-    for (int ii = 0; ii < nlayers; ++ii)
-    {
-        ana.histograms.add2DVecHistogram("rt", 50, 20, 120, TString::Format("dphi_by_layer%d", ii), 50, 0., 1., [&, ii]() { return rt_v_dphi__rt_by_layer[ii]; }, [&, ii]() { return rt_v_dphi__dphi_by_layer[ii]; } );
-    }
-
-    // Book cutflows
-    // ana.cutflow.bookCutflows();
 
     // Book Histograms
     ana.cutflow.bookHistograms(ana.histograms); // if just want to book everywhere
@@ -370,13 +312,11 @@ int main(int argc, char** argv)
     // Set extendable axes
     // ana.cutflow.setHistsAxesExtendable(); // Make histogram axes extendable
 
+    SDL::endcapGeometry.load("scripts/endcap_orientiation_data.txt");
+
     // Looping input file
     while (ana.looper.nextEvent())
     {
-        //Do what you need to do in for each event here
-        //To save use the following function
-        ana.cutflow.fill();
-
         // <--------------------------
         // <--------------------------
         // <--------------------------
@@ -386,9 +326,12 @@ int main(int argc, char** argv)
         // ***************************
         //
 
+        // *************************************************
+        // Reconstructed hits and formation of mini-doublets
+        // *************************************************
+
         // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
         SDL::Event event;
-        SDL::Event simevent;
 
         // Adding hits to modules
         for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
@@ -402,49 +345,43 @@ int main(int argc, char** argv)
                     trk.ph2_detId()[ihit]
                     );
 
-            for (auto& simhitidx : trk.ph2_simHitIdx()[ihit])
-            {
-                SDL::Hit(trk.simhit_x()[simhitidx], trk.simhit_y()[simhitidx], trk.simhit_z()[simhitidx], simhitidx);
-                simevent.addHitToModule(
-                        // a hit
-                        SDL::Hit(trk.simhit_x()[simhitidx], trk.simhit_y()[simhitidx], trk.simhit_z()[simhitidx], simhitidx),
-                        // add to module with "detId"
-                        trk.simhit_detId()[simhitidx]
-                        );
-            }
-
             // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
             SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-            if (module.moduleType() == SDL::Module::PS and module.moduleLayerType() == SDL::Module::Strip and module.subdet() == SDL::Module::Endcap)
-            {
-                std::cout <<  " 'stripendcap': " << "stripendcap" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  std::endl;
-            }
+            // if (module.moduleType() == SDL::Module::PS and module.moduleLayerType() == SDL::Module::Strip and module.subdet() == SDL::Module::Endcap)
+            // {
+            //     std::cout <<  " 'stripendcap': " << "stripendcap" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  std::endl;
+            // }
 
         }
-
-        // Set log level
-        event.setLogLevel(SDL::Log_Debug2);
 
         // Create mini doublets
+        // event.setLogLevel(SDL::Log_Debug2); // Set log level
         event.createMiniDoublets();
 
-        rt_v_phim__rt.clear();
-        rt_v_phim__phim.clear();
-        for (int ii = 0; ii < nlayers; ++ii)
+        // Print content in the event
+        // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
+        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
         {
-            rt_v_phim__rt_by_layer[ii].clear();
-            rt_v_phim__phim_by_layer[ii].clear();
+            SDL::cout << event;
         }
 
-        rt_v_dphi__rt.clear();
-        rt_v_dphi__dphi.clear();
-        for (int ii = 0; ii < nlayers; ++ii)
-        {
-            rt_v_dphi__rt_by_layer[ii].clear();
-            rt_v_dphi__dphi_by_layer[ii].clear();
-        }
 
-        // Efficiency measurement
+
+
+        // *******************************************************
+        // Formation of mini-doublets "candidates" from sim-tracks
+        // *******************************************************
+
+        // "Candidate" here means that it is just a pair of two hits without any selection applied.
+        // i.e. no cuts are applied.
+        // See http://uaf-10.t2.ucsd.edu/~phchang/talks/PhilipChang20190426_SDL_Update.pdf#page=7
+
+        // Each SDL::Event object in simtrkevents will hold single sim-track related hits
+        // It will be a vector of tuple of <sim_track_index, SDL::Event*>.
+        std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents;
+
+        // Loop over sim-tracks and per sim-track aggregate good hits (i.e. matched with particle ID)
+        // and only use those hits, and run mini-doublet reco algorithm on the sim-track-matched-reco-hits
         for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
         {
 
@@ -452,36 +389,33 @@ int main(int argc, char** argv)
             if (abs(trk.sim_pdgId()[isimtrk]) != 13)
                 continue;
 
-            // if (trk.sim_pt()[isimtrk] < 1.)
-            //     continue;
-
             // event just for this track
-            SDL::Event trackevent;
+            SDL::Event* trackevent = new SDL::Event();
 
             // loop over the simulated hits
             for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
             {
-                // float simhit_pt = sqrt(trk.simhit_px()[simhitidx] * trk.simhit_px()[simhitidx] + trk.simhit_py()[simhitidx] * trk.simhit_py()[simhitidx]);
 
                 int simhit_particle = trk.simhit_particle()[simhitidx];
 
-                // if (simhit_pt < 0.1 * trk.sim_pt()[isimtrk])
+                // Select only the sim hits that is matched to the muon
                 if (abs(simhit_particle) != 13)
                     continue;
-                    
-                for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit) // list of reco hit matched to this sim hit
+
+                // list of reco hit matched to this sim hit
+                for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
                 {
 
                     // Get the recohit type
                     int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
 
-                    // Consider only ph2 hits
+                    // Consider only ph2 hits (i.e. outer tracker hits)
                     if (recohittype == 4)
                     {
 
                         int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
 
-                        trackevent.addHitToModule(
+                        trackevent->addHitToModule(
                                 // a hit
                                 SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
                                 // add to module with "detId"
@@ -492,152 +426,451 @@ int main(int argc, char** argv)
 
             }
 
-            trackevent.createMiniDoublets(SDL::AllComb_MDAlgo);
+            // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
+            trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
 
-            for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
-            {
-
-                float pt = trk.sim_pt()[isimtrk];
-
-                if (pt > 1.)
-                    continue;
-
-                if (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() == SDL::Module::Center)
-                {
-
-                    for (auto& lowerHitPtr : lowerModulePtr_Track->getHitPtrs())
-                    {
-                        rt_v_phim__rt.push_back(lowerHitPtr->rt());
-                        rt_v_phim__phim.push_back(SDL::MiniDoublet::dPhiThreshold(*lowerHitPtr, *lowerModulePtr_Track));
-                        int layer_idx = lowerModulePtr_Track->layer() - 1;
-                        rt_v_phim__rt_by_layer[layer_idx].push_back(lowerHitPtr->rt());
-                        rt_v_phim__phim_by_layer[layer_idx].push_back(SDL::MiniDoublet::dPhiThreshold(*lowerHitPtr, *lowerModulePtr_Track));
-                    }
-
-                    for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
-                    {
-                        SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
-                        float rt = lowerHitPtr->rt();
-                        float dphi = lowerHitPtr->deltaPhiChange(*(md_Track->upperHitPtr()));
-                        rt_v_dphi__rt.push_back(rt);
-                        rt_v_dphi__dphi.push_back(dphi);
-                        int layer_idx = lowerModulePtr_Track->layer() - 1;
-                        rt_v_dphi__rt_by_layer[layer_idx].push_back(rt);
-                        rt_v_dphi__dphi_by_layer[layer_idx].push_back(dphi);
-                    }
-
-                }
-
-            }
-
-            // Efficiency calculation
-            md_matched_track_pt.clear();
-            md_all_track_pt.clear();
-            md_matched_track_eta.clear();
-            md_all_track_eta.clear();
-            for (int ii = 0; ii < nlayers; ++ii)
-            {
-                md_matched_track_pt_by_layer[ii].clear();
-                md_all_track_pt_by_layer[ii].clear();
-                md_matched_track_eta_by_layer[ii].clear();
-                md_all_track_eta_by_layer[ii].clear();
-            }
-            matched_dphi.clear();
-            not_matched_dphi.clear();
-            all_dphi.clear();
-
-            for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
-            {
-                int layer_idx = lowerModulePtr_Track->layer() - 1;
-
-                bool match = false;
-                for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
-                {
-
-                    // Compute "truth" MD's dphi
-                    SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
-                    SDL::Hit* upperHitPtr = md_Track->upperHitPtr();
-                    float dphi = lowerHitPtr->deltaPhiChange(*upperHitPtr);
-
-                    all_dphi.push_back(dphi);
-
-                    bool thismdmatched = false;
-                    for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
-                    {
-                        if (md_Track->isIdxMatched(*md))
-                        {
-                            match = true;
-                            thismdmatched = true;
-                        }
-                    }
-
-                    if (thismdmatched)
-                        matched_dphi.push_back(dphi);
-                    else
-                        not_matched_dphi.push_back(dphi);
-                }
-
-                float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
-                float eta = trk.sim_eta()[isimtrk];
-
-                // Modules with true mini-doublets
-                // if (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
-                // if (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
-                if (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() == SDL::Module::Center and lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
-                {
-
-                    md_all_track_pt.push_back(pt);
-                    if (trk.sim_pt()[isimtrk] > 1.)
-                        md_all_track_eta.push_back(eta);
-
-                    if (match)
-                    {
-                        md_matched_track_pt.push_back(pt);
-                        if (trk.sim_pt()[isimtrk] > 1.)
-                            md_matched_track_eta.push_back(eta);
-                    }
-
-                    md_all_track_pt_by_layer[layer_idx].push_back(pt);
-                    if (trk.sim_pt()[isimtrk] > 1.)
-                        md_all_track_eta_by_layer[layer_idx].push_back(eta);
-
-                    if (match)
-                    {
-                        md_matched_track_pt_by_layer[layer_idx].push_back(pt);
-                        if (trk.sim_pt()[isimtrk] > 1.)
-                            md_matched_track_eta_by_layer[layer_idx].push_back(eta);
-                    }
-
-                    // for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
-                    // {
-                    //     const SDL::Hit& lowerHit = *md_Track->lowerHitPtr();
-                    //     const SDL::Hit& upperHit = *md_Track->upperHitPtr();
-                    //     if (not SDL::MiniDoublet::isMiniDoubletPair(lowerHit, upperHit, *lowerModulePtr_Track, SDL::Default_MDAlgo))
-                    //         SDL::MiniDoublet::isMiniDoubletPair(lowerHit, upperHit, *lowerModulePtr_Track, SDL::Default_MDAlgo, SDL::Log_Debug2);
-                    // }
-
-                }
-
-            }
+            // Push to the vector so we have a data-base of per hit, mini-doublets
+            simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
 
         }
 
-        // Print content in the event
-        // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
+
+
+        // ********************************************************************************************
+        // Perform various studies with reco events and sim-track-matched-reco-hits-based mini-doublets
+        // ********************************************************************************************
+
+        for (auto& study : studies)
         {
-            SDL::cout << event;
-            SDL::cout << simevent;
+            study->doStudy(event, simtrkevents);
         }
+
+
+        // ************************************************
+        // Now fill all the histograms booked by each study
+        // ************************************************
+
+        // Fill all the histograms
+        ana.cutflow.fill();
 
         // <--------------------------
         // <--------------------------
         // <--------------------------
     }
 
+
+
     // Writing output file
     ana.cutflow.saveOutput();
 
     // The below can be sometimes crucial
     delete ana.output_tfile;
+}
+
+
+void Study::bookStudy() {} // To be overloaded
+void Study::doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents) {} // To be overloaded
+
+void StudyBarreldPhiChangeCutThresholdValidity::bookStudy()
+{
+    // Book Histograms
+    ana.histograms.add2DVecHistogram("rt", 50, 20, 120, "phim", 50, 0., 1., [&]() { return rt_v_phim__rt; }, [&]() { return rt_v_phim__phim; } );
+    for (int ii = 0; ii < NLAYERS; ++ii)
+    {
+        ana.histograms.add2DVecHistogram("rt", 50, 20, 120, TString::Format("phim_by_layer%d", ii), 50, 0., 1., [&, ii]() { return rt_v_phim__rt_by_layer[ii]; }, [&, ii]() { return rt_v_phim__phim_by_layer[ii]; } );
+    }
+
+    ana.histograms.add2DVecHistogram("rt", 50, 20, 120, "dphi", 50, 0., 1., [&]() { return rt_v_dphi__rt; }, [&]() { return rt_v_dphi__dphi; } );
+    for (int ii = 0; ii < NLAYERS; ++ii)
+    {
+        ana.histograms.add2DVecHistogram("rt", 50, 20, 120, TString::Format("dphi_by_layer%d", ii), 50, 0., 1., [&, ii]() { return rt_v_dphi__rt_by_layer[ii]; }, [&, ii]() { return rt_v_dphi__dphi_by_layer[ii]; } );
+    }
+
+}
+
+void StudyBarreldPhiChangeCutThresholdValidity::doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+{
+
+    // Each do study is performed per event
+
+    // First clear all the output variables that will be used to fill the histograms for this event
+    rt_v_phim__rt.clear();
+    rt_v_phim__phim.clear();
+    for (int ii = 0; ii < NLAYERS; ++ii)
+    {
+        rt_v_phim__rt_by_layer[ii].clear();
+        rt_v_phim__phim_by_layer[ii].clear();
+    }
+
+    rt_v_dphi__rt.clear();
+    rt_v_dphi__dphi.clear();
+    for (int ii = 0; ii < NLAYERS; ++ii)
+    {
+        rt_v_dphi__rt_by_layer[ii].clear();
+        rt_v_dphi__dphi_by_layer[ii].clear();
+    }
+
+    for (auto& simtrkevent : simtrkevents)
+    {
+
+        unsigned int& isimtrk = std::get<0>(simtrkevent);
+        SDL::Event& trackevent = *(std::get<1>(simtrkevent));
+
+        // Plotting dPhiChange's and the thresholds etc. (study done for 04/29/2019 http://uaf-10.t2.ucsd.edu/~phchang/talks/PhilipChang20190429_SDL_Update.pdf)
+        for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
+        {
+
+            float pt = trk.sim_pt()[isimtrk];
+
+            // Commented in or out for the plots
+            // if (pt > 1.)
+            //     continue;
+
+            if (pt < 1.)
+                continue;
+
+            // Fou
+            if (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() == SDL::Module::Center)
+            {
+
+                for (auto& lowerHitPtr : lowerModulePtr_Track->getHitPtrs())
+                {
+                    rt_v_phim__rt.push_back(lowerHitPtr->rt());
+                    rt_v_phim__phim.push_back(SDL::MiniDoublet::dPhiThreshold(*lowerHitPtr, *lowerModulePtr_Track));
+                    int layer_idx = lowerModulePtr_Track->layer() - 1;
+                    rt_v_phim__rt_by_layer[layer_idx].push_back(lowerHitPtr->rt());
+                    rt_v_phim__phim_by_layer[layer_idx].push_back(SDL::MiniDoublet::dPhiThreshold(*lowerHitPtr, *lowerModulePtr_Track));
+                }
+
+                for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                {
+                    SDL::Hit* lowerHitPtr = md_Track->lowerHitPtr();
+                    float rt = lowerHitPtr->rt();
+                    float dphi = lowerHitPtr->deltaPhiChange(*(md_Track->upperHitPtr()));
+                    rt_v_dphi__rt.push_back(rt);
+                    rt_v_dphi__dphi.push_back(dphi);
+                    int layer_idx = lowerModulePtr_Track->layer() - 1;
+                    rt_v_dphi__rt_by_layer[layer_idx].push_back(rt);
+                    rt_v_dphi__dphi_by_layer[layer_idx].push_back(dphi);
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+StudyEfficiency::StudyEfficiency(const char* studyName, StudyEfficiency::StudyEfficiencyMode mode_, std::vector<float> ptbounds)
+{
+
+    studyname = studyName;
+    mode = mode_;
+    switch (mode)
+    {
+        case kStudyEffAll: modename = "all"; break;
+        case kStudyEffBarrel: modename = "barrel"; break;
+        case kStudyEffEndcap: modename = "endcap"; break;
+        case kStudyEffEndcapPS: modename = "endcapPS"; break;
+        case kStudyEffEndcap2S: modename = "endcap2S"; break;
+        default: modename = "UNDEFINED"; break;
+    }
+    pt_boundaries = ptbounds;
+
+}
+
+void StudyEfficiency::bookStudy()
+{
+    // Book Histograms
+    ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_pt", modename), pt_boundaries, [&]() { return md_matched_track_pt; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt", modename), pt_boundaries, [&]() { return md_all_track_pt; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta", modename), 50, -4, 4, [&]() { return md_matched_track_eta; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta", modename), 50, -4, 4, [&]() { return md_all_track_eta; } );
+
+    const int nlayers = NLAYERS;
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_pt_by_layer%d", modename, ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt_by_layer%d", modename, ii), pt_boundaries, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_by_layer%d", modename, ii), 50, -4, 4, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_by_layer%d", modename, ii), 50, -4, 4, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
+    }
+    ana.histograms.addVecHistogram(TString::Format("md_%s_lower_hit_only_track_pt", modename), pt_boundaries, [&]() { return md_lower_hit_only_track_pt; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_lower_hit_only_track_eta", modename), 50, -4, 4, [&]() { return md_lower_hit_only_track_eta; } );
+}
+
+void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+{
+    // Each do study is performed per event
+
+    First clear all the output variables that will be used to fill the histograms for this event
+    md_matched_track_pt.clear();
+    md_all_track_pt.clear();
+    md_matched_track_eta.clear();
+    md_all_track_eta.clear();
+    for (int ii = 0; ii < NLAYERS; ++ii)
+    {
+        md_matched_track_pt_by_layer[ii].clear();
+        md_all_track_pt_by_layer[ii].clear();
+        md_matched_track_eta_by_layer[ii].clear();
+        md_all_track_eta_by_layer[ii].clear();
+    }
+    md_lower_hit_only_track_pt.clear();
+    md_lower_hit_only_track_eta.clear();
+
+    //***********************
+    // Efficiency calculation
+    //***********************
+
+    // Loop over track events
+    for (auto& simtrkevent : simtrkevents)
+    {
+
+        // md_matched_track_pt.clear();
+        // md_all_track_pt.clear();
+        // md_matched_track_eta.clear();
+        // md_all_track_eta.clear();
+        // for (int ii = 0; ii < NLAYERS; ++ii)
+        // {
+        //     md_matched_track_pt_by_layer[ii].clear();
+        //     md_all_track_pt_by_layer[ii].clear();
+        //     md_matched_track_eta_by_layer[ii].clear();
+        //     md_all_track_eta_by_layer[ii].clear();
+        // }
+        // md_lower_hit_only_track_pt.clear();
+        // md_lower_hit_only_track_eta.clear();
+
+        // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
+        unsigned int& isimtrk = std::get<0>(simtrkevent);
+        SDL::Event& trackevent = *(std::get<1>(simtrkevent));
+
+        // Loop over the lower modules that contains hits for this track
+        for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
+        {
+
+            // Depending on the mode, only run a subset of interested modules
+            switch (mode)
+            {
+                case kStudyEffAll: /* do nothing */ break;
+                case kStudyEffBarrel: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel)) { continue; } break;
+                case kStudyEffEndcap: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap)) { continue; } break;
+                case kStudyEffEndcapPS: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS)) { continue; } break;
+                case kStudyEffEndcap2S: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS)) { continue; } break;
+                default: /* skip everything should not be here anyways...*/ continue; break;
+            }
+
+            // Parse the layer index later to be used for indexing
+            int layer_idx = lowerModulePtr_Track->layer() - 1;
+
+            // Parse pt and eta of this track
+            float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
+            float eta = trk.sim_eta()[isimtrk];
+
+            // For this module that a sim-track supposedly passed through if there are no more than 1 mini-doublets
+            // it means that this track did not leave at least one hit each in each side of the module
+            // The getMiniDoubletPtrs() will return ALL pairs of hits between the modules.
+            // That's because the simtrkevent would have createMiniDoublets called with SDL::AllComb_MDAlgo option.
+            // This option loops over all hits in lower module and upper module and forms every possible pair.
+            // So if the following condition of size() == 0 is true, it means this sim-track didn't leave at least one hit in each side.
+            if (lowerModulePtr_Track->getMiniDoubletPtrs().size() == 0)
+            {
+                md_lower_hit_only_track_pt.push_back(pt);
+                md_lower_hit_only_track_pt.push_back(eta);
+                continue;
+            }
+
+            // Boolean to test whether for this module that a track passed through, whether it found a matched mini-doublet
+            bool match = false;
+
+            // Loop over the md "candidate" from the module that a sim-track passed through and left at least one hit in each module
+            for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+            {
+
+                // Loop over the md reconstructed from with proper SDL algorithm and if the index of the hits match
+                // Then we have found at least one mini-doublet associated to this track's reco-hits in this module
+                // Therefore flag the match boolean
+                for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
+                {
+                    if (md_Track->isIdxMatched(*md))
+                    {
+                        match = true;
+                    }
+                }
+            }
+
+            // At this stage, we have either found a mini-doublet in this module matched to the track or not.
+
+            // Denominator for all layers pt efficiency
+            md_all_track_pt.push_back(pt);
+
+            // Denominator for all layers eta efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                md_all_track_eta.push_back(eta);
+
+            // Numerators
+            if (match)
+            {
+
+                // Numerators for matched all layers pt efficiency
+                md_matched_track_pt.push_back(pt);
+
+                // Numeratosr for matched all layers eta efficiency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    md_matched_track_eta.push_back(eta);
+
+                // // These are the "truth" md_Track
+                // for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                // {
+                // }
+
+                // // When failed these are the list of reco-md's that didn't match to any of the "truth" md's
+                // for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
+                // {
+                // }
+
+                // // The module holding reco hits
+                // SDL::Module& lowerModule = event.getModule(lowerModulePtr_Track->detId());
+                // SDL::Module& upperModule = event.getModule(lowerModule.partnerDetId());
+
+                // // Double nested loops
+                // // Loop over lower module hits
+                // for (auto& lowerHitPtr : lowerModule.getHitPtrs())
+                // {
+
+                //     // Get reference to lower Hit
+                //     SDL::Hit& lowerHit = *lowerHitPtr;
+
+                //     // Loop over upper module hits
+                //     for (auto& upperHitPtr : upperModule.getHitPtrs())
+                //     {
+
+                //         // Get reference to upper Hit
+                //         SDL::Hit& upperHit = *upperHitPtr;
+
+                //         // const float dzCut = 1.f;
+                //         // const float drtCut = 10.f; // i.e. should be smaller than the module length. Could be tighter if PS modules
+                //         // float miniCut = SDL::MiniDoublet::dPhiThreshold(lowerHit, lowerModule);
+
+                //         // float dz = std::abs(lowerHit.z() - upperHit.z());
+                //         // float drt = std::abs(lowerHit.rt() - upperHit.rt());
+                //         // float fabsdPhi = SDL::MiniDoublet::fabsdPhiPixelShift(lowerHit, upperHit, lowerModule);
+                //         // float dzFrac = dz / fabs(lowerHit.z());
+                //         // float fabsdPhiMod = fabsdPhi / dzFrac * (1.f + dzFrac);
+
+                //         // dzs_matched.push_back(dz);
+                //         // dzFracs_matched.push_back(dzFrac);
+                //         // drts_matched.push_back(drt);
+                //         // fabsdPhiDiffs_matched.push_back(fabsdPhi - miniCut);
+                //         // fabsdPhiModDiffs_matched.push_back(fabsdPhiMod - miniCut);
+
+                //         // if (not (dz < dzCut))
+                //         // if (not (drt < drtCut))
+                //         // if (not (fabsdPhi < miniCut)) // If cut fails continue
+                //         // if (not (fabsdPhiMod < miniCut)) // If cut fails continue
+
+                //         // std::vector<float> dzs;
+                //         // std::vector<float> drts;
+                //         // std::vector<float> fabsdPhiDiffs;
+                //         // std::vector<float> fabsdPhiModDiffs;
+
+                //     }
+
+                // }
+
+            }
+            // Failed tracks for all layers
+            else
+            {
+
+                // // These are the "truth" md_Track
+                // for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
+                // {
+                // }
+
+                // // When failed these are the list of reco-md's that didn't match to any of the "truth" md's
+                // for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
+                // {
+                // }
+
+                // // The module holding reco hits
+                // SDL::Module& lowerModule = event.getModule(lowerModulePtr_Track->detId());
+                // SDL::Module& upperModule = event.getModule(lowerModule.partnerDetId());
+
+                // // Double nested loops
+                // // Loop over lower module hits
+                // for (auto& lowerHitPtr : lowerModule.getHitPtrs())
+                // {
+
+                //     // Get reference to lower Hit
+                //     SDL::Hit& lowerHit = *lowerHitPtr;
+
+                //     // Loop over upper module hits
+                //     for (auto& upperHitPtr : upperModule.getHitPtrs())
+                //     {
+
+                //         // Get reference to upper Hit
+                //         SDL::Hit& upperHit = *upperHitPtr;
+
+                //         const float dzCut = 1.f;
+                //         const float drtCut = 10.f; // i.e. should be smaller than the module length. Could be tighter if PS modules
+                //         float miniCut = SDL::MiniDoublet::dPhiThreshold(lowerHit, lowerModule);
+
+                //         float dz = std::abs(lowerHit.z() - upperHit.z());
+                //         float drt = std::abs(lowerHit.rt() - upperHit.rt());
+                //         float fabsdPhi = SDL::MiniDoublet::fabsdPhiPixelShift(lowerHit, upperHit, lowerModule);
+                //         float dzFrac = dz / fabs(lowerHit.z());
+                //         float fabsdPhiMod = fabsdPhi / dzFrac * (1.f + dzFrac);
+
+                //         dzs.push_back(dz);
+                //         dzFracs.push_back(dzFrac);
+                //         drts.push_back(drt);
+                //         fabsdPhiDiffs.push_back(fabsdPhi - miniCut);
+                //         fabsdPhiModDiffs.push_back(fabsdPhiMod - miniCut);
+
+                //         // if (not (dz < dzCut))
+                //         // if (not (drt < drtCut))
+                //         // if (not (fabsdPhi < miniCut)) // If cut fails continue
+                //         // if (not (fabsdPhiMod < miniCut)) // If cut fails continue
+
+                //         // std::vector<float> dzs;
+                //         // std::vector<float> drts;
+                //         // std::vector<float> fabsdPhiDiffs;
+                //         // std::vector<float> fabsdPhiModDiffs;
+
+                //     }
+
+                // }
+
+            }
+
+            // Denominator for specific layers pt efficiency
+            md_all_track_pt_by_layer[layer_idx].push_back(pt);
+
+            // Denominator for specific layers eta efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                md_all_track_eta_by_layer[layer_idx].push_back(eta);
+
+            // Numerators
+            if (match)
+            {
+                // Numerators for matched specific layer pt effciency
+                md_matched_track_pt_by_layer[layer_idx].push_back(pt);
+
+                // Numerators for matched specific layer eta effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    md_matched_track_eta_by_layer[layer_idx].push_back(eta);
+            }
+            // Failed tracks for specific layers
+            else
+            {
+            }
+
+        }
+
+    }
+
 }

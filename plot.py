@@ -65,8 +65,8 @@ def plot_eff(num_name, den_name, output_name):
     #        colors=[1],
     #        )
 
-plot_eff("Root__md_matched_track_pt", "Root__md_all_track_pt", "eff_pt.pdf")
-plot_eff("Root__md_matched_track_eta", "Root__md_all_track_eta", "eff_eta.pdf")
+plot_eff("Root__md_endcapPS_matched_track_pt", "Root__md_endcapPS_all_track_pt", "eff_pt.pdf")
+plot_eff("Root__md_endcapPS_matched_track_eta", "Root__md_endcapPS_all_track_eta", "eff_eta.pdf")
 for i in xrange(6):
-    plot_eff("Root__md_matched_track_pt_by_layer{}".format(i), "Root__md_all_track_pt_by_layer{}".format(i), "eff_pt_by_layer{}.pdf".format(i))
-    plot_eff("Root__md_matched_track_eta_by_layer{}".format(i), "Root__md_all_track_eta_by_layer{}".format(i), "eff_eta_by_layer{}.pdf".format(i))
+    plot_eff("Root__md_endcapPS_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPS_all_track_pt_by_layer{}".format(i), "eff_pt_by_layer{}.pdf".format(i))
+    plot_eff("Root__md_endcapPS_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPS_all_track_eta_by_layer{}".format(i), "eff_eta_by_layer{}.pdf".format(i))
