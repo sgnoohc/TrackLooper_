@@ -124,6 +124,8 @@ public:
         kStudyEndcapIneffAll = 1,
         kStudyEndcapIneffPS = 2,
         kStudyEndcapIneff2S = 3,
+        kStudyEndcapIneffPSLowP = 4,
+        kStudyEndcapIneffPSLowS = 5,
     };
 
     const char* studyname;

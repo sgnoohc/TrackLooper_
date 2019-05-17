@@ -302,6 +302,8 @@ int main(int argc, char** argv)
     studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffAll));
     studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPS));
     studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneff2S));
+    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPSLowP));
+    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPSLowS));
 
     // book the studies
     for (auto& study : studies)
@@ -874,6 +876,8 @@ StudyEndcapInefficiency::StudyEndcapInefficiency(const char* studyName, StudyEnd
         case kStudyEndcapIneffAll: modename = "all"; break;
         case kStudyEndcapIneffPS: modename = "PS"; break;
         case kStudyEndcapIneff2S: modename = "2S"; break;
+        case kStudyEndcapIneffPSLowP: modename = "PSLowP"; break;
+        case kStudyEndcapIneffPSLowS: modename = "PSLowS"; break;
         default: modename = "UNDEFINED"; break;
     }
 }
@@ -883,20 +887,20 @@ void StudyEndcapInefficiency::bookStudy()
 
     // Book histograms to study the mini-doublet candidate either passing or failing
     ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzs_passed"             , modename) , 50 , 0  , 2    , [&]() { return dzs_passed              ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_drts_passed"            , modename) , 50 , 0  , 20   , [&]() { return drts_passed             ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhis_passed"       , modename) , 50 , -1 , 1    , [&]() { return fabsdPhis_passed        ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzfracs_passed"         , modename) , 50 , 0  , 0.05 , [&]() { return dzfracs_passed          ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_zs_passed"              , modename) , 50 , 0  , 0.05 , [&]() { return zs_passed               ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiMods_passed"    , modename) , 50 , -1 , 5    , [&]() { return fabsdPhiMods_passed     ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiModDiffs_passed", modename) , 50 , -1 , 5    , [&]() { return fabsdPhiModDiffs_passed ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_drts_passed"            , modename) , 50 ,-2  , 2    , [&]() { return drts_passed             ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhis_passed"       , modename) , 50 , 0  , 0.1  , [&]() { return fabsdPhis_passed        ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzfracs_passed"         , modename) , 50 , 0  , 0.005 , [&]() { return dzfracs_passed          ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_zs_passed"              , modename) , 50 , 0  , 400  , [&]() { return zs_passed               ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiMods_passed"    , modename) , 60 , -1 , 5    , [&]() { return fabsdPhiMods_passed     ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiModDiffs_passed", modename) , 60 , -1 , 5    , [&]() { return fabsdPhiModDiffs_passed ; } );
 
     ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzs_failed"             , modename) , 50 , 0  , 2    , [&]() { return dzs_failed              ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_drts_failed"            , modename) , 50 , 0  , 20   , [&]() { return drts_failed             ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhis_failed"       , modename) , 50 , -1 , 1    , [&]() { return fabsdPhis_failed        ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzfracs_failed"         , modename) , 50 , 0  , 0.05 , [&]() { return dzfracs_failed          ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_zs_failed"              , modename) , 50 , 0  , 0.05 , [&]() { return zs_failed               ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiMods_failed"    , modename) , 50 , -1 , 5    , [&]() { return fabsdPhiMods_failed     ; } );
-    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiModDiffs_failed", modename) , 50 , -1 , 5    , [&]() { return fabsdPhiModDiffs_failed ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_drts_failed"            , modename) , 50 ,-2  , 2    , [&]() { return drts_failed             ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhis_failed"       , modename) , 50 , 0  , 0.1  , [&]() { return fabsdPhis_failed        ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_dzfracs_failed"         , modename) , 50 , 0  , 0.005, [&]() { return dzfracs_failed          ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_zs_failed"              , modename) , 50 , 0  , 400  , [&]() { return zs_failed               ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiMods_failed"    , modename) , 60 , -1 , 5    , [&]() { return fabsdPhiMods_failed     ; } );
+    ana.histograms.addVecHistogram(TString::Format("mdcand_%s_fabsdPhiModDiffs_failed", modename) , 60 , -1 , 5    , [&]() { return fabsdPhiModDiffs_failed ; } );
 
 }
 
@@ -941,6 +945,8 @@ void StudyEndcapInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<
                 case kStudyEndcapIneffAll: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap)) { continue; } break;
                 case kStudyEndcapIneffPS: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS)) { continue; } break;
                 case kStudyEndcapIneff2S: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS)) { continue; } break;
+                case kStudyEndcapIneffPSLowP: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS and lowerModulePtr_Track->moduleLayerType() == SDL::Module::Pixel)) { continue; } break;
+                case kStudyEndcapIneffPSLowS: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS and lowerModulePtr_Track->moduleLayerType() == SDL::Module::Strip)) { continue; } break;
                 default: /* skip everything should not be here anyways...*/ continue; break;
             }
 
@@ -956,7 +962,7 @@ void StudyEndcapInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<
                 // Copied from SDL::MiniDoublet code
                 float z = fabs(lowerHit.z());
                 float dz = std::abs(lowerHit.z() - upperHit.z());
-                float drt = std::abs(lowerHit.rt() - upperHit.rt());
+                float drt = lowerHit.rt() - upperHit.rt();
                 float fabsdPhi = (lowerModule.moduleType() == SDL::Module::PS) ?
                     SDL::MiniDoublet::fabsdPhiPixelShift(lowerHit, upperHit, lowerModule) : std::abs(lowerHit.deltaPhi(upperHit));
                 float dzfrac = dz / fabs(lowerHit.z());
