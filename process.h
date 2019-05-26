@@ -89,9 +89,13 @@ public:
     {
         kStudyEffAll = 1,
         kStudyEffBarrel = 2,
-        kStudyEffEndcap = 3,
-        kStudyEffEndcapPS = 4,
-        kStudyEffEndcap2S = 5,
+        kStudyEffBarrelFlat = 3,
+        kStudyEffBarrelTilt = 4,
+        kStudyEffEndcap = 5,
+        kStudyEffEndcapPS = 6,
+        kStudyEffEndcap2S = 7,
+        kStudyEffEndcapPSCloseRing = 8,
+        kStudyEffEndcapPSLowPt = 9,
     };
 
     const char* studyname;
