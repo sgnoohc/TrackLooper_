@@ -85,7 +85,7 @@ for i in xrange(6):
 
 plot_eff("Root__md_barreltilt_matched_track_pt", "Root__md_barreltilt_all_track_pt", "eff_barreltilt_pt.pdf")
 plot_eff("Root__md_barreltilt_matched_track_eta", "Root__md_barreltilt_all_track_eta", "eff_barreltilt_eta.pdf")
-for i in xrange(6):
+for i in xrange(3):
     plot_eff("Root__md_barreltilt_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilt_all_track_pt_by_layer{}".format(i), "eff_barreltilt_pt_by_layer{}.pdf".format(i))
     plot_eff("Root__md_barreltilt_matched_track_eta_by_layer{}".format(i), "Root__md_barreltilt_all_track_eta_by_layer{}".format(i), "eff_barreltilt_eta_by_layer{}.pdf".format(i))
 

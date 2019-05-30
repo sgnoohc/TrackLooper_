@@ -552,6 +552,53 @@ def xy_side1_order1_moduleall_individ():
         c1.SaveAs("plots/lin/xy_layerleq3_side1_order1_module{}.pdf".format(i))
         c1.SaveAs("plots/lin/xy_layerleq3_side1_order1_module{}.png".format(i))
 
+def rz_side1_subdet1_even_detId_even_module():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1&&ph2_detId%2==0&&ph2_module%2==0", "same")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module.pdf")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module.png")
+
+def rz_side1_subdet1_even_detId_even_module():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1&&ph2_detId%2==0&&ph2_module%2==0", "same")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module.pdf")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module.png")
+
+def rz_side1_subdet1_even_detId_even_module_rod11():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1&&ph2_rod==11")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1&&ph2_detId%2==0&&ph2_module%2==0&&ph2_rod==11", "same")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module_rod11.pdf")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module_rod11.png")
+
+def rz_side1_subdet1_even_detId_even_module_rod12():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1&&ph2_rod==12")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_subdet==5&&ph2_side==1&&ph2_detId%2==0&&ph2_module%2==0&&ph2_rod==12", "same")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module_rod12.pdf")
+    c1.SaveAs("plots/lin/rz_side1_subdet1_even_detId_even_module_rod12.png")
+
+def xy_side1_subdet1_even_detId_even_module_rod11():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("ph2_y:ph2_x", "ph2_subdet==5&&ph2_side==1&&ph2_rod==11")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("ph2_y:ph2_x", "ph2_subdet==5&&ph2_side==1&&ph2_detId%2==0&&ph2_module%2==0&&ph2_rod==11", "same")
+    c1.SaveAs("plots/lin/xy_side1_subdet1_even_detId_even_module_rod11.pdf")
+    c1.SaveAs("plots/lin/xy_side1_subdet1_even_detId_even_module_rod11.png")
+
+def xy_side1_subdet1_even_detId_even_module_rod12():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("ph2_y:ph2_x", "ph2_subdet==5&&ph2_side==1&&ph2_rod==12")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("ph2_y:ph2_x", "ph2_subdet==5&&ph2_side==1&&ph2_detId%2==0&&ph2_module%2==0&&ph2_rod==12", "same")
+    c1.SaveAs("plots/lin/xy_side1_subdet1_even_detId_even_module_rod12.pdf")
+    c1.SaveAs("plots/lin/xy_side1_subdet1_even_detId_even_module_rod12.png")
 
 if __name__ == "__main__":
 
@@ -597,4 +644,9 @@ if __name__ == "__main__":
     # rz_side3_specific_detId()
     # rz_simhit()
     # rz_side3_pixel()
-    xy_side1_order1_moduleall_individ()
+    # xy_side1_order1_moduleall_individ()
+    # rz_side1_subdet1_even_detId_even_module()
+    # rz_side1_subdet1_even_detId_even_module_rod11()
+    # rz_side1_subdet1_even_detId_even_module_rod12()
+    xy_side1_subdet1_even_detId_even_module_rod11()
+    xy_side1_subdet1_even_detId_even_module_rod12()

@@ -321,7 +321,8 @@ int main(int argc, char** argv)
     // Set extendable axes
     // ana.cutflow.setHistsAxesExtendable(); // Make histogram axes extendable
 
-    SDL::endcapGeometry.load("scripts/endcap_orientiation_data.txt");
+    SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
+    SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
 
     // Looping input file
     while (ana.looper.nextEvent())
@@ -356,9 +357,9 @@ int main(int argc, char** argv)
 
             // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
             SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-            // if (module.moduleType() == SDL::Module::PS and module.moduleLayerType() == SDL::Module::Strip and module.subdet() == SDL::Module::Endcap)
+            // if (module.subdet() == SDL::Module::Barrel and module.side() != SDL::Module::Center and module.moduleType() == SDL::Module::PS and module.moduleLayerType() == SDL::Module::Strip)
             // {
-            //     std::cout <<  " 'stripendcap': " << "stripendcap" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  std::endl;
+            //     std::cout <<  " 'tilted': " << "tilted" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  " trk.ph2_z()[ihit]: " << trk.ph2_z()[ihit] <<  std::endl;
             // }
 
         }
