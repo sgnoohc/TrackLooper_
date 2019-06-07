@@ -106,10 +106,20 @@ public:
     std::vector<float> md_all_track_pt;
     std::vector<float> md_matched_track_eta;
     std::vector<float> md_all_track_eta;
+    std::vector<float> md_matched_track_phi;
+    std::vector<float> md_all_track_phi;
+    std::vector<float> md_matched_track_z;
+    std::vector<float> md_all_track_z;
     std::array<std::vector<float>, NLAYERS> md_matched_track_pt_by_layer;
     std::array<std::vector<float>, NLAYERS> md_all_track_pt_by_layer;
     std::array<std::vector<float>, NLAYERS> md_matched_track_eta_by_layer;
     std::array<std::vector<float>, NLAYERS> md_all_track_eta_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_matched_track_phi_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_all_track_phi_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_matched_track_wrapphi_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_all_track_wrapphi_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_matched_track_z_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_all_track_z_by_layer;
     std::vector<float> md_lower_hit_only_track_pt;
     std::vector<float> md_lower_hit_only_track_eta;
 

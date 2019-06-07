@@ -606,6 +606,10 @@ void StudyEfficiency::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt", modename), pt_boundaries, [&]() { return md_all_track_pt; } );
     ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta", modename), 50, -4, 4, [&]() { return md_matched_track_eta; } );
     ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta", modename), 50, -4, 4, [&]() { return md_all_track_eta; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_phi", modename), 200, -3.1416, 3.1416, [&]() { return md_matched_track_phi; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_phi", modename), 200, -3.1416, 3.1416, [&]() { return md_all_track_phi; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_z", modename), 200, -300, 300, [&]() { return md_matched_track_z; } );
+    ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_z", modename), 200, -300, 300, [&]() { return md_all_track_z; } );
 
     const int nlayers = NLAYERS;
     for (int ii = 0; ii < nlayers; ++ii)
@@ -617,6 +621,21 @@ void StudyEfficiency::bookStudy()
     {
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_by_layer%d", modename, ii), 50, -4, 4, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_by_layer%d", modename, ii), 50, -4, 4, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_phi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return md_matched_track_phi_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_phi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return md_all_track_phi_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_wrapphi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return md_matched_track_wrapphi_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_wrapphi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return md_all_track_wrapphi_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_z_by_layer%d", modename, ii), 200, -300, 300, [&, ii]() { return md_matched_track_z_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_z_by_layer%d", modename, ii), 200, -300, 300, [&, ii]() { return md_all_track_z_by_layer[ii]; } );
     }
     ana.histograms.addVecHistogram(TString::Format("md_%s_lower_hit_only_track_pt", modename), pt_boundaries, [&]() { return md_lower_hit_only_track_pt; } );
     ana.histograms.addVecHistogram(TString::Format("md_%s_lower_hit_only_track_eta", modename), 50, -4, 4, [&]() { return md_lower_hit_only_track_eta; } );
@@ -631,12 +650,22 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
     md_all_track_pt.clear();
     md_matched_track_eta.clear();
     md_all_track_eta.clear();
+    md_matched_track_phi.clear();
+    md_all_track_phi.clear();
+    md_matched_track_z.clear();
+    md_all_track_z.clear();
     for (int ii = 0; ii < NLAYERS; ++ii)
     {
         md_matched_track_pt_by_layer[ii].clear();
         md_all_track_pt_by_layer[ii].clear();
         md_matched_track_eta_by_layer[ii].clear();
         md_all_track_eta_by_layer[ii].clear();
+        md_matched_track_phi_by_layer[ii].clear();
+        md_all_track_phi_by_layer[ii].clear();
+        md_matched_track_wrapphi_by_layer[ii].clear();
+        md_all_track_wrapphi_by_layer[ii].clear();
+        md_matched_track_z_by_layer[ii].clear();
+        md_all_track_z_by_layer[ii].clear();
     }
     md_lower_hit_only_track_pt.clear();
     md_lower_hit_only_track_eta.clear();
@@ -678,6 +707,7 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
             // Parse pt and eta of this track
             float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
             float eta = trk.sim_eta()[isimtrk];
+            float phi = trk.sim_phi()[isimtrk];
 
             // For this module that a sim-track supposedly passed through if there are no more than 1 mini-doublets
             // it means that this track did not leave at least one hit each in each side of the module
@@ -696,8 +726,12 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
             bool match = false;
 
             // Loop over the md "candidate" from the module that a sim-track passed through and left at least one hit in each module
+            float z = 0; // The z position of this "truth candidate" mini-doublet will be calculated by the average of all combos
             for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
             {
+
+                // To ge
+                z += md_Track->lowerHitPtr()->z();
 
                 // Loop over the md reconstructed from with proper SDL algorithm and if the index of the hits match
                 // Then we have found at least one mini-doublet associated to this track's reco-hits in this module
@@ -711,6 +745,9 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
                 }
             }
 
+            if (lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
+                z /= lowerModulePtr_Track->getMiniDoubletPtrs().size();
+
             // At this stage, we have either found a mini-doublet in this module matched to the track or not.
 
             // Denominator for all layers pt efficiency
@@ -719,6 +756,14 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
             // Denominator for all layers eta efficiency (notice the 1 GeV cut)
             if (trk.sim_pt()[isimtrk] > 1.)
                 md_all_track_eta.push_back(eta);
+
+            // Denominator for all layers phi efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                md_all_track_phi.push_back(phi);
+
+            // Denominator for all layers z efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                md_all_track_z.push_back(z);
 
             // Numerators
             if (match)
@@ -731,129 +776,19 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
                 if (trk.sim_pt()[isimtrk] > 1.)
                     md_matched_track_eta.push_back(eta);
 
-                // // These are the "truth" md_Track
-                // for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
-                // {
-                // }
+                // Numeratosr for matched all layers phi efficiency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    md_matched_track_phi.push_back(phi);
 
-                // // When failed these are the list of reco-md's that didn't match to any of the "truth" md's
-                // for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
-                // {
-                // }
-
-                // // The module holding reco hits
-                // SDL::Module& lowerModule = event.getModule(lowerModulePtr_Track->detId());
-                // SDL::Module& upperModule = event.getModule(lowerModule.partnerDetId());
-
-                // // Double nested loops
-                // // Loop over lower module hits
-                // for (auto& lowerHitPtr : lowerModule.getHitPtrs())
-                // {
-
-                //     // Get reference to lower Hit
-                //     SDL::Hit& lowerHit = *lowerHitPtr;
-
-                //     // Loop over upper module hits
-                //     for (auto& upperHitPtr : upperModule.getHitPtrs())
-                //     {
-
-                //         // Get reference to upper Hit
-                //         SDL::Hit& upperHit = *upperHitPtr;
-
-                //         // const float dzCut = 1.f;
-                //         // const float drtCut = 10.f; // i.e. should be smaller than the module length. Could be tighter if PS modules
-                //         // float miniCut = SDL::MiniDoublet::dPhiThreshold(lowerHit, lowerModule);
-
-                //         // float dz = std::abs(lowerHit.z() - upperHit.z());
-                //         // float drt = std::abs(lowerHit.rt() - upperHit.rt());
-                //         // float fabsdPhi = SDL::MiniDoublet::fabsdPhiPixelShift(lowerHit, upperHit, lowerModule);
-                //         // float dzFrac = dz / fabs(lowerHit.z());
-                //         // float fabsdPhiMod = fabsdPhi / dzFrac * (1.f + dzFrac);
-
-                //         // dzs_matched.push_back(dz);
-                //         // dzFracs_matched.push_back(dzFrac);
-                //         // drts_matched.push_back(drt);
-                //         // fabsdPhiDiffs_matched.push_back(fabsdPhi - miniCut);
-                //         // fabsdPhiModDiffs_matched.push_back(fabsdPhiMod - miniCut);
-
-                //         // if (not (dz < dzCut))
-                //         // if (not (drt < drtCut))
-                //         // if (not (fabsdPhi < miniCut)) // If cut fails continue
-                //         // if (not (fabsdPhiMod < miniCut)) // If cut fails continue
-
-                //         // std::vector<float> dzs;
-                //         // std::vector<float> drts;
-                //         // std::vector<float> fabsdPhiDiffs;
-                //         // std::vector<float> fabsdPhiModDiffs;
-
-                //     }
-
-                // }
+                // Numeratosr for matched all layers z efficiency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    md_matched_track_z.push_back(z);
 
             }
             // Failed tracks for all layers
             else
             {
-
-                // // These are the "truth" md_Track
-                // for (auto& md_Track : lowerModulePtr_Track->getMiniDoubletPtrs())
-                // {
-                // }
-
-                // // When failed these are the list of reco-md's that didn't match to any of the "truth" md's
-                // for (auto& md : event.getModule(lowerModulePtr_Track->detId()).getMiniDoubletPtrs())
-                // {
-                // }
-
-                // // The module holding reco hits
-                // SDL::Module& lowerModule = event.getModule(lowerModulePtr_Track->detId());
-                // SDL::Module& upperModule = event.getModule(lowerModule.partnerDetId());
-
-                // // Double nested loops
-                // // Loop over lower module hits
-                // for (auto& lowerHitPtr : lowerModule.getHitPtrs())
-                // {
-
-                //     // Get reference to lower Hit
-                //     SDL::Hit& lowerHit = *lowerHitPtr;
-
-                //     // Loop over upper module hits
-                //     for (auto& upperHitPtr : upperModule.getHitPtrs())
-                //     {
-
-                //         // Get reference to upper Hit
-                //         SDL::Hit& upperHit = *upperHitPtr;
-
-                //         const float dzCut = 1.f;
-                //         const float drtCut = 10.f; // i.e. should be smaller than the module length. Could be tighter if PS modules
-                //         float miniCut = SDL::MiniDoublet::dPhiThreshold(lowerHit, lowerModule);
-
-                //         float dz = std::abs(lowerHit.z() - upperHit.z());
-                //         float drt = std::abs(lowerHit.rt() - upperHit.rt());
-                //         float fabsdPhi = SDL::MiniDoublet::fabsdPhiPixelShift(lowerHit, upperHit, lowerModule);
-                //         float dzFrac = dz / fabs(lowerHit.z());
-                //         float fabsdPhiMod = fabsdPhi / dzFrac * (1.f + dzFrac);
-
-                //         dzs.push_back(dz);
-                //         dzFracs.push_back(dzFrac);
-                //         drts.push_back(drt);
-                //         fabsdPhiDiffs.push_back(fabsdPhi - miniCut);
-                //         fabsdPhiModDiffs.push_back(fabsdPhiMod - miniCut);
-
-                //         // if (not (dz < dzCut))
-                //         // if (not (drt < drtCut))
-                //         // if (not (fabsdPhi < miniCut)) // If cut fails continue
-                //         // if (not (fabsdPhiMod < miniCut)) // If cut fails continue
-
-                //         // std::vector<float> dzs;
-                //         // std::vector<float> drts;
-                //         // std::vector<float> fabsdPhiDiffs;
-                //         // std::vector<float> fabsdPhiModDiffs;
-
-                //     }
-
-                // }
-
+                // Doing nothing for now ...
             }
 
             // Denominator for specific layers pt efficiency
@@ -862,6 +797,25 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
             // Denominator for specific layers eta efficiency (notice the 1 GeV cut)
             if (trk.sim_pt()[isimtrk] > 1.)
                 md_all_track_eta_by_layer[layer_idx].push_back(eta);
+
+            // Denominator for specific layers phi efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                md_all_track_phi_by_layer[layer_idx].push_back(phi);
+
+            // Denominator for specific layers z efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                md_all_track_z_by_layer[layer_idx].push_back(z);
+
+            // Denominator for specific layers wrapphi efficiency (notice the 1 GeV cut)
+            float wrapphi = 0;
+            if (layer_idx == 0)
+                wrapphi = fmod(fabs(phi), 2*TMath::Pi() / 18);
+            else if (layer_idx == 1)
+                wrapphi = fmod(fabs(phi), 2*TMath::Pi() / 26);
+            else
+                wrapphi = fmod(fabs(phi), 2*TMath::Pi() / 36);
+            if (trk.sim_pt()[isimtrk] > 5.)
+                md_all_track_wrapphi_by_layer[layer_idx].push_back(wrapphi);
 
             // Numerators
             if (match)
@@ -872,6 +826,19 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
                 // Numerators for matched specific layer eta effciency (notice the 1 GeV cut)
                 if (trk.sim_pt()[isimtrk] > 1.)
                     md_matched_track_eta_by_layer[layer_idx].push_back(eta);
+
+                // Numerators for matched specific layer phi effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    md_matched_track_phi_by_layer[layer_idx].push_back(phi);
+
+                // Numerators for matched specific layer wrapphi effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 5.)
+                    md_matched_track_wrapphi_by_layer[layer_idx].push_back(wrapphi);
+
+                // Numerators for matched specific layer z effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    md_matched_track_z_by_layer[layer_idx].push_back(z);
+
             }
             // Failed tracks for specific layers
             else
