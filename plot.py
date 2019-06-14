@@ -119,6 +119,17 @@ for i in xrange(3):
     plot_eff("Root__md_barreltilt_matched_track_z_by_layer{}".format(i), "Root__md_barreltilt_all_track_z_by_layer{}".format(i), "eff_barreltilt_z_by_layer{}.pdf".format(i))
     plot_eff("Root__md_barreltilt_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barreltilt_all_track_wrapphi_by_layer{}".format(i), "eff_barreltilt_wrapphi_by_layer{}.pdf".format(i))
 
+plot_eff("Root__md_barreltilthighz_matched_track_pt", "Root__md_barreltilthighz_all_track_pt", "eff_barreltilthighz_pt.pdf")
+plot_eff("Root__md_barreltilthighz_matched_track_eta", "Root__md_barreltilthighz_all_track_eta", "eff_barreltilthighz_eta.pdf")
+plot_eff("Root__md_barreltilthighz_matched_track_phi", "Root__md_barreltilthighz_all_track_phi", "eff_barreltilthighz_phi.pdf")
+plot_eff("Root__md_barreltilthighz_matched_track_z", "Root__md_barreltilthighz_all_track_z", "eff_barreltilthighz_z.pdf")
+for i in xrange(3):
+    plot_eff("Root__md_barreltilthighz_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_pt_by_layer{}".format(i), "eff_barreltilthighz_pt_by_layer{}.pdf".format(i))
+    plot_eff("Root__md_barreltilthighz_matched_track_eta_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_eta_by_layer{}".format(i), "eff_barreltilthighz_eta_by_layer{}.pdf".format(i))
+    plot_eff("Root__md_barreltilthighz_matched_track_phi_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_phi_by_layer{}".format(i), "eff_barreltilthighz_phi_by_layer{}.pdf".format(i))
+    plot_eff("Root__md_barreltilthighz_matched_track_z_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_z_by_layer{}".format(i), "eff_barreltilthighz_z_by_layer{}.pdf".format(i))
+    plot_eff("Root__md_barreltilthighz_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_wrapphi_by_layer{}".format(i), "eff_barreltilthighz_wrapphi_by_layer{}.pdf".format(i))
+
 plot_eff("Root__md_endcapPS_matched_track_pt", "Root__md_endcapPS_all_track_pt", "eff_endcapPS_pt.pdf")
 plot_eff("Root__md_endcapPS_matched_track_eta", "Root__md_endcapPS_all_track_eta", "eff_endcapPS_eta.pdf")
 plot_eff("Root__md_endcapPS_matched_track_phi", "Root__md_endcapPS_all_track_phi", "eff_endcapPS_phi.pdf")

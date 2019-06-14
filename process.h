@@ -88,14 +88,16 @@ public:
     enum StudyEfficiencyMode
     {
         kStudyEffAll = 1,
-        kStudyEffBarrel = 2,
-        kStudyEffBarrelFlat = 3,
-        kStudyEffBarrelTilt = 4,
-        kStudyEffEndcap = 5,
-        kStudyEffEndcapPS = 6,
-        kStudyEffEndcap2S = 7,
-        kStudyEffEndcapPSCloseRing = 8,
-        kStudyEffEndcapPSLowPt = 9,
+        kStudyEffBarrel,
+        kStudyEffBarrelFlat,
+        kStudyEffBarrelTilt,
+        kStudyEffBarrelTiltHighZ,
+        kStudyEffBarrelTiltLowZ,
+        kStudyEffEndcap,
+        kStudyEffEndcapPS,
+        kStudyEffEndcap2S,
+        kStudyEffEndcapPSCloseRing,
+        kStudyEffEndcapPSLowPt,
     };
 
     const char* studyname;

@@ -298,6 +298,8 @@ int main(int argc, char** argv)
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
@@ -588,6 +590,8 @@ StudyEfficiency::StudyEfficiency(const char* studyName, StudyEfficiency::StudyEf
         case kStudyEffBarrel: modename = "barrel"; break;
         case kStudyEffBarrelFlat: modename = "barrelflat"; break;
         case kStudyEffBarrelTilt: modename = "barreltilt"; break;
+        case kStudyEffBarrelTiltHighZ: modename = "barreltilthighz"; break;
+        case kStudyEffBarrelTiltLowZ: modename = "barreltiltlowz"; break;
         case kStudyEffEndcap: modename = "endcap"; break;
         case kStudyEffEndcapPS: modename = "endcapPS"; break;
         case kStudyEffEndcap2S: modename = "endcap2S"; break;
@@ -693,6 +697,8 @@ void StudyEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned
                 case kStudyEffBarrel: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel)) { continue; } break;
                 case kStudyEffBarrelFlat: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() == SDL::Module::Center)) { continue; } break;
                 case kStudyEffBarrelTilt: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() != SDL::Module::Center)) { continue; } break;
+                case kStudyEffBarrelTiltHighZ: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() != SDL::Module::Center and ((lowerModulePtr_Track->rod() < 3 and lowerModulePtr_Track->side() == SDL::Module::NegZ) or (lowerModulePtr_Track->rod() > 10 and lowerModulePtr_Track->side() == SDL::Module::PosZ)))) { continue; } break;
+                case kStudyEffBarrelTiltLowZ: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel and lowerModulePtr_Track->side() != SDL::Module::Center and ((lowerModulePtr_Track->rod() > 5 and lowerModulePtr_Track->side() == SDL::Module::NegZ) or (lowerModulePtr_Track->rod() < 8 and lowerModulePtr_Track->side() == SDL::Module::PosZ)))) { continue; } break;
                 case kStudyEffEndcap: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap)) { continue; } break;
                 case kStudyEffEndcapPS: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::PS)) { continue; } break;
                 case kStudyEffEndcap2S: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Endcap and lowerModulePtr_Track->moduleType() == SDL::Module::TwoS)) { continue; } break;
