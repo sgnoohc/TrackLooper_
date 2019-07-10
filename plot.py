@@ -52,9 +52,9 @@ def plot_eff(num_name, den_name, output_name):
     if "barrelflat_eta" in output_name:
         eff.GetYaxis().SetRangeUser(0.97, 1.03)
     if "_eta" in output_name and "sg_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.0, 1.2)
+        eff.GetYaxis().SetRangeUser(0.98, 1.02)
     if "_z" in output_name and "sg_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.0, 1.2)
+        eff.GetYaxis().SetRangeUser(0.98, 1.02)
     # if "endcap2S_pt" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.90, 1.03)
     c1.SaveAs("plots/lin/{}".format(output_name))

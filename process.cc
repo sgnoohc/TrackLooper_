@@ -471,7 +471,8 @@ int main(int argc, char** argv)
             }
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-            trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+            // trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             trackevent->createSegments(SDL::AllComb_SGAlgo);
@@ -1347,6 +1348,20 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 }
             }
             z /= sgs_of_interest.size();
+
+            // Debugging high pt inefficiency
+            if (pt > 5 and not match and mode == kStudyEffBarrelTiltBarrelTilt)
+            {
+                // Among the sg "candidate" of interest (i.e. the ones that passes a module phase-space of interest
+                // Why did it fail?
+                SDL::cout << "Studying failed segment" << std::endl;
+                for (auto& sg_Track : sgs_of_interest)
+                {
+                    const SDL::MiniDoublet& innerMiniDoublet = *sg_Track->innerMiniDoubletPtr();
+                    const SDL::MiniDoublet& outerMiniDoublet = *sg_Track->outerMiniDoubletPtr();
+                    SDL::Segment::isMiniDoubletPairASegmentBarrelBarrel(innerMiniDoublet, outerMiniDoublet, SDL::Default_SGAlgo, SDL::Log_Debug3);
+                }
+            }
 
             // At this stage, we have either found a segment in this module either matched to the track or not.
 
