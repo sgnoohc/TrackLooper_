@@ -45,12 +45,16 @@ def plot_eff(num_name, den_name, output_name):
     eff.GetXaxis().SetTitleSize(0.05)
     eff.GetXaxis().SetLabelSize(0.05)
     eff.GetYaxis().SetLabelSize(0.05)
-    if "_eta" in output_name:
+    if "_eta" in output_name and "sg_" not in output_name:
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
-    if "_z" in output_name:
+    if "_z" in output_name and "sg_" not in output_name:
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
     if "barrelflat_eta" in output_name:
         eff.GetYaxis().SetRangeUser(0.97, 1.03)
+    if "_eta" in output_name and "sg_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.0, 1.2)
+    if "_z" in output_name and "sg_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.0, 1.2)
     # if "endcap2S_pt" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.90, 1.03)
     c1.SaveAs("plots/lin/{}".format(output_name))
@@ -192,16 +196,22 @@ for i in xrange(5):
 plot_eff("Root__sg_all_matched_track_pt", "Root__sg_all_all_track_pt", "sg_eff_all_pt.pdf")
 plot_eff("Root__sg_all_matched_track_eta", "Root__sg_all_all_track_eta", "sg_eff_all_eta.pdf")
 plot_eff("Root__sg_all_matched_track_phi", "Root__sg_all_all_track_phi", "sg_eff_all_phi.pdf")
+plot_eff("Root__sg_all_matched_track_z", "Root__sg_all_all_track_z", "sg_eff_all_z.pdf")
 for i in xrange(5):
     plot_eff("Root__sg_all_matched_track_pt_by_layer{}".format(i), "Root__sg_all_all_track_pt_by_layer{}".format(i), "sg_eff_all_pt_by_layer{}.pdf".format(i))
     plot_eff("Root__sg_all_matched_track_eta_by_layer{}".format(i), "Root__sg_all_all_track_eta_by_layer{}".format(i), "sg_eff_all_eta_by_layer{}.pdf".format(i))
     plot_eff("Root__sg_all_matched_track_phi_by_layer{}".format(i), "Root__sg_all_all_track_phi_by_layer{}".format(i), "sg_eff_all_phi_by_layer{}.pdf".format(i))
+    plot_eff("Root__sg_all_matched_track_z_by_layer{}".format(i), "Root__sg_all_all_track_z_by_layer{}".format(i), "sg_eff_all_z_by_layer{}.pdf".format(i))
 
-plot_eff("Root__sg_barrelbarrel_matched_track_pt", "Root__sg_barrelbarrel_all_track_pt", "sg_eff_barrelbarrel_pt.pdf")
-plot_eff("Root__sg_barrelbarrel_matched_track_eta", "Root__sg_barrelbarrel_all_track_eta", "sg_eff_barrelbarrel_eta.pdf")
-plot_eff("Root__sg_barrelbarrel_matched_track_phi", "Root__sg_barrelbarrel_all_track_phi", "sg_eff_barrelbarrel_phi.pdf")
-for i in xrange(5):
-    plot_eff("Root__sg_barrelbarrel_matched_track_pt_by_layer{}".format(i), "Root__sg_barrelbarrel_all_track_pt_by_layer{}".format(i), "sg_eff_barrelbarrel_pt_by_layer{}.pdf".format(i))
-    plot_eff("Root__sg_barrelbarrel_matched_track_eta_by_layer{}".format(i), "Root__sg_barrelbarrel_all_track_eta_by_layer{}".format(i), "sg_eff_barrelbarrel_eta_by_layer{}.pdf".format(i))
-    plot_eff("Root__sg_barrelbarrel_matched_track_phi_by_layer{}".format(i), "Root__sg_barrelbarrel_all_track_phi_by_layer{}".format(i), "sg_eff_barrelbarrel_phi_by_layer{}.pdf".format(i))
+sgcombos = ["all", "barrelbarrel", "barrelflatbarrel", "barreltiltbarrel", "barrelflatbarrelflat", "barrelflatbarreltilt", "barreltiltbarrelflat", "barreltiltbarreltilt", ]
 
+for sgcombo in sgcombos:
+    plot_eff("Root__sg_{}_matched_track_pt".format(sgcombo), "Root__sg_{}_all_track_pt".format(sgcombo), "sg_eff_{}_pt_alllayer.pdf".format(sgcombo))
+    plot_eff("Root__sg_{}_matched_track_eta".format(sgcombo), "Root__sg_{}_all_track_eta".format(sgcombo), "sg_eff_{}_eta_alllayer.pdf".format(sgcombo))
+    plot_eff("Root__sg_{}_matched_track_phi".format(sgcombo), "Root__sg_{}_all_track_phi".format(sgcombo), "sg_eff_{}_phi_alllayer.pdf".format(sgcombo))
+    plot_eff("Root__sg_{}_matched_track_z".format(sgcombo), "Root__sg_{}_all_track_z".format(sgcombo), "sg_eff_{}_z_alllayer.pdf".format(sgcombo))
+    for i in xrange(5):
+        plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_pt_by_layer{}.pdf".format(sgcombo, i))
+        plot_eff("Root__sg_{}_matched_track_eta_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_eta_by_layer{}".format(sgcombo, i), "sg_eff_{}_eta_by_layer{}.pdf".format(sgcombo, i))
+        plot_eff("Root__sg_{}_matched_track_phi_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_phi_by_layer{}".format(sgcombo, i), "sg_eff_{}_phi_by_layer{}.pdf".format(sgcombo, i))
+        plot_eff("Root__sg_{}_matched_track_z_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_z_by_layer{}".format(sgcombo, i), "sg_eff_{}_z_by_layer{}.pdf".format(sgcombo, i))

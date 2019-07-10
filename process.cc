@@ -305,13 +305,14 @@ int main(int argc, char** argv)
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffAll));
-    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPS));
-    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneff2S));
-    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPSLowP));
-    studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPSLowS));
     studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
 
     // book the studies
     for (auto& study : studies)
@@ -1164,6 +1165,12 @@ StudySegmentEfficiency::StudySegmentEfficiency(const char* studyName, StudySegme
     {
         case kStudyEffAll: modename = "all"; break;
         case kStudyEffBarrelBarrel: modename = "barrelbarrel"; break;
+        case kStudyEffBarrelFlatBarrel: modename = "barrelflatbarrel"; break;
+        case kStudyEffBarrelTiltBarrel: modename = "barreltiltbarrel"; break;
+        case kStudyEffBarrelFlatBarrelFlat: modename = "barrelflatbarrelflat"; break;
+        case kStudyEffBarrelFlatBarrelTilt: modename = "barrelflatbarreltilt"; break;
+        case kStudyEffBarrelTiltBarrelFlat: modename = "barreltiltbarrelflat"; break;
+        case kStudyEffBarrelTiltBarrelTilt: modename = "barreltiltbarreltilt"; break;
         default: modename = "UNDEFINED"; break;
     }
     pt_boundaries = ptbounds;
@@ -1253,15 +1260,6 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
         for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
         {
 
-            // Depending on the mode, only run a subset of interested modules
-            switch (mode)
-            {
-                case kStudyEffAll: /* do nothing */ break;
-                // case kStudyEffBarrelBarrel: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel)) { continue; } break;
-                case kStudyEffBarrelBarrel: if (not (fabs(trk.sim_eta()[isimtrk]) < 0.8)) { continue; } break; // Due to Segment class missing upper layer module info try restricting by eta
-                default: /* skip everything should not be here anyways...*/ continue; break;
-            }
-
             // Parse the layer index later to be used for indexing
             int layer_idx = lowerModulePtr_Track->layer() - 1;
 
@@ -1281,12 +1279,61 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 continue;
             }
 
+            // Assuming that I do have more than one segment for this module, restrict the phase-space based on the study mode
+            // if the study mode is for example barrel-bareel, then ask whether there is a segment that passes barrel-barrel
+            // So among the "getSegmentPtrs()" list, there should be at least one that has mini-doublets in both barrel modules
+            // So we will do a for loop over the segments, and depending on the study mode, we will save interested segments.
+            // If the number of interested segments is = 0, then we will "continue" from this track.
+            // And later the list of saved interested segments will be used to compare against the true reco-ed segments.
+            // If we find a match, then that passes the numerator as well
+            std::vector<SDL::Segment*> sgs_of_interest;
+            for (auto& sg_Track : lowerModulePtr_Track->getSegmentPtrs())
+            {
+                const SDL::Module& innerLowerModule = sg_Track->innerMiniDoubletPtr()->lowerHitPtr()->getModule();
+                const SDL::Module& outerLowerModule = sg_Track->outerMiniDoubletPtr()->lowerHitPtr()->getModule();
+                bool isInnerMiniDoubletBarrel = innerLowerModule.subdet() == SDL::Module::Barrel;
+                bool isOuterMiniDoubletBarrel = outerLowerModule.subdet() == SDL::Module::Barrel;
+                bool isInnerMiniDoubletCenter = innerLowerModule.side() == SDL::Module::Center;
+                bool isOuterMiniDoubletCenter = outerLowerModule.side() == SDL::Module::Center;
+                bool isInnerMiniDoubletBarrelFlat = isInnerMiniDoubletBarrel and isInnerMiniDoubletCenter;
+                bool isOuterMiniDoubletBarrelFlat = isOuterMiniDoubletBarrel and isOuterMiniDoubletCenter;
+                bool isInnerMiniDoubletBarrelTilt = isInnerMiniDoubletBarrel and not isInnerMiniDoubletCenter;
+                bool isOuterMiniDoubletBarrelTilt = isOuterMiniDoubletBarrel and not isOuterMiniDoubletCenter;
+
+                // Depending on the mode, only include a subset of interested segments
+                switch (mode)
+                {
+                    case kStudyEffAll: /* do nothing */ break;
+                    case kStudyEffBarrelBarrel: if (not (isInnerMiniDoubletBarrel and isOuterMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffBarrelFlatBarrel: if (not (isInnerMiniDoubletBarrelFlat and isOuterMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffBarrelTiltBarrel: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffBarrelFlatBarrelFlat: if (not (isInnerMiniDoubletBarrelFlat and isOuterMiniDoubletBarrelFlat)) { continue; } break;
+                    case kStudyEffBarrelFlatBarrelTilt: if (not (isInnerMiniDoubletBarrelFlat and isOuterMiniDoubletBarrelTilt)) { continue; } break;
+                    case kStudyEffBarrelTiltBarrelFlat: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrelFlat)) { continue; } break;
+                    case kStudyEffBarrelTiltBarrelTilt: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrelTilt)) { continue; } break;
+                    default: /* skip everything should not be here anyways...*/ continue; break;
+                }
+
+                // If this segment passes the condition that it is of interest then, add to the list of segements of interest
+                sgs_of_interest.push_back(sg_Track);
+
+            }
+
+            // If no sgs of interest are found then skip
+            if (sgs_of_interest.size() == 0)
+                continue;
+
             // Boolean to test whether for this module that a track passed through, whether it found a matched mini-doublet
             bool match = false;
 
             // Loop over the sg "candidate" from the module that a sim-track passed through and left at least one mini-doublet in each module
-            for (auto& sg_Track : lowerModulePtr_Track->getSegmentPtrs())
+            // The sgs_of_interest holds only the sg "candidate" that we think are of interest for the given study mode
+            float z; // the average value of z for the matched outer layer truth matched mini-doublet's lower hit
+            for (auto& sg_Track : sgs_of_interest)
             {
+
+                // Sum all the hits' z position of the outer md's lower hit z's. then after the loop divide by total number to get the average value
+                z += sg_Track->outerMiniDoubletPtr()->lowerHitPtr()->z();
 
                 // Loop over the sg reconstructed from with proper SDL algorithm and if the index of the mini-doublets match (i.e. if the 4 hits match)
                 // Then we have found at least one segment associated to this track's reco-hits in this module
@@ -1299,6 +1346,7 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                     }
                 }
             }
+            z /= sgs_of_interest.size();
 
             // At this stage, we have either found a segment in this module either matched to the track or not.
 
@@ -1312,6 +1360,10 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
             // Denominator for all layers phi efficiency (notice the 1 GeV cut)
             if (trk.sim_pt()[isimtrk] > 1.)
                 sg_all_track_phi.push_back(phi);
+
+            // Denominator for all layers z efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                sg_all_track_z.push_back(z);
 
             // Numerators
             if (match)
@@ -1328,6 +1380,9 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 if (trk.sim_pt()[isimtrk] > 1.)
                     sg_matched_track_phi.push_back(phi);
 
+                // Numeratosr for matched all layers z efficiency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    sg_matched_track_z.push_back(z);
             }
             // Failed tracks for all layers
             else
@@ -1345,6 +1400,10 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
             // Denominator for specific layers phi efficiency (notice the 1 GeV cut)
             if (trk.sim_pt()[isimtrk] > 1.)
                 sg_all_track_phi_by_layer[layer_idx].push_back(phi);
+
+            // Denominator for specific layers z efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                sg_all_track_z_by_layer[layer_idx].push_back(z);
 
             // Denominator for specific layers wrapphi efficiency (notice the 1 GeV cut)
             float wrapphi = 0;
@@ -1374,6 +1433,10 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 // Numerators for matched specific layer wrapphi effciency (notice the 1 GeV cut)
                 if (trk.sim_pt()[isimtrk] > 5.)
                     sg_matched_track_wrapphi_by_layer[layer_idx].push_back(wrapphi);
+
+                // Numerators for matched specific layer z effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    sg_matched_track_z_by_layer[layer_idx].push_back(z);
 
             }
             // Failed tracks for specific layers

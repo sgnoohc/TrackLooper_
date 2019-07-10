@@ -178,6 +178,12 @@ public:
     {
         kStudyEffAll = 1,
         kStudyEffBarrelBarrel,
+        kStudyEffBarrelFlatBarrel,
+        kStudyEffBarrelTiltBarrel,
+        kStudyEffBarrelFlatBarrelFlat,
+        kStudyEffBarrelFlatBarrelTilt,
+        kStudyEffBarrelTiltBarrelFlat,
+        kStudyEffBarrelTiltBarrelTilt,
     };
 
     const char* studyname;
