@@ -13,6 +13,7 @@
 #include "SDL/Module.h" // SDL::Module
 #include "SDL/PrintUtil.h" // SDL::out
 #include "SDL/EndcapGeometry.h" // SDL::EndcapGeometry
+#include "SDL/ModuleConnectionMap.h" // SDL::ModuleConnectionMap
 
 #define NLAYERS 6
 
@@ -168,5 +169,46 @@ public:
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 };
+
+class StudySegmentEfficiency : public Study
+{
+
+public:
+    enum StudySegmentEfficiencyMode
+    {
+        kStudyEffAll = 1,
+        kStudyEffBarrelBarrel,
+    };
+
+    const char* studyname;
+    StudySegmentEfficiencyMode mode;
+    const char* modename;
+    std::vector<float> pt_boundaries;
+    std::vector<float> sg_matched_track_pt;
+    std::vector<float> sg_all_track_pt;
+    std::vector<float> sg_matched_track_eta;
+    std::vector<float> sg_all_track_eta;
+    std::vector<float> sg_matched_track_phi;
+    std::vector<float> sg_all_track_phi;
+    std::vector<float> sg_matched_track_z;
+    std::vector<float> sg_all_track_z;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_pt_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_pt_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_eta_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_eta_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_phi_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_phi_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_wrapphi_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_wrapphi_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_z_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_z_by_layer;
+
+    StudySegmentEfficiency(const char* studyName, StudySegmentEfficiencyMode, std::vector<float> ptboundaries);
+    virtual void bookStudy();
+    virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+
+};
+
+void printModuleConnectionInfo();
 
 #endif

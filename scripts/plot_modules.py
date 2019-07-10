@@ -5,7 +5,7 @@ import sys
 
 r.gROOT.SetBatch(True)
 
-tf = r.TFile("/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root")
+tf = r.TFile("/home/users/phchang/public_html/analysis/sdl/TrackLooper/trackingNtuple.root")
 ttree = tf.Get("trackingNtuple/tree")
 
 c1 = r.TCanvas()
@@ -600,6 +600,174 @@ def xy_side1_subdet1_even_detId_even_module_rod12():
     c1.SaveAs("plots/lin/xy_side1_subdet1_even_detId_even_module_rod12.pdf")
     c1.SaveAs("plots/lin/xy_side1_subdet1_even_detId_even_module_rod12.png")
 
+def xy_specific():
+    ttree.SetMarkerColor(1)
+    mods = [443360282,
+     443360281,
+     443360285,
+     443360286,
+     437530646,
+     437530645,
+     437529622,
+     437529621,
+    ]
+    mods = [
+    437523494,
+    438570038,
+    439616586,
+    439616589,
+    411341905,
+    411337809,
+    411612262,
+    411866222,
+    412136585,
+    ]
+    cuts = []
+    for mod in mods:
+        cuts.append("ph2_detId=={}".format(mod))
+    cut = "||".join(cuts)
+    ttree.Draw("ph2_y:ph2_x", "")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("ph2_y:ph2_x", cut, "same")
+    c1.SaveAs("plots/lin/xy_specific.pdf")
+    c1.SaveAs("plots/lin/xy_specific.png")
+
+def rz_specific():
+    ttree.SetMarkerColor(1)
+    mods = [443360282,
+     443360281,
+     443360285,
+     443360286,
+     437530646,
+     437530645,
+     437529622,
+     437529621,
+    ]
+    mods = [
+    437523494,
+    438570038,
+    439616586,
+    439616589,
+    411341905,
+    411337809,
+    411612262,
+    411866222,
+    412136585,
+    ]
+    cuts = []
+    for mod in mods:
+        cuts.append("ph2_detId=={}".format(mod))
+    cut = "||".join(cuts)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", cut, "same")
+    c1.SaveAs("plots/lin/rz_specific.pdf")
+    c1.SaveAs("plots/lin/rz_specific.png")
+
+def rz_connection_specific():
+    # source = 437789750
+    # target = [438840393, 438840398, 438841422, 438841417, 438839369, 438839374, 439110689, 419959874, 438837321, 438839366, 438835270, 439109665, 439103534, 438831177, 438841430, 419701845]
+    source = 437782542
+    target = [438831121, 438831126, 438832145, 438830097, 438831118, 438830094, 438830102, 438832150, 438832142, 438833169, 439094318, 438833166]
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "")
+    cuts = []
+    for mod in target:
+        cuts.append("ph2_detId=={}".format(mod))
+    cut = "||".join(cuts)
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", cut, "same")
+    cuts = []
+    for mod in [source]:
+        cuts.append("ph2_detId=={}".format(mod))
+    cut = "||".join(cuts)
+    ttree.SetMarkerColor(4)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", cut, "same")
+    c1.SaveAs("plots/lin/rz_connection_specific.pdf")
+    c1.SaveAs("plots/lin/rz_connection_specific.png")
+
+def rz_specific_track():
+    ttree.SetMarkerColor(1)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "")
+    ttree.SetMarkerColor(2)
+    ttree.Draw("sqrt(simhit_x**2+simhit_y**2):simhit_z", "(Entry$==2)&&(simhit_simTrkIdx==4)&&(abs(simhit_particle)==13)&&(simhit_subdet==4||simhit_subdet==5)", "same")
+    c1.SaveAs("plots/lin/rz_specific_track.pdf")
+    c1.SaveAs("plots/lin/rz_specific_track.png")
+
+def rz_specific_track_and_module():
+    ttree.SetMarkerColor(16)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", "ph2_z>0")
+    mods = [
+    437523494,
+    438570038,
+    439616586,
+    439616589,
+    411341905,
+    411337809,
+    411612262,
+    411866222,
+    412136585,
+    ]
+    mods = [
+    438046750,
+    438046745,
+    439097385,
+    440148025,
+    441198658,
+    441197634,
+    442248261,
+    443296845,
+    420258821,
+    ]
+    cuts = []
+    for mod in mods:
+        cuts.append("ph2_detId=={}".format(mod))
+    cut = "||".join(cuts)
+    ttree.SetMarkerColor(4)
+    ttree.Draw("sqrt(ph2_x**2+ph2_y**2):ph2_z", cut, "same")
+    ttree.SetMarkerColor(2)
+    ttree.SetMarkerSize(20)
+    ttree.Draw("sqrt(simhit_x**2+simhit_y**2):simhit_z", "(event==7399)&&(simhit_simTrkIdx==4)&&(abs(simhit_particle)==13)&&(simhit_subdet==4||simhit_subdet==5)", "same")
+    c1.SaveAs("plots/lin/rz_specific_track_and_module.pdf")
+    c1.SaveAs("plots/lin/rz_specific_track_and_module.png")
+
+def xy_specific_track_and_module():
+    ttree.SetMarkerColor(16)
+    ttree.Draw("ph2_y:ph2_x", "")
+    mods = [
+    437523494,
+    438570038,
+    439616586,
+    439616589,
+    411341905,
+    411337809,
+    411612262,
+    411866222,
+    412136585,
+    ]
+    mods = [
+    438046750,
+    438046745,
+    439097385,
+    440148025,
+    441198658,
+    441197634,
+    442248261,
+    443296845,
+    420258821,
+    ]
+    cuts = []
+    for mod in mods:
+        cuts.append("ph2_detId=={}".format(mod))
+    cut = "||".join(cuts)
+    ttree.SetMarkerColor(4)
+    ttree.Draw("ph2_y:ph2_x", cut, "same")
+    ttree.SetMarkerColor(2)
+    ttree.SetMarkerSize(20)
+    ttree.Draw("simhit_y:simhit_x", "(event==7399)&&(simhit_simTrkIdx==4)&&(abs(simhit_particle)==13)&&(simhit_subdet==4||simhit_subdet==5)", "same")
+    c1.SaveAs("plots/lin/xy_specific_track_and_module.pdf")
+    c1.SaveAs("plots/lin/xy_specific_track_and_module.png")
+
 if __name__ == "__main__":
 
     # rz_side1_layer1_order0_moduleall()
@@ -648,5 +816,11 @@ if __name__ == "__main__":
     # rz_side1_subdet1_even_detId_even_module()
     # rz_side1_subdet1_even_detId_even_module_rod11()
     # rz_side1_subdet1_even_detId_even_module_rod12()
-    xy_side1_subdet1_even_detId_even_module_rod11()
-    xy_side1_subdet1_even_detId_even_module_rod12()
+    # xy_side1_subdet1_even_detId_even_module_rod11()
+    # xy_side1_subdet1_even_detId_even_module_rod12()
+    # xy_specific()
+    # rz_specific()
+    # rz_connection_specific()
+    # rz_specific_track()
+    rz_specific_track_and_module()
+    xy_specific_track_and_module()

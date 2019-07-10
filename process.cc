@@ -310,6 +310,8 @@ int main(int argc, char** argv)
     studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneff2S));
     studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPSLowP));
     studies.push_back(new StudyEndcapInefficiency("studyEndcapInEff", StudyEndcapInefficiency::kStudyEndcapIneffPSLowS));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
 
     // book the studies
     for (auto& study : studies)
@@ -325,6 +327,12 @@ int main(int argc, char** argv)
 
     SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
     SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
+    SDL::moduleConnectionMap.load("scripts/module_connection_map_data.txt");
+
+    // // Following maps to compute centroid of each modules
+    // std::map<unsigned int, std::vector<float>> module_xs;
+    // std::map<unsigned int, std::vector<float>> module_ys;
+    // std::map<unsigned int, std::vector<float>> module_zs;
 
     // Looping input file
     while (ana.looper.nextEvent())
@@ -357,11 +365,26 @@ int main(int argc, char** argv)
                     trk.ph2_detId()[ihit]
                     );
 
-            // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
-            SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-            // if (module.subdet() == SDL::Module::Barrel and module.side() != SDL::Module::Center and module.moduleType() == SDL::Module::PS and module.moduleLayerType() == SDL::Module::Strip)
+            // // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
+            // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
+            // if (module.subdet() == SDL::Module::Endcap and module.moduleType() == SDL::Module::TwoS and module.isLower())
             // {
-            //     std::cout <<  " 'tilted': " << "tilted" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  " trk.ph2_z()[ihit]: " << trk.ph2_z()[ihit] <<  std::endl;
+            //     std::cout <<  " 'endcap2S': " << "endcap2S" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  " trk.ph2_z()[ihit]: " << trk.ph2_z()[ihit] <<  std::endl;
+            // }
+
+            // // To print the reco hits per module to create a table of centroids of each module
+            // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
+            // if (module.isLower())
+            // {
+            //     module_xs[trk.ph2_detId()[ihit]].push_back(trk.ph2_x()[ihit]);
+            //     module_ys[trk.ph2_detId()[ihit]].push_back(trk.ph2_y()[ihit]);
+            //     module_zs[trk.ph2_detId()[ihit]].push_back(trk.ph2_z()[ihit]);
+            // }
+            // else
+            // {
+            //     module_xs[module.partnerDetId()].push_back(trk.ph2_x()[ihit]);
+            //     module_ys[module.partnerDetId()].push_back(trk.ph2_y()[ihit]);
+            //     module_zs[module.partnerDetId()].push_back(trk.ph2_z()[ihit]);
             // }
 
         }
@@ -369,6 +392,9 @@ int main(int argc, char** argv)
         // Create mini doublets
         // event.setLogLevel(SDL::Log_Debug2); // Set log level
         event.createMiniDoublets();
+
+        // Create segments
+        event.createSegments();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
@@ -446,12 +472,19 @@ int main(int argc, char** argv)
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
 
+            // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
+            trackevent->createSegments(SDL::AllComb_SGAlgo);
+
             // Push to the vector so we have a data-base of per hit, mini-doublets
             simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
 
         }
 
 
+        // *****************************************************
+        // Print module -> module connection info from sim track
+        // *****************************************************
+        // printModuleConnectionInfo();
 
         // ********************************************************************************************
         // Perform various studies with reco events and sim-track-matched-reco-hits-based mini-doublets
@@ -475,7 +508,48 @@ int main(int argc, char** argv)
         // <--------------------------
     }
 
+    // std::map<unsigned int, float> module_center_x;
+    // std::map<unsigned int, float> module_center_y;
+    // std::map<unsigned int, float> module_center_z;
 
+    // for (auto& key : module_xs)
+    // {
+    //     unsigned int detid = key.first;
+    //     std::vector<float> fs = key.second;
+    //     float sumf = 0;
+    //     for (auto& f : fs)
+    //         sumf += f;
+    //     if (fs.size() > 0)
+    //         module_center_x[detid] = sumf / fs.size();
+    // }
+
+    // for (auto& key : module_ys)
+    // {
+    //     unsigned int detid = key.first;
+    //     std::vector<float> fs = key.second;
+    //     float sumf = 0;
+    //     for (auto& f : fs)
+    //         sumf += f;
+    //     if (fs.size() > 0)
+    //         module_center_y[detid] = sumf / fs.size();
+    // }
+
+    // for (auto& key : module_zs)
+    // {
+    //     unsigned int detid = key.first;
+    //     std::vector<float> fs = key.second;
+    //     float sumf = 0;
+    //     for (auto& f : fs)
+    //         sumf += f;
+    //     if (fs.size() > 0)
+    //         module_center_z[detid] = sumf / fs.size();
+    // }
+
+    // for (auto& key : module_center_x)
+    // {
+    //     unsigned int detid = key.first;
+    //     std::cout <<  " detid: " << detid <<  " module_center_x[detid]: " << module_center_x[detid] <<  " module_center_y[detid]: " << module_center_y[detid] <<  " module_center_z[detid]: " << module_center_z[detid] <<  std::endl;
+    // }
 
     // Writing output file
     ana.cutflow.saveOutput();
@@ -923,7 +997,7 @@ void StudyEndcapInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<
     {
 
         // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
-        unsigned int& isimtrk = std::get<0>(simtrkevent);
+        // unsigned int& isimtrk = std::get<0>(simtrkevent);
         SDL::Event& trackevent = *(std::get<1>(simtrkevent));
 
         // Loop over the lower modules that contains hits for this track
@@ -962,7 +1036,7 @@ void StudyEndcapInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<
                 float fabsdPhiModDiff = fabsdPhiMod - miniCut;
 
                 // Actually use the static function to perform the calculation
-                if (SDL::MiniDoublet::isMiniDoubletPair(lowerHit, upperHit, lowerModule, SDL::Default_MDAlgo, SDL::Log_Nothing))
+                if (SDL::MiniDoublet::isHitPairAMiniDoublet(lowerHit, upperHit, lowerModule, SDL::Default_MDAlgo, SDL::Log_Nothing))
                 {
                     // Passed
                     dzs_passed.push_back(dz);
@@ -987,6 +1061,324 @@ void StudyEndcapInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<
 
                 }
 
+            }
+
+        }
+
+    }
+
+}
+
+void printModuleConnectionInfo()
+{
+    // *****************************************************
+    // Print module -> module connection info from sim track
+    // *****************************************************
+
+    // Loop over sim-tracks and per sim-track aggregate good hits (i.e. matched with particle ID)
+    // and only use those hits, and run mini-doublet reco algorithm on the sim-track-matched-reco-hits
+    for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
+    {
+
+        // Select only muon tracks
+        if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+            continue;
+
+        if (trk.sim_pt()[isimtrk] < 1)
+            continue;
+
+        // // Select only 1 cm from center tracks
+        // if (fabs(trk.sim_pca_dz()[isimtrk]) > 0.1)
+        //     continue;
+
+        std::vector<int> layers;
+        std::vector<int> subdets;
+        std::vector<int> detids;
+
+        std::cout <<  " trk.event(): " << trk.event() <<  std::endl;
+        std::cout <<  " isimtrk: " << isimtrk <<  std::endl;
+
+        // loop over the simulated hits
+        for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
+        {
+
+            // Select only the hits in the outer tracker
+            if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+                continue;
+
+            int simhit_particle = trk.simhit_particle()[simhitidx];
+            int detid = trk.simhit_detId()[simhitidx];
+            int layer = trk.simhit_layer()[simhitidx];
+            float x = trk.simhit_x()[simhitidx];
+            float y = trk.simhit_y()[simhitidx];
+            float z = trk.simhit_z()[simhitidx];
+            float r3 = sqrt(x*x + y*y + z*z);
+            int subdet = trk.simhit_subdet()[simhitidx];
+            int trkidx = trk.simhit_simTrkIdx()[simhitidx];
+            SDL::Module module = SDL::Module(detid);
+
+            std::cout <<  " layer: " << layer <<  " subdet: " << subdet <<  " simhit_particle: " << simhit_particle <<  " x: " << x <<  " y: " << y <<  " z: " << z <<  " r3: " << r3 <<  " trkidx: " << trkidx <<  " module.isLower(): " << module.isLower() <<  " detid: " << detid <<  std::endl;
+
+            // Select only the sim hits that is matched to the muon
+            if (abs(simhit_particle) != 13)
+                continue;
+
+            // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
+            if (module.isLower())
+            {
+                layers.push_back(layer);
+                subdets.push_back(subdet);
+                detids.push_back(detid);
+            }
+
+        }
+
+        if (layers.size() > 0)
+        {
+            std::cout <<  " trk.sim_pt()[isimtrk]: " << trk.sim_pt()[isimtrk] <<  " trk.sim_phi()[isimtrk]: " << trk.sim_phi()[isimtrk] <<  " trk.sim_eta()[isimtrk]: " << trk.sim_eta()[isimtrk] <<  " trk.sim_pca_dz()[isimtrk]: " << trk.sim_pca_dz()[isimtrk] <<  " trk.sim_pca_dxy()[isimtrk]: " << trk.sim_pca_dxy()[isimtrk] <<  " trk.sim_pca_lambda()[isimtrk]: " << trk.sim_pca_lambda()[isimtrk] <<  " trk.sim_pca_cotTheta()[isimtrk]: " << trk.sim_pca_cotTheta()[isimtrk] <<  " trk.sim_pca_phi()[isimtrk]: " << trk.sim_pca_phi()[isimtrk] <<  std::endl;
+            std::cout << "moduleconnection: ";
+            for (unsigned int i = 0; i < layers.size(); ++i)
+            {
+                std::cout << "(" << layers[i] << "," << subdets[i] << "," << detids[i] << "," << SDL::Module(detids[i]).partnerDetId() << ");";
+            }
+            std::cout << std::endl;
+            std::cout << trk.event() << " " << isimtrk << " ";
+            for (unsigned int i = 0; i < layers.size(); ++i)
+            {
+                std::cout << detids[i] << "," << SDL::Module(detids[i]).partnerDetId();
+                if (i != layers.size() - 1)
+                    std::cout << ",";
+            }
+            std::cout << std::endl;
+        }
+
+    }
+}
+
+StudySegmentEfficiency::StudySegmentEfficiency(const char* studyName, StudySegmentEfficiency::StudySegmentEfficiencyMode mode_, std::vector<float> ptbounds)
+{
+
+    studyname = studyName;
+    mode = mode_;
+    switch (mode)
+    {
+        case kStudyEffAll: modename = "all"; break;
+        case kStudyEffBarrelBarrel: modename = "barrelbarrel"; break;
+        default: modename = "UNDEFINED"; break;
+    }
+    pt_boundaries = ptbounds;
+
+}
+
+void StudySegmentEfficiency::bookStudy()
+{
+    // Book Histograms
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_pt", modename), pt_boundaries, [&]() { return sg_matched_track_pt; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt", modename), pt_boundaries, [&]() { return sg_all_track_pt; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta", modename), 50, -4, 4, [&]() { return sg_matched_track_eta; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta", modename), 50, -4, 4, [&]() { return sg_all_track_eta; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_phi", modename), 200, -3.1416, 3.1416, [&]() { return sg_matched_track_phi; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_phi", modename), 200, -3.1416, 3.1416, [&]() { return sg_all_track_phi; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_z", modename), 200, -300, 300, [&]() { return sg_matched_track_z; } );
+    ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_z", modename), 200, -300, 300, [&]() { return sg_all_track_z; } );
+
+    const int nlayers = NLAYERS;
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_pt_by_layer%d", modename, ii), pt_boundaries, [&, ii]() { return sg_matched_track_pt_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt_by_layer%d", modename, ii), pt_boundaries, [&, ii]() { return sg_all_track_pt_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_by_layer%d", modename, ii), 50, -4, 4, [&, ii]() { return sg_matched_track_eta_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_by_layer%d", modename, ii), 50, -4, 4, [&, ii]() { return sg_all_track_eta_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_phi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return sg_matched_track_phi_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_phi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return sg_all_track_phi_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_wrapphi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return sg_matched_track_wrapphi_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_wrapphi_by_layer%d", modename, ii), 200, -3.1416, 3.1416, [&, ii]() { return sg_all_track_wrapphi_by_layer[ii]; } );
+    }
+    for (int ii = 0; ii < nlayers; ++ii)
+    {
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_z_by_layer%d", modename, ii), 200, -300, 300, [&, ii]() { return sg_matched_track_z_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_z_by_layer%d", modename, ii), 200, -300, 300, [&, ii]() { return sg_all_track_z_by_layer[ii]; } );
+    }
+}
+
+void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+{
+    // Each do study is performed per event
+
+    // First clear all the output variables that will be used to fill the histograms for this event
+    sg_matched_track_pt.clear();
+    sg_all_track_pt.clear();
+    sg_matched_track_eta.clear();
+    sg_all_track_eta.clear();
+    sg_matched_track_phi.clear();
+    sg_all_track_phi.clear();
+    sg_matched_track_z.clear();
+    sg_all_track_z.clear();
+    for (int ii = 0; ii < NLAYERS; ++ii)
+    {
+        sg_matched_track_pt_by_layer[ii].clear();
+        sg_all_track_pt_by_layer[ii].clear();
+        sg_matched_track_eta_by_layer[ii].clear();
+        sg_all_track_eta_by_layer[ii].clear();
+        sg_matched_track_phi_by_layer[ii].clear();
+        sg_all_track_phi_by_layer[ii].clear();
+        sg_matched_track_wrapphi_by_layer[ii].clear();
+        sg_all_track_wrapphi_by_layer[ii].clear();
+        sg_matched_track_z_by_layer[ii].clear();
+        sg_all_track_z_by_layer[ii].clear();
+    }
+
+    //***********************
+    // Efficiency calculation
+    //***********************
+
+    // Loop over track events
+    for (auto& simtrkevent : simtrkevents)
+    {
+
+        // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
+        unsigned int& isimtrk = std::get<0>(simtrkevent);
+        SDL::Event& trackevent = *(std::get<1>(simtrkevent));
+
+        // Loop over the lower modules that contains hits for this track
+        for (auto& lowerModulePtr_Track : trackevent.getLowerModulePtrs())
+        {
+
+            // Depending on the mode, only run a subset of interested modules
+            switch (mode)
+            {
+                case kStudyEffAll: /* do nothing */ break;
+                // case kStudyEffBarrelBarrel: if (not (lowerModulePtr_Track->subdet() == SDL::Module::Barrel)) { continue; } break;
+                case kStudyEffBarrelBarrel: if (not (fabs(trk.sim_eta()[isimtrk]) < 0.8)) { continue; } break; // Due to Segment class missing upper layer module info try restricting by eta
+                default: /* skip everything should not be here anyways...*/ continue; break;
+            }
+
+            // Parse the layer index later to be used for indexing
+            int layer_idx = lowerModulePtr_Track->layer() - 1;
+
+            // Parse pt and eta of this track
+            float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
+            float eta = trk.sim_eta()[isimtrk];
+            float phi = trk.sim_phi()[isimtrk];
+
+            // For this module that a sim-track supposedly passed through if there are no more than 1 segment
+            // it means that this track did not leave at least one hit each in each side of the module + the same for the other module
+            // The getSegmentPtrs() will return ALL pairs of minidoublets between the modules.
+            // That's because the simtrkevent would have createSegments called with SDL::AllComb_SGAlgo option.
+            // This option loops over all hits in inner lower module and outer lower module and forms every possible pair of mini-doublets to form segments.
+            // So if the following condition of size() == 0 is true, it means this sim-track didn't leave at least one minidoublet in each side.
+            if (lowerModulePtr_Track->getSegmentPtrs().size() == 0)
+            {
+                continue;
+            }
+
+            // Boolean to test whether for this module that a track passed through, whether it found a matched mini-doublet
+            bool match = false;
+
+            // Loop over the sg "candidate" from the module that a sim-track passed through and left at least one mini-doublet in each module
+            for (auto& sg_Track : lowerModulePtr_Track->getSegmentPtrs())
+            {
+
+                // Loop over the sg reconstructed from with proper SDL algorithm and if the index of the mini-doublets match (i.e. if the 4 hits match)
+                // Then we have found at least one segment associated to this track's reco-hits in this module
+                // Therefore flag the match boolean
+                for (auto& sg : event.getModule(lowerModulePtr_Track->detId()).getSegmentPtrs())
+                {
+                    if (sg_Track->isIdxMatched(*sg))
+                    {
+                        match = true;
+                    }
+                }
+            }
+
+            // At this stage, we have either found a segment in this module either matched to the track or not.
+
+            // Denominator for all layers pt efficiency
+            sg_all_track_pt.push_back(pt);
+
+            // Denominator for all layers eta efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                sg_all_track_eta.push_back(eta);
+
+            // Denominator for all layers phi efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                sg_all_track_phi.push_back(phi);
+
+            // Numerators
+            if (match)
+            {
+
+                // Numerators for matched all layers pt efficiency
+                sg_matched_track_pt.push_back(pt);
+
+                // Numeratosr for matched all layers eta efficiency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    sg_matched_track_eta.push_back(eta);
+
+                // Numeratosr for matched all layers phi efficiency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    sg_matched_track_phi.push_back(phi);
+
+            }
+            // Failed tracks for all layers
+            else
+            {
+                // Doing nothing for now ...
+            }
+
+            // Denominator for specific layers pt efficiency
+            sg_all_track_pt_by_layer[layer_idx].push_back(pt);
+
+            // Denominator for specific layers eta efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                sg_all_track_eta_by_layer[layer_idx].push_back(eta);
+
+            // Denominator for specific layers phi efficiency (notice the 1 GeV cut)
+            if (trk.sim_pt()[isimtrk] > 1.)
+                sg_all_track_phi_by_layer[layer_idx].push_back(phi);
+
+            // Denominator for specific layers wrapphi efficiency (notice the 1 GeV cut)
+            float wrapphi = 0;
+            if (layer_idx == 0)
+                wrapphi = fmod(fabs(phi), 2*TMath::Pi() / 18);
+            else if (layer_idx == 1)
+                wrapphi = fmod(fabs(phi), 2*TMath::Pi() / 26);
+            else
+                wrapphi = fmod(fabs(phi), 2*TMath::Pi() / 36);
+            if (trk.sim_pt()[isimtrk] > 5.)
+                sg_all_track_wrapphi_by_layer[layer_idx].push_back(wrapphi);
+
+            // Numerators
+            if (match)
+            {
+                // Numerators for matched specific layer pt effciency
+                sg_matched_track_pt_by_layer[layer_idx].push_back(pt);
+
+                // Numerators for matched specific layer eta effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    sg_matched_track_eta_by_layer[layer_idx].push_back(eta);
+
+                // Numerators for matched specific layer phi effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 1.)
+                    sg_matched_track_phi_by_layer[layer_idx].push_back(phi);
+
+                // Numerators for matched specific layer wrapphi effciency (notice the 1 GeV cut)
+                if (trk.sim_pt()[isimtrk] > 5.)
+                    sg_matched_track_wrapphi_by_layer[layer_idx].push_back(wrapphi);
+
+            }
+            // Failed tracks for specific layers
+            else
+            {
             }
 
         }
