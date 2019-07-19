@@ -184,6 +184,13 @@ public:
         kStudyEffBarrelFlatBarrelTilt,
         kStudyEffBarrelTiltBarrelFlat,
         kStudyEffBarrelTiltBarrelTilt,
+        kStudyEffBarrelEndcap,
+        kStudyEffBarrel,
+        kStudyEffEndcap,
+        kStudyEffEndcapPS,
+        kStudyEffEndcapPSPS,
+        kStudyEffEndcapPS2S,
+        kStudyEffEndcap2S,
     };
 
     const char* studyname;

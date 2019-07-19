@@ -313,6 +313,13 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
 
     // book the studies
     for (auto& study : studies)
@@ -1172,6 +1179,13 @@ StudySegmentEfficiency::StudySegmentEfficiency(const char* studyName, StudySegme
         case kStudyEffBarrelFlatBarrelTilt: modename = "barrelflatbarreltilt"; break;
         case kStudyEffBarrelTiltBarrelFlat: modename = "barreltiltbarrelflat"; break;
         case kStudyEffBarrelTiltBarrelTilt: modename = "barreltiltbarreltilt"; break;
+        case kStudyEffBarrelEndcap: modename = "barrelendcap"; break;
+        case kStudyEffBarrel: modename = "barrel"; break;
+        case kStudyEffEndcap: modename = "endcap"; break;
+        case kStudyEffEndcapPS: modename = "endcapPS"; break;
+        case kStudyEffEndcapPSPS: modename = "endcapPSPS"; break;
+        case kStudyEffEndcapPS2S: modename = "endcapPS2S"; break;
+        case kStudyEffEndcap2S: modename = "endcap2S"; break;
         default: modename = "UNDEFINED"; break;
     }
     pt_boundaries = ptbounds;
@@ -1300,6 +1314,8 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 bool isOuterMiniDoubletBarrelFlat = isOuterMiniDoubletBarrel and isOuterMiniDoubletCenter;
                 bool isInnerMiniDoubletBarrelTilt = isInnerMiniDoubletBarrel and not isInnerMiniDoubletCenter;
                 bool isOuterMiniDoubletBarrelTilt = isOuterMiniDoubletBarrel and not isOuterMiniDoubletCenter;
+                bool isInnerMiniDoubletPS = innerLowerModule.moduleType() == SDL::Module::PS;
+                bool isOuterMiniDoubletPS = outerLowerModule.moduleType() == SDL::Module::PS;
 
                 // Depending on the mode, only include a subset of interested segments
                 switch (mode)
@@ -1312,6 +1328,13 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                     case kStudyEffBarrelFlatBarrelTilt: if (not (isInnerMiniDoubletBarrelFlat and isOuterMiniDoubletBarrelTilt)) { continue; } break;
                     case kStudyEffBarrelTiltBarrelFlat: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrelFlat)) { continue; } break;
                     case kStudyEffBarrelTiltBarrelTilt: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrelTilt)) { continue; } break;
+                    case kStudyEffBarrelEndcap: if (not (isInnerMiniDoubletBarrel and not isOuterMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffBarrel: if (not (isInnerMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffEndcap: if (not (not isInnerMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffEndcapPS: if (not (not isInnerMiniDoubletBarrel and isInnerMiniDoubletPS)) { continue; } break;
+                    case kStudyEffEndcapPSPS: if (not (not isInnerMiniDoubletBarrel and isInnerMiniDoubletPS and isOuterMiniDoubletPS)) { continue; } break;
+                    case kStudyEffEndcapPS2S: if (not (not isInnerMiniDoubletBarrel and isInnerMiniDoubletPS and not isOuterMiniDoubletPS)) { continue; } break;
+                    case kStudyEffEndcap2S: if (not (not isInnerMiniDoubletBarrel and not isInnerMiniDoubletPS)) { continue; } break;
                     default: /* skip everything should not be here anyways...*/ continue; break;
                 }
 
@@ -1359,7 +1382,7 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 {
                     const SDL::MiniDoublet& innerMiniDoublet = *sg_Track->innerMiniDoubletPtr();
                     const SDL::MiniDoublet& outerMiniDoublet = *sg_Track->outerMiniDoubletPtr();
-                    SDL::Segment::isMiniDoubletPairASegmentBarrelBarrel(innerMiniDoublet, outerMiniDoublet, SDL::Default_SGAlgo, SDL::Log_Debug3);
+                    SDL::Segment::isMiniDoubletPairASegmentBarrel(innerMiniDoublet, outerMiniDoublet, SDL::Default_SGAlgo, SDL::Log_Debug3);
                 }
             }
 
