@@ -408,8 +408,8 @@ int main(int argc, char** argv)
         // Create segments
         event.createSegments();
 
-        // Create segments
-        event.createTracklets(SDL::AllComb_TLAlgo);
+        // // Create segments
+        // event.createTracklets(SDL::AllComb_TLAlgo);
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
@@ -1379,19 +1379,19 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
             }
             z /= sgs_of_interest.size();
 
-            // Debugging high pt inefficiency
-            if (pt > 5 and not match and mode == kStudyEffBarrelTiltBarrelTilt)
-            {
-                // Among the sg "candidate" of interest (i.e. the ones that passes a module phase-space of interest
-                // Why did it fail?
-                SDL::cout << "Studying failed segment" << std::endl;
-                for (auto& sg_Track : sgs_of_interest)
-                {
-                    const SDL::MiniDoublet& innerMiniDoublet = *sg_Track->innerMiniDoubletPtr();
-                    const SDL::MiniDoublet& outerMiniDoublet = *sg_Track->outerMiniDoubletPtr();
-                    SDL::Segment::isMiniDoubletPairASegmentBarrel(innerMiniDoublet, outerMiniDoublet, SDL::Default_SGAlgo, SDL::Log_Debug3);
-                }
-            }
+            // // Debugging high pt inefficiency
+            // if (pt > 5 and not match and mode == kStudyEffBarrelTiltBarrelTilt)
+            // {
+            //     // Among the sg "candidate" of interest (i.e. the ones that passes a module phase-space of interest
+            //     // Why did it fail?
+            //     SDL::cout << "Studying failed segment" << std::endl;
+            //     for (auto& sg_Track : sgs_of_interest)
+            //     {
+            //         const SDL::MiniDoublet& innerMiniDoublet = *sg_Track->innerMiniDoubletPtr();
+            //         const SDL::MiniDoublet& outerMiniDoublet = *sg_Track->outerMiniDoubletPtr();
+            //         SDL::Segment::isMiniDoubletPairASegmentBarrel(innerMiniDoublet, outerMiniDoublet, SDL::Default_SGAlgo, SDL::Log_Debug3);
+            //     }
+            // }
 
             // At this stage, we have either found a segment in this module either matched to the track or not.
 
