@@ -57,6 +57,8 @@ def plot_eff(num_name, den_name, output_name):
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
     if "_ptzoom" in output_name and "sg_" in output_name:
         eff.GetYaxis().SetRangeUser(0.95, 1.02)
+    # if "_pt" in output_name:
+    #     eff.GetXaxis().SetRangeUser(0.8, 1.2)
     # if "endcap2S_pt" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.90, 1.03)
     c1.SaveAs("plots/lin/{}".format(output_name))

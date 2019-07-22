@@ -291,35 +291,39 @@ int main(int argc, char** argv)
     ana.histograms.addVecHistogram("md_matched_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs_matched; } );
     ana.histograms.addVecHistogram("md_matched_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs_matched; } );
 
+    // pt_boundaries
+    std::vector<float> pt_boundaries = {0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50};
+    // std::vector<float> pt_boundaries = {0, 0.5, 0.6, 0.7, 0.8, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.2, 1.5}; // lowpt
+
     // List of studies to perform
     std::vector<Study*> studies;
     studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, /*pt_boundaries=*/{0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50}));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
 
     // book the studies
     for (auto& study : studies)
@@ -404,6 +408,9 @@ int main(int argc, char** argv)
         // Create segments
         event.createSegments();
 
+        // Create segments
+        event.createTracklets(SDL::AllComb_TLAlgo);
+
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
         if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
@@ -478,8 +485,8 @@ int main(int argc, char** argv)
             }
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-            // trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
+            trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+            // trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             trackevent->createSegments(SDL::AllComb_SGAlgo);
