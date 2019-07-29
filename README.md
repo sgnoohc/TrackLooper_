@@ -429,3 +429,6 @@ Example output running over the first two events
     CPU  Time:      3.5
     Real Time:      4.7
 
+## Efficiency plots
+
+    python plot.py
