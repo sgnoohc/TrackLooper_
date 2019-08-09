@@ -29,6 +29,7 @@ public:
         kStudyEffBarrelTiltBarrelFlat,
         kStudyEffBarrelTiltBarrelTilt,
         kStudyEffBarrelEndcap,
+        kStudyEffBarrelTiltEndcap,
         kStudyEffBarrel,
         kStudyEffEndcap,
         kStudyEffEndcapPS,
@@ -63,6 +64,8 @@ public:
     StudySegmentEfficiency(const char* studyName, StudySegmentEfficiencyMode, std::vector<float> ptboundaries);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+
+    virtual void printSegmentDebugInfo(SDL::Segment* sg, float pt);
 
 };
 

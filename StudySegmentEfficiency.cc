@@ -16,6 +16,7 @@ StudySegmentEfficiency::StudySegmentEfficiency(const char* studyName, StudySegme
         case kStudyEffBarrelTiltBarrelFlat: modename = "barreltiltbarrelflat"; break;
         case kStudyEffBarrelTiltBarrelTilt: modename = "barreltiltbarreltilt"; break;
         case kStudyEffBarrelEndcap: modename = "barrelendcap"; break;
+        case kStudyEffBarrelTiltEndcap: modename = "barreltiltendcap"; break;
         case kStudyEffBarrel: modename = "barrel"; break;
         case kStudyEffEndcap: modename = "endcap"; break;
         case kStudyEffEndcapPS: modename = "endcapPS"; break;
@@ -115,6 +116,7 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
             int layer_idx = lowerModulePtr_Track->layer() - 1;
 
             // Parse pt and eta of this track
+            float rawpt = trk.sim_pt()[isimtrk];
             float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
             float eta = trk.sim_eta()[isimtrk];
             float phi = trk.sim_phi()[isimtrk];
@@ -165,6 +167,7 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                     case kStudyEffBarrelTiltBarrelFlat: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrelFlat)) { continue; } break;
                     case kStudyEffBarrelTiltBarrelTilt: if (not (isInnerMiniDoubletBarrelTilt and isOuterMiniDoubletBarrelTilt)) { continue; } break;
                     case kStudyEffBarrelEndcap: if (not (isInnerMiniDoubletBarrel and not isOuterMiniDoubletBarrel)) { continue; } break;
+                    case kStudyEffBarrelTiltEndcap: if (not (isInnerMiniDoubletBarrel and isInnerMiniDoubletBarrelTilt and not isOuterMiniDoubletBarrel)) { continue; } break;
                     case kStudyEffBarrel: if (not (isInnerMiniDoubletBarrel)) { continue; } break;
                     case kStudyEffEndcap: if (not (not isInnerMiniDoubletBarrel)) { continue; } break;
                     case kStudyEffEndcapPS: if (not (not isInnerMiniDoubletBarrel and isInnerMiniDoubletPS)) { continue; } break;
@@ -188,12 +191,12 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
 
             // Loop over the sg "candidate" from the module that a sim-track passed through and left at least one mini-doublet in each module
             // The sgs_of_interest holds only the sg "candidate" that we think are of interest for the given study mode
-            float z; // the average value of z for the matched outer layer truth matched mini-doublet's lower hit
+            float z; // the average value of z for the matched inner layer truth matched mini-doublet's lower hit
             for (auto& sg_Track : sgs_of_interest)
             {
 
-                // Sum all the hits' z position of the outer md's lower hit z's. then after the loop divide by total number to get the average value
-                z += sg_Track->outerMiniDoubletPtr()->lowerHitPtr()->z();
+                // Sum all the hits' z position of the inner md's lower hit z's. then after the loop divide by total number to get the average value
+                z  = sg_Track->innerMiniDoubletPtr()->lowerHitPtr()->z();
 
                 // Loop over the sg reconstructed from with proper SDL algorithm and if the index of the mini-doublets match (i.e. if the 4 hits match)
                 // Then we have found at least one segment associated to this track's reco-hits in this module
@@ -203,10 +206,18 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
                     if (sg_Track->isIdxMatched(*sg))
                     {
                         match = true;
+                        // if (mode == kStudyEffBarrelFlatBarrelFlat)
+                        // {
+                        //     SDL::cout << "***************************************************************************" << std::endl;
+                        //     SDL::cout << "Good segment" << std::endl;
+                        //     SDL::cout << "***************************************************************************" << std::endl;
+                        //     SDL::cout <<  " rawpt: " << rawpt <<  " eta: " << eta <<  " phi: " << phi <<  std::endl;
+                        //     printSegmentDebugInfo(sg_Track, rawpt);
+                        // }
                     }
                 }
             }
-            z /= sgs_of_interest.size();
+            // z /= sgs_of_interest.size();
 
             // // Debugging high pt inefficiency
             // if (pt > 5 and not match and mode == kStudyEffBarrelTiltBarrelTilt)
@@ -316,10 +327,59 @@ void StudySegmentEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<u
             // Failed tracks for specific layers
             else
             {
+                // Studying inefficiency in barreltilt to barreltilt
+                if (mode == kStudyEffEndcap2S and pt > 5.)
+                {
+
+                    for (auto& sg_Track : sgs_of_interest)
+                    {
+                        SDL::cout << "***************************************************************************" << std::endl;
+                        SDL::cout << "Bad segment" << std::endl;
+                        SDL::cout << "***************************************************************************" << std::endl;
+                        SDL::cout <<  " rawpt: " << rawpt <<  " eta: " << eta <<  " phi: " << phi <<  std::endl;
+                        printSegmentDebugInfo(sg_Track, rawpt);
+                    }
+
+                }
             }
 
         }
 
     }
 
+}
+
+void StudySegmentEfficiency::printSegmentDebugInfo(SDL::Segment* sg_Track, float pt)
+{
+    sg_Track->runSegmentAlgo(SDL::Default_SGAlgo, SDL::Log_Debug3);
+    SDL::cout <<  " sg_Track->getDeltaPhiChange(): " << sg_Track->getDeltaPhiChange() <<  std::endl;
+    SDL::cout <<  " sg_Track->passesSegmentAlgo(SDL::Default_SGAlgo): " << sg_Track->passesSegmentAlgo(SDL::Default_SGAlgo) <<  std::endl;
+    // SDL::cout << sg_Track << std::endl;
+    const SDL::MiniDoublet& innerMiniDoublet = (*sg_Track->innerMiniDoubletPtr());
+    const SDL::MiniDoublet& outerMiniDoublet = (*sg_Track->outerMiniDoubletPtr());
+    SDL::cout <<  " innerMiniDoublet.getDeltaPhiChange(): " << innerMiniDoublet.getDeltaPhiChange() <<  std::endl;
+    SDL::cout <<  " outerMiniDoublet.getDeltaPhiChange(): " << outerMiniDoublet.getDeltaPhiChange() <<  std::endl;
+    SDL::cout <<  " innerMiniDoublet.getDeltaPhiChangeNoShift(): " << innerMiniDoublet.getDeltaPhiChangeNoShift() <<  std::endl;
+    SDL::cout <<  " outerMiniDoublet.getDeltaPhiChangeNoShift(): " << outerMiniDoublet.getDeltaPhiChangeNoShift() <<  std::endl;
+    const SDL::Hit& lowerHitInnerMiniDoublet = (*innerMiniDoublet.lowerHitPtr());
+    const SDL::Hit& upperHitInnerMiniDoublet = (*innerMiniDoublet.upperHitPtr());
+    const SDL::Hit& lowerHitOuterMiniDoublet = (*outerMiniDoublet.lowerHitPtr());
+    const SDL::Hit& upperHitOuterMiniDoublet = (*outerMiniDoublet.upperHitPtr());
+    SDL::cout <<  " SDL::MathUtil::ptEstimateFromDeltaPhiChangeAndRt(innerMiniDoublet.getDeltaPhiChange(),lowerHitInnerMiniDoublet.rt()): " << SDL::MathUtil::ptEstimateFromDeltaPhiChangeAndRt(innerMiniDoublet.getDeltaPhiChange(),lowerHitInnerMiniDoublet.rt()) <<  std::endl;
+    SDL::cout <<  " SDL::MathUtil::ptEstimateFromDeltaPhiChangeAndRt(outerMiniDoublet.getDeltaPhiChange(),lowerHitOuterMiniDoublet.rt()): " << SDL::MathUtil::ptEstimateFromDeltaPhiChangeAndRt(outerMiniDoublet.getDeltaPhiChange(),lowerHitOuterMiniDoublet.rt()) <<  std::endl;
+    // const float innerMiniDoubletDPhiEstimate = SDL::MathUtil::dphiEstimateFromPtAndRt(pt, lowerHitInnerMiniDoublet.rt());
+    // const float outerMiniDoubletDPhiEstimate = SDL::MathUtil::dphiEstimateFromPtAndRt(pt, lowerHitOuterMiniDoublet.rt());
+    // SDL::cout <<  " innerMiniDoubletDPhiEstimate: " << innerMiniDoubletDPhiEstimate <<  std::endl;
+    // SDL::cout <<  " outerMiniDoubletDPhiEstimate: " << outerMiniDoubletDPhiEstimate <<  std::endl;
+    const SDL::Module& innerLowerModule = lowerHitInnerMiniDoublet.getModule();
+    const SDL::Module& outerLowerModule = lowerHitOuterMiniDoublet.getModule();
+    const SDL::Module& innerUpperModule = upperHitInnerMiniDoublet.getModule();
+    const SDL::Module& outerUpperModule = upperHitOuterMiniDoublet.getModule();
+    SDL::cout << innerLowerModule << std::endl;
+    SDL::cout << innerUpperModule << std::endl;
+    SDL::cout << outerLowerModule << std::endl;
+    SDL::cout << outerUpperModule << std::endl;
+    SDL::cout << innerMiniDoublet << std::endl;
+    SDL::cout << outerMiniDoublet << std::endl;
+    SDL::MiniDoublet::shiftStripHits(lowerHitInnerMiniDoublet, upperHitInnerMiniDoublet, innerLowerModule, SDL::Log_Debug3);
 }

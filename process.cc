@@ -316,6 +316,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
@@ -411,7 +412,7 @@ int main(int argc, char** argv)
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 3) // Print for the first 10 events only
+        if (ana.looper.getCurrentEventIndex() < 1) // Print for the first 10 events only
         {
             SDL::cout << event;
         }
