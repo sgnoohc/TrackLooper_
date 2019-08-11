@@ -19,6 +19,7 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     //Get a list of modules in the event
     std::vector<SDL::Module*> moduleList = event.getModulePtrs();
     averageOccupancyInBarrel = 0;
+    averageOccupancyInEndcap = 0;
     int nBarrelModules = 0, nEndcapModules = 0;
     //To get the occupancy, iterate through the modules and get the length
     //of the vector of pointers containing the hits on that module
@@ -36,5 +37,7 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
       }
     }
     averageOccupancyInBarrel /= nBarrelModules;
+    std::cout<<"average occupancy in barrel="<<averageOccupancyInBarrel<<std::endl;
     averageOccupancyInEndcap /= nEndcapModules;
+    std::cout<<"average occupancy in endcap="<<averageOccupancyInEndcap<<std::endl;
 }
