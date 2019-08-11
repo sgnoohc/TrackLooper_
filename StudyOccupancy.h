@@ -18,7 +18,7 @@ public:
   const char * studyname;
 
   std::unordered_map<unsigned int, int> occupancyInEveryModule;
-  float averageOccupanyInBarrel;
+  float averageOccupancyInBarrel;
   float averageOccupancyInEndcap;
 
   StudyOccupancy::StudyOccupancy(const char * studyName);

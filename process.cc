@@ -323,6 +323,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    studies.push_back(new StudyOccupancy("studyOccupancy"));
 
     // book the studies
     for (auto& study : studies)
@@ -658,4 +659,3 @@ void printModuleConnectionInfo()
 
     }
 }
-
