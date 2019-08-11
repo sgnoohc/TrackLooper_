@@ -8,9 +8,9 @@ StudyOccupancy::StudyOccupancy(const char *studyName)
 void StudyOccupancy::bookStudy()
 {
 
-    ana.histograms.addHistogram(TString::Format("occupancy_in_barrel"),100,0,100,[&](){return averageOccupancyInBarrel;});
+    ana.histograms.addHistogram(TString::Format("occupancy_in_barrel"),1000,0,100,[&](){return averageOccupancyInBarrel;});
 
-    ana.histograms.addHistogram(TString::Format("occupancy_in_endcap"),100,0,100,[&](){return averageOccupancyInEndcap;});
+    ana.histograms.addHistogram(TString::Format("occupancy_in_endcap"),1000,0,100,[&](){return averageOccupancyInEndcap;});
 
 }
 
@@ -39,7 +39,4 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
 
     averageOccupancyInBarrel = (nBarrelModules != 0) ? averageOccupancyInBarrel / nBarrelModules : 0;
     averageOccupancyInEndcap = (nEndcapModules != 0) ? averageOccupancyInEndcap / nEndcapModules : 0;
-
-    std::cout<<"average occupancy in barrel="<<averageOccupancyInBarrel<<std::endl;
-    std::cout<<"average occupancy in endcap="<<averageOccupancyInEndcap<<std::endl;
 }
