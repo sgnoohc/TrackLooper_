@@ -12,7 +12,7 @@
 
 # include "AnalysisConfig.h"
 
-class StudyOccupancy : public study
+class StudyOccupancy : public Study
 {
 public:
   const char * studyname;
@@ -21,9 +21,9 @@ public:
   float averageOccupancyInBarrel;
   float averageOccupancyInEndcap;
 
-  StudyOccupancy::StudyOccupancy(const char * studyName);
+  StudyOccupancy(const char * studyName);
   virtual void bookStudy();
-  virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+  virtual void doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 };
 
 #endif

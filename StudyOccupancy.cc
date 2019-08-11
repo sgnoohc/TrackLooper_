@@ -9,16 +9,16 @@ void StudyOccupancy::bookStudy()
 {
     for(auto &occupancy:occupancyInEveryModule)
     {
-      ana.histograms.addHistogram(TString::format("occupancy_in_%u",occupany.first),100,0,100,[&](){return (float)occupancy.first;});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_%u",occupancy.first),100,0,100,[&](){return (float)occupancy.second;});
     }
 
-    ana.histogram.addHistogram(TString::format("occupancy_in_barrel"),100,0,100[&](){return averageOccupancyInBarrel;});
+    ana.histograms.addHistogram(TString::Format("occupancy_in_barrel"),100,0,100[&](){return averageOccupancyInBarrel;});
 
-    ana.histogram.addHistogram(TString::format("occupancy_in_endcap"),100,0,100[&](){return averageOccupancyInEndcap;});
+    ana.histograms.addHistogram(TString::Format("occupancy_in_endcap"),100,0,100[&](){return averageOccupancyInEndcap;});
 
 }
 
-void StudyOccupancy::doStudy(SDL::Event& event std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     //Get a list of modules in the event
     occupancyInEveryModule.clear();
