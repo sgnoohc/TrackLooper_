@@ -17,7 +17,6 @@ class StudyOccupancy : public Study
 public:
   const char * studyname;
 
-  std::unordered_map<unsigned int, int> occupancyInEveryModule;
   float averageOccupancyInBarrel;
   float averageOccupancyInEndcap;
 

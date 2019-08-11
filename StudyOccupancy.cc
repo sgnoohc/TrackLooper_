@@ -7,10 +7,6 @@ StudyOccupancy::StudyOccupancy(const char *studyName)
 
 void StudyOccupancy::bookStudy()
 {
-    for(auto &occupancy:occupancyInEveryModule)
-    {
-      ana.histograms.addHistogram(TString::Format("occupancy_in_%u",occupancy.first),100,0,100,[&](){return (float)occupancy.second;});
-    }
 
     ana.histograms.addHistogram(TString::Format("occupancy_in_barrel"),100,0,100,[&](){return averageOccupancyInBarrel;});
 
@@ -21,7 +17,6 @@ void StudyOccupancy::bookStudy()
 void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     //Get a list of modules in the event
-    occupancyInEveryModule.clear();
     std::vector<SDL::Module*> moduleList = event.getModulePtrs();
     averageOccupancyInBarrel = 0;
     int nBarrelModules = 0, nEndcapModules = 0;
@@ -29,7 +24,6 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     //of the vector of pointers containing the hits on that module
     for(auto &module:moduleList)
     {
-      occupancyInEveryModule[module->detId()] = (module->getHitPtrs()).size();
       if(module->subdet() == 4) //barrel module
       {
         averageOccupancyInBarrel += (module->getHitPtrs()).size();
