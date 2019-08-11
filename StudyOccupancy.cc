@@ -36,8 +36,10 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
         nEndcapModules ++;
       }
     }
-    averageOccupancyInBarrel /= nBarrelModules;
+
+    averageOccupancyInBarrel = (nBarrelModules != 0) ? averageOccupancyInBarrel / nBarrelModules : 0;
+    averageOccupancyInEndcap = (nEndcapModules != 0) ? averageOccupancyInEndcap / nEndcapModules : 0;
+
     std::cout<<"average occupancy in barrel="<<averageOccupancyInBarrel<<std::endl;
-    averageOccupancyInEndcap /= nEndcapModules;
     std::cout<<"average occupancy in endcap="<<averageOccupancyInEndcap<<std::endl;
 }
