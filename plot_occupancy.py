@@ -5,7 +5,7 @@ import numpy as np
 import sys,os
 
 filename = "debug.root"
-if sys.argc > 1:
+if len(sys.argv) > 1:
     filename = sys.argv[1]
 
 xaxis_range = [0,5] #SUBJECT TO CHANGE
@@ -15,7 +15,7 @@ def plot_occupancy(hist,prefix):
     filename_prefix = prefix.replace(" ","_")
     ply.plot_hist(
         bgs = [hist],
-        legend_labels = [prefix]
+        legend_labels = [prefix],
         options = {
         "output_name":filename_prefix+".pdf",
         "xaxis_range":xaxis_range,
