@@ -46,7 +46,7 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     {
       averageLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
       nLayerModules.at(module->layer()-1)++;
-      if(module->subdet() == 4) //barrel module
+      if(module->subdet() == SDL::Module::Barrel) //barrel module
       {
         averageOccupancyInBarrel += (module->getHitPtrs()).size();
         nBarrelModules ++;
@@ -54,7 +54,7 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
         averageBarrelLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
         nBarrelLayerModules.at(module->layer()-1) ++;
       }
-      else if(module->subdet() == 5) //endcap module
+      else if(module->subdet() == SDL::Module::Endcap) //endcap module
       {
         averageOccupancyInEndcap += (module->getHitPtrs()).size();
         nEndcapModules ++;
