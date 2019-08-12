@@ -30,10 +30,13 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     std::vector<SDL::Module*> moduleList = event.getModulePtrs();
     averageOccupancyInBarrel = 0;
     averageOccupancyInEndcap = 0;
+    averageLayerOccupancy.clear();
     averageLayerOccupancy  = {0,0,0,0,0,0};
     int nLayerModules[] = {0,0,0,0,0,0};
+    averageBarrelLayerOccupancy.clear();
     averageBarrelLayerOccupancy = {0,0,0,0,0,0};
     int nBarrelLayerModules[] = {0,0,0,0,0,0};
+    averageEndcapLayerOccupancy.clear();
     averageEndcapLayerOccupancy = {0,0,0,0,0,0};
     int nEndcapLayerModules[] = {0,0,0,0,0,0};
     int nBarrelModules = 0, nEndcapModules = 0;
