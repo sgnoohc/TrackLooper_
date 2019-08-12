@@ -14,12 +14,12 @@ void StudyOccupancy::bookStudy()
 
     for(int i = 0; i<6; i++)
     {
-      ana.histograms.addHistogram(TString::Format("occupancy_in_layer_%d",i+1),1000,0,100,[&](){return averageLayerOccupancy[i]});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_layer_%d",i+1),1000,0,100,[&](){return averageLayerOccupancy[i];});
 
-      ana.histograms.addHistogram(TString::Format("occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&](){return averageBarrelLayerOccupancy[i]});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&](){return averageBarrelLayerOccupancy[i];});
 
 
-      ana.histograms.addHistogram(TString::Format("occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&](){return averageEndcapLayerOccupancy[i]});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&](){return averageEndcapLayerOccupancy[i];});
     }
 
 }
