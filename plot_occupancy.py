@@ -15,7 +15,7 @@ def plot_occupancy(hist,prefix):
     filename_prefix = prefix.replace(" ","_")
     ply.plot_hist(
         bgs = [hist],
-        legend_labels = [prefix]
+        legend_labels = [prefix],
         options = {
         "output_name":filename_prefix+".pdf",
         "xaxis_range":xaxis_range,
