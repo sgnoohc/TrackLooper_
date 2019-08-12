@@ -1,5 +1,5 @@
 from __future__ import print_function
-import plottery.plottery as plt
+import plottery.plottery as ply
 import ROOT as r
 import numpy as np
 import sys,os
