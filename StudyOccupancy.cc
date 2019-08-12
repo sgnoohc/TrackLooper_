@@ -30,34 +30,37 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     std::vector<SDL::Module*> moduleList = event.getModulePtrs();
     averageOccupancyInBarrel = 0;
     averageOccupancyInEndcap = 0;
+    averageLayerOccupancy.clear();
     averageLayerOccupancy  = {0,0,0,0,0,0};
-    int nLayerModules[] = {0,0,0,0,0,0};
+    std::vector<int> nLayerModules = {0,0,0,0,0,0};
+    averageBarrelLayerOccupancy.clear();
     averageBarrelLayerOccupancy = {0,0,0,0,0,0};
-    int nBarrelLayerModules[] = {0,0,0,0,0,0};
+    std::vector<nBarrelLayerModules> = {0,0,0,0,0,0};
+    averageEndcapLayerOccupancy.clear();
     averageEndcapLayerOccupancy = {0,0,0,0,0,0};
-    int nEndcapLayerModules[] = {0,0,0,0,0,0};
+    std::vector<int> nEndcapLayerModules = {0,0,0,0,0,0};
     int nBarrelModules = 0, nEndcapModules = 0;
     //To get the occupancy, iterate through the modules and get the length
     //of the vector of pointers containing the hits on that module
     for(auto &module:moduleList)
     {
-      averageLayerOccupancy[module->layer()] += (module->getHitPtrs()).size();
-      nLayerModules[module->layer()]++;
+      averageLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
+      nLayerModules.at(module->layer()-1)++;
       if(module->subdet() == 4) //barrel module
       {
         averageOccupancyInBarrel += (module->getHitPtrs()).size();
         nBarrelModules ++;
 
-        averageBarrelLayerOccupancy[module->layer()] += (module->getHitPtrs()).size();
-        nBarrelLayerModules[module->layer()] ++;
+        averageBarrelLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
+        nBarrelLayerModules.at(module->layer()-1) ++;
       }
       else if(module->subdet() == 5) //endcap module
       {
         averageOccupancyInEndcap += (module->getHitPtrs()).size();
         nEndcapModules ++;
 
-        averageEndcapLayerOccupancy[module->layer()] += (module->getHitPtrs()).size();
-        nEndcapLayerModules[module->layer()] ++;
+        averageEndcapLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
+        nEndcapLayerModules.at(module->layer()-1) ++;
       }
     }
 
