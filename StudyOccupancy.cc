@@ -14,12 +14,12 @@ void StudyOccupancy::bookStudy()
 
     for(int i = 0; i<6; i++)
     {
-      ana.histograms.addHistogram(TString::format("occupancy_in_layer_%d",i+1),1000,0,100,[&](){return averageLayerOccupancy[i]});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_layer_%d",i+1),1000,0,100,[&](){return averageLayerOccupancy[i]});
 
-      ana.histograms.addHistogram(TString::format("occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&](){return averageBarrelLayerOccupancy[i]});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&](){return averageBarrelLayerOccupancy[i]});
 
 
-      ana.histograms.addHistogram(TString::format("occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&](){return averageEndcapLayerOccupancy[i]});
+      ana.histograms.addHistogram(TString::Format("occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&](){return averageEndcapLayerOccupancy[i]});
     }
 
 }
@@ -48,16 +48,16 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
         averageOccupancyInBarrel += (module->getHitPtrs()).size();
         nBarrelModules ++;
 
-        averageBarrelLayerOccupancy[model->layer()] += (module->getHitPtrs()).size();
-        nBarrelLayerModules[model->layer()] ++;
+        averageBarrelLayerOccupancy[module->layer()] += (module->getHitPtrs()).size();
+        nBarrelLayerModules[module->layer()] ++;
       }
       else if(module->subdet() == 5) //endcap module
       {
         averageOccupancyInEndcap += (module->getHitPtrs()).size();
         nEndcapModules ++;
 
-        averageEndcapLayerOccupancy[model->layer()] += (module->getHitPtrs()).size();
-        nEndcapLayerModules[model->layer()] ++;
+        averageEndcapLayerOccupancy[module->layer()] += (module->getHitPtrs()).size();
+        nEndcapLayerModules[module->layer()] ++;
       }
     }
 

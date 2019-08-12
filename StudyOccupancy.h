@@ -19,9 +19,9 @@ public:
 
   float averageOccupancyInBarrel;
   float averageOccupancyInEndcap;
-  float averageLayerOccupancy[6];
-  float averageBarrelLayerOccupancy[6];
-  float averageEndcapLayerOccupancy[6];
+  std::vector<float> averageLayerOccupancy[6];
+  std::vector<float> averageBarrelLayerOccupancy[6];
+  std::vector<float> averageEndcapLayerOccupancy[6];
 
   StudyOccupancy(const char * studyName);
   virtual void bookStudy();
