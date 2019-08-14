@@ -10,7 +10,7 @@ void StudyOccupancy::bookStudy()
 
     //adding vector histograms for dumping occupancy numbers
 
-    ana.histograms.addVecHistogram(TString::Format("occupancy_in_barrel"),1000,0,100,[&](){return occupancyInBarrel;})
+    ana.histograms.addVecHistogram(TString::Format("occupancy_in_barrel"),1000,0,100,[&](){return occupancyInBarrel;});
 
     ana.histograms.addHistogram(TString::Format("average_occupancy_in_barrel"),1000,0,100,[&](){return averageOccupancyInBarrel;});
 
@@ -63,8 +63,8 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     //setting up sub-vectors for the barrel and endcap layer occupancy
     for(int i = 1; i<=6;i++)
     {
-        BarrelLayerOccupancy.push_back(std::vector<float>);
-        EndcapLayerOccupancy.push_back(std::vector<float>);
+        BarrelLayerOccupancy.push_back(std::vector<float>());
+        EndcapLayerOccupancy.push_back(std::vector<float>());
     }
 
     //To get the occupancy, iterate through the modules and get the length
