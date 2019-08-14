@@ -8,11 +8,12 @@ filename = "debug.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
-xaxis_range = [0,5] #SUBJECT TO CHANGE
+xaxis_range = [0,50] #SUBJECT TO CHANGE
 
 def plot_occupancy(hist,prefix):
     global xaxis_range
     filename_prefix = prefix.replace(" ","_")
+    filename_prefix = "/home/users/bsathian/public_html/SDL/"+filename_prefix
     ply.plot_hist(
         bgs = [hist],
         legend_labels = [prefix],
@@ -29,7 +30,7 @@ f = r.TFile(filename)
 layer_occupancy_hists = []
 layer_barrel_occupancy_hists = []
 layer_endcap_occupancy_hists = []
-for i in range(1,6):
+for i in range(1,7):
     layer_occupancy_hists.append(f.Get("Root__occupancy_in_layer_"+str(i)))
     layer_barrel_occupancy_hists.append(f.Get("Root__occupancy_in_barrel_for_layer_"+str(i)))
     layer_endcap_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_layer_"+str(i)))
@@ -40,7 +41,7 @@ endcap_average_occupancy_hist = f.Get("Root__occupancy_in_endcap")
 plot_occupancy(barrel_average_occupancy_hist,"barrel average occupancy")
 plot_occupancy(endcap_average_occupancy_hist,"endcap average occupancy")
 
-for i in range(1,6):
-    plot_occupancy(layer_occupancy_hists[i],"Average occupancy for layer "+str(i))
-    plot_occupancy(layer_barrel_occupancy_hists[i],"Average barrel occupancy for layer "+str(i))
-    plot_occupancy(layer_endcap_occupancy_hists[i],"Average endcap occupancy for layer "+str(i))
+for i in range(len(layer_occupancy_hists)):
+    plot_occupancy(layer_occupancy_hists[i],"Average occupancy for layer "+str(i+1))
+    plot_occupancy(layer_barrel_occupancy_hists[i],"Average barrel occupancy for layer "+str(i+1))
+    plot_occupancy(layer_endcap_occupancy_hists[i],"Average endcap occupancy for layer "+str(i+1))
