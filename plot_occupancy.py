@@ -20,6 +20,8 @@ def plot_occupancy(hist,prefix):
         options = {
         "output_name":filename_prefix+".pdf",
         "xaxis_range":xaxis_range,
+        "xaxis_label":prefix,
+        "plot_title":prefix,
         "legend_percentageinbox":False,
         }
     )
@@ -27,21 +29,44 @@ def plot_occupancy(hist,prefix):
 
 
 f = r.TFile(filename)
+layer_average_occupancy_hists = []
 layer_occupancy_hists = []
-layer_barrel_occupancy_hists = []
+layer_barrel_average_occupancy_hists = []
+layer_barrel_occupancy_hists
+layer_endcap_average_occupancy_hists = []
 layer_endcap_occupancy_hists = []
-for i in range(1,7):
-    layer_occupancy_hists.append(f.Get("Root__occupancy_in_layer_"+str(i)))
-    layer_barrel_occupancy_hists.append(f.Get("Root__occupancy_in_barrel_for_layer_"+str(i)))
-    layer_endcap_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_layer_"+str(i)))
 
-barrel_average_occupancy_hist = f.Get("Root__occupancy_in_barrel")
-endcap_average_occupancy_hist = f.Get("Root__occupancy_in_endcap")
+for i in range(1,7):
+    layer_average_occupancy_hists.append(f.Get("Root__occupancy_in_layer_"+str(i)))
+    layer_barrel_average_occupancy_hists.append(f.Get("Root__occupancy_in_barrel_for_layer_"+str(i)))
+    layer_endcap_average_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_layer_"+str(i)))
+
+    layer_occupancy_hists.append(f.Get("Root__occupancy_in_layer_"+str(i)))
+    layer_barrel_occupancy_hists.append(f.Get("Root__occupancy_in_barrel_for_layer"+str(i)))
+    layer_endcap_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_layer"+str(i)))
+
+
+barrel_occupancy_hist = f.Get("Root__occupancy_in_barrel")
+endcap_occupancy_hist = f.Get("Root__occupancy_in_endcap")
+
+barrel_average_occupancy_hist = f.Get("Root__average_occupancy_in_barrel")
+endcap_average_occupancy_hist = f.Get("Root__average_occupancy_in_endcap")
+
+plot_occupancy(barrel_occupancy_hist,"barrel occupancy")
+plot_occupancy)endcap_occupancy_hist,"endcap occupancy")
 
 plot_occupancy(barrel_average_occupancy_hist,"barrel average occupancy")
 plot_occupancy(endcap_average_occupancy_hist,"endcap average occupancy")
 
-for i in range(len(layer_occupancy_hists)):
-    plot_occupancy(layer_occupancy_hists[i],"Average occupancy for layer "+str(i+1))
-    plot_occupancy(layer_barrel_occupancy_hists[i],"Average barrel occupancy for layer "+str(i+1))
-    plot_occupancy(layer_endcap_occupancy_hists[i],"Average endcap occupancy for layer "+str(i+1))
+
+for i in range(layer_occupancy_hists):
+    plot_occupancy(layer_occupancy_hists[i],"Occupancy for layer "+str(i+1))
+    plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Occupancy for layer "+str(i+1))
+    plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap Occupancy for layer "+str(i+1))
+
+
+
+for i in range(len(layer_average_occupancy_hists)):
+    plot_occupancy(layer_average_occupancy_hists[i],"Average occupancy for layer "+str(i+1))
+    plot_occupancy(layer_barrel_average_occupancy_hists[i],"Average barrel occupancy for layer "+str(i+1))
+    plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap occupancy for layer "+str(i+1))
