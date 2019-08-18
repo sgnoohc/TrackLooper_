@@ -34,6 +34,13 @@ void StudyOccupancy::bookStudy()
 
     }
 
+    for(int i=0;i<15;i++)
+    {
+      ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingOccupancy[i];});
+
+      ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return EndcapRingOccupancy.at(i);});
+    }
+
 }
 
 void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
@@ -51,7 +58,14 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     averageEndcapLayerOccupancy.clear();
     averageEndcapLayerOccupancy = {0,0,0,0,0,0};
     std::vector<int> nEndcapLayerModules = {0,0,0,0,0,0};
+    std::vector<int> nEndcapRingModules(15,0);
     int nBarrelModules = 0, nEndcapModules = 0;
+
+
+
+    averageEndcapRingOccupancy.clear();
+    for(int i=0;i<15;i++)
+      averageEndcapRingOccupancy.push_back(0);
 
     occupancyInBarrel.clear();
     occupancyInEndcap.clear();
@@ -60,11 +74,16 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     LayerOccupancy.clear();
     BarrelLayerOccupancy.clear();
     EndcapLayerOccupancy.clear();
+    EndcapRingOccupancy.clear();
     //setting up sub-vectors for the barrel and endcap layer occupancy
     for(int i = 1; i<=6;i++)
     {
         BarrelLayerOccupancy.push_back(std::vector<float>());
         EndcapLayerOccupancy.push_back(std::vector<float>());
+    }
+    for(int i=0;i<15;i++)
+    {
+      EndcapRingOccupancy.push_back(std::vector<float>());
     }
 
     //To get the occupancy, iterate through the modules and get the length
@@ -97,6 +116,14 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
         nEndcapLayerModules.at(module->layer()-1) ++;
 
         EndcapLayerOccupancy.at(module->layer()-1).push_back((module->getHitPtrs().size()));
+
+
+        averageEndcapRingOccupancy.at(module->ring()-1) += (module->getHitPtrs()).size();
+        nEndcapRingModules.at(module->ring()-1) ++;
+
+        EndcapRingOccupancy.at(module->ring()-1).push_back((module->getHitPtrs().size()));
+
+
       }
     }
 
@@ -111,5 +138,10 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
       averageEndcapLayerOccupancy[i] = (nEndcapLayerModules[i] != 0) ? averageEndcapLayerOccupancy[i]/nEndcapLayerModules[i] : 0;
 
       averageLayerOccupancy[i] = (nLayerModules[i] != 0) ? averageLayerOccupancy[i]/nLayerModules[i] : 0;
+    }
+
+    for(int i=0;i<15;i++)
+    {
+      averageEndcapRingOccupancy.at(i) = (nEndcapRingModules.at(i) !=0) ? averageEndcapRingOccupancy.at(i)/nEndcapRingModules.at(i) : 0;
     }
 }

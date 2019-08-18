@@ -24,10 +24,12 @@ public:
   std::vector<float> averageLayerOccupancy;
   std::vector<float> averageBarrelLayerOccupancy;
   std::vector<float> averageEndcapLayerOccupancy;
+  std::vector<float> averageEndcapRingOccupancy;
 
   std::vector<std::vector<float>> LayerOccupancy;
   std::vector<std::vector<float>> BarrelLayerOccupancy;
   std::vector<std::vector<float>> EndcapLayerOccupancy;
+  std::vector<std::vector<float>> EndcapRingOccupancy;
 
   StudyOccupancy(const char * studyName);
   virtual void bookStudy();
