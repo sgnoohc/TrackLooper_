@@ -61,8 +61,6 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     std::vector<int> nEndcapRingModules(15,0);
     int nBarrelModules = 0, nEndcapModules = 0;
 
-
-
     averageEndcapRingOccupancy.clear();
     for(int i=0;i<15;i++)
       averageEndcapRingOccupancy.push_back(0);
