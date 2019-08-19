@@ -10,33 +10,33 @@ void StudyOccupancy::bookStudy()
 
     //adding vector histograms for dumping occupancy numbers
 
-    ana.histograms.addVecHistogram(TString::Format("occupancy_in_barrel"),1000,0,100,[&](){return occupancyInBarrel;});
+    ana.histograms.addVecHistogram(TString::Format("occupancy_in_barrel"),100,0,100,[&](){return occupancyInBarrel;});
 
     ana.histograms.addHistogram(TString::Format("average_occupancy_in_barrel"),1000,0,100,[&](){return averageOccupancyInBarrel;});
 
-    ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap"),1000,0,100,[&](){return occupancyInEndcap;});
+    ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap"),100,0,100,[&](){return occupancyInEndcap;});
 
-    ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap"),1000,0,100,[&](){return averageOccupancyInEndcap;});
+    ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap"),100,0,100,[&](){return averageOccupancyInEndcap;});
 
     for(int i = 0; i<6; i++)
     {
       ana.histograms.addHistogram(TString::Format("average_occupancy_in_layer_%d",i+1),1000,0,100,[&,i](){return averageLayerOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("occupancy_in_layer_%d",i+1),1000,0,100,[&,i](){return LayerOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("occupancy_in_layer_%d",i+1),100,0,100,[&,i](){return LayerOccupancy.at(i);});
 
       ana.histograms.addHistogram(TString::Format("average_occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&,i](){return averageBarrelLayerOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&,i](){return BarrelLayerOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("occupancy_in_barrel_for_layer_%d",i+1),100,0,100,[&,i](){return BarrelLayerOccupancy.at(i);});
 
       ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return averageEndcapLayerOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return EndcapLayerOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap_for_layer_%d",i+1),100,0,100,[&,i](){return EndcapLayerOccupancy.at(i);});
 
     }
 
     for(int i=0;i<15;i++)
     {
-      ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingOccupancy[i];});
+      ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return averageEndcapRingOccupancy[i];});
 
       ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return EndcapRingOccupancy.at(i);});
     }

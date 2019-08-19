@@ -8,11 +8,11 @@ StudyLinkedModule::StudyLinkedModule(const char* studyName)
 void StudyLinkedModule::bookstudy()
 {
 
-  ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return BarrelLinkedModuleOccupancy;});
+  ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
 
     ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageEndcapLinkedModuleOccupancy;});
 
-    ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap"),1000,0,100,[&](){return EndcapLinkedModuleOccupancy;});
+    ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap"),100,0,100,[&](){return EndcapLinkedModuleOccupancy;});
 
     ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap"),1000,0,100,[&](){return averageEndcapLinkedModuleOccupancy;});
 
@@ -20,7 +20,7 @@ void StudyLinkedModule::bookstudy()
     {
       ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&,i](){return averageLayerBarrelLinkedModuleOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&,i](){return BarrelLinkedModuleOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel_for_layer_%d",i+1),100,0,100,[&,i](){return BarrelLinkedModuleOccupancy.at(i);});
 
       ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return EndcapLinkedModuleOccupancy[i];});
 
@@ -32,7 +32,7 @@ void StudyLinkedModule::bookstudy()
     {
       ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingLinkedModuleOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return RingEndcapLinkedModuleOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return RingEndcapLinkedModuleOccupancy.at(i);});
     }
 }
 
