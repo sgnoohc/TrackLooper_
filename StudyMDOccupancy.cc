@@ -39,7 +39,7 @@ void StudyMDOccupancy::bookStudy()
     }
 }
 
-void StudyMDOccupacy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     std::vector<SDL::Module*> moduleList = event.getModulePtrs();
 

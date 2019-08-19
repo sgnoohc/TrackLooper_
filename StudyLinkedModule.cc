@@ -20,9 +20,9 @@ void StudyLinkedModule::bookStudy()
     {
       ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel_for_layer_%d",i+1),1000,0,100,[&,i](){return averageLayerBarrelLinkedModuleOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel_for_layer_%d",i+1),100,0,100,[&,i](){return BarrelLinkedModuleOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel_for_layer_%d",i+1),100,0,100,[&,i](){return LayerBarrelLinkedModuleOccupancy.at(i);});
 
-      ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return EndcapLinkedModuleOccupancy[i];});
+      ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return LayerEndcapLinkedModuleOccupancy[i];});
 
       ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return EndcapLinkedModuleOccupancy.at(i);});
     }
@@ -78,7 +78,7 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
 
     for(auto &module:moduleList)
     {
-      std::vector<unsigned int> connectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuledetIds(module->detId());
+      std::vector<unsigned int> connectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuleDetIds(module->detId());
       int nConnectedModules = 0, connectedModuleOccupancy = 0;
       for(auto &connectedModuleId:connectedModuleDetIds)
       {
