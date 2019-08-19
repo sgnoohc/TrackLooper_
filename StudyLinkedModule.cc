@@ -43,8 +43,6 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
     averageBarrelLinkedModuleOccupancy = 0;
     averageEndcapLinkedModuleOccupancy = 0;
     int nBarrelModules = 0,nEndcapModules = 0;
-    LayerBarrelLinkedModuleOccupancy.clear();
-    LayerEndcapLinkedModuleOccupancy.clear();
 
     averageLayerBarrelLinkedModuleOccupancy.clear();
     averageLayerBarrelLinkedModuleOccupancy = {0,0,0,0,0,0};

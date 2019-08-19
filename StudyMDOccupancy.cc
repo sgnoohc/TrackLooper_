@@ -72,6 +72,7 @@ void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned
     //setting up sub-vectors for the barrel and endcap layer occupancy
     for(int i = 1; i<=6;i++)
     {
+        LayerOccupancy.push_back(std::vector<float>());
         BarrelLayerOccupancy.push_back(std::vector<float>());
         EndcapLayerOccupancy.push_back(std::vector<float>());
     }
@@ -85,6 +86,7 @@ void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned
     {
       averageLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
       nLayerModules.at(module->layer()-1)++;
+      LayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs()).size());
       if(module->subdet() == SDL::Module::Barrel) //barrel module
       {
         averageOccupancyInBarrel += (module->getMiniDoubletPtrs()).size();
