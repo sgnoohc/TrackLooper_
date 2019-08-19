@@ -35,15 +35,22 @@ layer_barrel_average_occupancy_hists = []
 layer_barrel_occupancy_hists
 layer_endcap_average_occupancy_hists = []
 layer_endcap_occupancy_hists = []
+ring_endcap_average_occupancy_hists = []
+ring_endcap_occupancy_hists = []
 
 for i in range(1,7):
     layer_average_occupancy_hists.append(f.Get("Root__occupancy_in_layer_"+str(i)))
-    layer_barrel_average_occupancy_hists.append(f.Get("Root__occupancy_in_barrel_for_layer_"+str(i)))
-    layer_endcap_average_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_layer_"+str(i)))
+    layer_barrel_average_occupancy_hists.append(f.Get("Root__average_occupancy_in_barrel_for_layer_"+str(i)))
+    layer_endcap_average_occupancy_hists.append(f.Get("Root__average_occupancy_in_endcap_for_layer_"+str(i)))
 
     layer_occupancy_hists.append(f.Get("Root__occupancy_in_layer_"+str(i)))
     layer_barrel_occupancy_hists.append(f.Get("Root__occupancy_in_barrel_for_layer"+str(i)))
     layer_endcap_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_layer"+str(i)))
+
+for i in range(1,16):
+    ring_endcap_average_occupany_hists.append(f.Get("Root__average_occupancy in endcap_for_ring_"+str(i)))
+    ring_endcap_occupancy_hists.append(f.Get("Root__occupancy_in_endcap_for_ring_"+str(i)))
+
 
 
 barrel_occupancy_hist = f.Get("Root__occupancy_in_barrel")
@@ -62,11 +69,19 @@ plot_occupancy(endcap_average_occupancy_hist,"endcap average occupancy")
 for i in range(layer_occupancy_hists):
     plot_occupancy(layer_occupancy_hists[i],"Occupancy for layer "+str(i+1))
     plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Occupancy for layer "+str(i+1))
-    plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap Occupancy for layer "+str(i+1))
+    if i != 6:
+        plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap Occupancy for layer "+str(i+1))
 
 
 
 for i in range(len(layer_average_occupancy_hists)):
     plot_occupancy(layer_average_occupancy_hists[i],"Average occupancy for layer "+str(i+1))
     plot_occupancy(layer_barrel_average_occupancy_hists[i],"Average barrel occupancy for layer "+str(i+1))
-    plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap occupancy for layer "+str(i+1))
+    if i!= 6:
+        plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap occupancy for layer "+str(i+1))
+
+for i in range(len(ring_endcap_average_occupancy_hists)):
+    plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap occupancy in ring "+str(i+1))
+    plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap occupancy in ring "+str(i+1))
+
+
