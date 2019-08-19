@@ -432,3 +432,8 @@ Example output running over the first two events
 ## Efficiency plots
 
     python plot.py
+## High pileup sample location
+    
+    /home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0_mtd5/src/trackingNtuple_TTbar_PU200.root
+
+
