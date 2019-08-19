@@ -36,9 +36,9 @@ void StudyOccupancy::bookStudy()
 
     for(int i=0;i<15;i++)
     {
-      ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return averageEndcapRingOccupancy[i];});
+      ana.histograms.addHistogram(TString::Format("average_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingOccupancy[i];});
 
-      ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return EndcapRingOccupancy.at(i);});
+      ana.histograms.addVecHistogram(TString::Format("occupancy_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return EndcapRingOccupancy.at(i);});
     }
 
 }
