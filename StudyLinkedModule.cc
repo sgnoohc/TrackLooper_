@@ -5,7 +5,7 @@ StudyLinkedModule::StudyLinkedModule(const char* studyName)
   studyname = studyName;
 }
 
-void StudyLinkedModule::bookstudy()
+void StudyLinkedModule::bookStudy()
 {
 
   ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
@@ -78,13 +78,13 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
 
     for(auto &module:moduleList)
     {
-      std::vector<unsigned int> connectedModuleDetIds = moduleConnectionMap.getConnectedModuledetIds(module.detId());
+      std::vector<unsigned int> connectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuledetIds(module->detId());
       int nConnectedModules = 0, connectedModuleOccupancy = 0;
-      for(auto &connectedModuleId:connectedModuledetIds)
+      for(auto &connectedModuleId:connectedModuleDetIds)
       {
-        SDL::Module connectedModule = getModule(connectedModuleId);
+        SDL::Module& connectedModule = event.getModule(connectedModuleId);
         //Now start the occupancy thing
-        connectedModuleOccupancy += connectedModule->getMiniDoubletPtrs().size();
+        connectedModuleOccupancy += connectedModule.getMiniDoubletPtrs().size();
         nConnectedModules ++;
       }
 
@@ -98,7 +98,7 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
         averageLayerBarrelLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
         nBarrelLayerModules.at(module->layer()-1)++;
       }
-      else if(module->subdet() = SDL::Module::Endcap)
+      else if(module->subdet() == SDL::Module::Endcap)
       {
         EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
         averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;

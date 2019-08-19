@@ -325,7 +325,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    studies.push_back(new SudyLinkedModule("studyLinkedModule"));
+    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
     // book the studies
     for (auto& study : studies)
     {

@@ -1,5 +1,5 @@
-# ifndef StudyMDOccupancy_h
-#define StudyMDOccupancy_h
+# ifndef StudyLinkedModule_h
+#define StudyLinkedModule_h
 
 # include "Study.h"
 # include "SDL/Event.h"
@@ -32,3 +32,4 @@ class StudyLinkedModule : public Study
     virtual void bookStudy();
     virtual void doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 };
+#endif
