@@ -39,7 +39,7 @@ ring_endcap_average_occupancy_hists = []
 ring_endcap_occupancy_hists = []
 
 for i in range(1,7):
-    layer_average_occupancy_hists.append(f.Get("Root__MD_occupancy_in_layer_"+str(i)))
+    layer_average_occupancy_hists.append(f.Get("Root__average_MD_occupancy_in_layer_"+str(i)))
     layer_barrel_average_occupancy_hists.append(f.Get("Root__average_MD_occupancy_in_barrel_for_layer_"+str(i)))
     layer_endcap_average_occupancy_hists.append(f.Get("Root__average_MD_occupancy_in_endcap_for_layer_"+str(i)))
 
@@ -78,7 +78,7 @@ for i in range(len(layer_average_occupancy_hists)):
     plot_occupancy(layer_average_occupancy_hists[i],"Average mini-doublet occupancy for layer "+str(i+1))
     plot_occupancy(layer_barrel_average_occupancy_hists[i],"Average barrel mini-doublet occupancy for layer "+str(i+1))
     if i!= 5:
-        plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap occupancy for layer "+str(i+1))
+        plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap mini-doublet occupancy for layer "+str(i+1))
 
 for i in range(len(ring_endcap_average_occupancy_hists)):
     plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap mini-doublet occupancy in ring "+str(i+1))
