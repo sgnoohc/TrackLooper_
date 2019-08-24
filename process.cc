@@ -323,6 +323,9 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    studies.push_back(new StudyOccupancy("studyOccupancy"));
+    studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
+    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
@@ -672,4 +675,3 @@ void printModuleConnectionInfo()
 
     }
 }
-
