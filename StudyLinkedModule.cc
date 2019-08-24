@@ -8,7 +8,7 @@ StudyLinkedModule::StudyLinkedModule(const char* studyName)
 void StudyLinkedModule::bookStudy()
 {
 
-  ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
+    ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
 
     ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageEndcapLinkedModuleOccupancy;});
 
