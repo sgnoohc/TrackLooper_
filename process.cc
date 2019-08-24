@@ -326,6 +326,16 @@ int main(int argc, char** argv)
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
     studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Tilt", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Tilt, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltBarrel4", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltBarrel4, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltEndcap1", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltEndcap1, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
+
     // book the studies
     for (auto& study : studies)
     {
@@ -409,12 +419,12 @@ int main(int argc, char** argv)
         // Create segments
         event.createSegments();
 
-        // // Create segments
-        // event.createTracklets(SDL::AllComb_TLAlgo);
+        // Create segments
+        event.createTracklets();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 1) // Print for the first 10 events only
+        if (ana.looper.getCurrentEventIndex() < 2) // Print for the first 10 events only
         {
             SDL::cout << event;
         }
@@ -486,11 +496,15 @@ int main(int argc, char** argv)
             }
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-            trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            // trackevent->createMiniDoublets(SDL::Default_MDAlgo);
+            // trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-            trackevent->createSegments(SDL::AllComb_SGAlgo);
+            // trackevent->createSegments(SDL::AllComb_SGAlgo);
+            trackevent->createSegments(SDL::Default_SGAlgo);
+
+            // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
+            trackevent->createTracklets(SDL::AllComb_TLAlgo);
 
             // Push to the vector so we have a data-base of per hit, mini-doublets
             simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
