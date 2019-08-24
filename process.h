@@ -22,6 +22,7 @@
 #include "StudyEndcapInefficiency.h"
 #include "StudyBarreldPhiChangeCutThresholdValidity.h"
 #include "StudyTrackletEfficiency.h"
+#include "StudyTrackletSelection.h"
 
 #include "constants.h"
 

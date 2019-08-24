@@ -332,6 +332,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
+    studies.push_back(new StudyTrackletSelection("studySelTlBarrelBarrelBarrelBarrel", StudyTrackletSelection::kStudySelBarrelBarrelBarrelBarrel));
 
     // book the studies
     for (auto& study : studies)
@@ -421,10 +422,10 @@ int main(int argc, char** argv)
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 2) // Print for the first 10 events only
-        {
-            SDL::cout << event;
-        }
+        // if (ana.looper.getCurrentEventIndex() < 2) // Print for the first 10 events only
+        // {
+        //     SDL::cout << event;
+        // }
 
 
 
