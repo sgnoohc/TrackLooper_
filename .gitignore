@@ -1,4 +1,5 @@
 doAnalysis
 *.o
 debug.root
+*.pdf
 plots/
