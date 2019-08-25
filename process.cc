@@ -325,7 +325,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+    // studies.push_back(new StudyLinkedModule("studyLinkedModule"));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
@@ -335,6 +335,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
     studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
+    studies.push_back(new StudyTrackletSelection("studySelTlBarrelBarrelBarrelBarrel", StudyTrackletSelection::kStudySelBarrelBarrelBarrelBarrel));
 
     // book the studies
     for (auto& study : studies)
@@ -419,15 +420,15 @@ int main(int argc, char** argv)
         // Create segments
         event.createSegments();
 
-        // Create segments
-        event.createTracklets();
+        // // Create tracklets
+        // event.createTracklets();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
-        if (ana.looper.getCurrentEventIndex() < 2) // Print for the first 10 events only
-        {
-            SDL::cout << event;
-        }
+        // if (ana.looper.getCurrentEventIndex() < 2) // Print for the first 10 events only
+        // {
+        //     SDL::cout << event;
+        // }
 
 
 
@@ -503,8 +504,8 @@ int main(int argc, char** argv)
             // trackevent->createSegments(SDL::AllComb_SGAlgo);
             trackevent->createSegments(SDL::Default_SGAlgo);
 
-            // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
-            trackevent->createTracklets(SDL::AllComb_TLAlgo);
+            // // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
+            // trackevent->createTracklets(SDL::AllComb_TLAlgo);
 
             // Push to the vector so we have a data-base of per hit, mini-doublets
             simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
