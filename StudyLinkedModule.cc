@@ -10,7 +10,7 @@ void StudyLinkedModule::bookStudy()
 
     ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
 
-    ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageEndcapLinkedModuleOccupancy;});
+    ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageBarrelLinkedModuleOccupancy;});
 
     ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap"),100,0,100,[&](){return EndcapLinkedModuleOccupancy;});
 
@@ -43,6 +43,9 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
     averageBarrelLinkedModuleOccupancy = 0;
     averageEndcapLinkedModuleOccupancy = 0;
     int nBarrelModules = 0,nEndcapModules = 0;
+
+    BarrelLinkedModuleOccupancy.clear();
+    EndcapLinkedModuleOccupancy.clear();
 
     averageLayerBarrelLinkedModuleOccupancy.clear();
     averageLayerBarrelLinkedModuleOccupancy = {0,0,0,0,0,0};
@@ -88,27 +91,33 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
 
       if(module->subdet() == SDL::Module::Barrel)
       {
-        BarrelLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
-        averageBarrelLinkedModuleOccupancy += connectedModuleOccupancy;
-        nBarrelModules++;
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          BarrelLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
+          averageBarrelLinkedModuleOccupancy += connectedModuleOccupancy;
+          nBarrelModules++;
 
         LayerBarrelLinkedModuleOccupancy.at(module->layer() -1).push_back(connectedModuleOccupancy);
         averageLayerBarrelLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
         nBarrelLayerModules.at(module->layer()-1)++;
+        }
       }
       else if(module->subdet() == SDL::Module::Endcap)
       {
-        EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
-        averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;
-        nEndcapModules++;
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
+          averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;
+          nEndcapModules++;
 
-        LayerEndcapLinkedModuleOccupancy.at(module->layer()-1).push_back(connectedModuleOccupancy);
-        averageLayerEndcapLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
-        nEndcapLayerModules.at(module->layer()-1)++;
+          LayerEndcapLinkedModuleOccupancy.at(module->layer()-1).push_back(connectedModuleOccupancy);
+          averageLayerEndcapLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
+          nEndcapLayerModules.at(module->layer()-1)++;
 
-        RingEndcapLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
-        averageEndcapRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
-        nEndcapRingModules.at(module->ring()-1) ++;
+          RingEndcapLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
+          averageEndcapRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
+          nEndcapRingModules.at(module->ring()-1) ++;
+        }
       }
     }
 
