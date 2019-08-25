@@ -24,6 +24,7 @@
 #include "StudyOccupancy.h"
 #include "StudyMDOccupancy.h"
 #include "StudyLinkedModule.h"
+#include "StudyTrackletEfficiency.h"
 
 #include "constants.h"
 
