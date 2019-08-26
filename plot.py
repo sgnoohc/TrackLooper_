@@ -10,12 +10,35 @@ filename = "debug.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
+# p.dump_plot(fnames=["debug.root"],
+#     dirname="plots/log",
+#     dogrep=True,
+#     filter_pattern="deltaBeta",
+#     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
+#     )
+
+# p.dump_plot(fnames=["debug.root"],
+#     dirname="plots/lin",
+#     dogrep=True,
+#     filter_pattern="deltaBeta",
+#     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True},
+#     )
+
 p.dump_plot(fnames=["debug.root"],
-    dirname="plots/log",
+    dirname="plots/tracklet",
     dogrep=True,
-    filter_pattern="deltaBeta",
+    filter_pattern="tl_specific_",
+    extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":True, "remove_underflow":True},
+    )
+
+p.dump_plot(fnames=["debug.root"],
+    dirname="plots/tracklet_log",
+    dogrep=True,
+    filter_pattern="tl_specific_",
     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
     )
+
+sys.exit()
 
 # p.dump_plot(fnames=["debug.root"],
 #     dirname="plots/log",

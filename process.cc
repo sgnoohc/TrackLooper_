@@ -295,47 +295,48 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    studies.push_back(new StudyOccupancy("studyOccupancy"));
-    studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
+    // studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
+    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
+    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    // studies.push_back(new StudyOccupancy("studyOccupancy"));
+    // studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
     // studies.push_back(new StudyLinkedModule("studyLinkedModule"));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Tilt", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Tilt, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltBarrel4", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltBarrel4, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltEndcap1", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltEndcap1, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
-    studies.push_back(new StudyTrackletSelection("studySelTlBarrelBarrelBarrelBarrel", StudyTrackletSelection::kStudySelBarrelBarrelBarrelBarrel));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Tilt", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Tilt, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltBarrel4", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltBarrel4, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltEndcap1", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltEndcap1, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
+    // studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
+    // studies.push_back(new StudyTrackletSelection("studySelTlBarrelBarrelBarrelBarrel", StudyTrackletSelection::kStudySelBarrelBarrelBarrelBarrel));
+    studies.push_back(new StudyTrackletSelection("studySelTlSpecific", StudyTrackletSelection::kStudySelSpecific));
 
     // book the studies
     for (auto& study : studies)
@@ -420,7 +421,8 @@ int main(int argc, char** argv)
         // Create segments
         event.createSegments();
 
-        // // Create tracklets
+        // Create tracklets
+        event.createTracklets(SDL::AllComb_TLAlgo);
         // event.createTracklets();
 
         // Print content in the event
