@@ -9,6 +9,7 @@ void StudyLinkedModule::bookStudy()
 {
 
     ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
+    ana.histograms.addHistogram(TString::Foromat("Number_of_Linked_Modules_in_barrel"),10,0,10,[&](){return nLinkedModules})
 
     ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageBarrelLinkedModuleOccupancy;});
 
@@ -43,19 +44,30 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
     averageBarrelLinkedModuleOccupancy = 0;
     averageEndcapLinkedModuleOccupancy = 0;
     int nBarrelModules = 0,nEndcapModules = 0;
+    nBarrelLinkedModules = 0;
+    nEndcapLinkedModules = 0;
 
     BarrelLinkedModuleOccupancy.clear();
     EndcapLinkedModuleOccupancy.clear();
 
     averageLayerBarrelLinkedModuleOccupancy.clear();
-    averageLayerBarrelLinkedModuleOccupancy = {0,0,0,0,0,0};
+    averageLayerBarrelLinkedModuleOccupancy = {0,0,0,0,0,0};    
     std::vector<int> nBarrelLayerModules(6,0);
     std::vector<int> nEndcapLayerModules(6,0);
+    nLayerBarrelLinkedModules.clear();
+    nLayerBarrelLinkedModules = {0,0,0,0,0,0};
     averageLayerEndcapLinkedModuleOccupancy.clear();
     averageLayerEndcapLinkedModuleOccupancy = {0,0,0,0,0,0};
+    nLayerEndcapLinkedModules.clear();
+    nLayerEndcapLinkedModules = {0,0,0,0,0,0};
+
     averageEndcapRingLinkedModuleOccupancy.clear();
+    nRingEndcapLinkedModules.clear();
     for(int i=0;i<15;i++)
+    {
       averageEndcapRingLinkedModuleOccupancy.push_back(0);
+      nRingEndcapLinkedModules.push_back(0);
+    }
     std::vector<int> nEndcapRingModules(15,0);
 
     LayerBarrelLinkedModuleOccupancy.clear();
@@ -93,6 +105,9 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
       {
         if((module->getMiniDoubletPtrs()).size() != 0)
         {
+          nBarrelLinkedModules += nConnectedModules;
+          nLayerBarrelLinkedModules.at(module->layer()-1) += nConnectedModules;
+
           BarrelLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
           averageBarrelLinkedModuleOccupancy += connectedModuleOccupancy;
           nBarrelModules++;
@@ -106,6 +121,10 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
       {
         if((module->getMiniDoubletPtrs()).size() != 0)
         {
+          nEndcapLinkedModules += nConnectedModules;
+          nLayerEndcapLinkedModules.at(module->layer()-1) += nConnectedModules;
+          nRingEndcapLinkedModules.at(module->ring()-1) += nConnectedModules;
+
           EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
           averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;
           nEndcapModules++;
@@ -124,16 +143,24 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
     averageBarrelLinkedModuleOccupancy = (nBarrelModules != 0) ? averageBarrelLinkedModuleOccupancy / nBarrelModules : 0;
     averageEndcapLinkedModuleOccupancy = (nEndcapModules != 0) ? averageEndcapLinkedModuleOccupancy / nEndcapModules : 0;
 
+    nBarrelLinkedModules = (nBarrelModules != 0) ? nBarrelLinkedModules/nBarrelModules : 0;
+    nEndcapLinkedModules = (nEndcapModules != 0) ? nEndcapLinkedModules/nEndcapModules : 0;
+
     for(int i=0;i<6;i++)
     {
       averageLayerBarrelLinkedModuleOccupancy[i] = (nBarrelLayerModules[i] != 0) ? averageLayerBarrelLinkedModuleOccupancy[i]/nBarrelLayerModules[i] : 0;
 
       averageLayerEndcapLinkedModuleOccupancy[i] = (nEndcapLayerModules[i] != 0) ? averageLayerEndcapLinkedModuleOccupancy[i]/nEndcapLayerModules[i] : 0;
 
+      nLayerBarrelLinkedModules[i] = (nBarrelLayerModules[i] != 0) ? nLayerBarrelLinkedModules[i]/nBarrelLayerModules[i] : 0;
+      nLayerEndcapLinkedModules[i] = (nEndcapLayerModules[i] != 0) ? nLayerEndcapLinkedModules[i]/nEndcapLayerModules[i] : 0;
+
     }
 
     for(int i=0;i<15;i++)
     {
       averageEndcapRingLinkedModuleOccupancy.at(i) = (nEndcapRingModules.at(i) !=0) ? averageEndcapRingLinkedModuleOccupancy.at(i)/nEndcapRingModules.at(i) : 0;
+
+      nRingEndcapLinkedModules[i] = (nEndcapRingModules.at(i) != 0) ? nRingEndcapLinkedModules[i]/nEndcapRingModules.at(i) : 0;
     }
 }

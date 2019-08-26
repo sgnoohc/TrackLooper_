@@ -22,10 +22,13 @@ class StudyLinkedModule : public Study
     float averageEndcapLinkedModuleOccupancy;
 
     std::vector<std::vector<float>> LayerBarrelLinkedModuleOccupancy;
+    std::vector<int> nLayerBarrelLinkedModules;
     std::vector<float> averageLayerBarrelLinkedModuleOccupancy;
     std::vector<std::vector<float>> LayerEndcapLinkedModuleOccupancy;
+    std::vector<int> nLayerEndcapLinkedModules;
     std::vector<float> averageLayerEndcapLinkedModuleOccupancy;
     std::vector<std::vector<float>> RingEndcapLinkedModuleOccupancy;
+    std::vector<int> nRingEndcapLinkedModules;
     std::vector<float> averageEndcapRingLinkedModuleOccupancy;
 
     StudyLinkedModule(const char* studyName);
