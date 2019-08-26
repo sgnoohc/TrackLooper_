@@ -20,6 +20,7 @@ class StudyLinkedModule : public Study
     std::vector<float> EndcapLinkedModuleOccupancy;
     float averageBarrelLinkedModuleOccupancy;
     float averageEndcapLinkedModuleOccupancy;
+    int nBarrelLinkedModules,nEndcapLinkedModules;
 
     std::vector<std::vector<float>> LayerBarrelLinkedModuleOccupancy;
     std::vector<int> nLayerBarrelLinkedModules;
