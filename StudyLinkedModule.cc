@@ -9,8 +9,8 @@ void StudyLinkedModule::bookStudy()
 {
 
     ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
-    ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_modules_in_barrel"),100,0,100,[&](){return nBarrelLinkedModules;})
-    ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_modules_in_endcap"),100,0,100,[&](){return nEndcapLinkedModules;})
+    ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_modules_in_barrel"),100,0,100,[&](){return nBarrelLinkedModules;});
+    ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_modules_in_endcap"),100,0,100,[&](){return nEndcapLinkedModules;});
 
     ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageBarrelLinkedModuleOccupancy;});
 
