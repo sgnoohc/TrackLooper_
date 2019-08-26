@@ -9,7 +9,8 @@ void StudyLinkedModule::bookStudy()
 {
 
     ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_barrel"),100,0,100,[&](){return BarrelLinkedModuleOccupancy;});
-    ana.histograms.addHistogram(TString::Foromat("Number_of_Linked_Modules_in_barrel"),10,0,10,[&](){return nLinkedModules})
+    ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_modules_in_barrel"),100,0,100,[&](){return nBarrelLinkedModules;})
+    ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_modules_in_endcap"),100,0,100,[&](){return nEndcapLinkedModules;})
 
     ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_barrel"),1000,0,100,[&](){return averageBarrelLinkedModuleOccupancy;});
 
@@ -26,6 +27,9 @@ void StudyLinkedModule::bookStudy()
       ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return averageLayerEndcapLinkedModuleOccupancy[i];});
 
       ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap_for_layer_%d",i+1),1000,0,100,[&,i](){return LayerEndcapLinkedModuleOccupancy.at(i);});
+
+      ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_Modules_in_Barrel_for_layer_%d",i+1),100,0,100,[&,i](){return nLayerBarrelLinkedModules.at(i);});
+      ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_Modules_in_endcap_for_layer_%d",i+1),100,0,100,[&,i](){return nLayerEndcapLinkedModules.at(i);});
     }
 
 
@@ -34,6 +38,8 @@ void StudyLinkedModule::bookStudy()
       ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingLinkedModuleOccupancy[i];});
 
       ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return RingEndcapLinkedModuleOccupancy.at(i);});
+
+      ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_Modules_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return nRingEndcapLinkedModules.at(i);});
     }
 }
 
