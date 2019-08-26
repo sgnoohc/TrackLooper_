@@ -41,7 +41,7 @@ void StudyMDOccupancy::bookStudy()
 
 void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
-    std::vector<SDL::Module*> moduleList = event.getModulePtrs();
+    std::vector<SDL::Module*> moduleList = event.getLowerModulePtrs();
 
     averageOccupancyInBarrel = 0;
     averageOccupancyInEndcap = 0;
@@ -85,39 +85,55 @@ void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned
     for(auto &module:moduleList)
     {
       averageLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
-      nLayerModules.at(module->layer()-1)++;
+      if((module->getMiniDoubletPtrs()).size() != 0)
+      {
+        nLayerModules.at(module->layer()-1)++;
+      }
       LayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs()).size());
       if(module->subdet() == SDL::Module::Barrel) //barrel module
       {
         averageOccupancyInBarrel += (module->getMiniDoubletPtrs()).size();
-        nBarrelModules ++;
-
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          nBarrelModules ++;
+        }
         occupancyInBarrel.push_back((module->getMiniDoubletPtrs()).size());
 
         averageBarrelLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
+
         nBarrelLayerModules.at(module->layer()-1) ++;
-
-        BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
-
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
+        }
       }
       else if(module->subdet() == SDL::Module::Endcap) //endcap module
       {
         averageOccupancyInEndcap += (module->getMiniDoubletPtrs()).size();
-        nEndcapModules ++;
-
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          nEndcapModules ++;
+        }
         occupancyInEndcap.push_back((module->getMiniDoubletPtrs()).size());
 
         averageEndcapLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
-        nEndcapLayerModules.at(module->layer()-1) ++;
+
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          nEndcapLayerModules.at(module->layer()-1) ++;
+        }
 
         EndcapLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
 
 
         averageEndcapRingOccupancy.at(module->ring()-1) += (module->getMiniDoubletPtrs()).size();
-        nEndcapRingModules.at(module->ring()-1) ++;
+
+        if((module->getMiniDoubletPtrs()).size() != 0)
+        {
+          nEndcapRingModules.at(module->ring()-1) ++;
+        }
 
         EndcapRingOccupancy.at(module->ring()-1).push_back((module->getMiniDoubletPtrs().size()));
-
       }
     }
 
