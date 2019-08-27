@@ -112,8 +112,8 @@ void StudyLinkedModule::prepareStudy()
       LayerBarrelLinkedModuleOccupancy.push_back(std::vector<float>());
       LayerEndcapLinkedModuleOccupancy.push_back(std::vector<float>());
 
-      nLayerBarrelLinkedModuleOccupancy.push_back(std::vector<int>());
-      nLayerEndcapLinkedModuleOccupancy.push_back(std::vector<int>());
+      nLayerBarrelLinkedModules.push_back(std::vector<int>());
+      nLayerEndcapLinkedModules.push_back(std::vector<int>());
     }
 
     for(int i=0;i<15;i++)
@@ -179,40 +179,40 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
 
                 EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
                 averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;
-                nEndcapModules++;
+                nEndcapPrimaryModules++;
 
                 LayerEndcapLinkedModuleOccupancy.at(module->layer()-1).push_back(connectedModuleOccupancy);
                 averageLayerEndcapLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
-                nEndcapLayerModules.at(module->layer()-1)++;
+                nEndcapLayerPrimaryModules.at(module->layer()-1)++;
 
                 RingEndcapLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
                 averageEndcapRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
-                nEndcapRingModules.at(module->ring()-1) ++;
+                nEndcapRingPrimaryModules.at(module->ring()-1) ++;
             }
         }
     }
 
     averageBarrelLinkedModuleOccupancy = (nBarrelPrimaryModules != 0) ? averageBarrelLinkedModuleOccupancy / nBarrelPrimaryModules : 0;
-    averageEndcapLinkedModuleOccupancy = (nEndcapModules != 0) ? averageEndcapLinkedModuleOccupancy / nEndcapModules : 0;
+    averageEndcapLinkedModuleOccupancy = (nEndcapPrimaryModules != 0) ? averageEndcapLinkedModuleOccupancy / nEndcapPrimaryModules : 0;
 
     nBarrelAverageLinkedModules = (nBarrelPrimaryModules != 0) ? nBarrelAverageLinkedModules/nBarrelPrimaryModules : 0;
-    nEndcapAverageLinkedModules = (nEndcapModules != 0) ? nEndcapAverageLinkedModules/nEndcapModules : 0;
+    nEndcapAverageLinkedModules = (nEndcapPrimaryModules != 0) ? nEndcapAverageLinkedModules/nEndcapPrimaryModules : 0;
 
     for(int i=0;i<6;i++)
     {
         averageLayerBarrelLinkedModuleOccupancy[i] = (nBarrelLayerPrimaryModules[i] != 0) ? averageLayerBarrelLinkedModuleOccupancy[i]/nBarrelLayerPrimaryModules[i] : 0;
     
-        averageLayerEndcapLinkedModuleOccupancy[i] = (nEndcapLayerModules[i] != 0) ? averageLayerEndcapLinkedModuleOccupancy[i]/nEndcapLayerModules[i] : 0;
+        averageLayerEndcapLinkedModuleOccupancy[i] = (nEndcapLayerPrimaryModules[i] != 0) ? averageLayerEndcapLinkedModuleOccupancy[i]/nEndcapLayerPrimaryModules[i] : 0;
 
         nLayerBarrelAverageLinkedModules[i] = (nBarrelLayerPrimaryModules[i] != 0) ? nLayerBarrelAverageLinkedModules[i]/nBarrelLayerPrimaryModules[i] : 0;
 
-        nLayerEndcapAverageLinkedModules[i] = (nEndcapLayerModules[i] != 0) ? nLayerEndcapAverageLinkedModules[i]/nEndcapLayerModules[i] : 0;
+        nLayerEndcapAverageLinkedModules[i] = (nEndcapLayerPrimaryModules[i] != 0) ? nLayerEndcapAverageLinkedModules[i]/nEndcapLayerPrimaryModules[i] : 0;
 
     }
 
     for(int i=0;i<15;i++)
     {
-        averageEndcapRingLinkedModuleOccupancy.at(i) = (nEndcapRingModules.at(i) !=0) ? averageEndcapRingLinkedModuleOccupancy.at(i)/nEndcapRingModules.at(i) : 0;
+        averageEndcapRingLinkedModuleOccupancy.at(i) = (nEndcapRingPrimaryModules.at(i) !=0) ? averageEndcapRingLinkedModuleOccupancy.at(i)/nEndcapRingPrimaryModules.at(i) : 0;
 
         nRingEndcapAverageLinkedModules[i] = (nEndcapRingPrimaryModules.at(i) != 0) ? nRingEndcapAverageLinkedModules[i]/nEndcapRingPrimaryModules.at(i) : 0;
     }
