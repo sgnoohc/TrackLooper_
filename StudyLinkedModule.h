@@ -35,7 +35,7 @@ class StudyLinkedModule : public Study
     std::vector<std::vector<float>> LayerEndcapLinkedModuleOccupancy;
     std::vector<std::vector<int>> nLayerEndcapLinkedModules;
 
-    std::vector<int> nLayerEndcapLinkedModules;
+    std::vector<int> nLayerEndcapAverageLinkedModules;
     std::vector<float> averageLayerEndcapLinkedModuleOccupancy;
 
     std::vector<std::vector<float>> RingEndcapLinkedModuleOccupancy;

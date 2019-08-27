@@ -60,8 +60,8 @@ void StudyLinkedModule::prepareStudy()
 
     averageBarrelLinkedModuleOccupancy = 0;
     averageEndcapLinkedModuleOccupancy = 0;
-    nAverageBarrelLinkedModules = 0;
-    nAverageEndcapLinkedModules = 0;
+    nBarrelAverageLinkedModules = 0;
+    nEndcapAverageLinkedModules = 0;
 
     BarrelLinkedModuleOccupancy.clear();
     EndcapLinkedModuleOccupancy.clear();

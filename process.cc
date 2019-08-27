@@ -325,17 +325,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    // studies.push_back(new StudyLinkedModule("studyLinkedModule"));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Tilt", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Tilt, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltBarrel4", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltBarrel4, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltEndcap1", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltEndcap1, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
-    studies.push_back(new StudyTrackletSelection("studySelTlBarrelBarrelBarrelBarrel", StudyTrackletSelection::kStudySelBarrelBarrelBarrelBarrel));
+    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
 
     // book the studies
     for (auto& study : studies)
