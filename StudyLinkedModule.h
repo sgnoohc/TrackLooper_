@@ -27,19 +27,19 @@ class StudyLinkedModule : public Study
     int nBarrelAverageLinkedModules,nEndcapAverageLinkedModules;
 
     std::vector<std::vector<float>> LayerBarrelLinkedModuleOccupancy;
-    std::vector<std::vector<int>> nLayerBarrelLinkedModules;
+    std::vector<std::vector<float>> nLayerBarrelLinkedModules;
 
     std::vector<int> nLayerBarrelAverageLinkedModules;
     std::vector<float> averageLayerBarrelLinkedModuleOccupancy;
 
     std::vector<std::vector<float>> LayerEndcapLinkedModuleOccupancy;
-    std::vector<std::vector<int>> nLayerEndcapLinkedModules;
+    std::vector<std::vector<float>> nLayerEndcapLinkedModules;
 
     std::vector<int> nLayerEndcapAverageLinkedModules;
     std::vector<float> averageLayerEndcapLinkedModuleOccupancy;
 
     std::vector<std::vector<float>> RingEndcapLinkedModuleOccupancy;
-    std::vector<std::vector<int>> nRingEndcapLinkedModules;
+    std::vector<std::vector<float>> nRingEndcapLinkedModules;
 
     std::vector<int> nRingEndcapAverageLinkedModules;
     std::vector<float> averageEndcapRingLinkedModuleOccupancy;

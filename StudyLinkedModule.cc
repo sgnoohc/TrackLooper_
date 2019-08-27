@@ -112,8 +112,8 @@ void StudyLinkedModule::prepareStudy()
       LayerBarrelLinkedModuleOccupancy.push_back(std::vector<float>());
       LayerEndcapLinkedModuleOccupancy.push_back(std::vector<float>());
 
-      nLayerBarrelLinkedModules.push_back(std::vector<int>());
-      nLayerEndcapLinkedModules.push_back(std::vector<int>());
+      nLayerBarrelLinkedModules.push_back(std::vector<float>());
+      nLayerEndcapLinkedModules.push_back(std::vector<float>());
     }
 
     for(int i=0;i<15;i++)
