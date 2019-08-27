@@ -18,8 +18,8 @@ class StudyLinkedModule : public Study
     const char *studyname;
     std::vector<float> BarrelLinkedModuleOccupancy;
     std::vector<float> EndcapLinkedModuleOccupancy;
-    std::vector<int> nBarrelLinkedModules;
-    std::vector<int> nEndcapLinkedModules;
+    std::vector<float> nBarrelLinkedModules;
+    std::vector<float> nEndcapLinkedModules;
 
     float averageBarrelLinkedModuleOccupancy;
     float averageEndcapLinkedModuleOccupancy;
