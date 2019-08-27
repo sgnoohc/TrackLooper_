@@ -77,64 +77,72 @@ void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned
         EndcapLayerOccupancy.push_back(std::vector<float>());
     }
     for(int i=0;i<15;i++)
+    {
       EndcapRingOccupancy.push_back(std::vector<float>());
+    }
 
 
     //Loop over modules, and get mini-doublet occupancy
 
     for(auto &module:moduleList)
     {
-      averageLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
-      if((module->getMiniDoubletPtrs()).size() != 0)
-      {
-        nLayerModules.at(module->layer()-1)++;
-      }
-      LayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs()).size());
-      if(module->subdet() == SDL::Module::Barrel) //barrel module
-      {
-        averageOccupancyInBarrel += (module->getMiniDoubletPtrs()).size();
+        averageLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
         if((module->getMiniDoubletPtrs()).size() != 0)
         {
-          nBarrelModules ++;
+            nLayerModules.at(module->layer()-1)++;
         }
-        occupancyInBarrel.push_back((module->getMiniDoubletPtrs()).size());
+        LayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs()).size());
 
-        averageBarrelLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
-
-        nBarrelLayerModules.at(module->layer()-1) ++;
-        if((module->getMiniDoubletPtrs()).size() != 0)
+        if(module->subdet() == SDL::Module::Barrel) //barrel module
         {
-          BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
+            averageOccupancyInBarrel += (module->getMiniDoubletPtrs()).size();
+            if((module->getMiniDoubletPtrs()).size() != 0)
+            {
+                nBarrelModules ++;
+            }
+
+            occupancyInBarrel.push_back((module->getMiniDoubletPtrs()).size());
+
+            averageBarrelLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
+
+
+            if((module->getMiniDoubletPtrs().size()) != 0)
+            {
+                nBarrelLayerModules.at(module->layer()-1) ++;
+            }
+
+            BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
+
         }
-      }
-      else if(module->subdet() == SDL::Module::Endcap) //endcap module
-      {
-        averageOccupancyInEndcap += (module->getMiniDoubletPtrs()).size();
-        if((module->getMiniDoubletPtrs()).size() != 0)
+
+        else if(module->subdet() == SDL::Module::Endcap) //endcap module
         {
-          nEndcapModules ++;
+            averageOccupancyInEndcap += (module->getMiniDoubletPtrs()).size();
+            if((module->getMiniDoubletPtrs()).size() != 0)
+            {
+                nEndcapModules ++;
+            }
+            occupancyInEndcap.push_back((module->getMiniDoubletPtrs()).size());
+
+            averageEndcapLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
+
+            if((module->getMiniDoubletPtrs()).size() != 0)
+            {
+                nEndcapLayerModules.at(module->layer()-1) ++;
+            }
+
+            EndcapLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
+
+            averageEndcapRingOccupancy.at(module->ring()-1) += (module->getMiniDoubletPtrs()).size();
+
+            if((module->getMiniDoubletPtrs()).size() != 0)
+            {
+                nEndcapRingModules.at(module->ring()-1) ++;
+            }
+
+            EndcapRingOccupancy.at(module->ring()-1).push_back((module->getMiniDoubletPtrs().size()));
+
         }
-        occupancyInEndcap.push_back((module->getMiniDoubletPtrs()).size());
-
-        averageEndcapLayerOccupancy.at(module->layer()-1) += (module->getMiniDoubletPtrs()).size();
-
-        if((module->getMiniDoubletPtrs()).size() != 0)
-        {
-          nEndcapLayerModules.at(module->layer()-1) ++;
-        }
-
-        EndcapLayerOccupancy.at(module->layer()-1).push_back((module->getMiniDoubletPtrs().size()));
-
-
-        averageEndcapRingOccupancy.at(module->ring()-1) += (module->getMiniDoubletPtrs()).size();
-
-        if((module->getMiniDoubletPtrs()).size() != 0)
-        {
-          nEndcapRingModules.at(module->ring()-1) ++;
-        }
-
-        EndcapRingOccupancy.at(module->ring()-1).push_back((module->getMiniDoubletPtrs().size()));
-      }
     }
 
 
@@ -144,16 +152,16 @@ void StudyMDOccupancy::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned
     for(int i=0;i<6;i++)
     {
 
-      averageBarrelLayerOccupancy[i] = (nBarrelLayerModules[i] != 0) ? averageBarrelLayerOccupancy[i]/nBarrelLayerModules[i] : 0;
+        averageBarrelLayerOccupancy[i] = (nBarrelLayerModules[i] != 0) ? averageBarrelLayerOccupancy[i]/nBarrelLayerModules[i] : 0;
 
-      averageEndcapLayerOccupancy[i] = (nEndcapLayerModules[i] != 0) ? averageEndcapLayerOccupancy[i]/nEndcapLayerModules[i] : 0;
+        averageEndcapLayerOccupancy[i] = (nEndcapLayerModules[i] != 0) ? averageEndcapLayerOccupancy[i]/nEndcapLayerModules[i] : 0;
 
-      averageLayerOccupancy[i] = (nLayerModules[i] != 0) ? averageLayerOccupancy[i]/nLayerModules[i] : 0;
+        averageLayerOccupancy[i] = (nLayerModules[i] != 0) ? averageLayerOccupancy[i]/nLayerModules[i] : 0;
     }
 
     for(int i=0;i<15;i++)
     {
-      averageEndcapRingOccupancy.at(i) = (nEndcapRingModules.at(i) !=0) ? averageEndcapRingOccupancy.at(i)/nEndcapRingModules.at(i) : 0;
+        averageEndcapRingOccupancy.at(i) = (nEndcapRingModules.at(i) !=0) ? averageEndcapRingOccupancy.at(i)/nEndcapRingModules.at(i) : 0;
     }
 
 }
