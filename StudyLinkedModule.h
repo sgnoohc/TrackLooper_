@@ -41,7 +41,7 @@ class StudyLinkedModule : public Study
     std::vector<std::vector<float>> RingEndcapLinkedModuleOccupancy;
     std::vector<std::vector<float>> nRingEndcapLinkedModules;
 
-    std::vector<int> nRingEndcapAverageLinkedModules;
+    std::vector<float> nRingEndcapAverageLinkedModules;
     std::vector<float> averageEndcapRingLinkedModuleOccupancy;
 
     int nBarrelPrimaryModules, nEndcapPrimaryModules;
