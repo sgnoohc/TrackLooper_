@@ -97,8 +97,8 @@ plot_occupancy(endcap_average_occupancy_hist,"endcap average mini-doublet occupa
 plot_occupancy(barrel_average_linked_modules_hist,"average number of linked modules in barrel")
 plot_occupancy(endcap_average_linked_modules_hist,"average number of linked modules in endcap")
 
-plot_occupancy(barrel_linked_modules_hist,"number of linked modules in barrel")
-plot_occupancy(endcap_linked_modules_hist,"number of linked modules in endcap")
+plot_occupancy(barrel_linked_module_hist,"number of linked modules in barrel")
+plot_occupancy(endcap_linked_module_hist,"number of linked modules in endcap")
 
 
 for i in range(len(layer_barrel_occupancy_hists)):
