@@ -49,8 +49,8 @@ class StudyLinkedModule : public Study
     std::vector<int> nEndcapLayerPrimaryModules;
     std::vector<int> nEndcapRingPrimaryModules;
     
-    std::vector<int> zeroConnectedModuleEndcapLayer;
-    std::vector<int> zeroConnectedModuleEndcapRing;
+    std::vector<float> zeroConnectedModuleEndcapLayer;
+    std::vector<float> zeroConnectedModuleEndcapRing;
 
 
 
