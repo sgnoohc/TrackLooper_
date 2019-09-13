@@ -52,7 +52,7 @@ void StudyLinkedModule::bookStudy()
 
     //2D layer-ring histogram of zero modules
     //
-    ana.histograms.add2DVecHistogram("zero_connected_module_ring",15,0,15,"layer",6,0,6,[&](){return zeroConnectedModuleRing;},[&](){return zeroConnectedModuleLayer;});
+    ana.histograms.add2DVecHistogram("zero_connected_module_ring",15,0,15,"layer",6,0,6,[&](){return zeroConnectedModuleEndcapRing;},[&](){return zeroConnectedModuleEndcapLayer;});
 }
 
 
@@ -127,8 +127,8 @@ void StudyLinkedModule::prepareStudy()
       nRingEndcapLinkedModules.push_back(std::vector<float>());
     }
 
-    zeroConnectedModuleLayer.clear();
-    zeroConnectedModuleRing.clear();
+    zeroConnectedModuleEndcapLayer.clear();
+    zeroConnectedModuleEndcapRing.clear();
 
 }
 
@@ -199,8 +199,8 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
                 //Zero connected modules
                 if(nConnectedModules == 0)
                 {
-                    zeroConnectedModuleLayer.push_back(module->layer());
-                    zeroConnectedModuleRing.push_back(module->ring());
+                    zeroConnectedModuleEndcapLayer.push_back(module->layer());
+                    zeroConnectedModuleEndcapRing.push_back(module->ring());
                 }
             }
         }
