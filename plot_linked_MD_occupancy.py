@@ -105,6 +105,18 @@ plot_occupancy(barrel_linked_module_hist,"number of linked modules in barrel")
 plot_occupancy(endcap_linked_module_hist,"number of linked modules in endcap")
 
 
+zero_module_2d_hist = f.Get("Root__zero_connected_module_ring_v_layer")
+ply.plot_hist_2d(
+    hist = zero_module_2d_hist,
+    options = {
+            "xaxis_label":"Endcap ring number",
+            "yaxis_label":"Endcap layer number",
+            "title":"Endcap ring and layer numbers for zero connection modules",
+            "output_name":"zero_connection_layer_ring.pdf",
+        }
+        )
+
+
 for i in range(len(layer_barrel_occupancy_hists)):
     plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Linked Mini-doublet Occupancy for layer "+str(i+1))
     if i != 5:
