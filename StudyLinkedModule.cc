@@ -49,6 +49,10 @@ void StudyLinkedModule::bookStudy()
         ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingLinkedModuleOccupancy[i];});
 
     }
+
+    //2D layer-ring histogram of zero modules
+    //
+    ana.histograms.add2DVecHistogram("zero_connected_module_ring",15,0,15,"layer",6,0,6,[&](){return zeroConnectedModuleRing;},[&](){return zeroConnectedModuleLayer;});
 }
 
 
@@ -123,6 +127,9 @@ void StudyLinkedModule::prepareStudy()
       nRingEndcapLinkedModules.push_back(std::vector<float>());
     }
 
+    zeroConnectedModuleLayer.clear();
+    zeroConnectedModuleRing.clear();
+
 }
 
 void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
@@ -188,8 +195,16 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
                 RingEndcapLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
                 averageEndcapRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
                 nEndcapRingPrimaryModules.at(module->ring()-1) ++;
+
+                //Zero connected modules
+                if(nConnectedModules == 0)
+                {
+                    zeroConnectedModuleLayer.push_back(module->layer());
+                    zeroConnectedModuleRing.push_back(module->ring());
+                }
             }
         }
+
     }
 
     averageBarrelLinkedModuleOccupancy = (nBarrelPrimaryModules != 0) ? averageBarrelLinkedModuleOccupancy / nBarrelPrimaryModules : 0;
