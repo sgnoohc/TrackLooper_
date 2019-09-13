@@ -112,7 +112,7 @@ ply.plot_hist_2d(
             "xaxis_label":"Endcap ring number",
             "yaxis_label":"Endcap layer number",
             "title":"Endcap ring and layer numbers for zero connection modules",
-            "output_name":"zero_connection_layer_ring.pdf",
+            "output_name":"/home/users/bsathian/public_html/SDL/zero_connection_layer_ring.pdf",
         }
         )
 
