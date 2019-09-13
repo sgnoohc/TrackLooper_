@@ -43,7 +43,7 @@ void StudyLinkedModule::bookStudy()
     {
         ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return RingEndcapLinkedModuleOccupancy.at(i);});
 
-        ana.histograms.addHistogram(TString::Format("average_number_of_Linked_Modules_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return nRingEndcapAverageLinkedModules.at(i);});
+        ana.histograms.addHistogram(TString::Format("average_number_of_Linked_modules_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return nRingEndcapAverageLinkedModules.at(i);});
         ana.histograms.addVecHistogram(TString::Format("number_of_Linked_modules_in_endcap_for_ring_%d",i+1),100,0,100,[&,i](){return nRingEndcapLinkedModules.at(i);});
         
         ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_endcap_for_ring_%d",i+1),1000,0,100,[&,i](){return averageEndcapRingLinkedModuleOccupancy[i];});
