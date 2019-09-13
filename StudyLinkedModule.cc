@@ -52,7 +52,7 @@ void StudyLinkedModule::bookStudy()
 
     //2D layer-ring histogram of zero modules
     //
-    ana.histograms.add2DVecHistogram("zero_connected_module_ring",15,0,15,"layer",6,0,6,[&](){return zeroConnectedModuleEndcapRing;},[&](){return zeroConnectedModuleEndcapLayer;});
+    ana.histograms.add2DVecHistogram("zero_connected_module_ring",16,0,16,"layer",6,0,6,[&](){return zeroConnectedModuleEndcapRing;},[&](){return zeroConnectedModuleEndcapLayer;});
 }
 
 
