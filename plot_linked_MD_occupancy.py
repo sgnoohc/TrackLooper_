@@ -128,20 +128,20 @@ for i in range(len(layer_barrel_occupancy_hists)):
 for i in range(len(layer_barrel_average_occupancy_hists)):
     plot_occupancy(layer_barrel_average_occupancy_hists[i],"Average barrel Linked mini-doublet occupancy for layer "+str(i+1))
     if i!=5 :
-        plot_occupancy(linked_modules_in_barrel_layer[i],"number of linked modules in barrel layer "+str(i+1),additional_options = {"yaxis_log":True})
+        plot_occupancy(linked_modules_in_barrel_layer[i],"number of linked modules in barrel layer "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False})
         plot_occupancy(linked_average_modules_in_barrel_layer[i],"average number of linked modules in barrel layer "+str(i+1))
     if i!= 5:
         plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap Linked mini-doublet occupancy for layer "+str(i+1))
     if i<4:
         plot_occupancy(linked_average_modules_in_endcap_layer[i],"average number of linked modules in endcap layer "+str(i+1))
-        plot_occupancy(linked_modules_in_endcap_layer[i],"number of linked modules in endcap layer "+str(i+1),additional_options = {"yaxis_log":True})
+        plot_occupancy(linked_modules_in_endcap_layer[i],"number of linked modules in endcap layer "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False})
 
 
 for i in range(len(ring_endcap_average_occupancy_hists)):
     plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap mini-doublet occupancy in ring "+str(i+1))
     plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap mini-doublet occupancy in ring "+str(i+1))
     if i< 14:
-        plot_occupancy(linked_modules_in_endcap_ring[i],"number of linked modules in endcap ring "+str(i+1),additional_options = {"yaxis_log":True})
+        plot_occupancy(linked_modules_in_endcap_ring[i],"number of linked modules in endcap ring "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False})
         plot_occupancy(linked_average_modules_in_endcap_ring[i],"average number of linked modules in endcap ring "+str(i+1))
 
 
