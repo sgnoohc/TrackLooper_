@@ -326,6 +326,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
     studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+    studies.push_back(new StudyTrackletSelection("studySelTlSpecific", StudyTrackletSelection::kStudySelSpecific));
 
     // book the studies
     for (auto& study : studies)
@@ -410,7 +411,8 @@ int main(int argc, char** argv)
         // Create segments
         event.createSegments();
 
-        // // Create tracklets
+        // Create tracklets
+        event.createTracklets(SDL::AllComb_TLAlgo);
         // event.createTracklets();
 
         // Print content in the event
