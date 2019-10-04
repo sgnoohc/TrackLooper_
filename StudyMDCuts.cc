@@ -104,11 +104,11 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
             //Step 1 : Reproducing Philip's plots
             md->runMiniDoubletAlgo(SDL::Default_MDAlgo);
 
-            dzValues.push_back(md->getDZ());
+            dzValues.push_back(md->getDz());
             dPhiValues.push_back(md->getDeltaPhi());
             dPhiChangeValues.push_back(md->getDeltaPhiChange());
 
-            layerdzValues.at(module->layer()-1).push_back(md->getDZ());
+            layerdzValues.at(module->layer()-1).push_back(md->getDz());
             layerdPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
             layerdPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
 
@@ -116,11 +116,11 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
             if(module->subdet() == SDL::Module::Barrel)
             {
 
-                barreldzValues.push_back(md->getDZ());
+                barreldzValues.push_back(md->getDz());
                 barreldPhiValues.push_back(md->getDeltaPhi());
                 barreldPhiChangeValues.push_back(md->getDeltaPhiChange());
 
-                layerBarreldzValues.at(module->layer()-1).push_back(md->getDZ());
+                layerBarreldzValues.at(module->layer()-1).push_back(md->getDz());
                 layerBarreldPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                 layerBarreldPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
             }
@@ -128,11 +128,11 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
             else if(module->subdet() == SDL::Module::Endcap)
             {
 
-                endcapdzValues.push_back(md->getDZ());
+                endcapdzValues.push_back(md->getDz());
                 endcapdPhiValues.push_back(md->getDeltaPhi());
                 endcapdPhiChangeValues.push_back(md->getDeltaPhiChange());
 
-                layerEndcapdzValues.at(module->layer()-1).push_back(md->getDZ());
+                layerEndcapdzValues.at(module->layer()-1).push_back(md->getDz());
                 layerEndcapdPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                 layerEndcapdPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
             }
