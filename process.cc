@@ -264,30 +264,36 @@ int main(int argc, char** argv)
     ana.cutflow.setTFile(ana.output_tfile);
     // ana.cutflow.addCut("CutWeight", UNITY, UNITY);
 
+    // Create ttree to output to the ana.output_tfile
+    ana.output_ttree = new TTree("tree", "tree");
+
+    // Create TTreeX instance that will take care of the interface part of TTree
+    ana.tx = new RooUtil::TTreeX(ana.output_ttree);
+
     // Print cut structure
     ana.cutflow.printCuts();
 
-    std::vector<float> dzs;
-    std::vector<float> dzFracs;
-    std::vector<float> drts;
-    std::vector<float> fabsdPhiDiffs;
-    std::vector<float> fabsdPhiModDiffs;
-    ana.histograms.addVecHistogram("md_failed_dzs", 50, 0, 2, [&]() { return dzs; } );
-    ana.histograms.addVecHistogram("md_failed_dzFracs", 50, 0, 0.05, [&]() { return dzFracs; } );
-    ana.histograms.addVecHistogram("md_failed_drts", 50, 0, 20, [&]() { return drts; } );
-    ana.histograms.addVecHistogram("md_failed_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs; } );
-    ana.histograms.addVecHistogram("md_failed_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs; } );
+    // std::vector<float> dzs;
+    // std::vector<float> dzFracs;
+    // std::vector<float> drts;
+    // std::vector<float> fabsdPhiDiffs;
+    // std::vector<float> fabsdPhiModDiffs;
+    // ana.histograms.addVecHistogram("md_failed_dzs", 50, 0, 2, [&]() { return dzs; } );
+    // ana.histograms.addVecHistogram("md_failed_dzFracs", 50, 0, 0.05, [&]() { return dzFracs; } );
+    // ana.histograms.addVecHistogram("md_failed_drts", 50, 0, 20, [&]() { return drts; } );
+    // ana.histograms.addVecHistogram("md_failed_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs; } );
+    // ana.histograms.addVecHistogram("md_failed_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs; } );
 
-    std::vector<float> dzs_matched;
-    std::vector<float> dzFracs_matched;
-    std::vector<float> drts_matched;
-    std::vector<float> fabsdPhiDiffs_matched;
-    std::vector<float> fabsdPhiModDiffs_matched;
-    ana.histograms.addVecHistogram("md_matched_dzs", 50, 0, 2, [&]() { return dzs_matched; } );
-    ana.histograms.addVecHistogram("md_matched_dzFracs", 50, 0, 0.05, [&]() { return dzFracs_matched; } );
-    ana.histograms.addVecHistogram("md_matched_drts", 50, 0, 20, [&]() { return drts_matched; } );
-    ana.histograms.addVecHistogram("md_matched_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs_matched; } );
-    ana.histograms.addVecHistogram("md_matched_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs_matched; } );
+    // std::vector<float> dzs_matched;
+    // std::vector<float> dzFracs_matched;
+    // std::vector<float> drts_matched;
+    // std::vector<float> fabsdPhiDiffs_matched;
+    // std::vector<float> fabsdPhiModDiffs_matched;
+    // ana.histograms.addVecHistogram("md_matched_dzs", 50, 0, 2, [&]() { return dzs_matched; } );
+    // ana.histograms.addVecHistogram("md_matched_dzFracs", 50, 0, 0.05, [&]() { return dzFracs_matched; } );
+    // ana.histograms.addVecHistogram("md_matched_drts", 50, 0, 20, [&]() { return drts_matched; } );
+    // ana.histograms.addVecHistogram("md_matched_fabsdPhiDiffs", 50, -1, 1, [&]() { return fabsdPhiDiffs_matched; } );
+    // ana.histograms.addVecHistogram("md_matched_fabsdPhiModDiffs", 50, -1, 5, [&]() { return fabsdPhiModDiffs_matched; } );
 
     // pt_boundaries
     std::vector<float> pt_boundaries = {0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50};
@@ -295,48 +301,53 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-    // studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
-    // studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
-    // studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    // studies.push_back(new StudyOccupancy("studyOccupancy"));
-    // studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    // studies.push_back(new StudyLinkedModule("studyLinkedModule"));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1Barrel3", StudyTrackletEfficiency::kStudyEffBarrel1Barrel3, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1FlatBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1FlatBarrel3Flat, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Flat", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Flat, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3Tilt", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3Tilt, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltBarrel4", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltBarrel4, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrel1TiltBarrel3TiltEndcap1", StudyTrackletEfficiency::kStudyEffBarrel1TiltBarrel3TiltEndcap1, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelBarrelBarrel", StudyTrackletEfficiency::kStudyEffBarrelBarrelBarrelBarrel, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlBarrelBarrelEndcapEndcap", StudyTrackletEfficiency::kStudyEffBarrelBarrelEndcapEndcap, pt_boundaries));
-    // studies.push_back(new StudyTrackletEfficiency("studyEffTlSpecific", StudyTrackletEfficiency::kStudyEffSpecific, pt_boundaries));
-    // studies.push_back(new StudyTrackletSelection("studySelTlBarrelBarrelBarrelBarrel", StudyTrackletSelection::kStudySelBarrelBarrelBarrelBarrel));
-    studies.push_back(new StudyTrackletSelection("studySelTlSpecific", StudyTrackletSelection::kStudySelSpecific));
+    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
+    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
+    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
+    studies.push_back(new StudyOccupancy("studyOccupancy"));
+    studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
+    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+    studies.push_back(new StudyTrackletEfficiency("all", StudyTrackletEfficiency::kStudyEffAll, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffBB1BB3", StudyTrackletEfficiency::kStudyEffBB1BB3, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffBB2BB4", StudyTrackletEfficiency::kStudyEffBB2BB4, pt_boundaries));
+    studies.push_back(new StudyTrackletEfficiency("studyEffBB3BB5", StudyTrackletEfficiency::kStudyEffBB3BB5, pt_boundaries));
+    // studies.push_back(new StudyTrackletSelection("studySelTlSpecific", StudyTrackletSelection::kStudySelSpecific));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
+    // studies.push_back(new StudySegmentSelection("studySelSgBB12", StudySegmentSelection::kStudySelBB12));
+    // studies.push_back(new StudySegmentSelection("studySelSgBB23", StudySegmentSelection::kStudySelBB23));
+    // studies.push_back(new StudySegmentSelection("studySelSgBB34", StudySegmentSelection::kStudySelBB34));
+    // studies.push_back(new StudySegmentSelection("studySelSgBB45", StudySegmentSelection::kStudySelBB45));
+    // studies.push_back(new StudySegmentSelection("studySelSgBB56", StudySegmentSelection::kStudySelBB56));
+    studies.push_back(new StudyHitOccupancy("studyHitOccu", StudyHitOccupancy::kStudyAll));
+    studies.push_back(new StudyMiniDoubletOccupancy("studyMiniDoubletOccu", StudyMiniDoubletOccupancy::kStudyAll));
+    studies.push_back(new StudySegmentOccupancy("studySegmentOccu", StudySegmentOccupancy::kStudyAll));
 
     // book the studies
     for (auto& study : studies)
@@ -419,6 +430,7 @@ int main(int argc, char** argv)
         event.createMiniDoublets();
 
         // Create segments
+        // event.createSegments(SDL::AllComb_SGAlgo);
         event.createSegments();
 
         // Create tracklets
@@ -431,6 +443,8 @@ int main(int argc, char** argv)
         // {
         //     SDL::cout << event;
         // }
+
+        std::cout << "event" << std::endl;
 
 
 
@@ -472,6 +486,8 @@ int main(int argc, char** argv)
                 // Select only the sim hits that is matched to the muon
                 if (abs(simhit_particle) != 13)
                     continue;
+                // if (simhit_particle != 13)
+                //     continue;
 
                 // list of reco hit matched to this sim hit
                 for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
@@ -500,13 +516,13 @@ int main(int argc, char** argv)
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             // trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
+            // trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             // trackevent->createSegments(SDL::AllComb_SGAlgo);
-            trackevent->createSegments(SDL::Default_SGAlgo);
+            // trackevent->createSegments(SDL::Default_SGAlgo);
 
-            // // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
+            // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
             // trackevent->createTracklets(SDL::AllComb_TLAlgo);
 
             // Push to the vector so we have a data-base of per hit, mini-doublets
@@ -587,6 +603,9 @@ int main(int argc, char** argv)
 
     // Writing output file
     ana.cutflow.saveOutput();
+
+    // Writing ttree output to file
+    ana.output_ttree->Write();
 
     // The below can be sometimes crucial
     delete ana.output_tfile;

@@ -37,6 +37,12 @@ public:
     // Custom Histograms object compatible with RooUtil::Cutflow framework
     RooUtil::Histograms histograms;
 
+    // TTree output for studies
+    TTree* output_ttree;
+
+    // TTreeX to facilitate writing output to ttree
+    RooUtil::TTreeX* tx;
+
 };
 
 extern AnalysisConfig ana;

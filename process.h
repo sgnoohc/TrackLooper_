@@ -26,6 +26,11 @@
 #include "StudyLinkedModule.h"
 #include "StudyTrackletEfficiency.h"
 #include "StudyTrackletSelection.h"
+#include "StudyTrackletSelectionOnTruths.h"
+#include "StudySegmentSelection.h"
+#include "StudyHitOccupancy.h"
+#include "StudyMiniDoubletOccupancy.h"
+#include "StudySegmentOccupancy.h"
 
 #include "constants.h"
 

@@ -6,44 +6,16 @@ import ROOT as r
 
 import sys
 
+drawMDplots = False
+drawSGplots = False
+drawSGSelPlots = False
+drawSGTruthSelPlots = False
+drawTLplots = False
+drawTLSelPlots = True
+
 filename = "debug.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
-
-# p.dump_plot(fnames=["debug.root"],
-#     dirname="plots/log",
-#     dogrep=True,
-#     filter_pattern="deltaBeta",
-#     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
-#     )
-
-# p.dump_plot(fnames=["debug.root"],
-#     dirname="plots/lin",
-#     dogrep=True,
-#     filter_pattern="deltaBeta",
-#     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True},
-#     )
-
-p.dump_plot(fnames=["debug.root"],
-    dirname="plots/tracklet",
-    dogrep=True,
-    filter_pattern="tl_specific_",
-    extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":True, "remove_underflow":True},
-    )
-
-p.dump_plot(fnames=["debug.root"],
-    dirname="plots/tracklet_log",
-    dogrep=True,
-    filter_pattern="tl_specific_",
-    extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
-    )
-
-sys.exit()
-
-# p.dump_plot(fnames=["debug.root"],
-#     dirname="plots/log",
-#     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
-#     )
 
 def plot_eff(num_name, den_name, output_name):
     f = r.TFile(filename)
@@ -87,13 +59,14 @@ def plot_eff(num_name, den_name, output_name):
     if "_z" in output_name and "sg_" in output_name:
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
     if "_ptzoom" in output_name and "sg_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.999, 1.001)
+        eff.GetYaxis().SetRangeUser(0.95, 1.05)
     if "_ptzoom" in output_name and "md_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.999, 1.001)
+        eff.GetYaxis().SetRangeUser(0.98, 1.02)
     if "_ptzoom" in output_name and "tl_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.985, 1.015)
+        eff.GetYaxis().SetRangeUser(0.9, 1.1)
+        # eff.GetYaxis().SetRangeUser(0.985, 1.015)
     if "_eta" in output_name and "tl_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.0, 2.0)
+        eff.GetYaxis().SetRangeUser(0.995, 1.005)
     # if "_pt" in output_name:
     #     eff.GetXaxis().SetRangeUser(0.8, 1.2)
     # if "endcap2S_pt" in output_name:
@@ -123,10 +96,6 @@ def plot_eff(num_name, den_name, output_name):
     #            },
     #        colors=[1],
     #        )
-
-drawMDplots = False
-drawSGplots = False
-drawTLplots = True
 
 if drawMDplots:
 
@@ -289,10 +258,58 @@ if drawSGplots:
             plot_eff("Root__sg_{}_matched_track_phi_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_phi_by_layer{}".format(sgcombo, i), "sg_eff_{}_phi_by_layer{}.pdf".format(sgcombo, i))
             plot_eff("Root__sg_{}_matched_track_z_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_z_by_layer{}".format(sgcombo, i), "sg_eff_{}_z_by_layer{}.pdf".format(sgcombo, i))
 
+if drawSGSelPlots:
+
+    sgcombos = ["bb12", "bb23", "bb34", "bb45", "bb56"]
+    recovars = ["zLo_cut", "sdCut", "sdSlope", "sdMuls", "sdPVoff", "deltaPhi"]
+
+    for sgcombo in sgcombos:
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/segment",
+            dogrep=False,
+            filter_pattern="Root__sg_{}_cutflow".format(sgcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":False, "remove_underflow":False},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/segment_log",
+            dogrep=False,
+            filter_pattern="Root__sg_{}_cutflow".format(sgcombo),
+            extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
+            )
+
+        for recovar in recovars:
+
+            p.dump_plot(fnames=[filename],
+                dirname="plots/segment",
+                dogrep=False,
+                filter_pattern="Root__sg_{}_{}".format(sgcombo, recovar),
+                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":True, "remove_underflow":False},
+                )
+
+if drawSGTruthSelPlots:
+
+    sgcombos = ["bb12", "bb23", "bb34", "bb45", "bb56"]
+    recovars = ["zLo_cut", "sdCut", "sdSlope", "sdMuls", "sdPVoff", "deltaPhi"]
+
+    for sgcombo in sgcombos:
+
+        for recovar in recovars:
+
+            p.dump_plot(fnames=[filename],
+                dirname="plots/segment",
+                dogrep=False,
+                filter_pattern="Root__sg_truth_{}_{}".format(sgcombo, recovar),
+                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":True, "remove_underflow":False},
+                )
+
 if drawTLplots:
 
-    tlcombos = ["barrel1barrel3", "barrel1flatbarrel3flat", "barrel1tiltbarrel3flat", "barrel1tiltbarrel3tilt", "barrel1tiltbarrel3tiltbarrel4", "barrel1tiltbarrel3tiltendcap1", "barrelbarrelbarrelbarrel"]
-    tlcombos = ["barrelbarrelbarrelbarrel", "barrelbarrelendcapendcap"]
+    # tlcombos = ["barrel1barrel3", "barrel1flatbarrel3flat", "barrel1tiltbarrel3flat", "barrel1tiltbarrel3tilt", "barrel1tiltbarrel3tiltbarrel4", "barrel1tiltbarrel3tiltendcap1", "barrelbarrelbarrelbarrel"]
+    # tlcombos = ["barrelbarrelbarrelbarrel", "barrelbarrelendcapendcap"]
+    # tlcombos = ["specific"]
+    tlcombos = ["bb1bb3", "bb2bb4", "bb3bb5", "all"]
 
     for tlcombo in tlcombos:
         plot_eff("Root__tl_{}_matched_track_pt".format(tlcombo), "Root__tl_{}_all_track_pt".format(tlcombo), "tl_eff_{}_pt_alllayer.pdf".format(tlcombo))
@@ -300,9 +317,59 @@ if drawTLplots:
         plot_eff("Root__tl_{}_matched_track_eta".format(tlcombo), "Root__tl_{}_all_track_eta".format(tlcombo), "tl_eff_{}_eta_alllayer.pdf".format(tlcombo))
         plot_eff("Root__tl_{}_matched_track_phi".format(tlcombo), "Root__tl_{}_all_track_phi".format(tlcombo), "tl_eff_{}_phi_alllayer.pdf".format(tlcombo))
         plot_eff("Root__tl_{}_matched_track_z".format(tlcombo), "Root__tl_{}_all_track_z".format(tlcombo), "tl_eff_{}_z_alllayer.pdf".format(tlcombo))
-        for i in xrange(5):
-            plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_pt_by_layer{}.pdf".format(tlcombo, i))
-            plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_ptzoom_by_layer{}.pdf".format(tlcombo, i))
-            plot_eff("Root__tl_{}_matched_track_eta_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_eta_by_layer{}".format(tlcombo, i), "tl_eff_{}_eta_by_layer{}.pdf".format(tlcombo, i))
-            plot_eff("Root__tl_{}_matched_track_phi_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_phi_by_layer{}".format(tlcombo, i), "tl_eff_{}_phi_by_layer{}.pdf".format(tlcombo, i))
-            plot_eff("Root__tl_{}_matched_track_z_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_z_by_layer{}".format(tlcombo, i), "tl_eff_{}_z_by_layer{}.pdf".format(tlcombo, i))
+        # for i in xrange(5):
+        #     plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_pt_by_layer{}.pdf".format(tlcombo, i))
+        #     plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_ptzoom_by_layer{}.pdf".format(tlcombo, i))
+        #     plot_eff("Root__tl_{}_matched_track_eta_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_eta_by_layer{}".format(tlcombo, i), "tl_eff_{}_eta_by_layer{}.pdf".format(tlcombo, i))
+        #     plot_eff("Root__tl_{}_matched_track_phi_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_phi_by_layer{}".format(tlcombo, i), "tl_eff_{}_phi_by_layer{}.pdf".format(tlcombo, i))
+        #     plot_eff("Root__tl_{}_matched_track_z_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_z_by_layer{}".format(tlcombo, i), "tl_eff_{}_z_by_layer{}.pdf".format(tlcombo, i))
+
+if drawTLSelPlots:
+
+    tlcombos = ["bb1bb3", "bb1bb4", "bb1bb5", "bb2bb4", "bb3bb5", "all"]
+
+    for tlcombo in tlcombos:
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_zoom".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_slava".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet_log",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_cutflow".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":False, "remove_underflow":False},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet_log",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_cutflow".format(tlcombo),
+            extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
+            )
+
+
