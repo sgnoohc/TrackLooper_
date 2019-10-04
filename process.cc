@@ -295,7 +295,7 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
+/*    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
@@ -325,8 +325,10 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
-    studies.push_back(new StudyTrackletSelection("studySelTlSpecific", StudyTrackletSelection::kStudySelSpecific));
+    studies.push_back(new StudyLinkedModule("studyLinkedModule")); */
+
+    studies.push_back(new StudyMDCuts("StudyMDCuts"));
+
 
     // book the studies
     for (auto& study : studies)
@@ -406,7 +408,12 @@ int main(int argc, char** argv)
 
         // Create mini doublets
         // event.setLogLevel(SDL::Log_Debug2); // Set log level
-        event.createMiniDoublets();
+
+        //Default method to create them MDs
+//        event.createMiniDoublets();
+//
+//       Balaji's modification
+        event.createMiniDoublets(SDL::AllComb_MDAlgo);
 
         // Create segments
         event.createSegments();
