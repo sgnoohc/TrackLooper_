@@ -22,7 +22,7 @@ void StudyMDCuts::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange"),200,-6.28,6.28,[&](){return dPhiChangeValues;});
 
     //one per layer
-    for(size_t i = 1; i <=6; i++)
+    for(size_t i = 0; i < 6; i++)
     {
         ana.histograms.addVecHistogram(TString::Format("MD_dz_layer_%ld",i),400,-20,20,[&,i](){return layerdzValues[i];});
         ana.histograms.addVecHistogram(TString::Format("MD_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
@@ -33,9 +33,8 @@ void StudyMDCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
 
-        if(i < 6)
+        if(i < 5)
         {
-
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz_layer_%ld",i),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
@@ -69,7 +68,7 @@ void StudyMDCuts::resetVariables()
     layerEndcapdPhiValues.clear();
     layerEndcapdPhiChangeValues.clear();
 
-    for(size_t i = 1; i < 6; i++)
+    for(size_t i = 1; i <= 6; i++)
     {
       layerdzValues.push_back(std::vector<float>());
       layerdPhiValues.push_back(std::vector<float>());
