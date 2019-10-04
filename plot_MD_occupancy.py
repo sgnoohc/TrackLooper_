@@ -14,7 +14,7 @@ xaxis_range = [0,25] #SUBJECT TO CHANGE
 def plot_occupancy(hist,prefix,additional_options = None):
     global xaxis_range
     filename_prefix = prefix.replace(" ","_")
-    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_20190918/"+filename_prefix
+    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_20190918/MD_occupancies/"+filename_prefix
     xaxis_plot = xaxis_range
 
     default_options = {
@@ -65,8 +65,9 @@ endcap_occupancy_hist = f.Get("Root__MD_occupancy_in_endcap")
 barrel_average_occupancy_hist = f.Get("Root__average_MD_occupancy_in_barrel")
 endcap_average_occupancy_hist = f.Get("Root__average_MD_occupancy_in_endcap")
 
-plot_occupancy(barrel_occupancy_hist,"barrel mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e5]})
-plot_occupancy(endcap_occupancy_hist,"endcap mini-doublet occupancy",additional_options = {"yaxis_log":True,})
+
+plot_occupancy(barrel_occupancy_hist,"barrel mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e7]})
+plot_occupancy(endcap_occupancy_hist,"endcap mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e6]})
 
 plot_occupancy(barrel_average_occupancy_hist,"barrel average mini-doublet occupancy")
 plot_occupancy(endcap_average_occupancy_hist,"endcap average mini-doublet occupancy")
