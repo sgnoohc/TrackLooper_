@@ -6,12 +6,16 @@ import ROOT as r
 
 import sys
 
+## TODO Add numerator and denominator histogram
+
 drawMDplots = False
 drawSGplots = False
 drawSGSelPlots = False
 drawSGTruthSelPlots = False
-drawTLplots = False
-drawTLSelPlots = True
+drawTLplots = True
+drawTLSelPlots = False
+drawTCplots = False
+drawTCSelPlots = False
 
 filename = "debug.root"
 if len(sys.argv) > 1:
@@ -22,6 +26,54 @@ def plot_eff(num_name, den_name, output_name):
     num = f.Get(num_name)
     den = f.Get(den_name)
     #num.Divide(num, den, 1, 1, "B")
+
+    p.plot_hist(bgs=[den.Clone()],
+            data=num.Clone(),
+            options={
+                "yaxis_log":False,
+                "legend_smart":False,
+                "print_yield":False,
+                "output_name":"plots/lin/{}".format(output_name.replace(".pdf","_numden.pdf")),
+                # "remove_underflow":True,
+                # "remove_overflow":True,
+                # "yaxis_range": [0.95, 1.05] if "eta" in output_name else [],
+                #"yaxis_range": [0.95, 1.05],
+                # "no_ratio":False,
+                "draw_points":False,
+                "do_stack":False,
+                # "print_yield":True,
+                # "yield_prec":4,
+                # "xaxis_log":False if "eta" in output_name else True,
+                # "hist_disable_xerrors": True if "eta" in output_name else False,
+                # "hist_black_line": True,
+                "show_bkg_errors": True,
+                "hist_line_black": True,
+                },
+        )
+    #p.plot_hist(
+    #        bgs=[eff.Clone()],
+    #        data=eff.Clone(),
+    #        options=
+    #            {
+    #                "output_name":"plots/lin/{}".format(output_name),
+    #                # "remove_underflow":True,
+    #                # "remove_overflow":True,
+    #                "yaxis_range": [0.95, 1.05] if "eta" in output_name else [],
+    #                #"yaxis_range": [0.95, 1.05],
+    #                "no_ratio":True,
+    #                "draw_points":True,
+    #                "do_stack":False,
+    #                "print_yield":True,
+    #                "yield_prec":4,
+    #                "xaxis_log":False if "eta" in output_name else True,
+    #                "hist_disable_xerrors": True if "eta" in output_name else False,
+    #                "hist_black_line": True,
+    #                "show_bkg_errors": True,
+    #                "hist_line_black": True,
+    #            },
+    #        colors=[1],
+    #        )
+
     teff = r.TEfficiency(num, den)
     eff = teff.CreateGraph()
     #eff.Print("all")
@@ -372,4 +424,114 @@ if drawTLSelPlots:
             extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
             )
 
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_postCut".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True, "nbins":1},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet_log",
+            dogrep=False,
+            filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+if drawTCplots:
+    tccombos = ["all"]
+
+    for tccombo in tccombos:
+        plot_eff("Root__tc_{}_matched_track_pt".format(tccombo), "Root__tc_{}_all_track_pt".format(tccombo), "tc_eff_{}_pt_alllayer.pdf".format(tccombo))
+        plot_eff("Root__tc_{}_matched_track_pt".format(tccombo), "Root__tc_{}_all_track_pt".format(tccombo), "tc_eff_{}_ptzoom_alllayer.pdf".format(tccombo))
+
+if drawTCSelPlots:
+
+    tlcombos = ["all"]
+
+    for tlcombo in tlcombos:
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_inner_tl_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_nocut_inner_tl_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_outer_tl_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_nocut_outer_tl_deltaBeta".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_inner_tl_betaIn_minus_outer_tl_betaOut".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_dr".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_dr_v_tc_{}_r".format(tlcombo,tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__truth_tc_{}_dr_v_truth_tc_{}_r".format(tlcombo,tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__truth_gt1pt_tc_{}_dr_v_truth_gt1pt_tc_{}_r".format(tlcombo,tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_cutflow".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/trackcandidate",
+            dogrep=False,
+            filter_pattern="Root__tc_{}_inner_tl_betaAv_minus_outer_tl_betaAv".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":True, "remove_underflow":True},
+            )
 

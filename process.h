@@ -31,6 +31,7 @@
 #include "StudyHitOccupancy.h"
 #include "StudyMiniDoubletOccupancy.h"
 #include "StudySegmentOccupancy.h"
+#include "StudyTrackCandidateSelection.h"
 
 #include "constants.h"
 

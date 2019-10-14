@@ -46,6 +46,10 @@ void StudyTrackletSelection::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("tl_%s_betaIn_cutthresh", modename), 180, 0., 0.6, [&]() { return tl_betaIn_cutthresh; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_cutflow", modename), 8, 0, 8, [&]() { return tl_cutflow; } );
 
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_truth_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_truth_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_truth_deltaBeta; } );
+
     const int nlayers = NLAYERS;
     for (int ii = 0; ii < nlayers; ++ii)
     {
@@ -694,5 +698,182 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
         }
 
     }
+
+    // Loop over track events
+    for (auto& simtrkevent : simtrkevents)
+    {
+
+        // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
+        unsigned int& isimtrk = std::get<0>(simtrkevent);
+        SDL::Event& trackevent = *(std::get<1>(simtrkevent));
+
+        // Loop over tracklets in event
+        for (auto& layerPtr : trackevent.getLayerPtrs())
+        {
+
+            // Parse the layer index later to be used for indexing
+            int layer_idx = layerPtr->layerIdx() - 1;
+
+            // This means no tracklets in this layer
+            if (layerPtr->getTrackletPtrs().size() == 0)
+            {
+                continue;
+            }
+
+            // Assuming I have at least one tracklets from this track
+            std::vector<SDL::Tracklet*> tls_of_interest;
+            for (auto& tl : layerPtr->getTrackletPtrs())
+            {
+                const SDL::Module& innerSgInnerMDLowerHitModule = tl->innerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()->getModule();
+                const SDL::Module& outerSgInnerMDLowerHitModule = tl->outerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()->getModule();
+                const SDL::Module& innerSgOuterMDLowerHitModule = tl->innerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule();
+                const SDL::Module& outerSgOuterMDLowerHitModule = tl->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule();
+                const int innerSgInnerLayerIdx = innerSgInnerMDLowerHitModule.layer();
+                const int outerSgInnerLayerIdx = outerSgInnerMDLowerHitModule.layer();
+                const bool innerSgInnerLayerBarrel = innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel;
+                const bool outerSgInnerLayerBarrel = outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel;
+                const bool innerSgOuterLayerBarrel = innerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel;
+                const bool outerSgOuterLayerBarrel = outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel;
+                const bool outerSgInnerLayerEndcap = outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Endcap;
+                const bool innerSgInnerLayerEndcap = innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Endcap;
+                const bool outerSgOuterLayerEndcap = outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Endcap;
+                const bool innerSgOuterLayerEndcap = innerSgOuterMDLowerHitModule.subdet() == SDL::Module::Endcap;
+                const bool innerSgInnerLayerBarrelFlat = innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel and innerSgInnerMDLowerHitModule.side() == SDL::Module::Center;
+                const bool outerSgInnerLayerBarrelFlat = outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel and outerSgInnerMDLowerHitModule.side() == SDL::Module::Center;
+                const bool innerSgInnerLayerBarrelTilt = innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel and innerSgInnerMDLowerHitModule.side() != SDL::Module::Center;
+                const bool outerSgInnerLayerBarrelTilt = outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel and outerSgInnerMDLowerHitModule.side() != SDL::Module::Center;
+                const bool innerSgOuterLayerBarrelFlat = innerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel and innerSgOuterMDLowerHitModule.side() == SDL::Module::Center;
+                const bool outerSgOuterLayerBarrelFlat = outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel and outerSgOuterMDLowerHitModule.side() == SDL::Module::Center;
+                const bool innerSgOuterLayerBarrelTilt = innerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel and innerSgOuterMDLowerHitModule.side() != SDL::Module::Center;
+                const bool outerSgOuterLayerBarrelTilt = outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel and outerSgOuterMDLowerHitModule.side() != SDL::Module::Center;
+                const bool innerSgInnerLayerPS = innerSgInnerMDLowerHitModule.moduleType() == SDL::Module::PS;
+                const bool innerSgOuterLayerPS = innerSgOuterMDLowerHitModule.moduleType() == SDL::Module::PS;
+                const bool outerSgInnerLayerPS = outerSgInnerMDLowerHitModule.moduleType() == SDL::Module::PS;
+                const bool outerSgOuterLayerPS = outerSgOuterMDLowerHitModule.moduleType() == SDL::Module::PS;
+                const bool outerSgInnerLayer2S = outerSgInnerMDLowerHitModule.moduleType() == SDL::Module::TwoS;
+                const bool outerSgOuterLayer2S = outerSgOuterMDLowerHitModule.moduleType() == SDL::Module::TwoS;
+
+                // Depending on the mode, only include a subset of interested tracklets
+                switch (mode)
+                {
+                    case kStudySelAll: /* do nothing */ break;
+                    case kStudySelBarrelBarrelBarrelBarrel:
+                                                        if (not (innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel))
+                                                            continue;
+                                                        break;
+                    case kStudySelBarrelBarrelEndcapEndcap:
+                                                        if (not (innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerEndcap
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerEndcap
+                                                                    and innerSgInnerLayerPS
+                                                                    and innerSgOuterLayerPS
+                                                                    and outerSgInnerLayer2S
+                                                                    and outerSgOuterLayer2S
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelBB1BB3:
+                                                        if (not (
+                                                                    innerSgInnerLayerIdx == 1
+                                                                    and outerSgInnerLayerIdx == 3
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelBB1BB4:
+                                                        if (not (
+                                                                    innerSgInnerLayerIdx == 1
+                                                                    and outerSgInnerLayerIdx == 4
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelBB1BB5:
+                                                        if (not (
+                                                                    innerSgInnerLayerIdx == 1
+                                                                    and outerSgInnerLayerIdx == 5
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelBB2BB4:
+                                                        if (not (
+                                                                    innerSgInnerLayerIdx == 2
+                                                                    and outerSgInnerLayerIdx == 4
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelBB3BB5:
+                                                        if (not (
+                                                                    innerSgInnerLayerIdx == 3
+                                                                    and outerSgInnerLayerIdx == 5
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelSpecific:
+                                                        if (not (
+                                                                    layer_idx == 0
+                                                                    and innerSgInnerLayerIdx == 1
+                                                                    and outerSgInnerLayerIdx == 3
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    default: /* skip everything should not be here anyways...*/ continue; break;
+                }
+
+                // If this tracklet passes the condition that it is of interest then, add to the list of tracklets of interest
+                tls_of_interest.push_back(tl);
+
+            }
+
+            for (auto& tl : tls_of_interest)
+            {
+
+                tl->runTrackletAlgo(SDL::Default_TLAlgo);
+
+                const int& passbit = tl->getPassBitsDefaultAlgo();
+
+                // DeltaBeta
+                //------------------------
+                if (passbit & (1 << SDL::Tracklet::TrackletSelection::dAlphaOut))
+                {
+
+                    const float deltaBeta = tl->getDeltaBeta();
+
+                    tl_truth_deltaBeta.push_back(deltaBeta);
+
+                }
+
+            }
+
+        }
+
+    }
+
 
 }

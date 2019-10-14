@@ -55,6 +55,8 @@ public:
     std::array<std::vector<float>, NLAYERS> tl_betaIn_cutthresh_by_layer;
     std::array<std::vector<float>, NLAYERS> tl_cutflow_by_layer;
 
+    std::vector<float> tl_truth_deltaBeta;
+
     std::array<std::vector<float>, 7> tl_deltaBeta_ptslice;
     std::array<std::array<std::vector<float>, 7>, NLAYERS> tl_deltaBeta_ptslice_by_layer;
     std::array<std::vector<float>, 7> tl_deltaBeta_postCut_ptslice;

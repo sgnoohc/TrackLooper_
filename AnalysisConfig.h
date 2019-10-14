@@ -22,6 +22,9 @@ public:
     // Number of events to loop over
     int n_events;
 
+    // specific event_index to process
+    int specific_event_index;
+
     // Debug boolean
     bool debug;
 

@@ -21,6 +21,7 @@ int main(int argc, char** argv)
         ("t,tree"        , "Name of the tree in the root file to open and loop over"                                             , cxxopts::value<std::string>())
         ("o,output"      , "Output file name"                                                                                    , cxxopts::value<std::string>())
         ("n,nevents"     , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
+        ("x,event_index" , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
         ("d,debug"       , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
         ("h,help"        , "Print help")
         ;
@@ -96,6 +97,7 @@ int main(int argc, char** argv)
     //_______________________________________________________________________________
     // --nevents
     ana.n_events = result["nevents"].as<int>();
+    ana.specific_event_index = result["event_index"].as<int>();
 
     //
     // Printing out the option settings overview
@@ -348,6 +350,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudyHitOccupancy("studyHitOccu", StudyHitOccupancy::kStudyAll));
     studies.push_back(new StudyMiniDoubletOccupancy("studyMiniDoubletOccu", StudyMiniDoubletOccupancy::kStudyAll));
     studies.push_back(new StudySegmentOccupancy("studySegmentOccu", StudySegmentOccupancy::kStudyAll));
+    studies.push_back(new StudyTrackCandidateSelection("studySelTCAll", StudyTrackCandidateSelection::kStudySelAll, pt_boundaries));
 
     // book the studies
     for (auto& study : studies)
@@ -373,6 +376,13 @@ int main(int argc, char** argv)
     // Looping input file
     while (ana.looper.nextEvent())
     {
+
+        if (ana.specific_event_index >= 0)
+        {
+            if (ana.looper.getCurrentEventIndex() != ana.specific_event_index)
+                continue;
+        }
+
         // <--------------------------
         // <--------------------------
         // <--------------------------
@@ -434,8 +444,12 @@ int main(int argc, char** argv)
         event.createSegments();
 
         // Create tracklets
-        event.createTracklets(SDL::AllComb_TLAlgo);
-        // event.createTracklets();
+        // event.createTracklets(SDL::AllComb_TLAlgo);
+        event.createTracklets();
+
+        // Create tracklets
+        // event.createTrackCandidates(SDL::AllComb_TCAlgo);
+        event.createTrackCandidates();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
@@ -466,8 +480,12 @@ int main(int argc, char** argv)
         for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
         {
 
-            // Select only muon tracks
-            if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+            // // Select only muon tracks
+            // if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+            //     continue;
+
+            // if (abs(trk.sim_pdgId()[isimtrk]) != 211 and abs(trk.sim_pdgId()[isimtrk]) != 13 and abs(trk.sim_pdgId()[isimtrk]) != 11)
+            if (abs(trk.sim_pdgId()[isimtrk]) != 211)
                 continue;
 
             // // Select only 1 cm from center tracks
@@ -484,7 +502,9 @@ int main(int argc, char** argv)
                 int simhit_particle = trk.simhit_particle()[simhitidx];
 
                 // Select only the sim hits that is matched to the muon
-                if (abs(simhit_particle) != 13)
+                // if (abs(simhit_particle) != 211 and abs(simhit_particle) != 13 and abs(simhit_particle) != 11)
+                if (abs(simhit_particle) != 211)
+                // if (abs(simhit_particle) != 13)
                     continue;
                 // if (simhit_particle != 13)
                 //     continue;
@@ -514,16 +534,21 @@ int main(int argc, char** argv)
 
             }
 
-            // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
+            // Create mini-doublet from truth matched reco hits
             // trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            // trackevent->createMiniDoublets(SDL::Default_MDAlgo);
+            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
-            // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
+            // Create mini-doublet from truth matched reco hits
             // trackevent->createSegments(SDL::AllComb_SGAlgo);
-            // trackevent->createSegments(SDL::Default_SGAlgo);
+            trackevent->createSegments(SDL::Default_SGAlgo);
 
-            // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
-            // trackevent->createTracklets(SDL::AllComb_TLAlgo);
+            // Create tracklet from truth matched reco hits
+            trackevent->createTracklets(SDL::AllComb_TLAlgo);
+            // trackevent->createTracklets(SDL::Default_TLAlgo);
+
+            // Create track candidate from truth matched reco hits
+            // trackevent->createTrackCandidates(SDL::Default_TCAlgo);
+            // trackevent->createTrackCandidates(SDL::AllComb_TCAlgo);
 
             // Push to the vector so we have a data-base of per hit, mini-doublets
             simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
