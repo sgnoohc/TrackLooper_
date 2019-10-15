@@ -14,7 +14,10 @@ def plot_md_params(hist,prefix,additional_options = None):
 
     default_options = {
         "output_name":filename_prefix+".pdf",
-        "xaxis_range":xaxis_plot,
+        "legend_smart":False,
+        "xaxis_range":[-10,10],
+        "yaxis_log":True,
+        "yaxis_range":[0.1,1e6],
         "xaxis_label":prefix,
         "title":prefix,
         "legend_percentageinbox":False,
@@ -56,23 +59,22 @@ dPhiChange_endcap_layer_hists = []
 for layer in range(1,7):
     dz_layer_hists.append(f.Get("Root__MD_barrel_dz_layer_"+str(layer)))
     dz_barrel_layer_hists.append(f.Get("Root__MD_barrel_dz_layer_"+str(layer)))
-    if i<6 :
+    if layer < 6 :
         dz_endcap_layer_hists.append(f.Get("Root__MD_endcap_dz_layer_"+str(layer)))
 
     dPhi_layer_hists.append(f.Get("Root__MD_barrel_dPhi_layer_"+str(layer)))
     dPhi_barrel_layer_hists.append(f.Get("Root__MD_barrel_dPhi_layer_"+str(layer)))
-    if i<6 :
+    if layer < 6 :
         dPhi_endcap_layer_hists.append(f.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
-
 plot_md_params(dz_hist,"Mini-doublet dz histogram")
 plot_md_params(dz_barrel_hist,"Mini-doublet dz histogram in barrel")
 plot_md_params(dz_endcap_hist,"Mini-doublet dz histogram in endcap")
 
 for layer in range(1,7):
-    plot_md_params(dz_layer_hists[i],"Mini-doublet dz histogram for layer "+str(layer))
-    plot_md_params(dz_barrel_layer_hists[i],"Mini-doublet dz histogram in barrel for layer "+str(layer))
+    plot_md_params(dz_layer_hists[layer-1],"Mini-doublet dz histogram for layer "+str(layer))
+    plot_md_params(dz_barrel_layer_hists[layer-1],"Mini-doublet dz histogram in barrel for layer "+str(layer))
     if layer < 6:
-        plot_md_params(dz_endcap_layer_hists[i],"Mini-doublet dz histogram in endcap for layer "+str(layer))
+        plot_md_params(dz_endcap_layer_hists[layer-1],"Mini-doublet dz histogram in endcap for layer "+str(layer))
 
 
 

@@ -12,31 +12,31 @@ void StudyMDCuts::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange"),200,-6.28,6.28,[&](){return dPhiChangeValues;});
 
 
-    ana.histograms.addVecHistogram(TString::Format("MD_barrel_dz"),400,-20,20,[&](){return dzValues;});
-    ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhi"),200,-6.28,6.28,[&](){return dPhiValues;});
-    ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhiChange"),200,-6.28,6.28,[&](){return dPhiChangeValues;});
+    ana.histograms.addVecHistogram(TString::Format("MD_barrel_dz"),400,-20,20,[&](){return barreldzValues;});
+    ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhi"),200,-6.28,6.28,[&](){return barreldPhiValues;});
+    ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhiChange"),200,-6.28,6.28,[&](){return barreldPhiChangeValues;});
 
 
-    ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz"),400,-20,20,[&](){return dzValues;});
-    ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi"),200,-6.28,6.28,[&](){return dPhiValues;});
-    ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange"),200,-6.28,6.28,[&](){return dPhiChangeValues;});
+    ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz"),400,-20,20,[&](){return endcapdzValues;});
+    ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi"),200,-6.28,6.28,[&](){return endcapdPhiValues;});
+    ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange"),200,-6.28,6.28,[&](){return endcapdPhiChangeValues;});
 
     //one per layer
     for(size_t i = 0; i < 6; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("MD_dz_layer_%ld",i),400,-20,20,[&,i](){return layerdzValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("MD_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerdzValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
 
 
-        ana.histograms.addVecHistogram(TString::Format("MD_barrel_dz_layer_%ld",i),400,-20,20,[&,i](){return layerBarreldzValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_barrel_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerBarreldzValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
 
         if(i < 5)
         {
-            ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz_layer_%ld",i),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
         }
     }
@@ -93,7 +93,6 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
 
     float dzCut = 10.0;
     std::vector<SDL::Module*> moduleList = event.getLowerModulePtrs();
-
     for(auto &module:moduleList)
     {
         std::vector<SDL::MiniDoublet*> miniDoublets = module->getMiniDoubletPtrs();
@@ -101,7 +100,7 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
         {
 
             //Step 1 : Reproducing Philip's plots
-            md->runMiniDoubletAlgo(SDL::Default_MDAlgo);
+            //md->runMiniDoubletAlgo(SDL::Default_MDAlgo);
 
             dzValues.push_back(md->getDz());
             dPhiValues.push_back(md->getDeltaPhi());

@@ -14,7 +14,10 @@ xaxis_range_average = [0,25]
 def plot_occupancy(hist,prefix,additional_options = None):
     global xaxis_range,xaxis_range_average
     filename_prefix = prefix.replace(" ","_")
-    filename_prefix = "/home/users/bsathian/public_html/SDL/"+filename_prefix
+    if "module" in prefix or "Module" in prefix:
+       filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_20190918/Linked_module_occupancies/"+filename_prefix
+    else:
+        filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_20190918/Linked_MD_occupancies/"+filename_prefix
     xaxis_plot = None
     if "average" not in prefix:
         xaxis_plot = xaxis_range
@@ -31,6 +34,11 @@ def plot_occupancy(hist,prefix,additional_options = None):
     options = default_options.copy()
     if type(additional_options) is dict:
         options.update(additional_options)
+
+    if "yaxis_log" not in options.keys():
+      options["legend_smart"] = True
+    else:
+      options["legend_smart"] = False
 
     ply.plot_hist(
         bgs = [hist],
@@ -92,11 +100,11 @@ endcap_average_linked_modules_hist = f.Get("Root__average_number_of_Linked_modul
 barrel_linked_module_hist = f.Get("Root__number_of_Linked_modules_in_barrel")
 endcap_linked_module_hist = f.Get("Root__number_of_Linked_modules_in_endcap")
 
-plot_occupancy(barrel_occupancy_hist,"barrel mini-doublet occupancy")
-plot_occupancy(endcap_occupancy_hist,"endcap mini-doublet occupancy")
+plot_occupancy(barrel_occupancy_hist,"barrel linked mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,300]})
+plot_occupancy(endcap_occupancy_hist,"endcap linked mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,300]})
 
-plot_occupancy(barrel_average_occupancy_hist,"barrel average mini-doublet occupancy")
-plot_occupancy(endcap_average_occupancy_hist,"endcap average mini-doublet occupancy")
+plot_occupancy(barrel_average_occupancy_hist,"barrel average linked mini-doublet occupancy",)
+plot_occupancy(endcap_average_occupancy_hist,"endcap average linked mini-doublet occupancy")
 
 plot_occupancy(barrel_average_linked_modules_hist,"average number of linked modules in barrel")
 plot_occupancy(endcap_average_linked_modules_hist,"average number of linked modules in endcap")
@@ -113,35 +121,39 @@ ply.plot_hist_2d(
             "yaxis_label":"Endcap layer number",
             "title":"Endcap ring and layer numbers for zero connection modules",
             "output_name":"/home/users/bsathian/public_html/SDL/zero_connection_layer_ring.pdf",
+	   "draw_option_2d":"colztext",
+           "bin_text_size":0.5
         }
         )
 
 
 for i in range(len(layer_barrel_occupancy_hists)):
-    plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Linked Mini-doublet Occupancy for layer "+str(i+1))
+    additional_options = {"yaxis_log":True,"xaxis_range":[0,300],"yaxis_range":[0.1,1e5],"show_hist_stats":True,}
+    plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Linked Mini-doublet Occupancy for layer "+str(i+1),additional_options = additional_options)
     if i != 5:
-        plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap Linked mini-doublet Occupancy for layer "+str(i+1))
+        plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap Linked mini-doublet Occupancy for layer "+str(i+1),additional_options = additional_options)
 
 
 
 
 for i in range(len(layer_barrel_average_occupancy_hists)):
-    plot_occupancy(layer_barrel_average_occupancy_hists[i],"Average barrel Linked mini-doublet occupancy for layer "+str(i+1))
+    plot_occupancy(layer_barrel_average_occupancy_hists[i],"Average barrel Linked mini-doublet occupancy for layer "+str(i+1),{"xaxis_range":[0,100]})
     if i!=5 :
-        plot_occupancy(linked_modules_in_barrel_layer[i],"number of linked modules in barrel layer "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False})
+        plot_occupancy(linked_modules_in_barrel_layer[i],"number of linked modules in barrel layer "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False,"yaxis_range":[0.1,1e5]})
         plot_occupancy(linked_average_modules_in_barrel_layer[i],"average number of linked modules in barrel layer "+str(i+1))
     if i!= 5:
         plot_occupancy(layer_endcap_average_occupancy_hists[i],"Average endcap Linked mini-doublet occupancy for layer "+str(i+1))
     if i<4:
         plot_occupancy(linked_average_modules_in_endcap_layer[i],"average number of linked modules in endcap layer "+str(i+1))
-        plot_occupancy(linked_modules_in_endcap_layer[i],"number of linked modules in endcap layer "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False})
+        plot_occupancy(linked_modules_in_endcap_layer[i],"number of linked modules in endcap layer "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False,"yaxis_range":[0.1,1e5]})
 
 
 for i in range(len(ring_endcap_average_occupancy_hists)):
-    plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap mini-doublet occupancy in ring "+str(i+1))
-    plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap mini-doublet occupancy in ring "+str(i+1))
+    additional_options = {"yaxis_log":True,"xaxis_range":[0,200],"yaxis_range":[0.1,1e5],"show_hist_stats":True,}
+    plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap linked mini-doublet occupancy in ring "+str(i+1))
+    plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap linked mini-doublet occupancy in ring "+str(i+1),additional_options = additional_options)
     if i< 14:
-        plot_occupancy(linked_modules_in_endcap_ring[i],"number of linked modules in endcap ring "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False})
+        plot_occupancy(linked_modules_in_endcap_ring[i],"number of linked modules in endcap ring "+str(i+1),additional_options = {"yaxis_log":True,"legend_smart":False,"yaxis_range":[0.1,1e5]})
         plot_occupancy(linked_average_modules_in_endcap_ring[i],"average number of linked modules in endcap ring "+str(i+1))
 
 

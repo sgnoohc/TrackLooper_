@@ -416,10 +416,10 @@ int main(int argc, char** argv)
         event.createMiniDoublets(SDL::AllComb_MDAlgo);
 
         // Create segments
-        event.createSegments();
+//        event.createSegments();
 
         // Create tracklets
-        event.createTracklets(SDL::AllComb_TLAlgo);
+//        event.createTracklets(SDL::AllComb_TLAlgo);
         // event.createTracklets();
 
         // Print content in the event
@@ -496,12 +496,12 @@ int main(int argc, char** argv)
             }
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-            // trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
+             trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+            //trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             // trackevent->createSegments(SDL::AllComb_SGAlgo);
-            trackevent->createSegments(SDL::Default_SGAlgo);
+            //trackevent->createSegments(SDL::Default_SGAlgo);
 
             // // Create tracklet CANDIDATES. i.e. create tracklet via ALL COMBINATION of hits
             // trackevent->createTracklets(SDL::AllComb_TLAlgo);
