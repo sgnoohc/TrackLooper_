@@ -1,5 +1,12 @@
 # include "StudySimtrackMatchedMDCuts.h"
 
+
+StudySimtrackMatchedMDCuts::StudySimtrackMatchedMDCuts(const char * studyName)
+{
+    studyName = studyName;
+}
+
+
 void StudySimtrackMatchedMDCuts::bookStudy()
 {
         //SIM TRACK MATCHED STUFF
@@ -40,7 +47,7 @@ void StudySimtrackMatchedMDCuts::bookStudy()
 }
 
 
-void resetVariables()
+void StudySimtrackMatchedMDCuts::resetVariables()
 {
     dzValues.clear();
     dPhiValues.clear();
