@@ -1,5 +1,12 @@
 # include "StudySimtrackMatchedMDCuts.h"
 
+
+StudySimtrackMatchedMDCuts::StudySimtrackMatchedMDCuts(const char * studyName)
+{
+    studyName = studyName;
+}
+
+
 void StudySimtrackMatchedMDCuts::bookStudy()
 {
         //SIM TRACK MATCHED STUFF

@@ -47,7 +47,7 @@ class StudySimtrackMatchedMDCuts : public Study
         std::vector<std::vector<float>> layerEndcapdPhiChangeValues;
 
 
-        StudyMDCuts(const char * studyName);
+        StudySimtrackMatchedMDCuts(const char * studyName);
         virtual void bookStudy();
         virtual void resetVariables();
         virtual void doStudy(SDL::Event &event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
