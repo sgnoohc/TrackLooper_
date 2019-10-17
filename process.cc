@@ -411,10 +411,10 @@ int main(int argc, char** argv)
         // event.setLogLevel(SDL::Log_Debug2); // Set log level
 
         //Default method to create them MDs
-//        event.createMiniDoublets();
+        event.createMiniDoublets();
 //
 //       Balaji's modification
-        event.createMiniDoublets(SDL::AllComb_MDAlgo);
+//        event.createMiniDoublets(SDL::AllComb_MDAlgo);
 
         // Create segments
 //        event.createSegments();
@@ -497,8 +497,8 @@ int main(int argc, char** argv)
             }
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-             trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            //trackevent->createMiniDoublets(SDL::Default_MDAlgo);
+//             trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
 
             // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
             // trackevent->createSegments(SDL::AllComb_SGAlgo);

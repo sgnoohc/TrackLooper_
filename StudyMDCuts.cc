@@ -33,6 +33,14 @@ void StudyMDCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("MD_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
 
+        ana.histograms.addVecHistogram(TString::Format("MD_barrel_center_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiValues[i];});
+
+        if(i < 3) //Barrel tilted modules
+        {
+            ana.histograms.addVecHistogram(TString::Format("MD_dPhi_barrel_normal_tilted_layer_"%ld,i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("MD_dPhi_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});    
+        }
+
         if(i < 5)
         {
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
@@ -68,6 +76,10 @@ void StudyMDCuts::resetVariables()
     layerEndcapdPhiValues.clear();
     layerEndcapdPhiChangeValues.clear();
 
+    layerBarrelCenterdPhiValues.clear();
+    layerBarrelNormalTilteddPhivalues.clear();
+    layerBarrelEndcapTilteddPhiValues.clear();
+
     for(size_t i = 1; i <= 6; i++)
     {
       layerdzValues.push_back(std::vector<float>());
@@ -83,6 +95,14 @@ void StudyMDCuts::resetVariables()
           layerEndcapdzValues.push_back(std::vector<float>());
           layerEndcapdPhiValues.push_back(std::vector<float>());
           layerEndcapdPhiChangeValues.push_back(std::vector<float>());
+      }
+      
+      layerBarrelCenterdPhiValues.push_back(std::vector<float>());
+
+      if(i <= 3)
+      {
+          layerBarrelNormalTilteddPhiValues.push_back(std::vector<float>());
+          layerBarrelEndcapTilteddPhiValues.push_back(std::vector<float>());
       }
     }
 }
@@ -121,6 +141,22 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
                 layerBarreldzValues.at(module->layer()-1).push_back(md->getDz());
                 layerBarreldPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                 layerBarreldPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
+
+                if(module->side() == SDL::Module::Center)
+                {
+                    layerBarrelCenterdPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                }
+                else
+                {
+                    if(SDL::MiniDoublets::isNormalTiltedModules(*module))
+                    {
+                        layerBarrelNormalTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                    }
+                    else
+                    {
+                        layerBarrelEndcapTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                    }
+                }
             }
 
             else if(module->subdet() == SDL::Module::Endcap)

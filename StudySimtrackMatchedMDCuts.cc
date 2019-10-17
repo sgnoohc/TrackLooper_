@@ -27,22 +27,35 @@ void StudySimtrackMatchedMDCuts::bookStudy()
     //one per layer
     for(size_t i = 0; i < 6; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dz_layer_%ld",i),400,-20,20,[&,i](){return layerdzValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerdzValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
 
 
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_dz_layer_%ld",i),400,-20,20,[&,i](){return layerBarreldzValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerBarreldzValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
+
+        //Add barrel center modules (non tilted)
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_center_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiValues[i];});
+
+        if(i < 3) //Barrel tilted modules - normal and endcap logic
+        {
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_normal_tilted_layer_"%ld,i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTiltedPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});    
+        }
 
         if(i < 5)
         {
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dz_layer_%ld",i),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhi_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
         }
     }
+
+
+
+
 
 }
 
@@ -102,14 +115,14 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
     //Every sim track is stored in an Event* container, and an event consists of a list of such containers
     for(auto &matchedTrack:simtrkevents)
     {
-        std::vector<SDL::Module*> moduleList = event.getLowerModulePtrs();
+        std::vector<SDL::Module*> moduleList = std::get<1>(matchedTrack-)->getLowerModulePtrs();
         for(auto &module:moduleList)
         {
             std::vector<SDL::MiniDoublet*> miniDoublets = module->getMiniDoubletPtrs();
             for(auto &md:miniDoublets)
             {
                 //Step 1 : Reproducing Philip's plots
-                md->runMiniDoubletAlgo(SDL::Default_MDAlgo);
+//                md->runMiniDoubletAlgo(SDL::Default_MDAlgo);
 
                 dzValues.push_back(md->getDz());
                 dPhiValues.push_back(md->getDeltaPhi());
@@ -127,6 +140,23 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
                     layerBarreldzValues.at(module->layer()-1).push_back(md->getDz());
                     layerBarreldPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                     layerBarreldPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
+
+                    
+                    if(module->side() == SDL::Module::Center)
+                    {
+                        layerBarrelCenterdPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                    }
+                    else
+                    {
+                        if(SDL::MiniDoublets::isNormalTiltedModules(*module))
+                        {
+                            layerBarrelNormalTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                        }
+                        else
+                        {
+                            layerBarrelEndcapTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                        }
+                    }
                 }
 
                 else if(module->subdet() == SDL::Module::Endcap)
