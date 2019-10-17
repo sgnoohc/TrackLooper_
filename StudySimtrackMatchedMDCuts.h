@@ -46,6 +46,11 @@ class StudySimtrackMatchedMDCuts : public Study
         std::vector<std::vector<float>> layerEndcapdPhiValues;
         std::vector<std::vector<float>> layerEndcapdPhiChangeValues;
 
+        std::vector<std::vector<float>> layerBarrelCenterdPhiValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddPhiValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddPhiValues;
+
+
 
         StudySimtrackMatchedMDCuts(const char * studyName);
         virtual void bookStudy();
