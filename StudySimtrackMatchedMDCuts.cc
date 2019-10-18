@@ -38,11 +38,17 @@ void StudySimtrackMatchedMDCuts::bookStudy()
 
         //Add barrel center modules (non tilted)
         ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_barrel_center_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_barrel_center_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiChangeValues[i];});
+
 
         if(i < 3) //Barrel tilted modules - normal and endcap logic
         {
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_normal_tilted_layer_"%ld,i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTiltedPhiValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});    
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});   
+
+            ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange_barrel_normal_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiChangeValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiChangeValues[i];});
+
         }
 
         if(i < 5)
@@ -88,20 +94,32 @@ void StudySimtrackMatchedMDCuts::resetVariables()
 
     for(size_t i = 1; i <= 6; i++)
     {
-      layerdzValues.push_back(std::vector<float>());
-      layerdPhiValues.push_back(std::vector<float>());
-      layerdPhiChangeValues.push_back(std::vector<float>());
+        layerdzValues.push_back(std::vector<float>());
+        layerdPhiValues.push_back(std::vector<float>());
+        layerdPhiChangeValues.push_back(std::vector<float>());
 
-      layerBarreldzValues.push_back(std::vector<float>());
-      layerBarreldPhiValues.push_back(std::vector<float>());
-      layerBarreldPhiChangeValues.push_back(std::vector<float>());
+        layerBarreldzValues.push_back(std::vector<float>());
+        layerBarreldPhiValues.push_back(std::vector<float>());
+        layerBarreldPhiChangeValues.push_back(std::vector<float>());
+       
+        layerBarrelCenterdPhiValues.push_back(std::vector<float>());
+        layerBarrelCenterdPhiChangeValues.push_back(std::vector<float>());
+        if(i < 6)
+        {
+            layerEndcapdzValues.push_back(std::vector<float>());
+            layerEndcapdPhiValues.push_back(std::vector<float>());
+            layerEndcapdPhiChangeValues.push_back(std::vector<float>());            
+        }
+        
 
-      if(i < 6)
-      {
-          layerEndcapdzValues.push_back(std::vector<float>());
-          layerEndcapdPhiValues.push_back(std::vector<float>());
-          layerEndcapdPhiChangeValues.push_back(std::vector<float>());
-      }
+        if(i <= 3)
+        {
+            layerBarrelNormalTilteddPhiValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddPhiValues.push_back(std::vector<float>());
+
+            layerBarrelNormalTilteddPhiChangeValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddPhiChangeValues.push_back(std::vector<float>());
+        }
     }
 
 }
@@ -141,20 +159,28 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
                     layerBarreldPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                     layerBarreldPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
 
+                    layerBarreldPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
+
+
                     
                     if(module->side() == SDL::Module::Center)
                     {
                         layerBarrelCenterdPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                        layerBarrelCenterdPhiChangeValues[module->layer()-1].push_back(md->getDeltaPhiChange());
+
                     }
                     else
                     {
-                        if(SDL::MiniDoublets::isNormalTiltedModules(*module))
+                        if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                         {
                             layerBarrelNormalTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                            layerBarrelNormalTilteddPhiChangeValues[module->layer()-1].push_back(md->getDeltaPhiChange());
+
                         }
                         else
                         {
                             layerBarrelEndcapTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
+                            layerBarrelEndcapTilteddPhiChangeValues[module->layer()-1].push_back(md->getDeltaPhiChange());
                         }
                     }
                 }
