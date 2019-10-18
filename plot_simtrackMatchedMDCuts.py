@@ -78,6 +78,19 @@ dPhi_endcap_hist_PU200 = f_PU200.Get("Root__MD_endcap_dPhi")
 dPhi_endcap_hist_muonGun = f_muonGun.Get("Root__MD_endcap_dPhi")
 dPhi_endcap_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_endcap_dPhi")
 
+dPhiChange_hist_PU200 = f_PU200.Get("Root__MD_dPhiChange")
+dPhiChange_hist_muonGun = f_muonGun.Get("Root__MD_dPhiChange")
+dPhiChange_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_dPhiChange")
+
+dPhiChange_barrel_hist_PU200 = f_PU200.Get("Root__MD_barrel_dPhiChange")
+dPhiChange_barrel_hist_muonGun = f_muonGun.Get("Root__MD_barrel_dPhiChange")
+dPhiChange_barrel_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_barrel_dPhiChange")
+
+dPhiChange_endcap_hist_PU200 = f_PU200.Get("Root__MD_endcap_dPhiChange")
+dPhiChange_endcap_hist_muonGun = f_muonGun.Get("Root__MD_endcap_dPhiChange")
+dPhiChange_endcap_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_endcap_dPhiChange")
+
+
 dz_layer_hists_PU200 = []
 dz_layer_hists_muonGun = []
 dz_layer_hists_matched_muonGun = []
@@ -116,6 +129,30 @@ dPhi_endcap_layer_hists_PU200 = []
 dPhi_endcap_layer_hists_muonGun = []
 dPhi_endcap_layer_hists_matched_muonGun = []
 
+dPhiChange_layer_hists_PU200 = []
+dPhiChange_layer_hists_muonGun = []
+dPhiChange_layer_hists_matched_muonGun = []
+
+dPhiChange_barrel_layer_hists_PU200 = []
+dPhiChange_barrel_layer_hists_muonGun = []
+dPhiChange_barrel_layer_hists_matched_muonGun = []
+
+dPhiChange_barrel_layer_center_hists_PU200 = []
+dPhiChange_barrel_layer_center_hists_muonGun = []
+dPhiChange_barrel_layer_center_hists_matched_muonGun = []
+
+dPhiChange_barrel_layer_tilted_regular_hists_PU200 = []
+dPhiChange_barrel_layer_tilted_regular_hists_muonGun = []
+dPhiChange_barrel_layer_tilted_regular_hists_matched_muonGun = []
+
+dPhiChange_barrel_layer_tilted_endcap_hists_PU200 = []
+dPhiChange_barrel_layer_tilted_endcap_hists_muonGun = []
+dPhiChange_barrel_layer_tilted_endcap_hists_matched_muonGun = []
+
+
+dPhiChange_endcap_layer_hists_PU200 = []
+dPhiChange_endcap_layer_hists_muonGun = []
+dPhiChange_endcap_layer_hists_matched_muonGun = []
 
 for layer in range(1,7):
     dz_layer_hists_PU200.append(f_PU200.Get("Root__MD_barrel_dz_layer_"+str(layer)))
@@ -138,6 +175,19 @@ for layer in range(1,7):
     dPhi_barrel_layer_center_hists_muonGun.append(f_muonGun.Get("Root__MD_barrel_center_dPhi_layer_"+str(layer)))
     dPhi_barrel_layer_center_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_barrel_center_dPhi_layer_"+str(layer)))
 
+    dPhiChange_layer_hists_PU200.append(f_PU200.Get("Root__MD_dPhiChange_layer_"+str(layer)))
+    dPhiChange_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_dPhiChange_layer_"+str(layer)))
+    dPhiChange_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_dPhiChange_layer_"+str(layer)))
+
+    dPhiChange_barrel_layer_hists_PU200.append(f_PU200.Get("Root__MD_barrel_dPhiChange_layer_"+str(layer)))
+    dPhiChange_barrel_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_barrel_dPhiChange_layer_"+str(layer)))
+    dPhiChange_barrel_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_barrel_dPhiChange_layer_"+str(layer)))
+
+    dPhiChange_barrel_layer_center_hists_PU200.append(f_PU200.Get("Root__MD_barrel_center_dPhiChange_layer_"+str(layer)))
+    dPhiChange_barrel_layer_center_hists_muonGun.append(f_muonGun.Get("Root__MD_barrel_center_dPhiChange_layer_"+str(layer)))
+    dPhiChange_barrel_layer_center_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_barrel_center_dPhiChange_layer_"+str(layer)))
+
+
 
     if layer < 4:
         dPhi_barrel_layer_tilted_regular_hists_PU200.append(f_PU200.Get("Root__MD_dPhi_barrel_normal_tilted_layer_"+str(layer)))
@@ -148,6 +198,15 @@ for layer in range(1,7):
         dPhi_barrel_layer_tilted_endcap_hists_muonGun.append(f_muonGun.Get("Root__MD_dPhi_barrel_endcapLogic_tilted_layer_"+str(layer)))
         dPhi_barrel_layer_tilted_endcap_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_dPhi_barrel_endcapLogic_tilted_layer_"+str(layer)))
 
+         dPhiChange_barrel_layer_tilted_regular_hists_PU200.append(f_PU200.Get("Root__MD_dPhiChange_barrel_normal_tilted_layer_"+str(layer)))
+        dPhiChange_barrel_layer_tilted_regular_hists_muonGun.append(f_muonGun.Get("Root__MD_dPhiChange_barrel_normal_tilted_layer_"+str(layer)))
+        dPhiChange_barrel_layer_tilted_regular_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_dPhiChange_barrel_normal_tilted_layer_"+str(layer)))
+
+        dPhiChange_barrel_layer_tilted_endcap_hists_PU200.append(f_PU200.Get("Root__MD_dPhiChange_barrel_endcapLogic_tilted_layer_"+str(layer)))
+        dPhiChange_barrel_layer_tilted_endcap_hists_muonGun.append(f_muonGun.Get("Root__MD_dPhiChange_barrel_endcapLogic_tilted_layer_"+str(layer)))
+        dPhiChange_barrel_layer_tilted_endcap_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_dPhiChange_barrel_endcapLogic_tilted_layer_"+str(layer)))
+
+
     if layer < 6 :
         dz_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_dz_layer_"+str(layer)))
         dz_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_dz_layer_"+str(layer)))
@@ -156,6 +215,11 @@ for layer in range(1,7):
         dPhi_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
         dPhi_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
         dPhi_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_dPhi_layer_"+str(layer)))
+
+        dPhiChange_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_dPhiChange_layer_"+str(layer)))
+        dPhiChange_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_dPhiChange_layer_"+str(layer)))
+        dPhiChange_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_dPhiChange_layer_"+str(layer)))
+
 
 
 
@@ -167,6 +231,11 @@ plot_md_params(dPhi_hist_PU200,dPhi_hist_matched_muonGun,dPhi_hist_muonGun,"Mini
 plot_md_params(dPhi_barrel_hist_PU200,dPhi_barrel_hist_matched_muonGun,dPhi_barrel_hist_muonGun,"Mini-doublet dPhi histogram in barrel")
 plot_md_params(dPhi_endcap_hist_PU200,dPhi_endcap_hist_matched_muonGun,dPhi_barrel_hist_muonGun,"Mini-doublet dPhi histogram in endcap")
 
+plot_md_params(dPhiChange_hist_PU200,dPhiChange_hist_matched_muonGun,dPhiChange_hist_muonGun,"Mini-doublet dPhiChange histogram")
+plot_md_params(dPhiChange_barrel_hist_PU200,dPhiChange_barrel_hist_matched_muonGun,dPhiChange_barrel_hist_muonGun,"Mini-doublet dPhiChange histogram in barrel")
+plot_md_params(dPhiChange_endcap_hist_PU200,dPhiChange_endcap_hist_matched_muonGun,dPhiChange_barrel_hist_muonGun,"Mini-doublet dPhiChange histogram in endcap")
+
+
 for layer in range(1,7):
     plot_md_params(dz_layer_hists_PU200[layer-1],dz_layer_hists_matched_muonGun[layer-1],dz_layer_hists_muonGun[layer-1],"Mini-doublet dz histogram for layer "+str(layer))
 
@@ -176,19 +245,36 @@ for layer in range(1,7):
 
     plot_md_params(dPhi_barrel_layer_hists_PU200[layer-1],dPhi_barrel_layer_hists_matched_muonGun[layer-1],dPhi_barrel_layer_hists_muonGun[layer-1],"Mini-doublet dPhi histogram in barrel for layer "+str(layer))
 
+    plot_md_params(dPhiChange_layer_hists_PU200[layer-1],dPhiChange_layer_hists_matched_muonGun[layer-1],dPhiChange_layer_hists_muonGun[layer-1],"Mini-doublet dPhiChange histogram for layer "+str(layer))
+
+    plot_md_params(dPhiChange_barrel_layer_hists_PU200[layer-1],dPhiChange_barrel_layer_hists_matched_muonGun[layer-1],dPhiChange_barrel_layer_hists_muonGun[layer-1],"Mini-doublet dPhiChange histogram in barrel for layer "+str(layer))
+
+
 
     if layer < 4:
         plot_md_params(dPhi_barrel_layer_center_hists_PU200[layer-1],dPhi_barrel_layer_center_hists_matched_muonGun[layer-1],dPhi_barrel_layer_center_hists_muonGun[layer-1],"Mini-doublet dPhi histogram for the center modules in barrel for layer "+str(layer))
 
         plot_md_params(dPhi_barrel_layer_tilted_regular_hists_PU200[layer-1],dPhi_barrel_layer_tilted_regular_hists_matched_muonGun[layer-1],dPhi_barrel_layer_tilted_regular_hists_muonGun[layer-1],"Mini-doublet dPhi histogram for regular tilted modules in barrel for layer "+str(layer))
 
+        plot_md_params(dPhiChange_barrel_layer_center_hists_PU200[layer-1],dPhiChange_barrel_layer_center_hists_matched_muonGun[layer-1],dPhiChange_barrel_layer_center_hists_muonGun[layer-1],"Mini-doublet dPhiChange histogram for the center modules in barrel for layer "+str(layer))
+
+        plot_md_params(dPhiChange_barrel_layer_tilted_regular_hists_PU200[layer-1],dPhiChange_barrel_layer_tilted_regular_hists_matched_muonGun[layer-1],dPhiChange_barrel_layer_tilted_regular_hists_muonGun[layer-1],"Mini-doublet dPhiChange histogram for regular tilted modules in barrel for layer "+str(layer))
+
+
+
     if layer < 3:
         plot_md_params(dPhi_barrel_layer_tilted_endcap_hists_PU200[layer-1],dPhi_barrel_layer_tilted_endcap_hists_matched_muonGun[layer-1],dPhi_barrel_layer_tilted_endcap_hists_muonGun[layer-1],"Mini-doublet dPhi histogram for endcap like tilted modules in barrel for layer "+str(layer))
+
+        plot_md_params(dPhiChange_barrel_layer_tilted_endcap_hists_PU200[layer-1],dPhiChange_barrel_layer_tilted_endcap_hists_matched_muonGun[layer-1],dPhiChange_barrel_layer_tilted_endcap_hists_muonGun[layer-1],"Mini-doublet dPhiChange histogram for endcap like tilted modules in barrel for layer "+str(layer))
+
 
     if layer < 6:
         plot_md_params(dz_endcap_layer_hists_PU200[layer-1],dz_endcap_layer_hists_matched_muonGun[layer-1],dz_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dz histogram in endcap for layer "+str(layer))
 
         plot_md_params(dPhi_endcap_layer_hists_PU200[layer-1],dPhi_endcap_layer_hists_matched_muonGun[layer-1],dPhi_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dPhi histogram in endcap for layer "+str(layer))
+
+        plot_md_params(dPhiChange_endcap_layer_hists_PU200[layer-1],dPhiChange_endcap_layer_hists_matched_muonGun[layer-1],dPhiChange_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dPhiChange histogram in endcap for layer "+str(layer))
+
 
 
 
