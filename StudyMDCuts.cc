@@ -82,7 +82,7 @@ void StudyMDCuts::resetVariables()
     layerEndcapdPhiChangeValues.clear();
 
     layerBarrelCenterdPhiValues.clear();
-    layerBarrelNormalTilteddPhivalues.clear();
+    layerBarrelNormalTilteddPhiValues.clear();
     layerBarrelEndcapTilteddPhiValues.clear();
 
     layerBarrelCenterdPhiChangeValues.clear();
@@ -161,7 +161,7 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
                 }
                 else
                 {
-                    if(SDL::MiniDoublets::isNormalTiltedModules(*module))
+                    if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                     {
                         layerBarrelNormalTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
                         layerBarrelNormalTilteddPhiChangeValues[module->layer()-1].push_back(md->getDeltaPhiChange());

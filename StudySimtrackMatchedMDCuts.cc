@@ -171,7 +171,7 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
                     }
                     else
                     {
-                        if(SDL::MiniDoublets::isNormalTiltedModules(*module))
+                        if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                         {
                             layerBarrelNormalTilteddPhiValues[module->layer()-1].push_back(md->getDeltaPhi());
                             layerBarrelNormalTilteddPhiChangeValues[module->layer()-1].push_back(md->getDeltaPhiChange());
