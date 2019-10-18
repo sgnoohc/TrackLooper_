@@ -43,7 +43,7 @@ void StudySimtrackMatchedMDCuts::bookStudy()
 
         if(i < 3) //Barrel tilted modules - normal and endcap logic
         {
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_normal_tilted_layer_"%ld,i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTiltedPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_normal_tilted_layer_"%ld,i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_dPhi_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});   
 
             ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange_barrel_normal_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiChangeValues[i];});
@@ -133,7 +133,7 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
     //Every sim track is stored in an Event* container, and an event consists of a list of such containers
     for(auto &matchedTrack:simtrkevents)
     {
-        std::vector<SDL::Module*> moduleList = std::get<1>(matchedTrack-)->getLowerModulePtrs();
+        std::vector<SDL::Module*> moduleList = std::get<1>(matchedTrack)->getLowerModulePtrs();
         for(auto &module:moduleList)
         {
             std::vector<SDL::MiniDoublet*> miniDoublets = module->getMiniDoubletPtrs();
