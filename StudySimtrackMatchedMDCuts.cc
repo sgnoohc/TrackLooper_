@@ -92,6 +92,15 @@ void StudySimtrackMatchedMDCuts::resetVariables()
     layerEndcapdPhiValues.clear();
     layerEndcapdPhiChangeValues.clear();
 
+    layerBarrelCenterdPhiValues.clear();
+    layerBarrelNormalTilteddPhiValues.clear();
+    layerBarrelEndcapTilteddPhiValues.clear();
+
+    layerBarrelCenterdPhiChangeValues.clear();
+    layerBarrelNormalTilteddPhiChangeValues.clear();
+    layerBarrelEndcapTilteddPhiChangeValues.clear();
+
+
     for(size_t i = 1; i <= 6; i++)
     {
         layerdzValues.push_back(std::vector<float>());
