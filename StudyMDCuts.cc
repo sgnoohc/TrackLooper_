@@ -39,7 +39,7 @@ void StudyMDCuts::bookStudy()
 
         if(i < 3) //Barrel tilted modules
         {
-            ana.histograms.addVecHistogram(TString::Format("MD_dPhi_barrel_normal_tilted_layer_"%ld,i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("MD_dPhi_barrel_normal_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_dPhi_barrel_endcapLogic_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});   
 
             ana.histograms.addVecHistogram(TString::Format("MD_dPhiChange_barrel_normal_tilted_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiChangeValues[i];});
