@@ -50,7 +50,7 @@ void StudyMDCuts::bookStudy()
         {
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange_layer_%ld",i),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
         }
     }
 }
