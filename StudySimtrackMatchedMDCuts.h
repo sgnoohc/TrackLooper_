@@ -50,6 +50,12 @@ class StudySimtrackMatchedMDCuts : public Study
         std::vector<std::vector<float>> layerBarrelNormalTilteddPhiValues;
         std::vector<std::vector<float>> layerBarrelEndcapTilteddPhiValues;
 
+        //additional splittings for dPhiChange
+        std::vector<std::vector<float>> layerBarrelCenterdPhiChangeValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddPhiChangeValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddPhiChangeValues;
+
+
 
 
         StudySimtrackMatchedMDCuts(const char * studyName);
