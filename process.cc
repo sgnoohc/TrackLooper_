@@ -443,39 +443,90 @@ int main(int argc, char** argv)
         // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
         SDL::Event event;
 
-        // Adding hits to modules
-        for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
+        if (ana.eff_level == 0)
         {
-            // Takes two arguments, SDL::Hit, and detId
-            // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
-            event.addHitToModule(
-                    // a hit
-                    SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
-                    // add to module with "detId"
-                    trk.ph2_detId()[ihit]
-                    );
 
-            // // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
-            // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-            // if (module.subdet() == SDL::Module::Endcap and module.moduleType() == SDL::Module::TwoS and module.isLower())
-            // {
-            //     std::cout <<  " 'endcap2S': " << "endcap2S" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  " trk.ph2_z()[ihit]: " << trk.ph2_z()[ihit] <<  std::endl;
-            // }
+            // Adding hits to modules
+            for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
+            {
 
-            // // To print the reco hits per module to create a table of centroids of each module
-            // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-            // if (module.isLower())
-            // {
-            //     module_xs[trk.ph2_detId()[ihit]].push_back(trk.ph2_x()[ihit]);
-            //     module_ys[trk.ph2_detId()[ihit]].push_back(trk.ph2_y()[ihit]);
-            //     module_zs[trk.ph2_detId()[ihit]].push_back(trk.ph2_z()[ihit]);
-            // }
-            // else
-            // {
-            //     module_xs[module.partnerDetId()].push_back(trk.ph2_x()[ihit]);
-            //     module_ys[module.partnerDetId()].push_back(trk.ph2_y()[ihit]);
-            //     module_zs[module.partnerDetId()].push_back(trk.ph2_z()[ihit]);
-            // }
+                // Takes two arguments, SDL::Hit, and detId
+                // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
+                event.addHitToModule(
+                        // a hit
+                        SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
+                        // add to module with "detId"
+                        trk.ph2_detId()[ihit]
+                        );
+
+                // // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
+                // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
+                // if (module.subdet() == SDL::Module::Endcap and module.moduleType() == SDL::Module::TwoS and module.isLower())
+                // {
+                //     std::cout <<  " 'endcap2S': " << "endcap2S" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  " trk.ph2_z()[ihit]: " << trk.ph2_z()[ihit] <<  std::endl;
+                // }
+
+                // // To print the reco hits per module to create a table of centroids of each module
+                // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
+                // if (module.isLower())
+                // {
+                //     module_xs[trk.ph2_detId()[ihit]].push_back(trk.ph2_x()[ihit]);
+                //     module_ys[trk.ph2_detId()[ihit]].push_back(trk.ph2_y()[ihit]);
+                //     module_zs[trk.ph2_detId()[ihit]].push_back(trk.ph2_z()[ihit]);
+                // }
+                // else
+                // {
+                //     module_xs[module.partnerDetId()].push_back(trk.ph2_x()[ihit]);
+                //     module_ys[module.partnerDetId()].push_back(trk.ph2_y()[ihit]);
+                //     module_zs[module.partnerDetId()].push_back(trk.ph2_z()[ihit]);
+                // }
+
+            }
+
+        }
+        else
+        {
+
+            // Adding hits to modules
+            for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
+            {
+
+                // Select only muon tracks
+                if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+                    continue;
+
+                if (not hasAll12Hits(isimtrk))
+                    continue;
+
+                // loop over the simulated hits
+                for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
+                {
+
+                    // list of reco hit matched to this sim hit
+                    for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
+                    {
+
+                        // Get the recohit type
+                        int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+
+                        // Consider only ph2 hits (i.e. outer tracker hits)
+                        if (recohittype == 4)
+                        {
+
+                            int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+
+                            event.addHitToModule(
+                                    // a hit
+                                    SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
+                                    // add to module with "detId"
+                                    trk.ph2_detId()[ihit]
+                                    );
+
+                        }
+                    }
+
+                }
+            }
 
         }
 
@@ -493,8 +544,8 @@ int main(int argc, char** argv)
         event.createTracklets();
 
         // Create tracklets
-        event.createTrackCandidates(SDL::AllComb_TCAlgo);
-        // event.createTrackCandidates();
+        // event.createTrackCandidates(SDL::AllComb_TCAlgo);
+        event.createTrackCandidates();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
