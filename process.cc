@@ -24,8 +24,10 @@ int main(int argc, char** argv)
         ("x,event_index" , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
         ("e,eff_level"   , "Efficiency study level (i.e. up to which point allow all comb."                                      , cxxopts::value<int>()->default_value("0"))
         ("p,ptbound_mode", "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
+        ("g,pdg_id"      , "The simhit pdgId match option (default = 13)"                                                        , cxxopts::value<int>()->default_value("13"))
         ("d,debug"       , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
         ("c,print_conn"  , "Print module connections")
+        ("o,centroid"    , "Print centroid information")
         ("h,help"        , "Print help")
         ;
 
@@ -109,6 +111,17 @@ int main(int argc, char** argv)
     }
 
     //_______________________________________________________________________________
+    // --debug
+    if (result.count("centroid"))
+    {
+        ana.print_centroid = true;
+    }
+    else
+    {
+        ana.print_centroid = false;
+    }
+
+    //_______________________________________________________________________________
     // --nevents
     ana.n_events = result["nevents"].as<int>();
     ana.specific_event_index = result["event_index"].as<int>();
@@ -124,6 +137,10 @@ int main(int argc, char** argv)
     //  4 upto tracklet is default trackcandidate is all-comb
     ana.eff_level = result["eff_level"].as<int>();
     ana.ptbound_mode = result["ptbound_mode"].as<int>();
+
+    //_______________________________________________________________________________
+    // --pdg_id
+    ana.pdg_id = result["pdg_id"].as<int>();
 
     //
     // Printing out the option settings overview
@@ -398,9 +415,9 @@ int main(int argc, char** argv)
     // SDL::moduleConnectionMap.add("scripts/module_connection_map_data_pt0p95_1p05.txt");
 
     // // Following maps to compute centroid of each modules
-    // std::map<unsigned int, std::vector<float>> module_xs;
-    // std::map<unsigned int, std::vector<float>> module_ys;
-    // std::map<unsigned int, std::vector<float>> module_zs;
+    std::map<unsigned int, std::vector<float>> module_xs;
+    std::map<unsigned int, std::vector<float>> module_ys;
+    std::map<unsigned int, std::vector<float>> module_zs;
 
     // connection information
     std::ofstream module_connection_log_output("conn.txt");
@@ -417,6 +434,8 @@ int main(int argc, char** argv)
                 continue;
         }
 
+        std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
+
         // *****************************************************
         // Print module -> module connection info from sim track
         // *****************************************************
@@ -424,6 +443,32 @@ int main(int argc, char** argv)
         {
             // Print the module connection info and do nothing else on the event
             printModuleConnectionInfo(module_connection_log_output);
+            continue;
+        }
+
+        if (ana.print_centroid)
+        {
+            // Adding hits to modules
+            for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
+            {
+
+                // To print the reco hits per module to create a table of centroids of each module
+                SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
+                if (module.isLower())
+                {
+                    module_xs[trk.ph2_detId()[ihit]].push_back(trk.ph2_x()[ihit]);
+                    module_ys[trk.ph2_detId()[ihit]].push_back(trk.ph2_y()[ihit]);
+                    module_zs[trk.ph2_detId()[ihit]].push_back(trk.ph2_z()[ihit]);
+                }
+                else
+                {
+                    module_xs[module.partnerDetId()].push_back(trk.ph2_x()[ihit]);
+                    module_ys[module.partnerDetId()].push_back(trk.ph2_y()[ihit]);
+                    module_zs[module.partnerDetId()].push_back(trk.ph2_z()[ihit]);
+                }
+
+            }
+
             continue;
         }
 
@@ -459,28 +504,6 @@ int main(int argc, char** argv)
                         trk.ph2_detId()[ihit]
                         );
 
-                // // Access hits on the S side of the PS modules in the endcaps and get three numbers, (detId, x, y)
-                // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-                // if (module.subdet() == SDL::Module::Endcap and module.moduleType() == SDL::Module::TwoS and module.isLower())
-                // {
-                //     std::cout <<  " 'endcap2S': " << "endcap2S" <<  " trk.ph2_detId()[ihit]: " << trk.ph2_detId()[ihit] <<  " trk.ph2_x()[ihit]: " << trk.ph2_x()[ihit] <<  " trk.ph2_y()[ihit]: " << trk.ph2_y()[ihit] <<  " trk.ph2_z()[ihit]: " << trk.ph2_z()[ihit] <<  std::endl;
-                // }
-
-                // // To print the reco hits per module to create a table of centroids of each module
-                // SDL::Module module = SDL::Module(trk.ph2_detId()[ihit]);
-                // if (module.isLower())
-                // {
-                //     module_xs[trk.ph2_detId()[ihit]].push_back(trk.ph2_x()[ihit]);
-                //     module_ys[trk.ph2_detId()[ihit]].push_back(trk.ph2_y()[ihit]);
-                //     module_zs[trk.ph2_detId()[ihit]].push_back(trk.ph2_z()[ihit]);
-                // }
-                // else
-                // {
-                //     module_xs[module.partnerDetId()].push_back(trk.ph2_x()[ihit]);
-                //     module_ys[module.partnerDetId()].push_back(trk.ph2_y()[ihit]);
-                //     module_zs[module.partnerDetId()].push_back(trk.ph2_z()[ihit]);
-                // }
-
             }
 
         }
@@ -491,8 +514,8 @@ int main(int argc, char** argv)
             for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
             {
 
-                // Select only muon tracks
-                if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+                // Select only tracks of interest
+                if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
                     continue;
 
                 if (not hasAll12Hits(isimtrk))
@@ -575,7 +598,7 @@ int main(int argc, char** argv)
         {
 
             // Select only muon tracks
-            if (abs(trk.sim_pdgId()[isimtrk]) != 13)
+            if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
                 continue;
 
             if (not hasAll12Hits(isimtrk))
@@ -595,9 +618,28 @@ int main(int argc, char** argv)
             // event just for this track
             SDL::Event* trackevent = new SDL::Event();
 
+            // std::vector<float> ps;
+
             // loop over the simulated hits
             for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
             {
+
+                // float px = trk.simhit_px()[simhitidx];
+                // float py = trk.simhit_py()[simhitidx];
+                // float pz = trk.simhit_pz()[simhitidx];
+                // float p = sqrt(px*px + py*py + pz*pz);
+
+                // if (ps.size() > 0)
+                // {
+                //     float loss = fabs(ps.back() - p) / ps.back();
+                //     if (loss > 0.35)
+                //         break;
+                // }
+
+                // ps.push_back(p);
+
+                // if (angle(simhitidx) > 1.6)
+                //     break;
 
                 int simhit_particle = trk.simhit_particle()[simhitidx];
 
@@ -714,48 +756,53 @@ int main(int argc, char** argv)
 
     std::cout <<  " ncounter: " << ncounter <<  std::endl;
 
-    // std::map<unsigned int, float> module_center_x;
-    // std::map<unsigned int, float> module_center_y;
-    // std::map<unsigned int, float> module_center_z;
+    if (ana.print_centroid)
+    {
 
-    // for (auto& key : module_xs)
-    // {
-    //     unsigned int detid = key.first;
-    //     std::vector<float> fs = key.second;
-    //     float sumf = 0;
-    //     for (auto& f : fs)
-    //         sumf += f;
-    //     if (fs.size() > 0)
-    //         module_center_x[detid] = sumf / fs.size();
-    // }
+        std::map<unsigned int, float> module_center_x;
+        std::map<unsigned int, float> module_center_y;
+        std::map<unsigned int, float> module_center_z;
 
-    // for (auto& key : module_ys)
-    // {
-    //     unsigned int detid = key.first;
-    //     std::vector<float> fs = key.second;
-    //     float sumf = 0;
-    //     for (auto& f : fs)
-    //         sumf += f;
-    //     if (fs.size() > 0)
-    //         module_center_y[detid] = sumf / fs.size();
-    // }
+        for (auto& key : module_xs)
+        {
+            unsigned int detid = key.first;
+            std::vector<float> fs = key.second;
+            float sumf = 0;
+            for (auto& f : fs)
+                sumf += f;
+            if (fs.size() > 0)
+                module_center_x[detid] = sumf / fs.size();
+        }
 
-    // for (auto& key : module_zs)
-    // {
-    //     unsigned int detid = key.first;
-    //     std::vector<float> fs = key.second;
-    //     float sumf = 0;
-    //     for (auto& f : fs)
-    //         sumf += f;
-    //     if (fs.size() > 0)
-    //         module_center_z[detid] = sumf / fs.size();
-    // }
+        for (auto& key : module_ys)
+        {
+            unsigned int detid = key.first;
+            std::vector<float> fs = key.second;
+            float sumf = 0;
+            for (auto& f : fs)
+                sumf += f;
+            if (fs.size() > 0)
+                module_center_y[detid] = sumf / fs.size();
+        }
 
-    // for (auto& key : module_center_x)
-    // {
-    //     unsigned int detid = key.first;
-    //     std::cout <<  " detid: " << detid <<  " module_center_x[detid]: " << module_center_x[detid] <<  " module_center_y[detid]: " << module_center_y[detid] <<  " module_center_z[detid]: " << module_center_z[detid] <<  std::endl;
-    // }
+        for (auto& key : module_zs)
+        {
+            unsigned int detid = key.first;
+            std::vector<float> fs = key.second;
+            float sumf = 0;
+            for (auto& f : fs)
+                sumf += f;
+            if (fs.size() > 0)
+                module_center_z[detid] = sumf / fs.size();
+        }
+
+        for (auto& key : module_center_x)
+        {
+            unsigned int detid = key.first;
+            std::cout <<  " detid: " << detid <<  " module_center_x[detid]: " << module_center_x[detid] <<  " module_center_y[detid]: " << module_center_y[detid] <<  " module_center_z[detid]: " << module_center_z[detid] <<  std::endl;
+        }
+
+    }
 
     // Writing output file
     ana.cutflow.saveOutput();
@@ -901,25 +948,6 @@ void printModuleConnectionInfo(std::ofstream& ostrm)
     }
 }
 
-// void printSimHits()
-// {
-//     for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
-//     {
-
-//         int simhit_particle = trk.simhit_particle()[simhitidx];
-
-//         // Select only the sim hits that is matched to the muon
-//         if (abs(simhit_particle) != 13)
-//             continue;
-
-//         // list of reco hit matched to this sim hit
-//         for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
-//         {
-//         }
-
-//     }
-// }
-
 bool hasAll12Hits(unsigned int isimtrk)
 {
 
@@ -927,12 +955,6 @@ bool hasAll12Hits(unsigned int isimtrk)
     std::array<std::vector<SDL::Module>, 6> layers_modules;
     for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
     {
-
-        int simhit_particle = trk.simhit_particle()[simhitidx];
-
-        // Select only the sim hits that is matched to the muon
-        // if (abs(simhit_particle) != 13)
-        //     continue;
 
         // list of reco hit matched to this sim hit
         for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
@@ -997,3 +1019,23 @@ bool hasAll12Hits(unsigned int isimtrk)
     return has_good_pair_all_layer;
 
 }
+
+bool angle(unsigned int simhitidx)
+{
+
+    float x = trk.simhit_x()[simhitidx];
+    float y = trk.simhit_y()[simhitidx];
+    float z = trk.simhit_z()[simhitidx];
+    float r3 = sqrt(x*x + y*y + z*z);
+    float px = trk.simhit_px()[simhitidx];
+    float py = trk.simhit_py()[simhitidx];
+    float pz = trk.simhit_pz()[simhitidx];
+    float p = sqrt(px*px + py*py + pz*pz);
+    float rdotp = x*px + y*py + z*pz;
+    rdotp = rdotp / r3;
+    rdotp = rdotp / p;
+    float angle = acos(rdotp);
+
+    return angle;
+}
+

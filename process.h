@@ -41,5 +41,6 @@
 
 void printModuleConnectionInfo(std::ofstream&);
 bool hasAll12Hits(unsigned int);
+bool angle(unsigned int simhitidx);
 
 #endif

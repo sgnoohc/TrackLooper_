@@ -71,6 +71,7 @@ def plot_eff(num_name, den_name, output_name, dirname="lin"):
                 # "divide_by_bin_width":True,
                 "print_yield":True,
                 "xaxis_log":True if "_pt" in output_name else False,
+                "no_ratio":True,
                 # "remove_overflow": True,
                 },
         )

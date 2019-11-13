@@ -40,8 +40,14 @@ public:
     // pt binning options
     int ptbound_mode;
 
+    // pdg id of the particles to compute efficincies on
+    int pdg_id;
+
     // to print module connection info
     bool print_conn;
+
+    // to print centroid
+    bool print_centroid;
 
     // Debug boolean
     bool debug;
