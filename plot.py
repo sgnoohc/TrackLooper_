@@ -6,22 +6,41 @@ import ROOT as r
 
 import sys
 
-## TODO Add numerator and denominator histogram
+filename = "debug.root"
+if len(sys.argv) > 2:
+    filename = sys.argv[2]
+
+option = 1
+if len(sys.argv) > 1:
+    option = int(sys.argv[1])
 
 drawMDplots = False
-drawSGplots = False
+drawSGplots =False
 drawSGSelPlots = False
 drawSGTruthSelPlots = False
-drawTLplots = True
+drawTLplots = False
 drawTLSelPlots = False
 drawTCplots = False
 drawTCSelPlots = False
 
-filename = "debug.root"
-if len(sys.argv) > 1:
-    filename = sys.argv[1]
+if option == 1:
+    drawMDplots = True
 
-def plot_eff(num_name, den_name, output_name):
+if option == 2:
+    drawSGplots = True
+
+if option == 3:
+    drawTLplots = True
+
+if option == 4:
+    drawTCplots = True
+
+if option == 5:
+    drawTLSelPlots = True
+
+eff_file = r.TFile("eff.root", "recreate")
+
+def plot_eff(num_name, den_name, output_name, dirname="lin"):
     f = r.TFile(filename)
     num = f.Get(num_name)
     den = f.Get(den_name)
@@ -33,7 +52,7 @@ def plot_eff(num_name, den_name, output_name):
                 "yaxis_log":False,
                 "legend_smart":False,
                 "print_yield":False,
-                "output_name":"plots/lin/{}".format(output_name.replace(".pdf","_numden.pdf")),
+                "output_name":"plots/{}/{}".format(dirname, output_name.replace(".pdf","_numden.pdf")),
                 # "remove_underflow":True,
                 # "remove_overflow":True,
                 # "yaxis_range": [0.95, 1.05] if "eta" in output_name else [],
@@ -48,6 +67,11 @@ def plot_eff(num_name, den_name, output_name):
                 # "hist_black_line": True,
                 "show_bkg_errors": True,
                 "hist_line_black": True,
+                "ratio_range": [0., 1.05],
+                # "divide_by_bin_width":True,
+                "print_yield":True,
+                "xaxis_log":True if "_pt" in output_name else False,
+                "remove_overflow": True,
                 },
         )
     #p.plot_hist(
@@ -123,8 +147,8 @@ def plot_eff(num_name, den_name, output_name):
     #     eff.GetXaxis().SetRangeUser(0.8, 1.2)
     # if "endcap2S_pt" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.90, 1.03)
-    c1.SaveAs("plots/lin/{}".format(output_name))
-    c1.SaveAs("plots/lin/{}".format(output_name.replace("pdf", "png")))
+    c1.SaveAs("plots/{}/{}".format(dirname, output_name))
+    c1.SaveAs("plots/{}/{}".format(dirname, output_name.replace("pdf", "png")))
     #p.plot_hist(
     #        bgs=[eff.Clone()],
     #        data=eff.Clone(),
@@ -148,167 +172,197 @@ def plot_eff(num_name, den_name, output_name):
     #            },
     #        colors=[1],
     #        )
+    eff_file.cd()
+    eff.SetName(output_name.replace(".png",""))
+    eff.Write()
 
 if drawMDplots:
 
-    plot_eff("Root__md_all_matched_track_pt", "Root__md_all_all_track_pt", "md_eff_all_pt.pdf")
-    plot_eff("Root__md_all_matched_track_pt", "Root__md_all_all_track_pt", "md_eff_all_ptzoom.pdf")
-    plot_eff("Root__md_all_matched_track_eta", "Root__md_all_all_track_eta", "md_eff_all_eta.pdf")
-    plot_eff("Root__md_all_matched_track_phi", "Root__md_all_all_track_phi", "md_eff_all_phi.pdf")
-    plot_eff("Root__md_all_matched_track_z", "Root__md_all_all_track_z", "md_eff_all_z.pdf")
-    for i in xrange(6):
-        plot_eff("Root__md_all_matched_track_pt_by_layer{}".format(i), "Root__md_all_all_track_pt_by_layer{}".format(i), "md_eff_all_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_all_matched_track_pt_by_layer{}".format(i), "Root__md_all_all_track_pt_by_layer{}".format(i), "md_eff_all_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_all_matched_track_eta_by_layer{}".format(i), "Root__md_all_all_track_eta_by_layer{}".format(i), "md_eff_all_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_all_matched_track_phi_by_layer{}".format(i), "Root__md_all_all_track_phi_by_layer{}".format(i), "md_eff_all_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_all_matched_track_z_by_layer{}".format(i), "Root__md_all_all_track_z_by_layer{}".format(i), "md_eff_all_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_all_matched_track_wrapphi_by_layer{}".format(i), "Root__md_all_all_track_wrapphi_by_layer{}".format(i), "md_eff_all_wrapphi_by_layer{}.pdf".format(i))
+    mdcombos = ["barrel", "endcap", "all"]
 
-    plot_eff("Root__md_barrel_matched_track_pt", "Root__md_barrel_all_track_pt", "md_eff_barrel_pt.pdf")
-    plot_eff("Root__md_barrel_matched_track_pt", "Root__md_barrel_all_track_pt", "md_eff_barrel_ptzoom.pdf")
-    plot_eff("Root__md_barrel_matched_track_eta", "Root__md_barrel_all_track_eta", "md_eff_barrel_eta.pdf")
-    plot_eff("Root__md_barrel_matched_track_phi", "Root__md_barrel_all_track_phi", "md_eff_barrel_phi.pdf")
-    plot_eff("Root__md_barrel_matched_track_z", "Root__md_barrel_all_track_z", "md_eff_barrel_z.pdf")
-    for i in xrange(6):
-        plot_eff("Root__md_barrel_matched_track_pt_by_layer{}".format(i), "Root__md_barrel_all_track_pt_by_layer{}".format(i), "md_eff_barrel_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrel_matched_track_pt_by_layer{}".format(i), "Root__md_barrel_all_track_pt_by_layer{}".format(i), "md_eff_barrel_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrel_matched_track_eta_by_layer{}".format(i), "Root__md_barrel_all_track_eta_by_layer{}".format(i), "md_eff_barrel_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrel_matched_track_phi_by_layer{}".format(i), "Root__md_barrel_all_track_phi_by_layer{}".format(i), "md_eff_barrel_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrel_matched_track_z_by_layer{}".format(i), "Root__md_barrel_all_track_z_by_layer{}".format(i), "md_eff_barrel_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrel_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barrel_all_track_wrapphi_by_layer{}".format(i), "md_eff_barrel_wrapphi_by_layer{}.pdf".format(i))
+    for mdcombo in mdcombos:
 
-    plot_eff("Root__md_barrelflat_matched_track_pt", "Root__md_barrelflat_all_track_pt", "md_eff_barrelflat_pt.pdf")
-    plot_eff("Root__md_barrelflat_matched_track_pt", "Root__md_barrelflat_all_track_pt", "md_eff_barrelflat_ptzoom.pdf")
-    plot_eff("Root__md_barrelflat_matched_track_eta", "Root__md_barrelflat_all_track_eta", "md_eff_barrelflat_eta.pdf")
-    plot_eff("Root__md_barrelflat_matched_track_phi", "Root__md_barrelflat_all_track_phi", "md_eff_barrelflat_phi.pdf")
-    plot_eff("Root__md_barrelflat_matched_track_z", "Root__md_barrelflat_all_track_z", "md_eff_barrelflat_z.pdf")
-    for i in xrange(6):
-        plot_eff("Root__md_barrelflat_matched_track_pt_by_layer{}".format(i), "Root__md_barrelflat_all_track_pt_by_layer{}".format(i), "md_eff_barrelflat_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrelflat_matched_track_pt_by_layer{}".format(i), "Root__md_barrelflat_all_track_pt_by_layer{}".format(i), "md_eff_barrelflat_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrelflat_matched_track_eta_by_layer{}".format(i), "Root__md_barrelflat_all_track_eta_by_layer{}".format(i), "md_eff_barrelflat_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrelflat_matched_track_phi_by_layer{}".format(i), "Root__md_barrelflat_all_track_phi_by_layer{}".format(i), "md_eff_barrelflat_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrelflat_matched_track_z_by_layer{}".format(i), "Root__md_barrelflat_all_track_z_by_layer{}".format(i), "md_eff_barrelflat_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barrelflat_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barrelflat_all_track_wrapphi_by_layer{}".format(i), "md_eff_barrelflat_wrapphi_by_layer{}.pdf".format(i))
+        plot_eff("Root__md_{}_matched_track_pt".format(mdcombo), "Root__md_{}_all_track_pt".format(mdcombo), "md_eff_{}_pt_alllayer.pdf".format(mdcombo), "mdeff")
+        plot_eff("Root__md_{}_matched_track_pt".format(mdcombo), "Root__md_{}_all_track_pt".format(mdcombo), "md_eff_{}_ptzoom_alllayer.pdf".format(mdcombo), "mdeff")
+        plot_eff("Root__md_{}_matched_track_eta".format(mdcombo), "Root__md_{}_all_track_eta".format(mdcombo), "md_eff_{}_eta_alllayer.pdf".format(mdcombo), "mdeff")
+        plot_eff("Root__md_{}_matched_track_phi".format(mdcombo), "Root__md_{}_all_track_phi".format(mdcombo), "md_eff_{}_phi_alllayer.pdf".format(mdcombo), "mdeff")
+        plot_eff("Root__md_{}_matched_track_z".format(mdcombo), "Root__md_{}_all_track_z".format(mdcombo), "md_eff_{}_z_alllayer.pdf".format(mdcombo), "mdeff")
+        for i in xrange(6):
+            plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_pt_by_layer{}.pdf".format(mdcombo, i), "mdeff")
+            plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_ptzoom_by_layer{}.pdf".format(mdcombo, i), "mdeff")
+            plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_eta_by_layer{}.pdf".format(mdcombo, i), "mdeff")
+            plot_eff("Root__md_{}_matched_track_phi_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_phi_by_layer{}".format(mdcombo, i), "md_eff_{}_phi_by_layer{}.pdf".format(mdcombo, i), "mdeff")
+            plot_eff("Root__md_{}_matched_track_z_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_z_by_layer{}".format(mdcombo, i), "md_eff_{}_z_by_layer{}.pdf".format(mdcombo, i), "mdeff")
+            plot_eff("Root__md_{}_matched_track_wrapphi_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_wrapphi_by_layer{}".format(mdcombo, i), "md_eff_{}_wrapphi_by_layer{}.pdf".format(mdcombo, i), "mdeff")
 
-    plot_eff("Root__md_barreltilt_matched_track_pt", "Root__md_barreltilt_all_track_pt", "md_eff_barreltilt_pt.pdf")
-    plot_eff("Root__md_barreltilt_matched_track_pt", "Root__md_barreltilt_all_track_pt", "md_eff_barreltilt_ptzoom.pdf")
-    plot_eff("Root__md_barreltilt_matched_track_eta", "Root__md_barreltilt_all_track_eta", "md_eff_barreltilt_eta.pdf")
-    plot_eff("Root__md_barreltilt_matched_track_phi", "Root__md_barreltilt_all_track_phi", "md_eff_barreltilt_phi.pdf")
-    plot_eff("Root__md_barreltilt_matched_track_z", "Root__md_barreltilt_all_track_z", "md_eff_barreltilt_z.pdf")
-    for i in xrange(3):
-        plot_eff("Root__md_barreltilt_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilt_all_track_pt_by_layer{}".format(i), "md_eff_barreltilt_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilt_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilt_all_track_pt_by_layer{}".format(i), "md_eff_barreltilt_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilt_matched_track_eta_by_layer{}".format(i), "Root__md_barreltilt_all_track_eta_by_layer{}".format(i), "md_eff_barreltilt_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilt_matched_track_phi_by_layer{}".format(i), "Root__md_barreltilt_all_track_phi_by_layer{}".format(i), "md_eff_barreltilt_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilt_matched_track_z_by_layer{}".format(i), "Root__md_barreltilt_all_track_z_by_layer{}".format(i), "md_eff_barreltilt_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilt_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barreltilt_all_track_wrapphi_by_layer{}".format(i), "md_eff_barreltilt_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_all_matched_track_pt", "Root__md_all_all_track_pt", "md_eff_all_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_all_matched_track_pt", "Root__md_all_all_track_pt", "md_eff_all_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_all_matched_track_eta", "Root__md_all_all_track_eta", "md_eff_all_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_all_matched_track_phi", "Root__md_all_all_track_phi", "md_eff_all_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_all_matched_track_z", "Root__md_all_all_track_z", "md_eff_all_z_alllayer.pdf", "mdeff")
+    # for i in xrange(6):
+    #     plot_eff("Root__md_all_matched_track_pt_by_layer{}".format(i), "Root__md_all_all_track_pt_by_layer{}".format(i), "md_eff_all_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_all_matched_track_pt_by_layer{}".format(i), "Root__md_all_all_track_pt_by_layer{}".format(i), "md_eff_all_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_all_matched_track_eta_by_layer{}".format(i), "Root__md_all_all_track_eta_by_layer{}".format(i), "md_eff_all_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_all_matched_track_phi_by_layer{}".format(i), "Root__md_all_all_track_phi_by_layer{}".format(i), "md_eff_all_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_all_matched_track_z_by_layer{}".format(i), "Root__md_all_all_track_z_by_layer{}".format(i), "md_eff_all_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_all_matched_track_wrapphi_by_layer{}".format(i), "Root__md_all_all_track_wrapphi_by_layer{}".format(i), "md_eff_all_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
-    plot_eff("Root__md_barreltilthighz_matched_track_pt", "Root__md_barreltilthighz_all_track_pt", "md_eff_barreltilthighz_pt.pdf")
-    plot_eff("Root__md_barreltilthighz_matched_track_pt", "Root__md_barreltilthighz_all_track_pt", "md_eff_barreltilthighz_ptzoom.pdf")
-    plot_eff("Root__md_barreltilthighz_matched_track_eta", "Root__md_barreltilthighz_all_track_eta", "md_eff_barreltilthighz_eta.pdf")
-    plot_eff("Root__md_barreltilthighz_matched_track_phi", "Root__md_barreltilthighz_all_track_phi", "md_eff_barreltilthighz_phi.pdf")
-    plot_eff("Root__md_barreltilthighz_matched_track_z", "Root__md_barreltilthighz_all_track_z", "md_eff_barreltilthighz_z.pdf")
-    for i in xrange(3):
-        plot_eff("Root__md_barreltilthighz_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_pt_by_layer{}".format(i), "md_eff_barreltilthighz_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilthighz_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_pt_by_layer{}".format(i), "md_eff_barreltilthighz_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilthighz_matched_track_eta_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_eta_by_layer{}".format(i), "md_eff_barreltilthighz_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilthighz_matched_track_phi_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_phi_by_layer{}".format(i), "md_eff_barreltilthighz_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilthighz_matched_track_z_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_z_by_layer{}".format(i), "md_eff_barreltilthighz_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_barreltilthighz_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_wrapphi_by_layer{}".format(i), "md_eff_barreltilthighz_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_barrel_matched_track_pt", "Root__md_barrel_all_track_pt", "md_eff_barrel_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrel_matched_track_pt", "Root__md_barrel_all_track_pt", "md_eff_barrel_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrel_matched_track_eta", "Root__md_barrel_all_track_eta", "md_eff_barrel_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrel_matched_track_phi", "Root__md_barrel_all_track_phi", "md_eff_barrel_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrel_matched_track_z", "Root__md_barrel_all_track_z", "md_eff_barrel_z_alllayer.pdf", "mdeff")
+    # for i in xrange(6):
+    #     plot_eff("Root__md_barrel_matched_track_pt_by_layer{}".format(i), "Root__md_barrel_all_track_pt_by_layer{}".format(i), "md_eff_barrel_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrel_matched_track_pt_by_layer{}".format(i), "Root__md_barrel_all_track_pt_by_layer{}".format(i), "md_eff_barrel_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrel_matched_track_eta_by_layer{}".format(i), "Root__md_barrel_all_track_eta_by_layer{}".format(i), "md_eff_barrel_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrel_matched_track_phi_by_layer{}".format(i), "Root__md_barrel_all_track_phi_by_layer{}".format(i), "md_eff_barrel_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrel_matched_track_z_by_layer{}".format(i), "Root__md_barrel_all_track_z_by_layer{}".format(i), "md_eff_barrel_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrel_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barrel_all_track_wrapphi_by_layer{}".format(i), "md_eff_barrel_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
-    plot_eff("Root__md_endcapPS_matched_track_pt", "Root__md_endcapPS_all_track_pt", "md_eff_endcapPS_pt.pdf")
-    plot_eff("Root__md_endcapPS_matched_track_pt", "Root__md_endcapPS_all_track_pt", "md_eff_endcapPS_ptzoom.pdf")
-    plot_eff("Root__md_endcapPS_matched_track_eta", "Root__md_endcapPS_all_track_eta", "md_eff_endcapPS_eta.pdf")
-    plot_eff("Root__md_endcapPS_matched_track_phi", "Root__md_endcapPS_all_track_phi", "md_eff_endcapPS_phi.pdf")
-    plot_eff("Root__md_endcapPS_matched_track_z", "Root__md_endcapPS_all_track_z", "md_eff_endcapPS_z.pdf")
-    for i in xrange(5):
-        plot_eff("Root__md_endcapPS_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPS_all_track_pt_by_layer{}".format(i), "md_eff_endcapPS_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPS_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPS_all_track_pt_by_layer{}".format(i), "md_eff_endcapPS_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPS_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPS_all_track_eta_by_layer{}".format(i), "md_eff_endcapPS_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPS_matched_track_phi_by_layer{}".format(i), "Root__md_endcapPS_all_track_phi_by_layer{}".format(i), "md_eff_endcapPS_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPS_matched_track_z_by_layer{}".format(i), "Root__md_endcapPS_all_track_z_by_layer{}".format(i), "md_eff_endcapPS_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPS_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcapPS_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcapPS_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_barrelflat_matched_track_pt", "Root__md_barrelflat_all_track_pt", "md_eff_barrelflat_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrelflat_matched_track_pt", "Root__md_barrelflat_all_track_pt", "md_eff_barrelflat_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrelflat_matched_track_eta", "Root__md_barrelflat_all_track_eta", "md_eff_barrelflat_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrelflat_matched_track_phi", "Root__md_barrelflat_all_track_phi", "md_eff_barrelflat_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barrelflat_matched_track_z", "Root__md_barrelflat_all_track_z", "md_eff_barrelflat_z_alllayer.pdf", "mdeff")
+    # for i in xrange(6):
+    #     plot_eff("Root__md_barrelflat_matched_track_pt_by_layer{}".format(i), "Root__md_barrelflat_all_track_pt_by_layer{}".format(i), "md_eff_barrelflat_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrelflat_matched_track_pt_by_layer{}".format(i), "Root__md_barrelflat_all_track_pt_by_layer{}".format(i), "md_eff_barrelflat_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrelflat_matched_track_eta_by_layer{}".format(i), "Root__md_barrelflat_all_track_eta_by_layer{}".format(i), "md_eff_barrelflat_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrelflat_matched_track_phi_by_layer{}".format(i), "Root__md_barrelflat_all_track_phi_by_layer{}".format(i), "md_eff_barrelflat_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrelflat_matched_track_z_by_layer{}".format(i), "Root__md_barrelflat_all_track_z_by_layer{}".format(i), "md_eff_barrelflat_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barrelflat_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barrelflat_all_track_wrapphi_by_layer{}".format(i), "md_eff_barrelflat_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
-    plot_eff("Root__md_endcap2S_matched_track_pt", "Root__md_endcap2S_all_track_pt", "md_eff_endcap2S_pt.pdf")
-    plot_eff("Root__md_endcap2S_matched_track_pt", "Root__md_endcap2S_all_track_pt", "md_eff_endcap2S_ptzoom.pdf")
-    plot_eff("Root__md_endcap2S_matched_track_eta", "Root__md_endcap2S_all_track_eta", "md_eff_endcap2S_eta.pdf")
-    plot_eff("Root__md_endcap2S_matched_track_phi", "Root__md_endcap2S_all_track_phi", "md_eff_endcap2S_phi.pdf")
-    plot_eff("Root__md_endcap2S_matched_track_z", "Root__md_endcap2S_all_track_z", "md_eff_endcap2S_z.pdf")
-    for i in xrange(5):
-        plot_eff("Root__md_endcap2S_matched_track_pt_by_layer{}".format(i), "Root__md_endcap2S_all_track_pt_by_layer{}".format(i), "md_eff_endcap2S_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap2S_matched_track_pt_by_layer{}".format(i), "Root__md_endcap2S_all_track_pt_by_layer{}".format(i), "md_eff_endcap2S_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap2S_matched_track_eta_by_layer{}".format(i), "Root__md_endcap2S_all_track_eta_by_layer{}".format(i), "md_eff_endcap2S_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap2S_matched_track_phi_by_layer{}".format(i), "Root__md_endcap2S_all_track_phi_by_layer{}".format(i), "md_eff_endcap2S_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap2S_matched_track_z_by_layer{}".format(i), "Root__md_endcap2S_all_track_z_by_layer{}".format(i), "md_eff_endcap2S_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap2S_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcap2S_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcap2S_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_barreltilt_matched_track_pt", "Root__md_barreltilt_all_track_pt", "md_eff_barreltilt_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilt_matched_track_pt", "Root__md_barreltilt_all_track_pt", "md_eff_barreltilt_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilt_matched_track_eta", "Root__md_barreltilt_all_track_eta", "md_eff_barreltilt_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilt_matched_track_phi", "Root__md_barreltilt_all_track_phi", "md_eff_barreltilt_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilt_matched_track_z", "Root__md_barreltilt_all_track_z", "md_eff_barreltilt_z_alllayer.pdf", "mdeff")
+    # for i in xrange(3):
+    #     plot_eff("Root__md_barreltilt_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilt_all_track_pt_by_layer{}".format(i), "md_eff_barreltilt_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilt_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilt_all_track_pt_by_layer{}".format(i), "md_eff_barreltilt_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilt_matched_track_eta_by_layer{}".format(i), "Root__md_barreltilt_all_track_eta_by_layer{}".format(i), "md_eff_barreltilt_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilt_matched_track_phi_by_layer{}".format(i), "Root__md_barreltilt_all_track_phi_by_layer{}".format(i), "md_eff_barreltilt_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilt_matched_track_z_by_layer{}".format(i), "Root__md_barreltilt_all_track_z_by_layer{}".format(i), "md_eff_barreltilt_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilt_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barreltilt_all_track_wrapphi_by_layer{}".format(i), "md_eff_barreltilt_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
-    plot_eff("Root__md_endcap_matched_track_pt", "Root__md_endcap_all_track_pt", "md_eff_endcap_pt.pdf")
-    plot_eff("Root__md_endcap_matched_track_pt", "Root__md_endcap_all_track_pt", "md_eff_endcap_ptzoom.pdf")
-    plot_eff("Root__md_endcap_matched_track_eta", "Root__md_endcap_all_track_eta", "md_eff_endcap_eta.pdf")
-    plot_eff("Root__md_endcap_matched_track_phi", "Root__md_endcap_all_track_phi", "md_eff_endcap_phi.pdf")
-    plot_eff("Root__md_endcap_matched_track_z", "Root__md_endcap_all_track_z", "md_eff_endcap_z.pdf")
-    for i in xrange(5):
-        plot_eff("Root__md_endcap_matched_track_pt_by_layer{}".format(i), "Root__md_endcap_all_track_pt_by_layer{}".format(i), "md_eff_endcap_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap_matched_track_pt_by_layer{}".format(i), "Root__md_endcap_all_track_pt_by_layer{}".format(i), "md_eff_endcap_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap_matched_track_eta_by_layer{}".format(i), "Root__md_endcap_all_track_eta_by_layer{}".format(i), "md_eff_endcap_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap_matched_track_phi_by_layer{}".format(i), "Root__md_endcap_all_track_phi_by_layer{}".format(i), "md_eff_endcap_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap_matched_track_z_by_layer{}".format(i), "Root__md_endcap_all_track_z_by_layer{}".format(i), "md_eff_endcap_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcap_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcap_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcap_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_barreltilthighz_matched_track_pt", "Root__md_barreltilthighz_all_track_pt", "md_eff_barreltilthighz_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilthighz_matched_track_pt", "Root__md_barreltilthighz_all_track_pt", "md_eff_barreltilthighz_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilthighz_matched_track_eta", "Root__md_barreltilthighz_all_track_eta", "md_eff_barreltilthighz_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilthighz_matched_track_phi", "Root__md_barreltilthighz_all_track_phi", "md_eff_barreltilthighz_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_barreltilthighz_matched_track_z", "Root__md_barreltilthighz_all_track_z", "md_eff_barreltilthighz_z_alllayer.pdf", "mdeff")
+    # for i in xrange(3):
+    #     plot_eff("Root__md_barreltilthighz_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_pt_by_layer{}".format(i), "md_eff_barreltilthighz_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilthighz_matched_track_pt_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_pt_by_layer{}".format(i), "md_eff_barreltilthighz_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilthighz_matched_track_eta_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_eta_by_layer{}".format(i), "md_eff_barreltilthighz_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilthighz_matched_track_phi_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_phi_by_layer{}".format(i), "md_eff_barreltilthighz_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilthighz_matched_track_z_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_z_by_layer{}".format(i), "md_eff_barreltilthighz_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_barreltilthighz_matched_track_wrapphi_by_layer{}".format(i), "Root__md_barreltilthighz_all_track_wrapphi_by_layer{}".format(i), "md_eff_barreltilthighz_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
-    plot_eff("Root__md_endcapPSCloseRing_matched_track_pt", "Root__md_endcapPSCloseRing_all_track_pt", "md_eff_endcapPSCloseRing_pt.pdf")
-    plot_eff("Root__md_endcapPSCloseRing_matched_track_pt", "Root__md_endcapPSCloseRing_all_track_pt", "md_eff_endcapPSCloseRing_ptzoom.pdf")
-    plot_eff("Root__md_endcapPSCloseRing_matched_track_eta", "Root__md_endcapPSCloseRing_all_track_eta", "md_eff_endcapPSCloseRing_eta.pdf")
-    plot_eff("Root__md_endcapPSCloseRing_matched_track_phi", "Root__md_endcapPSCloseRing_all_track_phi", "md_eff_endcapPSCloseRing_phi.pdf")
-    plot_eff("Root__md_endcapPSCloseRing_matched_track_z", "Root__md_endcapPSCloseRing_all_track_z", "md_eff_endcapPSCloseRing_z.pdf")
-    for i in xrange(5):
-        plot_eff("Root__md_endcapPSCloseRing_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSCloseRing_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSCloseRing_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSCloseRing_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSCloseRing_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_eta_by_layer{}".format(i), "md_eff_endcapPSCloseRing_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSCloseRing_matched_track_phi_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_phi_by_layer{}".format(i), "md_eff_endcapPSCloseRing_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSCloseRing_matched_track_z_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_z_by_layer{}".format(i), "md_eff_endcapPSCloseRing_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSCloseRing_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcapPSCloseRing_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_endcapPS_matched_track_pt", "Root__md_endcapPS_all_track_pt", "md_eff_endcapPS_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPS_matched_track_pt", "Root__md_endcapPS_all_track_pt", "md_eff_endcapPS_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPS_matched_track_eta", "Root__md_endcapPS_all_track_eta", "md_eff_endcapPS_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPS_matched_track_phi", "Root__md_endcapPS_all_track_phi", "md_eff_endcapPS_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPS_matched_track_z", "Root__md_endcapPS_all_track_z", "md_eff_endcapPS_z_alllayer.pdf", "mdeff")
+    # for i in xrange(5):
+    #     plot_eff("Root__md_endcapPS_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPS_all_track_pt_by_layer{}".format(i), "md_eff_endcapPS_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPS_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPS_all_track_pt_by_layer{}".format(i), "md_eff_endcapPS_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPS_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPS_all_track_eta_by_layer{}".format(i), "md_eff_endcapPS_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPS_matched_track_phi_by_layer{}".format(i), "Root__md_endcapPS_all_track_phi_by_layer{}".format(i), "md_eff_endcapPS_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPS_matched_track_z_by_layer{}".format(i), "Root__md_endcapPS_all_track_z_by_layer{}".format(i), "md_eff_endcapPS_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPS_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcapPS_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcapPS_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
-    plot_eff("Root__md_endcapPSLowPt_matched_track_pt", "Root__md_endcapPSLowPt_all_track_pt", "md_eff_endcapPSLowPt_pt.pdf")
-    plot_eff("Root__md_endcapPSLowPt_matched_track_pt", "Root__md_endcapPSLowPt_all_track_pt", "md_eff_endcapPSLowPt_ptzoom.pdf")
-    plot_eff("Root__md_endcapPSLowPt_matched_track_eta", "Root__md_endcapPSLowPt_all_track_eta", "md_eff_endcapPSLowPt_eta.pdf")
-    plot_eff("Root__md_endcapPSLowPt_matched_track_phi", "Root__md_endcapPSLowPt_all_track_phi", "md_eff_endcapPSLowPt_phi.pdf")
-    plot_eff("Root__md_endcapPSLowPt_matched_track_z", "Root__md_endcapPSLowPt_all_track_z", "md_eff_endcapPSLowPt_z.pdf")
-    for i in xrange(5):
-        plot_eff("Root__md_endcapPSLowPt_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSLowPt_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSLowPt_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSLowPt_ptzoom_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSLowPt_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_eta_by_layer{}".format(i), "md_eff_endcapPSLowPt_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSLowPt_matched_track_phi_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_phi_by_layer{}".format(i), "md_eff_endcapPSLowPt_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSLowPt_matched_track_z_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_z_by_layer{}".format(i), "md_eff_endcapPSLowPt_z_by_layer{}.pdf".format(i))
-        plot_eff("Root__md_endcapPSLowPt_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcapPSLowPt_wrapphi_by_layer{}.pdf".format(i))
+    # plot_eff("Root__md_endcap2S_matched_track_pt", "Root__md_endcap2S_all_track_pt", "md_eff_endcap2S_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap2S_matched_track_pt", "Root__md_endcap2S_all_track_pt", "md_eff_endcap2S_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap2S_matched_track_eta", "Root__md_endcap2S_all_track_eta", "md_eff_endcap2S_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap2S_matched_track_phi", "Root__md_endcap2S_all_track_phi", "md_eff_endcap2S_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap2S_matched_track_z", "Root__md_endcap2S_all_track_z", "md_eff_endcap2S_z_alllayer.pdf", "mdeff")
+    # for i in xrange(5):
+    #     plot_eff("Root__md_endcap2S_matched_track_pt_by_layer{}".format(i), "Root__md_endcap2S_all_track_pt_by_layer{}".format(i), "md_eff_endcap2S_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap2S_matched_track_pt_by_layer{}".format(i), "Root__md_endcap2S_all_track_pt_by_layer{}".format(i), "md_eff_endcap2S_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap2S_matched_track_eta_by_layer{}".format(i), "Root__md_endcap2S_all_track_eta_by_layer{}".format(i), "md_eff_endcap2S_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap2S_matched_track_phi_by_layer{}".format(i), "Root__md_endcap2S_all_track_phi_by_layer{}".format(i), "md_eff_endcap2S_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap2S_matched_track_z_by_layer{}".format(i), "Root__md_endcap2S_all_track_z_by_layer{}".format(i), "md_eff_endcap2S_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap2S_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcap2S_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcap2S_wrapphi_by_layer{}.pdf".format(i), "mdeff")
+
+    # plot_eff("Root__md_endcap_matched_track_pt", "Root__md_endcap_all_track_pt", "md_eff_endcap_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap_matched_track_pt", "Root__md_endcap_all_track_pt", "md_eff_endcap_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap_matched_track_eta", "Root__md_endcap_all_track_eta", "md_eff_endcap_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap_matched_track_phi", "Root__md_endcap_all_track_phi", "md_eff_endcap_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcap_matched_track_z", "Root__md_endcap_all_track_z", "md_eff_endcap_z_alllayer.pdf", "mdeff")
+    # for i in xrange(5):
+    #     plot_eff("Root__md_endcap_matched_track_pt_by_layer{}".format(i), "Root__md_endcap_all_track_pt_by_layer{}".format(i), "md_eff_endcap_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap_matched_track_pt_by_layer{}".format(i), "Root__md_endcap_all_track_pt_by_layer{}".format(i), "md_eff_endcap_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap_matched_track_eta_by_layer{}".format(i), "Root__md_endcap_all_track_eta_by_layer{}".format(i), "md_eff_endcap_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap_matched_track_phi_by_layer{}".format(i), "Root__md_endcap_all_track_phi_by_layer{}".format(i), "md_eff_endcap_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap_matched_track_z_by_layer{}".format(i), "Root__md_endcap_all_track_z_by_layer{}".format(i), "md_eff_endcap_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcap_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcap_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcap_wrapphi_by_layer{}.pdf".format(i), "mdeff")
+
+    # plot_eff("Root__md_endcapPSCloseRing_matched_track_pt", "Root__md_endcapPSCloseRing_all_track_pt", "md_eff_endcapPSCloseRing_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSCloseRing_matched_track_pt", "Root__md_endcapPSCloseRing_all_track_pt", "md_eff_endcapPSCloseRing_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSCloseRing_matched_track_eta", "Root__md_endcapPSCloseRing_all_track_eta", "md_eff_endcapPSCloseRing_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSCloseRing_matched_track_phi", "Root__md_endcapPSCloseRing_all_track_phi", "md_eff_endcapPSCloseRing_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSCloseRing_matched_track_z", "Root__md_endcapPSCloseRing_all_track_z", "md_eff_endcapPSCloseRing_z_alllayer.pdf", "mdeff")
+    # for i in xrange(5):
+    #     plot_eff("Root__md_endcapPSCloseRing_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSCloseRing_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSCloseRing_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSCloseRing_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSCloseRing_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_eta_by_layer{}".format(i), "md_eff_endcapPSCloseRing_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSCloseRing_matched_track_phi_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_phi_by_layer{}".format(i), "md_eff_endcapPSCloseRing_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSCloseRing_matched_track_z_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_z_by_layer{}".format(i), "md_eff_endcapPSCloseRing_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSCloseRing_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcapPSCloseRing_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcapPSCloseRing_wrapphi_by_layer{}.pdf".format(i), "mdeff")
+
+    # plot_eff("Root__md_endcapPSLowPt_matched_track_pt", "Root__md_endcapPSLowPt_all_track_pt", "md_eff_endcapPSLowPt_pt_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSLowPt_matched_track_pt", "Root__md_endcapPSLowPt_all_track_pt", "md_eff_endcapPSLowPt_ptzoom_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSLowPt_matched_track_eta", "Root__md_endcapPSLowPt_all_track_eta", "md_eff_endcapPSLowPt_eta_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSLowPt_matched_track_phi", "Root__md_endcapPSLowPt_all_track_phi", "md_eff_endcapPSLowPt_phi_alllayer.pdf", "mdeff")
+    # plot_eff("Root__md_endcapPSLowPt_matched_track_z", "Root__md_endcapPSLowPt_all_track_z", "md_eff_endcapPSLowPt_z_alllayer.pdf", "mdeff")
+    # for i in xrange(5):
+    #     plot_eff("Root__md_endcapPSLowPt_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSLowPt_pt_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSLowPt_matched_track_pt_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_pt_by_layer{}".format(i), "md_eff_endcapPSLowPt_ptzoom_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSLowPt_matched_track_eta_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_eta_by_layer{}".format(i), "md_eff_endcapPSLowPt_eta_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSLowPt_matched_track_phi_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_phi_by_layer{}".format(i), "md_eff_endcapPSLowPt_phi_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSLowPt_matched_track_z_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_z_by_layer{}".format(i), "md_eff_endcapPSLowPt_z_by_layer{}.pdf".format(i), "mdeff")
+    #     plot_eff("Root__md_endcapPSLowPt_matched_track_wrapphi_by_layer{}".format(i), "Root__md_endcapPSLowPt_all_track_wrapphi_by_layer{}".format(i), "md_eff_endcapPSLowPt_wrapphi_by_layer{}.pdf".format(i), "mdeff")
 
 if drawSGplots:
 
-    plot_eff("Root__sg_all_matched_track_pt", "Root__sg_all_all_track_pt", "sg_eff_all_pt.pdf")
-    plot_eff("Root__sg_all_matched_track_pt", "Root__sg_all_all_track_pt", "sg_eff_all_ptzoom.pdf")
-    plot_eff("Root__sg_all_matched_track_eta", "Root__sg_all_all_track_eta", "sg_eff_all_eta.pdf")
-    plot_eff("Root__sg_all_matched_track_phi", "Root__sg_all_all_track_phi", "sg_eff_all_phi.pdf")
-    plot_eff("Root__sg_all_matched_track_z", "Root__sg_all_all_track_z", "sg_eff_all_z.pdf")
-    for i in xrange(5):
-        plot_eff("Root__sg_all_matched_track_pt_by_layer{}".format(i), "Root__sg_all_all_track_pt_by_layer{}".format(i), "sg_eff_all_pt_by_layer{}.pdf".format(i))
-        plot_eff("Root__sg_all_matched_track_eta_by_layer{}".format(i), "Root__sg_all_all_track_eta_by_layer{}".format(i), "sg_eff_all_eta_by_layer{}.pdf".format(i))
-        plot_eff("Root__sg_all_matched_track_phi_by_layer{}".format(i), "Root__sg_all_all_track_phi_by_layer{}".format(i), "sg_eff_all_phi_by_layer{}.pdf".format(i))
-        plot_eff("Root__sg_all_matched_track_z_by_layer{}".format(i), "Root__sg_all_all_track_z_by_layer{}".format(i), "sg_eff_all_z_by_layer{}.pdf".format(i))
+    # plot_eff("Root__sg_all_matched_track_pt", "Root__sg_all_all_track_pt", "sg_eff_all_pt_alllayer.pdf", "sgeff")
+    # plot_eff("Root__sg_all_matched_track_pt", "Root__sg_all_all_track_pt", "sg_eff_all_ptzoom_alllayer.pdf", "sgeff")
+    # plot_eff("Root__sg_all_matched_track_eta", "Root__sg_all_all_track_eta", "sg_eff_all_eta_alllayer.pdf", "sgeff")
+    # plot_eff("Root__sg_all_matched_track_phi", "Root__sg_all_all_track_phi", "sg_eff_all_phi_alllayer.pdf", "sgeff")
+    # plot_eff("Root__sg_all_matched_track_z", "Root__sg_all_all_track_z", "sg_eff_all_z_alllayer.pdf", "sgeff")
+    # for i in xrange(5):
+    #     plot_eff("Root__sg_all_matched_track_pt_by_layer{}".format(i), "Root__sg_all_all_track_pt_by_layer{}".format(i), "sg_eff_all_pt_by_layer{}.pdf".format(i), "sgeff")
+    #     plot_eff("Root__sg_all_matched_track_eta_by_layer{}".format(i), "Root__sg_all_all_track_eta_by_layer{}".format(i), "sg_eff_all_eta_by_layer{}.pdf".format(i), "sgeff")
+    #     plot_eff("Root__sg_all_matched_track_phi_by_layer{}".format(i), "Root__sg_all_all_track_phi_by_layer{}".format(i), "sg_eff_all_phi_by_layer{}.pdf".format(i), "sgeff")
+    #     plot_eff("Root__sg_all_matched_track_z_by_layer{}".format(i), "Root__sg_all_all_track_z_by_layer{}".format(i), "sg_eff_all_z_by_layer{}.pdf".format(i), "sgeff")
 
-    sgcombos = ["all", "barrelbarrel", "barrelflatbarrel", "barreltiltbarrel", "barrelflatbarrelflat", "barrelflatbarreltilt", "barreltiltbarrelflat", "barreltiltbarreltilt", "barrelendcap", "barreltiltendcap", "barrel", "endcap", "endcapPS", "endcapPSPS", "endcapPS2S", "endcap2S"]
+    # sgcombos = ["all", "barrelbarrel", "barrelflatbarrel", "barreltiltbarrel", "barrelflatbarrelflat", "barrelflatbarreltilt", "barreltiltbarrelflat", "barreltiltbarreltilt", "barrelendcap", "barreltiltendcap", "barrel", "endcap", "endcapPS", "endcapPSPS", "endcapPS2S", "endcap2S"]
+    # sgcombos = ["all", "barrelbarrel"]
+    sgcombos = ["all", "barrelbarrel", "barrelendcap", "endcap"]
     # sgcombos = ["endcap2S", "endcapPS", "endcap"]
 
     for sgcombo in sgcombos:
-        plot_eff("Root__sg_{}_matched_track_pt".format(sgcombo), "Root__sg_{}_all_track_pt".format(sgcombo), "sg_eff_{}_pt_alllayer.pdf".format(sgcombo))
-        plot_eff("Root__sg_{}_matched_track_pt".format(sgcombo), "Root__sg_{}_all_track_pt".format(sgcombo), "sg_eff_{}_ptzoom_alllayer.pdf".format(sgcombo))
-        plot_eff("Root__sg_{}_matched_track_eta".format(sgcombo), "Root__sg_{}_all_track_eta".format(sgcombo), "sg_eff_{}_eta_alllayer.pdf".format(sgcombo))
-        plot_eff("Root__sg_{}_matched_track_phi".format(sgcombo), "Root__sg_{}_all_track_phi".format(sgcombo), "sg_eff_{}_phi_alllayer.pdf".format(sgcombo))
-        plot_eff("Root__sg_{}_matched_track_z".format(sgcombo), "Root__sg_{}_all_track_z".format(sgcombo), "sg_eff_{}_z_alllayer.pdf".format(sgcombo))
+        plot_eff("Root__sg_{}_matched_track_pt".format(sgcombo), "Root__sg_{}_all_track_pt".format(sgcombo), "sg_eff_{}_pt_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_pt".format(sgcombo), "Root__sg_{}_all_track_pt".format(sgcombo), "sg_eff_{}_ptzoom_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_eta".format(sgcombo), "Root__sg_{}_all_track_eta".format(sgcombo), "sg_eff_{}_eta_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_phi".format(sgcombo), "Root__sg_{}_all_track_phi".format(sgcombo), "sg_eff_{}_phi_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_z".format(sgcombo), "Root__sg_{}_all_track_z".format(sgcombo), "sg_eff_{}_z_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_ring".format(sgcombo), "Root__sg_{}_all_track_ring".format(sgcombo), "sg_eff_{}_ring_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_module".format(sgcombo), "Root__sg_{}_all_track_module".format(sgcombo), "sg_eff_{}_module_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_targ_ring".format(sgcombo), "Root__sg_{}_all_track_targ_ring".format(sgcombo), "sg_eff_{}_targ_ring_alllayer.pdf".format(sgcombo), "sgeff")
+        plot_eff("Root__sg_{}_matched_track_targ_module".format(sgcombo), "Root__sg_{}_all_track_targ_module".format(sgcombo), "sg_eff_{}_targ_module_alllayer.pdf".format(sgcombo), "sgeff")
         for i in xrange(5):
-            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_pt_by_layer{}.pdf".format(sgcombo, i))
-            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_ptzoom_by_layer{}.pdf".format(sgcombo, i))
-            plot_eff("Root__sg_{}_matched_track_eta_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_eta_by_layer{}".format(sgcombo, i), "sg_eff_{}_eta_by_layer{}.pdf".format(sgcombo, i))
-            plot_eff("Root__sg_{}_matched_track_phi_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_phi_by_layer{}".format(sgcombo, i), "sg_eff_{}_phi_by_layer{}.pdf".format(sgcombo, i))
-            plot_eff("Root__sg_{}_matched_track_z_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_z_by_layer{}".format(sgcombo, i), "sg_eff_{}_z_by_layer{}.pdf".format(sgcombo, i))
+            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_pt_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_ptzoom_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_eta_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_eta_by_layer{}".format(sgcombo, i), "sg_eff_{}_eta_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_phi_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_phi_by_layer{}".format(sgcombo, i), "sg_eff_{}_phi_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_z_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_z_by_layer{}".format(sgcombo, i), "sg_eff_{}_z_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_ring_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_ring_by_layer{}".format(sgcombo, i), "sg_eff_{}_ring_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_module_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_module_by_layer{}".format(sgcombo, i), "sg_eff_{}_module_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_targ_ring_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_targ_ring_by_layer{}".format(sgcombo, i), "sg_eff_{}_targ_ring_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_targ_module_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_targ_module_by_layer{}".format(sgcombo, i), "sg_eff_{}_targ_module_by_layer{}.pdf".format(sgcombo, i), "sgeff")
 
 if drawSGSelPlots:
 
@@ -364,11 +418,11 @@ if drawTLplots:
     tlcombos = ["bb1bb3", "bb2bb4", "bb3bb5", "all"]
 
     for tlcombo in tlcombos:
-        plot_eff("Root__tl_{}_matched_track_pt".format(tlcombo), "Root__tl_{}_all_track_pt".format(tlcombo), "tl_eff_{}_pt_alllayer.pdf".format(tlcombo))
-        plot_eff("Root__tl_{}_matched_track_pt".format(tlcombo), "Root__tl_{}_all_track_pt".format(tlcombo), "tl_eff_{}_ptzoom_alllayer.pdf".format(tlcombo))
-        plot_eff("Root__tl_{}_matched_track_eta".format(tlcombo), "Root__tl_{}_all_track_eta".format(tlcombo), "tl_eff_{}_eta_alllayer.pdf".format(tlcombo))
-        plot_eff("Root__tl_{}_matched_track_phi".format(tlcombo), "Root__tl_{}_all_track_phi".format(tlcombo), "tl_eff_{}_phi_alllayer.pdf".format(tlcombo))
-        plot_eff("Root__tl_{}_matched_track_z".format(tlcombo), "Root__tl_{}_all_track_z".format(tlcombo), "tl_eff_{}_z_alllayer.pdf".format(tlcombo))
+        plot_eff("Root__tl_{}_matched_track_pt".format(tlcombo), "Root__tl_{}_all_track_pt".format(tlcombo), "tl_eff_{}_pt_alllayer.pdf".format(tlcombo), "tleff")
+        plot_eff("Root__tl_{}_matched_track_pt".format(tlcombo), "Root__tl_{}_all_track_pt".format(tlcombo), "tl_eff_{}_ptzoom_alllayer.pdf".format(tlcombo), "tleff")
+        plot_eff("Root__tl_{}_matched_track_eta".format(tlcombo), "Root__tl_{}_all_track_eta".format(tlcombo), "tl_eff_{}_eta_alllayer.pdf".format(tlcombo), "tleff")
+        plot_eff("Root__tl_{}_matched_track_phi".format(tlcombo), "Root__tl_{}_all_track_phi".format(tlcombo), "tl_eff_{}_phi_alllayer.pdf".format(tlcombo), "tleff")
+        plot_eff("Root__tl_{}_matched_track_z".format(tlcombo), "Root__tl_{}_all_track_z".format(tlcombo), "tl_eff_{}_z_alllayer.pdf".format(tlcombo), "tleff")
         # for i in xrange(5):
         #     plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_pt_by_layer{}.pdf".format(tlcombo, i))
         #     plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_ptzoom_by_layer{}.pdf".format(tlcombo, i))
@@ -392,7 +446,78 @@ if drawTLSelPlots:
         p.dump_plot(fnames=[filename],
             dirname="plots/tracklet",
             dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_midpoint".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_3rdCorr".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_4thCorr".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_3rdCorr_maxzoom".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_standard".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_midpoint_standard".format(tlcombo),
+            # extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":False, "remove_underflow":False},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_3rdCorr_standard".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
             filter_pattern="Root__tl_{}_deltaBeta_zoom".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_{}_deltaBeta_maxzoom".format(tlcombo),
             extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
             )
 
@@ -443,6 +568,13 @@ if drawTLSelPlots:
             dogrep=False,
             filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
             extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":True, "remove_underflow":True},
+            )
+
+        p.dump_plot(fnames=[filename],
+            dirname="plots/tracklet",
+            dogrep=False,
+            filter_pattern="Root__tl_truth_{}_cutflow".format(tlcombo),
+            extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":False, "remove_underflow":False},
             )
 
 if drawTCplots:

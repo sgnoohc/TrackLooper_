@@ -61,6 +61,7 @@ public:
     StudyTrackletEfficiency(const char* studyName, StudyTrackletEfficiencyMode, std::vector<float> ptboundaries);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+    virtual void doStudy_v1(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 
 };
 

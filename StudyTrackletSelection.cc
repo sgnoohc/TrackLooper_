@@ -30,7 +30,9 @@ void StudyTrackletSelection::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_postCut_ptbin%d", modename, ii), 180, -0.15, 0.15, [&, ii]() { return tl_deltaBeta_postCut_ptslice[ii]; } );
     }
     ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_standard", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_postCut", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta_postCut; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_dcut", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta_dcut; } );
@@ -45,10 +47,24 @@ void StudyTrackletSelection::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("tl_%s_betaIn_dcut_wide", modename), 180, -0.6, 0.6, [&]() { return tl_betaIn_dcut; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_betaIn_cutthresh", modename), 180, 0., 0.6, [&]() { return tl_betaIn_cutthresh; } );
     ana.histograms.addVecHistogram(TString::Format("tl_%s_cutflow", modename), 8, 0, 8, [&]() { return tl_cutflow; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_midpoint", modename), 180, -0.30, 0.30, [&]() { return tl_deltaBeta_midpoint; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_3rdCorr", modename), 180, -0.06, 0.06, [&]() { return tl_deltaBeta_3rdCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_4thCorr", modename), 180, -0.03, 0.03, [&]() { return tl_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_midpoint_standard", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta_midpoint; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_3rdCorr_standard", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta_3rdCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_4thCorr_standard", modename), 180, -0.15, 0.15, [&]() { return tl_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_midpoint_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_deltaBeta_midpoint; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_3rdCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_deltaBeta_3rdCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_midpoint_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_deltaBeta_midpoint; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_3rdCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_deltaBeta_3rdCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_deltaBeta_4thCorr; } );
 
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_truth_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_truth_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_truth_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_truth_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_cutflow", modename), 8, 0, 8, [&]() { return tl_truth_cutflow; } );
 
     const int nlayers = NLAYERS;
     for (int ii = 0; ii < nlayers; ++ii)
@@ -74,51 +90,93 @@ void StudyTrackletSelection::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tl_%s_cutflow_by_layer%d", modename, ii), 8, 0, 8, [&, ii]() { return tl_cutflow_by_layer[ii]; } );
     }
 
-    // ana.tx->createBranch<float>("sinAlphaMax");
-    // ana.tx->createBranch<float>("betaIn");
-    // ana.tx->createBranch<float>("betaInRHmax");
-    // ana.tx->createBranch<float>("betaInRHmin");
-    // ana.tx->createBranch<float>("betaOut");
-    // ana.tx->createBranch<float>("betaOutRHmax");
-    // ana.tx->createBranch<float>("betaOutRHmin");
-    // ana.tx->createBranch<float>("dBeta");
-    // ana.tx->createBranch<float>("dBetaCut2");
-    // ana.tx->createBranch<float>("dBetaLum2");
-    // ana.tx->createBranch<float>("dBetaMuls");
-    // ana.tx->createBranch<float>("dBetaRIn2");
-    // ana.tx->createBranch<float>("dBetaROut2");
-    // ana.tx->createBranch<float>("dBetaRes");
-    // ana.tx->createBranch<float>("deltaZLum");
-    // ana.tx->createBranch<float>("dr");
-    // ana.tx->createBranch<float>("dzDrtScale");
-    // ana.tx->createBranch<float>("innerSgInnerMdDetId");
-    // ana.tx->createBranch<float>("innerSgOuterMdDetId");
-    // ana.tx->createBranch<float>("k2Rinv1GeVf");
-    // ana.tx->createBranch<float>("kRinv1GeVf");
-    // ana.tx->createBranch<float>("outerSgInnerMdDetId");
-    // ana.tx->createBranch<float>("outerSgOuterMdDetId");
-    // ana.tx->createBranch<float>("pixelPSZpitch");
-    // ana.tx->createBranch<float>("ptCut");
-    // ana.tx->createBranch<float>("pt_betaIn");
-    // ana.tx->createBranch<float>("pt_betaOut");
-    // ana.tx->createBranch<float>("rtIn");
-    // ana.tx->createBranch<float>("rtOut");
-    // ana.tx->createBranch<float>("rtOut_o_rtIn");
-    // ana.tx->createBranch<float>("sdIn_d");
-    // ana.tx->createBranch<float>("sdOut_d");
-    // ana.tx->createBranch<float>("sdlSlope");
-    // ana.tx->createBranch<float>("strip2SZpitch");
-    // ana.tx->createBranch<float>("zGeom");
-    // ana.tx->createBranch<float>("zIn");
-    // ana.tx->createBranch<float>("zLo");
-    // ana.tx->createBranch<float>("zOut");
-    // ana.tx->createBranch<float>("betacormode");
-    // ana.tx->createBranch<float>("sdIn_alpha");
-    // ana.tx->createBranch<float>("sdOut_alphaOut");
-    // ana.tx->createBranch<float>("rawBetaInCorrection");
-    // ana.tx->createBranch<float>("rawBetaOutCorrection");
-    // ana.tx->createBranch<float>("rawBetaIn");
-    // ana.tx->createBranch<float>("rawBetaOut");
+    // if (not ana.tx->hasBranch<float>("sinAlphaMax"))
+    // {
+
+    //     ana.tx->createBranch<int>("tl_leg");
+
+    //     ana.tx->createBranch<float>("hit1_x");
+    //     ana.tx->createBranch<float>("hit1_y");
+    //     ana.tx->createBranch<float>("hit2_x");
+    //     ana.tx->createBranch<float>("hit2_y");
+    //     ana.tx->createBranch<float>("hit3_x");
+    //     ana.tx->createBranch<float>("hit3_y");
+    //     ana.tx->createBranch<float>("hit4_x");
+    //     ana.tx->createBranch<float>("hit4_y");
+
+    //     ana.tx->createBranch<float>("betaIn_0th");
+    //     ana.tx->createBranch<float>("betaOut_0th");
+    //     ana.tx->createBranch<float>("betaAv_0th");
+    //     ana.tx->createBranch<float>("betaPt_0th");
+    //     ana.tx->createBranch<float>("betaIn_1stCorr");
+    //     ana.tx->createBranch<float>("betaOut_1stCorr");
+    //     ana.tx->createBranch<float>("dBeta_0th");
+    //     ana.tx->createBranch<float>("betaIn_1st");
+    //     ana.tx->createBranch<float>("betaOut_1st");
+    //     ana.tx->createBranch<float>("betaAv_1st");
+    //     ana.tx->createBranch<float>("betaPt_1st");
+    //     ana.tx->createBranch<float>("betaIn_2ndCorr");
+    //     ana.tx->createBranch<float>("betaOut_2ndCorr");
+    //     ana.tx->createBranch<float>("dBeta_1st");
+    //     ana.tx->createBranch<float>("betaIn_2nd");
+    //     ana.tx->createBranch<float>("betaOut_2nd");
+    //     ana.tx->createBranch<float>("betaAv_2nd");
+    //     ana.tx->createBranch<float>("betaPt_2nd");
+    //     ana.tx->createBranch<float>("betaIn_3rdCorr");
+    //     ana.tx->createBranch<float>("betaOut_3rdCorr");
+    //     ana.tx->createBranch<float>("dBeta_2nd");
+    //     ana.tx->createBranch<float>("betaIn_3rd");
+    //     ana.tx->createBranch<float>("betaOut_3rd");
+    //     ana.tx->createBranch<float>("betaAv_3rd");
+    //     ana.tx->createBranch<float>("betaPt_3rd");
+    //     ana.tx->createBranch<float>("dBeta_3rd");
+
+    //     ana.tx->createBranch<float>("sinAlphaMax");
+    //     ana.tx->createBranch<float>("betaIn");
+    //     ana.tx->createBranch<float>("betaInRHmax");
+    //     ana.tx->createBranch<float>("betaInRHmin");
+    //     ana.tx->createBranch<float>("betaOut");
+    //     ana.tx->createBranch<float>("betaOutRHmax");
+    //     ana.tx->createBranch<float>("betaOutRHmin");
+    //     ana.tx->createBranch<float>("dBeta");
+    //     ana.tx->createBranch<float>("dBetaCut2");
+    //     ana.tx->createBranch<float>("dBetaLum2");
+    //     ana.tx->createBranch<float>("dBetaMuls");
+    //     ana.tx->createBranch<float>("dBetaRIn2");
+    //     ana.tx->createBranch<float>("dBetaROut2");
+    //     ana.tx->createBranch<float>("dBetaRes");
+    //     ana.tx->createBranch<float>("deltaZLum");
+    //     ana.tx->createBranch<float>("dr");
+    //     ana.tx->createBranch<float>("dzDrtScale");
+    //     ana.tx->createBranch<float>("innerSgInnerMdDetId");
+    //     ana.tx->createBranch<float>("innerSgOuterMdDetId");
+    //     ana.tx->createBranch<float>("k2Rinv1GeVf");
+    //     ana.tx->createBranch<float>("kRinv1GeVf");
+    //     ana.tx->createBranch<float>("outerSgInnerMdDetId");
+    //     ana.tx->createBranch<float>("outerSgOuterMdDetId");
+    //     ana.tx->createBranch<float>("pixelPSZpitch");
+    //     ana.tx->createBranch<float>("ptCut");
+    //     ana.tx->createBranch<float>("pt_betaIn");
+    //     ana.tx->createBranch<float>("pt_betaOut");
+    //     ana.tx->createBranch<float>("rtIn");
+    //     ana.tx->createBranch<float>("rtOut");
+    //     ana.tx->createBranch<float>("rtOut_o_rtIn");
+    //     ana.tx->createBranch<float>("sdIn_d");
+    //     ana.tx->createBranch<float>("sdOut_d");
+    //     ana.tx->createBranch<float>("sdlSlope");
+    //     ana.tx->createBranch<float>("strip2SZpitch");
+    //     ana.tx->createBranch<float>("zGeom");
+    //     ana.tx->createBranch<float>("zIn");
+    //     ana.tx->createBranch<float>("zLo");
+    //     ana.tx->createBranch<float>("zOut");
+    //     ana.tx->createBranch<float>("betacormode");
+    //     ana.tx->createBranch<float>("sdIn_alpha");
+    //     ana.tx->createBranch<float>("sdOut_alphaOut");
+    //     ana.tx->createBranch<float>("rawBetaInCorrection");
+    //     ana.tx->createBranch<float>("rawBetaOutCorrection");
+    //     ana.tx->createBranch<float>("rawBetaIn");
+    //     ana.tx->createBranch<float>("rawBetaOut");
+    // }
 
 }
 
@@ -140,7 +198,11 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
     tl_betaIn.clear();
     tl_betaIn_dcut.clear();
     tl_betaIn_cutthresh.clear();
+    tl_deltaBeta_midpoint.clear();
+    tl_deltaBeta_3rdCorr.clear();
+    tl_deltaBeta_4thCorr.clear();
     tl_cutflow.clear();
+    tl_truth_cutflow.clear();
     for (int ii = 0; ii < 7; ++ii)
     {
         tl_deltaBeta_ptslice[ii].clear();
@@ -500,6 +562,9 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 const float deltaBetaCut = fabs(deltaBeta) - tl->getDeltaBetaCut();
 
                 tl_deltaBeta.push_back(deltaBeta);
+                tl_deltaBeta_midpoint.push_back(tl->getRecoVar("dBeta_midPoint"));
+                tl_deltaBeta_3rdCorr.push_back(tl->getRecoVar("dBeta_3rd"));
+                tl_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
                 tl_deltaBeta_dcut.push_back(deltaBetaCut);
 
                 tl_deltaBeta_by_layer[layer_idx].push_back(deltaBeta);
@@ -608,6 +673,49 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
 
 
                 }
+
+                // if (mode == kStudySelBB1BB3)
+                //     ana.tx->setBranch<int>("tl_leg", 1);
+                // else if (mode == kStudySelBB2BB4)
+                //     ana.tx->setBranch<int>("tl_leg", 2);
+                // else if (mode == kStudySelBB3BB5)
+                //     ana.tx->setBranch<int>("tl_leg", 3);
+
+                // ana.tx->setBranch<float>("hit1_x", tl->getRecoVar("hit1_x"));
+                // ana.tx->setBranch<float>("hit1_y", tl->getRecoVar("hit1_y"));
+                // ana.tx->setBranch<float>("hit2_x", tl->getRecoVar("hit2_x"));
+                // ana.tx->setBranch<float>("hit2_y", tl->getRecoVar("hit2_y"));
+                // ana.tx->setBranch<float>("hit3_x", tl->getRecoVar("hit3_x"));
+                // ana.tx->setBranch<float>("hit3_y", tl->getRecoVar("hit3_y"));
+                // ana.tx->setBranch<float>("hit4_x", tl->getRecoVar("hit4_x"));
+                // ana.tx->setBranch<float>("hit4_y", tl->getRecoVar("hit4_y"));
+
+                // ana.tx->setBranch<float>("betaIn_0th", tl->getRecoVar("betaIn_0th"));
+                // ana.tx->setBranch<float>("betaOut_0th", tl->getRecoVar("betaOut_0th"));
+                // ana.tx->setBranch<float>("betaAv_0th", tl->getRecoVar("betaAv_0th"));
+                // ana.tx->setBranch<float>("betaPt_0th", tl->getRecoVar("betaPt_0th"));
+                // ana.tx->setBranch<float>("betaIn_1stCorr", tl->getRecoVar("betaIn_1stCorr"));
+                // ana.tx->setBranch<float>("betaOut_1stCorr", tl->getRecoVar("betaOut_1stCorr"));
+                // ana.tx->setBranch<float>("dBeta_0th", tl->getRecoVar("dBeta_0th"));
+                // ana.tx->setBranch<float>("betaIn_1st", tl->getRecoVar("betaIn_1st"));
+                // ana.tx->setBranch<float>("betaOut_1st", tl->getRecoVar("betaOut_1st"));
+                // ana.tx->setBranch<float>("betaAv_1st", tl->getRecoVar("betaAv_1st"));
+                // ana.tx->setBranch<float>("betaPt_1st", tl->getRecoVar("betaPt_1st"));
+                // ana.tx->setBranch<float>("betaIn_2ndCorr", tl->getRecoVar("betaIn_2ndCorr"));
+                // ana.tx->setBranch<float>("betaOut_2ndCorr", tl->getRecoVar("betaOut_2ndCorr"));
+                // ana.tx->setBranch<float>("dBeta_1st", tl->getRecoVar("dBeta_1st"));
+                // ana.tx->setBranch<float>("betaIn_2nd", tl->getRecoVar("betaIn_2nd"));
+                // ana.tx->setBranch<float>("betaOut_2nd", tl->getRecoVar("betaOut_2nd"));
+                // ana.tx->setBranch<float>("betaAv_2nd", tl->getRecoVar("betaAv_2nd"));
+                // ana.tx->setBranch<float>("betaPt_2nd", tl->getRecoVar("betaPt_2nd"));
+                // ana.tx->setBranch<float>("betaIn_3rdCorr", tl->getRecoVar("betaIn_3rdCorr"));
+                // ana.tx->setBranch<float>("betaOut_3rdCorr", tl->getRecoVar("betaOut_3rdCorr"));
+                // ana.tx->setBranch<float>("dBeta_2nd", tl->getRecoVar("dBeta_2nd"));
+                // ana.tx->setBranch<float>("betaIn_3rd", tl->getRecoVar("betaIn_3rd"));
+                // ana.tx->setBranch<float>("betaOut_3rd", tl->getRecoVar("betaOut_3rd"));
+                // ana.tx->setBranch<float>("betaAv_3rd", tl->getRecoVar("betaAv_3rd"));
+                // ana.tx->setBranch<float>("betaPt_3rd", tl->getRecoVar("betaPt_3rd"));
+                // ana.tx->setBranch<float>("dBeta_3rd", tl->getRecoVar("dBeta_3rd"));
 
                 // ana.tx->setBranch<float>("sinAlphaMax", tl->getRecoVar("sinAlphaMax"));
                 // ana.tx->setBranch<float>("betaIn", tl->getRecoVar("betaIn"));
@@ -857,6 +965,22 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 tl->runTrackletAlgo(SDL::Default_TLAlgo);
 
                 const int& passbit = tl->getPassBitsDefaultAlgo();
+
+                // Cutflow
+                //------------------------
+                tl_truth_cutflow.push_back(0);
+
+                for (unsigned int i = 0; i < SDL::Tracklet::TrackletSelection::nCut; ++i)
+                {
+                    if (passbit & (1 << i))
+                    {
+                        tl_truth_cutflow.push_back(i + 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
 
                 // DeltaBeta
                 //------------------------

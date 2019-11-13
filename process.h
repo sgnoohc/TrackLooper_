@@ -32,12 +32,14 @@
 #include "StudyMiniDoubletOccupancy.h"
 #include "StudySegmentOccupancy.h"
 #include "StudyTrackCandidateSelection.h"
+#include "StudyMiniDoubletEfficiency.h"
 
 #include "constants.h"
 
 #include "AnalysisConfig.h"
 
 
-void printModuleConnectionInfo();
+void printModuleConnectionInfo(std::ofstream&);
+bool hasAll12Hits(unsigned int);
 
 #endif

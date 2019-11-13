@@ -61,6 +61,7 @@ public:
     StudyEfficiency(const char* studyName, StudyEfficiencyMode, std::vector<float> ptboundaries);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+    virtual void doStudy_v1(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 
 };
 
