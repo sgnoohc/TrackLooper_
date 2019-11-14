@@ -17,18 +17,19 @@ int main(int argc, char** argv)
 
     // Read the options
     options.add_options()
-        ("i,input"       , "Comma separated input file list OR if just a directory is provided it will glob all in the directory BUT must end with '/' for the path", cxxopts::value<std::string>())
-        ("t,tree"        , "Name of the tree in the root file to open and loop over"                                             , cxxopts::value<std::string>())
-        ("o,output"      , "Output file name"                                                                                    , cxxopts::value<std::string>())
-        ("n,nevents"     , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
-        ("x,event_index" , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
-        ("e,eff_level"   , "Efficiency study level (i.e. up to which point allow all comb."                                      , cxxopts::value<int>()->default_value("0"))
-        ("p,ptbound_mode", "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
-        ("g,pdg_id"      , "The simhit pdgId match option (default = 13)"                                                        , cxxopts::value<int>()->default_value("13"))
-        ("d,debug"       , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
-        ("c,print_conn"  , "Print module connections")
-        ("o,centroid"    , "Print centroid information")
-        ("h,help"        , "Print help")
+        ("i,input"        , "Comma separated input file list OR if just a directory is provided it will glob all in the directory BUT must end with '/' for the path", cxxopts::value<std::string>())
+        ("t,tree"         , "Name of the tree in the root file to open and loop over"                                             , cxxopts::value<std::string>())
+        ("o,output"       , "Output file name"                                                                                    , cxxopts::value<std::string>())
+        ("n,nevents"      , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
+        ("x,event_index"  , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
+        ("p,ptbound_mode" , "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
+        ("g,pdg_id"       , "The simhit pdgId match option (default = 13)"                                                        , cxxopts::value<int>()->default_value("13"))
+        ("v,verbose"      , "Verbose mode"                                                                                        , cxxopts::value<int>()->default_value("0"))
+        ("d,debug"        , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
+        ("c,print_conn"   , "Print module connections")
+        ("r,centroid"     , "Print centroid information")
+        ("e,run_eff_study", "Run efficiency study")
+        ("h,help"         , "Print help")
         ;
 
     auto result = options.parse(argc, argv);
@@ -100,7 +101,7 @@ int main(int argc, char** argv)
     }
 
     //_______________________________________________________________________________
-    // --debug
+    // --print_conn
     if (result.count("print_conn"))
     {
         ana.print_conn = true;
@@ -111,7 +112,18 @@ int main(int argc, char** argv)
     }
 
     //_______________________________________________________________________________
-    // --debug
+    // --run_eff_study
+    if (result.count("run_eff_study"))
+    {
+        ana.run_eff_study = true;
+    }
+    else
+    {
+        ana.run_eff_study = false;
+    }
+
+    //_______________________________________________________________________________
+    // --centroid
     if (result.count("centroid"))
     {
         ana.print_centroid = true;
@@ -135,12 +147,15 @@ int main(int argc, char** argv)
     //  2 upto mini-doublet is default segment is all-comb
     //  3 upto segment is default tracklet is all-comb
     //  4 upto tracklet is default trackcandidate is all-comb
-    ana.eff_level = result["eff_level"].as<int>();
     ana.ptbound_mode = result["ptbound_mode"].as<int>();
 
     //_______________________________________________________________________________
     // --pdg_id
     ana.pdg_id = result["pdg_id"].as<int>();
+
+    //_______________________________________________________________________________
+    // --verbose
+    ana.verbose = result["verbose"].as<int>();
 
     //
     // Printing out the option settings overview
@@ -151,7 +166,9 @@ int main(int argc, char** argv)
     std::cout <<  " ana.input_file_list_tstring: " << ana.input_file_list_tstring <<  std::endl;
     std::cout <<  " ana.output_tfile: " << ana.output_tfile->GetName() <<  std::endl;
     std::cout <<  " ana.n_events: " << ana.n_events <<  std::endl;
-    std::cout <<  " ana.eff_level: " << ana.eff_level <<  std::endl;
+    std::cout <<  " ana.run_eff_study: " << ana.run_eff_study <<  std::endl;
+    std::cout <<  " ana.print_centroid: " << ana.print_centroid <<  std::endl;
+    std::cout <<  " ana.print_conn: " << ana.print_conn <<  std::endl;
     std::cout <<  " ana.ptbound_mode: " << ana.ptbound_mode <<  std::endl;
     std::cout <<  "=========================================================" << std::endl;
 
@@ -335,55 +352,19 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
     studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
     studies.push_back(new StudyLinkedModule("studyLinkedModule"));
-    studies.push_back(new StudyTrackletEfficiency("all", StudyTrackletEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffBB1BB3", StudyTrackletEfficiency::kStudyEffBB1BB3, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffBB2BB4", StudyTrackletEfficiency::kStudyEffBB2BB4, pt_boundaries));
-    studies.push_back(new StudyTrackletEfficiency("studyEffBB3BB5", StudyTrackletEfficiency::kStudyEffBB3BB5, pt_boundaries));
-    // studies.push_back(new StudyTrackletSelection("studySelTlSpecific", StudyTrackletSelection::kStudySelSpecific));
     studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
     studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
     studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
-    // studies.push_back(new StudySegmentSelection("studySelSgBB12", StudySegmentSelection::kStudySelBB12));
-    // studies.push_back(new StudySegmentSelection("studySelSgBB23", StudySegmentSelection::kStudySelBB23));
-    // studies.push_back(new StudySegmentSelection("studySelSgBB34", StudySegmentSelection::kStudySelBB34));
-    // studies.push_back(new StudySegmentSelection("studySelSgBB45", StudySegmentSelection::kStudySelBB45));
-    // studies.push_back(new StudySegmentSelection("studySelSgBB56", StudySegmentSelection::kStudySelBB56));
-    studies.push_back(new StudyHitOccupancy("studyHitOccu", StudyHitOccupancy::kStudyAll));
-    studies.push_back(new StudyMiniDoubletOccupancy("studyMiniDoubletOccu", StudyMiniDoubletOccupancy::kStudyAll));
-    studies.push_back(new StudySegmentOccupancy("studySegmentOccu", StudySegmentOccupancy::kStudyAll));
     studies.push_back(new StudyTrackCandidateSelection("studySelTCAll", StudyTrackCandidateSelection::kStudySelAll, pt_boundaries));
-    // studies.push_back(new StudyMiniDoubletEfficiency("studyEff", StudyMiniDoubletEfficiency::kStudyEffAll, pt_boundaries));
+    studies.push_back(new StudySDLEfficiency("efficiency",
+                StudySDLEfficiency::kStudySDLMDEffBarrel,
+                StudySDLEfficiency::kStudySDLSGEffBB,
+                StudySDLEfficiency::kStudySDLTLEffBBBB,
+                StudySDLEfficiency::kStudySDLTCEffBBBBBB,
+                pt_boundaries));
 
     // book the studies
     for (auto& study : studies)
@@ -394,25 +375,9 @@ int main(int argc, char** argv)
     // Book Histograms
     ana.cutflow.bookHistograms(ana.histograms); // if just want to book everywhere
 
-    // Set extendable axes
-    // ana.cutflow.setHistsAxesExtendable(); // Make histogram axes extendable
-
     SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
     SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
     SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_d35cm.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_d35_55cm.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_d35_45cm.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nocurlers.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_e0_200_pt0p8_2p0_400_pt0p8_2p0_vetoing_returning_tracks.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_e0_200_pt0p8_2p0_400_pt0p8_2p0.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_e0_200_pt0p8_2p0_pt0p5_1p5_400_pt0p8_2p0.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_e0_200_pt0p8_2p0_pt0p5_1p5.txt");
-    // SDL::moduleConnectionMap.load("scripts/module_connection_map_data_e0_200_pt0p8_2p0_pt0p95_1p05.txt");
-    // SDL::moduleConnectionMap.add("scripts/module_connection_map_data_pt0p8_2p0.txt");
-    // SDL::moduleConnectionMap.add("scripts/module_connection_map_data_pt0p95_1p05.txt");
 
     // // Following maps to compute centroid of each modules
     std::map<unsigned int, std::vector<float>> module_xs;
@@ -421,8 +386,6 @@ int main(int argc, char** argv)
 
     // connection information
     std::ofstream module_connection_log_output("conn.txt");
-
-    int ncounter = 0;
 
     // Looping input file
     while (ana.looper.nextEvent())
@@ -434,7 +397,7 @@ int main(int argc, char** argv)
                 continue;
         }
 
-        std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
+        if (ana.verbose) std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
 
         // *****************************************************
         // Print module -> module connection info from sim track
@@ -470,6 +433,7 @@ int main(int argc, char** argv)
             }
 
             continue;
+
         }
 
         // <--------------------------
@@ -488,7 +452,12 @@ int main(int argc, char** argv)
         // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
         SDL::Event event;
 
-        if (ana.eff_level == 0)
+        // Each SDL::Event object in simtrkevents will hold single sim-track related hits
+        // It will be a vector of tuple of <sim_track_index, SDL::Event*>.
+        std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents;
+
+        // run_eff_study == 0 then run all the reconstruction
+        if (ana.run_eff_study == 0)
         {
 
             // Adding hits to modules
@@ -506,24 +475,78 @@ int main(int argc, char** argv)
 
             }
 
+            if (ana.verbose != 0) std::cout << "Reco Mini-Doublet start" << std::endl;
+            event.createMiniDoublets();
+            if (ana.verbose != 0) std::cout << "Reco Segment start" << std::endl;
+            event.createSegmentsWithModuleMap();
+            if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
+            event.createTracklets();
+            if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
+            event.createTrackCandidates();
+            if (ana.verbose != 0) std::cout << "Reco SDL end" << std::endl;
+
         }
+        // If efficiency is to be calculated
         else
         {
 
-            // Adding hits to modules
+            // *******************************************************
+            // Formation of mini-doublets "candidates" from sim-tracks
+            // *******************************************************
+
+            // Loop over sim-tracks and per sim-track aggregate good hits (i.e. matched with particle ID)
+            // and only use those hits, and run mini-doublet reco algorithm on the sim-track-matched-reco-hits
             for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
             {
 
-                // Select only tracks of interest
+                // Select only muon tracks
                 if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
                     continue;
 
-                if (not hasAll12Hits(isimtrk))
+                if (not hasAll12HitsInBarrel(isimtrk))
                     continue;
+
+                // event just for this track
+                SDL::Event* trackevent = new SDL::Event();
+
+                std::vector<float> ps;
 
                 // loop over the simulated hits
                 for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
                 {
+
+                    // Select only the hits in the outer tracker
+                    if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+                        continue;
+
+                    float px = trk.simhit_px()[simhitidx];
+                    float py = trk.simhit_py()[simhitidx];
+                    float pz = trk.simhit_pz()[simhitidx];
+                    float p = sqrt(px*px + py*py + pz*pz);
+                    int detid = trk.simhit_detId()[simhitidx];
+                    SDL::Module module = SDL::Module(detid);
+                    int simhit_particle = trk.simhit_particle()[simhitidx];
+                    float angle = hitAngle(simhitidx);
+
+                    // Select only the sim hits that is matched to the muon
+                    if (abs(simhit_particle) == 13)
+                    {
+                        if (ps.size() > 0)
+                        {
+                            float loss = fabs(ps.back() - p) / ps.back();
+                            if (loss > 0.35)
+                                break;
+                        }
+
+                        if (module.isLower())
+                        {
+                            ps.push_back(p);
+                        }
+
+                        if (abs(angle) > 1.6)
+                            break;
+
+                    }
 
                     // list of reco hit matched to this sim hit
                     for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
@@ -538,7 +561,7 @@ int main(int argc, char** argv)
 
                             int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
 
-                            event.addHitToModule(
+                            trackevent->addHitToModule(
                                     // a hit
                                     SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
                                     // add to module with "detId"
@@ -546,29 +569,29 @@ int main(int argc, char** argv)
                                     );
 
                         }
+
                     }
 
                 }
+
+                if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                trackevent->createMiniDoublets();
+                if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
+                trackevent->createSegmentsWithModuleMap();
+                if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
+                trackevent->createTracklets();
+                if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
+                trackevent->createTrackCandidates();
+                if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
+
+
+                // Push to the vector so we have a data-base of per hit, mini-doublets
+                simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
+
             }
 
+
         }
-
-        // Create mini doublets
-        // event.setLogLevel(SDL::Log_Debug2); // Set log level
-        event.createMiniDoublets();
-
-        // Create segments
-        // event.createSegments(SDL::AllComb_SGAlgo);
-        // event.createSegments();
-        event.createSegmentsWithModuleMap();
-
-        // Create tracklets
-        // event.createTracklets(SDL::AllComb_TLAlgo);
-        event.createTracklets();
-
-        // Create tracklets
-        // event.createTrackCandidates(SDL::AllComb_TCAlgo);
-        event.createTrackCandidates();
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
@@ -576,160 +599,6 @@ int main(int argc, char** argv)
         // {
         //     SDL::cout << event;
         // }
-
-
-
-
-        // *******************************************************
-        // Formation of mini-doublets "candidates" from sim-tracks
-        // *******************************************************
-
-        // "Candidate" here means that it is just a pair of two hits without any selection applied.
-        // i.e. no cuts are applied.
-        // See http://uaf-10.t2.ucsd.edu/~phchang/talks/PhilipChang20190426_SDL_Update.pdf#page=7
-
-        // Each SDL::Event object in simtrkevents will hold single sim-track related hits
-        // It will be a vector of tuple of <sim_track_index, SDL::Event*>.
-        std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents;
-
-        // Loop over sim-tracks and per sim-track aggregate good hits (i.e. matched with particle ID)
-        // and only use those hits, and run mini-doublet reco algorithm on the sim-track-matched-reco-hits
-        for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
-        {
-
-            // Select only muon tracks
-            if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
-                continue;
-
-            if (not hasAll12Hits(isimtrk))
-                continue;
-
-            if (trk.sim_pt()[isimtrk] > 1.2 and trk.sim_pt()[isimtrk] < 1.5)
-                ncounter++;
-
-            // if (abs(trk.sim_pdgId()[isimtrk]) != 211 and abs(trk.sim_pdgId()[isimtrk]) != 13 and abs(trk.sim_pdgId()[isimtrk]) != 11)
-            // if (abs(trk.sim_pdgId()[isimtrk]) != 211)
-            //     continue;
-
-            // // Select only 1 cm from center tracks
-            // if (fabs(trk.sim_pca_dz()[isimtrk]) > 0.1)
-            //     continue;
-
-            // event just for this track
-            SDL::Event* trackevent = new SDL::Event();
-
-            // std::vector<float> ps;
-
-            // loop over the simulated hits
-            for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
-            {
-
-                // float px = trk.simhit_px()[simhitidx];
-                // float py = trk.simhit_py()[simhitidx];
-                // float pz = trk.simhit_pz()[simhitidx];
-                // float p = sqrt(px*px + py*py + pz*pz);
-
-                // if (ps.size() > 0)
-                // {
-                //     float loss = fabs(ps.back() - p) / ps.back();
-                //     if (loss > 0.35)
-                //         break;
-                // }
-
-                // ps.push_back(p);
-
-                // if (angle(simhitidx) > 1.6)
-                //     break;
-
-                int simhit_particle = trk.simhit_particle()[simhitidx];
-
-                // Select only the sim hits that is matched to the muon
-                // if (abs(simhit_particle) != 211 and abs(simhit_particle) != 13 and abs(simhit_particle) != 11)
-                // if (abs(simhit_particle) != 211)
-                // if (abs(simhit_particle) != 13)
-                //     continue;
-                // if (simhit_particle != 13)
-                //     continue;
-
-                // list of reco hit matched to this sim hit
-                for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
-                {
-
-                    // Get the recohit type
-                    int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
-
-                    // Consider only ph2 hits (i.e. outer tracker hits)
-                    if (recohittype == 4)
-                    {
-
-                        int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
-
-                        trackevent->addHitToModule(
-                                // a hit
-                                SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
-                                // add to module with "detId"
-                                trk.ph2_detId()[ihit]
-                                );
-
-                    }
-                }
-
-            }
-
-            // Running of truth level
-            if (ana.eff_level == 1)
-            {
-                trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            }
-            else if (ana.eff_level == 2)
-            {
-                trackevent->createMiniDoublets(SDL::Default_MDAlgo);
-                trackevent->createSegments(SDL::AllComb_SGAlgo);
-            }
-            else if (ana.eff_level == 3)
-            {
-                trackevent->createMiniDoublets(SDL::Default_MDAlgo);
-                trackevent->createSegments(SDL::Default_SGAlgo);
-                trackevent->createTracklets(SDL::AllComb_TLAlgo);
-            }
-            else if (ana.eff_level == 4)
-            {
-                trackevent->createMiniDoublets(SDL::Default_MDAlgo);
-                trackevent->createSegments(SDL::Default_SGAlgo);
-                trackevent->createTracklets(SDL::Default_TLAlgo);
-                trackevent->createTrackCandidates(SDL::AllComb_TCAlgo);
-            }
-            else if (ana.eff_level == -1)
-            {
-                trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            }
-            else if (ana.eff_level == -2)
-            {
-                trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-                trackevent->createSegments(SDL::AllComb_SGAlgo);
-            }
-            else if (ana.eff_level == -3)
-            {
-                trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-                trackevent->createSegments(SDL::AllComb_SGAlgo);
-                trackevent->createTracklets(SDL::AllComb_TLAlgo);
-            }
-            else if (ana.eff_level == -4)
-            {
-                trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-                trackevent->createSegments(SDL::AllComb_SGAlgo);
-                trackevent->createTracklets(SDL::AllComb_TLAlgo);
-                trackevent->createTrackCandidates(SDL::AllComb_TCAlgo);
-            }
-            else
-            {
-                // Do nothing
-            }
-
-            // Push to the vector so we have a data-base of per hit, mini-doublets
-            simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
-
-        }
 
 
         // ********************************************************************************************
@@ -753,8 +622,6 @@ int main(int argc, char** argv)
         // <--------------------------
         // <--------------------------
     }
-
-    std::cout <<  " ncounter: " << ncounter <<  std::endl;
 
     if (ana.print_centroid)
     {
@@ -948,7 +815,7 @@ void printModuleConnectionInfo(std::ofstream& ostrm)
     }
 }
 
-bool hasAll12Hits(unsigned int isimtrk)
+bool hasAll12HitsInBarrel(unsigned int isimtrk)
 {
 
     // Select only tracks that left all 12 hits in the barrel
@@ -1020,7 +887,7 @@ bool hasAll12Hits(unsigned int isimtrk)
 
 }
 
-bool angle(unsigned int simhitidx)
+float hitAngle(unsigned int simhitidx)
 {
 
     float x = trk.simhit_x()[simhitidx];
@@ -1035,7 +902,6 @@ bool angle(unsigned int simhitidx)
     rdotp = rdotp / r3;
     rdotp = rdotp / p;
     float angle = acos(rdotp);
-
     return angle;
 }
 

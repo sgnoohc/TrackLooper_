@@ -33,6 +33,7 @@
 #include "StudySegmentOccupancy.h"
 #include "StudyTrackCandidateSelection.h"
 #include "StudyMiniDoubletEfficiency.h"
+#include "StudySDLEfficiency.h"
 
 #include "constants.h"
 
@@ -40,7 +41,7 @@
 
 
 void printModuleConnectionInfo(std::ofstream&);
-bool hasAll12Hits(unsigned int);
-bool angle(unsigned int simhitidx);
+bool hasAll12HitsInBarrel(unsigned int);
+float hitAngle(unsigned int simhitidx);
 
 #endif
