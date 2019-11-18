@@ -66,6 +66,10 @@ dz_endcap_hist_PU200 = f_PU200.Get("Root__MD_endcap_dz")
 dz_endcap_hist_muonGun = f_muonGun.Get("Root__MD_endcap_dz")
 dz_endcap_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_endcap_dz")
 
+drt_endcap_hist_PU200 = f_PU200.Get("Root__MD_endcap_drt")
+drt_endcap_hist_muonGun = f_muonGun.Get("Root__MD_endcap_drt")
+drt_endcap_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_endcap_drt")
+
 dPhi_hist_PU200 = f_PU200.Get("Root__MD_dPhi")
 dPhi_hist_muonGun = f_muonGun.Get("Root__MD_dPhi")
 dPhi_hist_matched_muonGun = f_muonGun.Get("Root__sim_matched_MD_dPhi")
@@ -103,6 +107,9 @@ dz_endcap_layer_hists_PU200 = []
 dz_endcap_layer_hists_muonGun = []
 dz_endcap_layer_hists_matched_muonGun = []
 
+drt_endcap_layer_hists_PU200 = []
+drt_endcap_layer_hists_muonGun = []
+drt_endcap_layer_hists_matched_muonGun = []
 
 dPhi_layer_hists_PU200 = []
 dPhi_layer_hists_muonGun = []
@@ -211,6 +218,9 @@ for layer in range(1,7):
         dz_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_dz_layer_"+str(layer)))
         dz_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_dz_layer_"+str(layer)))
         dz_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_dz_layer_"+str(layer)))
+        drt_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_drt_layer_"+str(layer)))
+        drt_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_drt_layer_"+str(layer)))
+        drt_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root_sim_matched_MD_endcap_drt_layer_"+str(layer)))
 
         dPhi_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
         dPhi_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
@@ -226,6 +236,7 @@ for layer in range(1,7):
 plot_md_params(dz_hist_PU200,dz_hist_matched_muonGun,dz_hist_muonGun,"Mini-doublet dz histogram")
 plot_md_params(dz_barrel_hist_PU200,dz_barrel_hist_matched_muonGun,dz_barrel_hist_muonGun,"Mini-doublet dz histogram in barrel")
 plot_md_params(dz_endcap_hist_PU200,dz_endcap_hist_matched_muonGun,dz_endcap_hist_muonGun,"Mini-doublet dz histogram in endcap")
+plot_md_params(drt_endcap_hist_PU200,drt_endcap_hist_matched_muonGun,drt_endcap_hist_muonGun,"Mini-doublet drt histogram in endcap")
 
 plot_md_params(dPhi_hist_PU200,dPhi_hist_matched_muonGun,dPhi_hist_muonGun,"Mini-doublet dPhi histogram")
 plot_md_params(dPhi_barrel_hist_PU200,dPhi_barrel_hist_matched_muonGun,dPhi_barrel_hist_muonGun,"Mini-doublet dPhi histogram in barrel")
@@ -270,6 +281,7 @@ for layer in range(1,7):
 
     if layer < 6:
         plot_md_params(dz_endcap_layer_hists_PU200[layer-1],dz_endcap_layer_hists_matched_muonGun[layer-1],dz_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dz histogram in endcap for layer "+str(layer))
+        plot_md_params(drt_endcap_layer_hists_PU200[layer-1],drt_endcap_layer_hists_matched_muonGun[layer-1],drt_endcap_layer_hists_muonGun[layer-1],"Mini-doublet drt histogram in endcap for layer "+str(layer))
 
         plot_md_params(dPhi_endcap_layer_hists_PU200[layer-1],dPhi_endcap_layer_hists_matched_muonGun[layer-1],dPhi_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dPhi histogram in endcap for layer "+str(layer))
 
