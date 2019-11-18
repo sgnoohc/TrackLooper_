@@ -48,6 +48,8 @@ class StudyMDCuts : public Study
         std::vector<std::vector<float>> layerEndcapdPhiValues;
         std::vector<std::vector<float>> layerEndcapdPhiChangeValues;
 
+        std::vector<std::vector<float>> ringEndcapdrtValues;
+
         //additional spliittings for dPhi
         std::vector<std::vector<float>> layerBarrelCenterdPhiValues;
         std::vector<std::vector<float>> layerBarrelNormalTilteddPhiValues;
