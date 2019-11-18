@@ -261,7 +261,7 @@ for layer in range(1,7):
         dz_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_dz_layer_"+str(layer)))
         drt_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_drt_layer_"+str(layer)))
         drt_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_drt_layer_"+str(layer)))
-        drt_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root_sim_matched_MD_endcap_drt_layer_"+str(layer)))
+        drt_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_drt_layer_"+str(layer)))
 
         dPhi_endcap_layer_hists_PU200.append(f_PU200.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
         dPhi_endcap_layer_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_dPhi_layer_"+str(layer)))
