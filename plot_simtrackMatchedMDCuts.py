@@ -5,8 +5,8 @@ import numpy as np
 import sys,os
 
 #filename_PU200 = "debug_NuGun.root" #high pileup dude goes here
-filename_PU200 = "debug_ttbar.root"
-filename_muonGun = "debug_tenMuon_simMatched.root"
+filename_PU200 = "../20191018_minidoublet_cut_investigations/debug_ttbar.root"
+filename_muonGun = "debug_pt0p99_1p01.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
@@ -21,11 +21,46 @@ def normalize_histograms(hist_PU200,hist_muonGun_matched,hist_muonGun_unmatched)
     return hist_PU200,hist_muonGun_matched,hist_muonGun_unmatched
 
 
+def plot_representative_md_params(PU200_hist,muonGun_matched_hist,muonGun_hist,prefix,additional_options = None): 
+    PU200_normed_hist, muonGun_matched_normed_hist, muonGun_normed_hist = normalize_histograms(PU200_hist,muonGun_matched_hist,muonGun_hist)
+    #PU200_normed_hist,muonGun_matched_normed_hist,muonGun_normed_hist = (PU200_hist,muonGun_matched_hist,muonGun_hist)
+    print("PU200 integral=",PU200_normed_hist.Integral())
+    print("unmatched_integral=",muonGun_normed_hist.Integral())
+    filename_prefix = prefix.replace(" ","_")
+    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Minidoublets/20191110_lowPt_muGunvttbar/"+filename_prefix+"_representative"
+#     filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Minidoublets/20191017_NuGun_tenMuon/"+filename_prefix
+
+    default_options = {
+        "output_name":filename_prefix+".pdf",
+        "do_stack":False,
+        "legend_smart":False,
+        "xaxis_label":"",
+        "xaxis_range":[-10,10],
+        "yaxis_log":True,
+        "yaxis_range":[1e-6,1],
+#        "yaxis_range":[0.1,1e6],
+        "title":prefix,
+        "legend_percentageinbox":False,
+        }
+    if "dPhi" in prefix and "dPhiChange" not in prefix:
+       default_options["xaxis_range"] = [-0.5,0.5]
+    options = default_options.copy()
+    if type(additional_options) is dict:
+        options.update(additional_options)
+
+    ply.plot_hist(
+        bgs = [PU200_normed_hist,muonGun_matched_normed_hist,muonGun_normed_hist],
+        legend_labels = ["High pile-up","sim-hit matched muon gun","all muon-gun"],
+        options = options)
+
+
+
 
 def plot_md_params(PU200_hist,muonGun_matched_hist,muonGun_hist,prefix,additional_options = None):
     PU200_normed_hist, muonGun_matched_normed_hist, muonGun_normed_hist = normalize_histograms(PU200_hist,muonGun_matched_hist,muonGun_hist)
     filename_prefix = prefix.replace(" ","_")
-    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Minidoublets/20191017_ttbar_tenMuon/"+filename_prefix
+    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Minidoublets/20191110_lowPt_muGunvttbar/"+filename_prefix
+#    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Minidoublets/20191017_NuGun_tenMuon/"+filename_prefix
 
     default_options = {
         "output_name":filename_prefix+".pdf",
@@ -35,11 +70,11 @@ def plot_md_params(PU200_hist,muonGun_matched_hist,muonGun_hist,prefix,additiona
         "yaxis_log":True,
         "yaxis_range":[1e-6,1],
 #        "yaxis_range":[0.1,1e6],
-        "xaxis_label":prefix,
+        "xaxis_label":"",
         "title":prefix,
         "legend_percentageinbox":False,
         }
-    if "dPhi" in prefix:
+    if "dPhi" in prefix and "dPhiChange" not in prefix:
        default_options["xaxis_range"] = [-0.5,0.5]
     options = default_options.copy()
     if type(additional_options) is dict:
@@ -47,7 +82,9 @@ def plot_md_params(PU200_hist,muonGun_matched_hist,muonGun_hist,prefix,additiona
 
     ply.plot_hist(
         bgs = [PU200_normed_hist,muonGun_matched_normed_hist],
-        legend_labels = [prefix+"_PU200",prefix+"_matched_muonGun"],
+        legend_labels = ["High pile-up","Matched muon gun"],
+#        legend_labels = ["Rec hits","Rec hits matched to sim hits"],
+        colors = [r.kBlue,r.kRed],
         options = options)
 
 
@@ -224,6 +261,8 @@ for layer in range(1,7):
 
 
 plot_md_params(dz_hist_PU200,dz_hist_matched_muonGun,dz_hist_muonGun,"Mini-doublet dz histogram")
+plot_representative_md_params(dz_hist_PU200,dz_hist_matched_muonGun,dz_hist_muonGun,"Mini-doublet dz histogram")
+
 plot_md_params(dz_barrel_hist_PU200,dz_barrel_hist_matched_muonGun,dz_barrel_hist_muonGun,"Mini-doublet dz histogram in barrel")
 plot_md_params(dz_endcap_hist_PU200,dz_endcap_hist_matched_muonGun,dz_endcap_hist_muonGun,"Mini-doublet dz histogram in endcap")
 
@@ -269,7 +308,8 @@ for layer in range(1,7):
 
 
     if layer < 6:
-        plot_md_params(dz_endcap_layer_hists_PU200[layer-1],dz_endcap_layer_hists_matched_muonGun[layer-1],dz_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dz histogram in endcap for layer "+str(layer))
+        endcap_additional_options = {"xaxis_range":[-2,2]}
+        plot_md_params(dz_endcap_layer_hists_PU200[layer-1],dz_endcap_layer_hists_matched_muonGun[layer-1],dz_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dz histogram in endcap for layer "+str(layer),endcap_additional_options)
 
         plot_md_params(dPhi_endcap_layer_hists_PU200[layer-1],dPhi_endcap_layer_hists_matched_muonGun[layer-1],dPhi_endcap_layer_hists_muonGun[layer-1],"Mini-doublet dPhi histogram in endcap for layer "+str(layer))
 
