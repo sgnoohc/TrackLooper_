@@ -275,7 +275,7 @@ for layer in range(1,7):
 for ring in range(1,16):
     drt_endcap_ring_hists_PU200.append(f_PU200.Get("Root__MD_endcap_drt_ring_"+str(ring)))
     drt_endcap_ring_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_drt_ring_"+str(ring)))
-    drt_endcap_ring_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_hit_matched_MD_endcap_drt_ring_"+str(ring)))
+    drt_endcap_ring_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_drt_ring_"+str(ring)))
 
 
 plot_md_params(dz_hist_PU200,dz_hist_matched_muonGun,dz_hist_muonGun,"Mini-doublet dz histogram")
