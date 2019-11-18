@@ -339,5 +339,5 @@ for layer in range(1,7):
 
 
 for ring in range(1,16):
-    plot_md_params(drt_endcap_ring_hists_PU200[ring-1],drt_endcap_ring_hists_matched_muonGun[ring-1],drt_endcap_ring_hists_muonGun[ring-1],"Mini-doublet drt histogram in endcap for ring "+str(layer))
+    plot_md_params(drt_endcap_ring_hists_PU200[ring-1],drt_endcap_ring_hists_matched_muonGun[ring-1],drt_endcap_ring_hists_muonGun[ring-1],"Mini-doublet drt histogram in endcap for ring "+str(ring))
 
