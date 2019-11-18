@@ -21,7 +21,7 @@ def normalize_histograms(hist_PU200,hist_muonGun_matched,hist_muonGun_unmatched)
     return hist_PU200,hist_muonGun_matched,hist_muonGun_unmatched
 
 
-def plot_representative_md_params(PU200_hist,muonGun_matched_hist,muonGun_hist,prefix,additional_options = None): 
+def plot_representative_md_params(PU200_hist,muonGun_matched_hist,muonGun_hist,prefix,additional_options = None):
     PU200_normed_hist, muonGun_matched_normed_hist, muonGun_normed_hist = normalize_histograms(PU200_hist,muonGun_matched_hist,muonGun_hist)
     #PU200_normed_hist,muonGun_matched_normed_hist,muonGun_normed_hist = (PU200_hist,muonGun_matched_hist,muonGun_hist)
     print("PU200 integral=",PU200_normed_hist.Integral())
@@ -148,6 +148,10 @@ drt_endcap_layer_hists_PU200 = []
 drt_endcap_layer_hists_muonGun = []
 drt_endcap_layer_hists_matched_muonGun = []
 
+drt_endcap_ring_hists_PU200 = []
+drt_endcap_ring_hists_muonGun = []
+drt_endcap_ring_hists_matched_muonGun = []
+
 dPhi_layer_hists_PU200 = []
 dPhi_layer_hists_muonGun = []
 dPhi_layer_hists_matched_muonGun = []
@@ -268,6 +272,10 @@ for layer in range(1,7):
         dPhiChange_endcap_layer_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_matched_MD_endcap_dPhiChange_layer_"+str(layer)))
 
 
+for ring in range(1,16):
+    drt_endcap_ring_hists_PU200.append(f_PU200.Get("Root__MD_endcap_drt_ring_"+str(ring)))
+    drt_endcap_ring_hists_muonGun.append(f_muonGun.Get("Root__MD_endcap_drt_ring_"+str(ring)))
+    drt_endcap_ring_hists_matched_muonGun.append(f_muonGun.Get("Root__sim_hit_matched_MD_endcap_drt_ring_"+str(ring)))
 
 
 plot_md_params(dz_hist_PU200,dz_hist_matched_muonGun,dz_hist_muonGun,"Mini-doublet dz histogram")
@@ -330,4 +338,6 @@ for layer in range(1,7):
 
 
 
+for ring in range(1,16):
+    plot_md_params(drt_endcap_ring_hists_PU200[ring-1],drt_endcap_ring_hists_matched_muonGun[ring-1],drt_endcap_ring_hists_muonGun[ring-1],"Mini-doublet drt histogram in endcap for ring "+str(layer))
 
