@@ -39,7 +39,7 @@ class StudySimtrackMatchedMDCuts : public Study
 
         //endcap
         std::vector<float> endcapdzValues;
-        std::vector<float> endcapdrtvalues;
+        std::vector<float> endcapdrtValues;
         std::vector<float> endcapdPhiValues;
         std::vector<float> endcapdPhiChangeValues;
         //split by barrel layer - one vector per layer

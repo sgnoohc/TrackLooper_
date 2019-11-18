@@ -55,7 +55,7 @@ void StudySimtrackMatchedMDCuts::bookStudy()
         if(i < 5)
         {
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_drt_layer_"%ld,i+1),400,-20,20,[&,i](){return layerEndcapdrtValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_drt_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdrtValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
         }
