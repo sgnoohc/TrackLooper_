@@ -39,10 +39,12 @@ class StudyMDCuts : public Study
 
         //endcap
         std::vector<float> endcapdzValues;
+        std::vector<float> endcapdrtValues;
         std::vector<float> endcapdPhiValues;
         std::vector<float> endcapdPhiChangeValues;
         //split by barrel layer - one vector per layer
         std::vector<std::vector<float>> layerEndcapdzValues;
+        std::vector<std::vector<float>> layerEndcapdrtValues;
         std::vector<std::vector<float>> layerEndcapdPhiValues;
         std::vector<std::vector<float>> layerEndcapdPhiChangeValues;
 

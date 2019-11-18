@@ -21,6 +21,7 @@ void StudySimtrackMatchedMDCuts::bookStudy()
 
 
     ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dz"),400,-20,20,[&](){return endcapdzValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_drt",400,-20,20,[&](){return endcapdrtValues;}));
     ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhi"),200,-6.28,6.28,[&](){return endcapdPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhiChange"),200,-6.28,6.28,[&](){return endcapdPhiChangeValues;});
 
@@ -54,6 +55,7 @@ void StudySimtrackMatchedMDCuts::bookStudy()
         if(i < 5)
         {
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_drt_layer_"%ld,i+1),400,-20,20,[&,i](){return layerEndcapdrtValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
         }
@@ -77,6 +79,7 @@ void StudySimtrackMatchedMDCuts::resetVariables()
     barreldPhiChangeValues.clear();
 
     endcapdzValues.clear();
+    endcapdrtValues.clear();
     endcapdPhiValues.clear();
     endcapdPhiChangeValues.clear();
 
@@ -89,6 +92,7 @@ void StudySimtrackMatchedMDCuts::resetVariables()
     layerBarreldPhiChangeValues.clear();
 
     layerEndcapdzValues.clear();
+    layerEndcapdrtValues.clear();
     layerEndcapdPhiValues.clear();
     layerEndcapdPhiChangeValues.clear();
 
@@ -116,6 +120,7 @@ void StudySimtrackMatchedMDCuts::resetVariables()
         if(i < 6)
         {
             layerEndcapdzValues.push_back(std::vector<float>());
+            layerEndcapdrtValues.push_back(std::vector<float>());
             layerEndcapdPhiValues.push_back(std::vector<float>());
             layerEndcapdPhiChangeValues.push_back(std::vector<float>());            
         }
@@ -198,9 +203,11 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
                 {
 
                     endcapdzValues.push_back(md->getDz());
+                    endcapdrtValues.push_back(md->getDrt());
                     endcapdPhiValues.push_back(md->getDeltaPhi());
                     endcapdPhiChangeValues.push_back(md->getDeltaPhiChange());
                     layerEndcapdzValues.at(module->layer()-1).push_back(md->getDz());
+                    layerEndcapdrtValues.at(module->layer()-1).push_back(md->getDrt());
                     layerEndcapdPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                     layerEndcapdPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
                 }
