@@ -50,10 +50,15 @@ void StudyMDCuts::bookStudy()
         if(i < 5)
         {
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dz_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdzValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("MD_endcap_drt_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdrtValues[i]});
+            ana.histograms.addVecHistogram(TString::Format("MD_endcap_drt_layer_%ld",i+1),400,-20,20,[&,i](){return layerEndcapdrtValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("MD_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
         }
+    }
+
+    for(size_t i = 0; i < 15; i++)
+    {
+        ana.histograms.addVecHistogram(TString::Format("MD_endcap_drt_ring_%ld",i+1),400,-20,20,[&,i](){return ringEndcapdrtValues[i];});
     }
 }
 
@@ -84,6 +89,8 @@ void StudyMDCuts::resetVariables()
     layerEndcapdrtValues.clear();
     layerEndcapdPhiValues.clear();
     layerEndcapdPhiChangeValues.clear();
+
+    ringEndcapdrtValues.clear();
 
     layerBarrelCenterdPhiValues.clear();
     layerBarrelNormalTilteddPhiValues.clear();
@@ -121,6 +128,11 @@ void StudyMDCuts::resetVariables()
           layerBarrelNormalTilteddPhiChangeValues.push_back(std::vector<float>());
           layerBarrelEndcapTilteddPhiChangeValues.push_back(std::vector<float>());
       }
+    }
+
+    for(size_t i = 0; i < 15; i++)
+    {
+        ringEndcapdrtValues.push_back(std::vector<float>());
     }
 }
 
@@ -189,6 +201,7 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
 
                 layerEndcapdzValues.at(module->layer()-1).push_back(md->getDz());
                 layerEndcapdrtValues.at(module->layer()-1).push_back(md->getDrt());
+                ringEndcapdrtValues.at(module->ring()-1).push_back(md->getDrt());
                 layerEndcapdPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                 layerEndcapdPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
             }

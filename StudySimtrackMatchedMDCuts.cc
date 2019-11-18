@@ -61,6 +61,11 @@ void StudySimtrackMatchedMDCuts::bookStudy()
         }
     }
 
+    for(size_t i = 0; i < 15; i++)
+    {
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_MD_endcap_drt_ring_%ld",i+1),400,-20,20,[&,i](){return ringEndcapdrtValues[i];});
+    }
+
 
 
 
@@ -103,7 +108,8 @@ void StudySimtrackMatchedMDCuts::resetVariables()
     layerBarrelCenterdPhiChangeValues.clear();
     layerBarrelNormalTilteddPhiChangeValues.clear();
     layerBarrelEndcapTilteddPhiChangeValues.clear();
-
+    
+    ringEndcapdrtValues.clear();
 
     for(size_t i = 1; i <= 6; i++)
     {
@@ -134,6 +140,11 @@ void StudySimtrackMatchedMDCuts::resetVariables()
             layerBarrelNormalTilteddPhiChangeValues.push_back(std::vector<float>());
             layerBarrelEndcapTilteddPhiChangeValues.push_back(std::vector<float>());
         }
+    }
+
+    for(size_t i = 0;i < 15; i++)
+    {
+        ringEndcapdrtValues.push_back(std::vector<float>());
     }
 
 }
@@ -208,6 +219,7 @@ void StudySimtrackMatchedMDCuts::doStudy(SDL::Event &event,std::vector<std::tupl
                     endcapdPhiChangeValues.push_back(md->getDeltaPhiChange());
                     layerEndcapdzValues.at(module->layer()-1).push_back(md->getDz());
                     layerEndcapdrtValues.at(module->layer()-1).push_back(md->getDrt());
+                    ringEndcapdrtValues.at(module->ring()-1).push_back(md->getDrt());
                     layerEndcapdPhiValues.at(module->layer()-1).push_back(md->getDeltaPhi());
                     layerEndcapdPhiChangeValues.at(module->layer()-1).push_back(md->getDeltaPhiChange());
                 }
