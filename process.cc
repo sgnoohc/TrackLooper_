@@ -329,6 +329,8 @@ int main(int argc, char** argv)
 
     studies.push_back(new StudyMDCuts("StudyMDCuts"));
     studies.push_back(new StudySimtrackMatchedMDCuts("StudySimtrackMatchedMDCuts"));
+    studies.push_back(new StudySegmentCuts("StudySegmentCuts"));
+    studies.push_back(new StudySimtrackMatchedSegmentCuts("StudySimtrackMatchedSegmentCuts"));
 
 
     // book the studies
