@@ -26,6 +26,8 @@
 #include "StudyLinkedModule.h"
 #include "StudyMDCuts.h"
 #include "StudySimtrackMatchedMDCuts.h"
+#include "StudySegmentCuts.h"
+#include "StudySimtrackMatchedSegmentCuts.h"
 
 #include "constants.h"
 
