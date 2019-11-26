@@ -228,9 +228,9 @@ void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std
                     endcapdrtValues.push_back(sg->getRtOut());
                     endcapdPhiValues.push_back(sg->getRecoVars["deltaPhi"]);
                     endcapdPhiChangeValues.push_back(sg->getDeltaPhiChange());
-                    endcapInnerMDSegmentValues.push_back(dAlphaInnerMDSegment);
-                    endcapOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
-                    endcapInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
+                    endcapdAlphaInnerMDSegmentValues.push_back(dAlphaInnerMDSegment);
+                    endcapdAlphaOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
+                    endcapdAlphaInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
 
                     layerEndcapdrtValues.at(module->layer()-1).push_back(sg->getRtOut);
                     layerEndcapdPhiValues.at(module->layer()-1).push_back(sg->getRecoVars["deltaPhi"]);
