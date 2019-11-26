@@ -169,7 +169,7 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
         ringEndcapdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
     }
 
-}, 
+} 
 
 
 void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
