@@ -42,7 +42,7 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaInnerMDSegmentValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaOuterMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaOuterMDSegmentValues[i];});
-        ana.histograms.addvecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDOuterMD_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaInnerMDOuterMDValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDOuterMD_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaInnerMDOuterMDValues[i];});
 
 
 
@@ -173,7 +173,7 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
 
 
 
-void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigned int SDL::Event*>> simtrkevents)
+void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     resetVariables();
 

@@ -69,7 +69,7 @@ class StudySimtrackMatchedSegmentCuts : public Study
  
         
 
-        studySimtrackMatchedSegmentCuts(const char * studyName);
+        StudySimtrackMatchedSegmentCuts(const char * studyName);
         virtual void bookStudy();
         virtual void resetVariables();
         virtual void doStudy(SDL::Event &event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
