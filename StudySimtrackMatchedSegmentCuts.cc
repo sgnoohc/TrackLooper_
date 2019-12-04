@@ -7,7 +7,8 @@ StudySimtrackMatchedSegmentCuts::StudySimtrackMatchedSegmentCuts(const char * st
 
 void StudySimtrackMatchedSegmentCuts::bookStudy()
 {
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dz"),4000,-200,200,[&](){return dzValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffLow"),400,0,20,[&](){return dzDiffLowValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffHigh"),400,0,20,[&](){return dzDiffHighValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhi"),200,-6.28,6.28,[&](){return dPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhiChange"),200,-6.28,6.28,[&](){return dPhiChangeValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDSegment"),200,-6.28,6.28,[&](){return dAlphaInnerMDSegmentValues;});
@@ -16,7 +17,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 
 
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dz"),4000,-200,200,[&](){return barreldzValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffLow"),400,-20,20,[&](){return barreldzDiffLowValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffHigh"),400,0,20,[&](){return barreldzDiffHighValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhi"),200,-6.28,6.28,[&](){return barreldPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhiChange"),200,-6.28,6.28,[&](){return barreldPhiChangeValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dAlphaInnerMDSegment"),200,-6.28,6.28,[&](){return barreldAlphaInnerMDSegmentValues;});
@@ -25,7 +27,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 
 
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drt"),2000,0,200,[&](){return endcapdrtValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow"),400,0,20,[&](){return endcapdrtDiffLowValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffHigh"),400,0,20,[&](){return endcapdrtDiffHighValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhi"),200,-6.28,6.28,[&](){return endcapdPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhiChange"),200,-6.28,6.28,[&](){return endcapdPhiChangeValues;});
      ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dAlphaInnerMDSegment"),200,-6.28,6.28,[&](){return endcapdAlphaInnerMDSegmentValues;});
@@ -37,7 +40,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
     //one per layer
     for(size_t i = 0; i < 6; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dz_layer_%ld",i+1),4000,-200,200,[&,i](){return layerdzValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffLow_layer_%ld",i+1),400,0,20,[&,i](){return layerdzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TSTring::Format("sim_matched_Segment_dzDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerdzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaInnerMDSegmentValues[i];});
@@ -46,7 +50,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 
 
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dz_layer_%ld",i+1),4000,-200,200,[&,i](){return layerBarreldzValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffLow_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldAlphaInnerMDSegmentValues[i];});
@@ -58,7 +63,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
         if(i < 5)
         {
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drt_layer_%ld",i+1),2000,0,200,[&,i](){return layerEndcapdrtValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow_layer_%ld",i+1),400,0,20,[&,i](){return layerEndcapdrtDiffLowValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dncap_drtDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerEndcapdrtDiffHighValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdAlphaInnerMDSegmentValues[i];});
@@ -69,7 +75,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
     for(size_t i = 0; i < 15; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drt_ring_%ld",i+1),2000,0,200,[&,i](){return ringEndcapdrtValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow_ring_%ld",i+1),400,0,20,[&,i](){return ringEndcapdrtDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffHigh_ring_%ld",i+1),400,0,20,[&,i](){return ringEndcapdrtDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhi_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhiChange_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dAlphaInnerMDSegment_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdAlphaInnerMDSegmentValues[i];});
@@ -80,49 +87,56 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 void StudySimtrackMatchedSegmentCuts::resetVariables()
 {
-    dzValues.clear();
+    dzDiffLowValues.clear();
+    dzDiffHighValues.clear();
     dPhiValues.clear();
     dPhiChangeValues.clear();
     dAlphaInnerMDSegmentValues.clear();
     dAlphaOuterMDSegmentValues.clear();
     dAlphaInnerMDOuterMDValues.clear();
 
-    barreldzValues.clear();
+    barreldzDiffLowValues.clear();
+    barreldzDiffHighValues.clear();
     barreldPhiValues.clear();
     barreldPhiChangeValues.clear();
     barreldAlphaInnerMDSegmentValues.clear();
     barreldAlphaOuterMDSegmentValues.clear();
     barreldAlphaInnerMDOuterMDValues.clear();
 
-    endcapdrtValues.clear();
+    endcapdrtDiffLowValues.clear();
+    endcapdrtDiffHighValues.clear();
     endcapdPhiValues.clear();
     endcapdPhiChangeValues.clear();
     endcapdAlphaInnerMDSegmentValues.clear();
     endcapdAlphaOuterMDSegmentValues.clear();
     endcapdAlphaInnerMDOuterMDValues.clear();
 
-    layerdzValues.clear();
+    layerdzDiffLowValues.clear();
+    layerdzDiffHighValues.clear();
     layerdPhiValues.clear();
     layerdPhiChangeValues.clear();
     layerdAlphaInnerMDSegmentValues.clear();
     layerdAlphaOuterMDSegmentValues.clear();
     layerdAlphaInnerMDOuterMDValues.clear();
 
-    layerBarreldzValues.clear();
+    layerBarreldzDiffLowValues.clear();
+    layerBarreldzDiffHighValues.clear();
     layerBarreldPhiValues.clear();
     layerBarreldPhiChangeValues.clear();
     layerBarreldAlphaInnerMDSegmentValues.clear();
     layerBarreldAlphaOuterMDSegmentValues.clear();
     layerBarreldAlphaInnerMDOuterMDValues.clear();
 
-    layerEndcapdrtValues.clear();
+    layerEndcapdrtDiffLowValues.clear();
+    layerEndcapdrtDiffHighValues.clear();
     layerEndcapdPhiValues.clear();
     layerEndcapdPhiChangeValues.clear();
     layerEndcapdAlphaInnerMDSegmentValues.clear();
     layerEndcapdAlphaOuterMDSegmentValues.clear();
     layerEndcapdAlphaInnerMDOuterMDValues.clear();
 
-    ringEndcapdrtValues.clear();
+    ringEndcapdrtDiffLowValues.clear();
+    ringEndcapdrtDiffHighValues.clear();
     ringEndcapdPhiValues.clear();
     ringEndcapdPhiChangeValues.clear();
     ringEndcapdAlphaInnerMDSegmentValues.clear();
@@ -132,14 +146,16 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
 
     for(size_t i = 1; i <= 6; i++)
     {
-        layerdzValues.push_back(std::vector<float>());
+        layerdzDiffLowValues.push_back(std::vector<float>());
+        layerdzDiffHighValues.push_back(std::vector<float>());
         layerdPhiValues.push_back(std::vector<float>());
         layerdPhiChangeValues.push_back(std::vector<float>());
         layerdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
         layerdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
         layerdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
 
-        layerBarreldzValues.push_back(std::vector<float>());
+        layerBarreldzDiffLowValues.push_back(std::vector<float>());
+        layerBarreldzDiffHighValues.push_back(std::vector<float>());
         layerBarreldPhiValues.push_back(std::vector<float>());
         layerBarreldPhiChangeValues.push_back(std::vector<float>());
         layerBarreldAlphaInnerMDSegmentValues.push_back(std::vector<float>());
@@ -148,7 +164,8 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
 
         if(i < 6)
         {
-            layerEndcapdrtValues.push_back(std::vector<float>());
+            layerEndcapdrtDiffLowValues.push_back(std::vector<float>());
+            layerEndcapdrtDiffHighValues.push_back(std::vector<float>());
             layerEndcapdPhiValues.push_back(std::vector<float>());
             layerEndcapdrtValues.push_back(std::vector<float>());
             layerEndcapdPhiChangeValues.push_back(std::vector<float>());
@@ -161,7 +178,8 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
 
     for(size_t i = 0; i < 15; i++)
     {
-        ringEndcapdrtValues.push_back(std::vector<float>());
+        ringEndcapdrtDiffLowValues.push_back(std::vector<float>());
+        ringEndcapdrtDiffHighValues.push_back(std::vector<float>());
         ringEndcapdPhiValues.push_back(std::vector<float>());
         ringEndcapdPhiChangeValues.push_back(std::vector<float>());
         ringEndcapdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
@@ -184,15 +202,15 @@ void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std
             std::vector<SDL::Segment*> segments = module->getSegmentPtrs();
             for(auto &sg:segments)
             {
-                dzValues.push_back(sg->getZOut());
-                if((sg->getRecoVars()).size() == 0)
-                    continue;
 
+		dzDiffLowValues.push_back(sg->getZOut() - sg->getZLo());
+                dzDiffHighValues.push_back(sg->getZHi() - sg->getZOut());
                 dPhiValues.push_back((sg->getRecoVars()).at("deltaPhi"));
                 dPhiChangeValues.push_back(sg->getDeltaPhiChange());
+                layerdzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo());
+                layerdzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
+		 layerdPhiValues.at(module->layer()-1).push_back(sg->getRecoVars().at("deltaPhi"));
 
-                layerdzValues.at(module->layer()-1).push_back(sg->getZOut());
-                layerdPhiValues.at(module->layer()-1).push_back(sg->getRecoVars().at("deltaPhi"));
                 layerdPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
 
                 float dPhiChangeInnerMD = (sg->innerMiniDoubletPtr())->getDeltaPhiChange();
@@ -212,15 +230,17 @@ void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std
 
                 if(module->subdet() == SDL::Module::Barrel)
                 {
-                    barreldzValues.push_back(sg->getZOut());
                     barreldPhiValues.push_back(((sg->getRecoVars()).at("deltaPhi")));
+                    barreldzDiffLowValues.push_back(sg->getZOut() - sg->getZLo());
+                    barreldzDiffHighValues.push_back(sg->getZHi() - sg->getZOut());
                     barreldPhiChangeValues.push_back(sg->getDeltaPhiChange());
                     barreldAlphaInnerMDSegmentValues.push_back(dAlphaInnerMDSegment);
                     barreldAlphaOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
                     barreldAlphaInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
 
-                    layerBarreldzValues.at(module->layer()-1).push_back(sg->getZOut());
                     layerBarreldPhiValues.at(module->layer()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
+                    layerBarreldzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo());
+                    layerBarreldzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
                     layerBarreldPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
                     layerBarreldAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                     layerBarreldAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
@@ -228,22 +248,26 @@ void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std
                 }
                 else if(module->subdet() == SDL::Module::Endcap)
                 {
-                    endcapdrtValues.push_back(sg->getRtOut());
                     endcapdPhiValues.push_back((sg->getRecoVars()).at("deltaPhi"));
+                    endcapdrtDiffLowValues.push_back(sg->getRtOut() - sg->getRtLo());
+                    endcapdrtDiffHighValues.push_back(sg->getRtHi() - sg->getRtOut());
+                    
                     endcapdPhiChangeValues.push_back(sg->getDeltaPhiChange());
                     endcapdAlphaInnerMDSegmentValues.push_back(dAlphaInnerMDSegment);
                     endcapdAlphaOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
                     endcapdAlphaInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
 
-                    layerEndcapdrtValues.at(module->layer()-1).push_back(sg->getRtOut());
                     layerEndcapdPhiValues.at(module->layer()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
+                    layerEndcapdrtDiffLowValues.at(module->layer()-1).push_back(sg->getRtOut() - sg->getRtLo());
+                    layerEndcapdrtDiffHighValues.at(module->layer()-1).push_back(sg->getRtHi() - sg->getRtOut());
                     layerEndcapdPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
                     layerEndcapdAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                     layerEndcapdAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
                     layerEndcapdAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
 
-                    ringEndcapdrtValues.at(module->ring()-1).push_back(sg->getRtOut());
                     ringEndcapdPhiValues.at(module->ring()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
+                    ringEndcapdrtValues.at(module->ring()-1).push_back(sg->getRtOut() - sg->getRtLo());
+                    ringEndcapdrtValues.at(module->ring() - 1).push_back(sg->getRtHi() - sg->getRtOut()):
                     ringEndcapdPhiChangeValues.at(module->ring()-1).push_back(sg->getDeltaPhiChange());
                     ringEndcapdAlphaInnerMDSegmentValues.at(module->ring()-1).push_back(dAlphaInnerMDSegment);
                     ringEndcapdAlphaOuterMDSegmentValues.at(module->ring()-1).push_back(dAlphaOuterMDSegment);
