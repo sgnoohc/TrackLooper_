@@ -50,6 +50,28 @@ class StudySegmentCuts : public Study
         std::vector<std::vector<float>> layerBarreldAlphaOuterMDSegmentValues;
         std::vector<std::vector<float>> layerBarreldAlphaInnerMDOuterMDValues;
 
+        //Additional splitting in the barrel
+        std::vector<std::vector<float>> layerBarrelCenterdPhiValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddPhiValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddPhiValues;
+
+        std::vector<std::vector<float>> layerBarrelCenterdPhiChangeValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddPhiChangeValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddPhiChangeValues;
+
+        std::vector<std::vector<float>> layerBarrelCenterdAlphaInnerMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddAlphaInnerMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddAlphaInnerMDSegmentValues;
+
+        std::vector<std::vector<float>> layerBarrelCenterdAlphaOuterMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddAlphaOuterMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddAlphaOuterMDSegmentValues;
+
+        std::vector<std::vector<float>> layerBarrelCenterdAlphaInnerMDOuterMDValues;
+        std::vector<std::vector<float>> layerBarrelNormalTilteddAlphaInnerMDOuterMDValues;
+        std::vector<std::vector<float>> layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues;
+
+
         std::vector<float> endcapdrtDiffLowValues;
         std::vector<float> endcapdrtDiffHighValues;
         std::vector<float> endcapdPhiValues;

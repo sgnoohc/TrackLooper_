@@ -127,6 +127,26 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
     layerBarreldAlphaOuterMDSegmentValues.clear();
     layerBarreldAlphaInnerMDOuterMDValues.clear();
 
+    layerBarrelCenterdPhiValues.clear();
+    layerBarrelNormalTilteddPhiValues.clear();
+    layerBarrelEndcapTilteddPhiValues.clear();
+
+    layerBarrelCenterdPhiChangeValues.clear();
+    layerBarrelNormalTilteddPhiChangeValues.clear();
+    layerBarrelEndcapTilteddPhiChangeValues.clear();
+
+    layerBarrelCenterdAlphaInnerMDSegmentValues.clear();
+    layerBarrelNormalTilteddAlphaInnerMDSegmentValues.clear();
+    layerBarrelEndcapTilteddAlphaInnerMDSegmentValues.clear();
+
+    layerBarrelCenterdAlphaOuterMDSemgentValues.clear();
+    layerBarrelNormalTilteddAlphaOuterMDSegmentValues.clear();
+    layerBarrelEndcapTilteddAlphaOuterMDSegmentValues.clear();
+
+    layerBarrelCenterdAlphaInnerMDOuterMDValues.clear();
+    layerBarrelNormalTilteddAlphaInnerMDOuterMDValues.clear();
+    layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues.clear();
+
     layerEndcapdrtDiffLowValues.clear();
     layerEndcapdrtDiffHighValues.clear();
     layerEndcapdPhiValues.clear();
@@ -173,6 +193,27 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
             layerEndcapdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
             layerEndcapdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
             layerEndcapdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+        }
+
+        layerBarrelCenterdPhiValues.push_back(std::vector<float>());
+        layerBarrelCenterdPhiChangeValues.push_back(std::vector<float>());
+        layerBarrelCenterdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+        layerBarrelCenterdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+        layerBarrelCenterdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
+        if(i <= 3)
+        {
+            layerBarrelNormalTilteddPhiValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddPhiChangeValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
+            layerBarrelEndcapTilteddPhiValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddPhiChangeValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
         }
       
     }
@@ -245,6 +286,24 @@ void StudySimtrackMatchedSegmentCuts::doStudy(SDL::Event &event, std::vector<std
                     layerBarreldAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                     layerBarreldAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
                     layerBarreldAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
+
+
+                    if(module->side() == SDL::Module::Center)
+                    {
+                       layerBarrelCenterdPhiValues.at(module->layer()-1).push_back(sg->getRecoV) 
+                    }
+                    else
+                    {
+                        //redirect this to innerminidoubletptr somehow
+                        if(SDL::MiniDoublet::isNormalTiltedModule(*module))
+                        {
+                            
+                        }
+                        else
+                        {
+
+                        }
+                    }
                 }
                 else if(module->subdet() == SDL::Module::Endcap)
                 {
