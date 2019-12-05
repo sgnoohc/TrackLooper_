@@ -5,7 +5,7 @@ import numpy as np
 import sys,os
 
 #filename_PU200 = "debug_NuGun.root" #high pileup dude goes here
-filename_PU200 = "../20191018_minidoublet_cut_investigations/debug_ttbar.root"
+filename_PU200 = "debug_ttbar.root"
 filename_muonGun = "debug_pt0p99_1p01.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]

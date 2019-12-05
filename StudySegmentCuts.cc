@@ -48,7 +48,7 @@ void StudySegmentCuts::bookStudy()
 
 
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dz_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffLowValues[i];});
-        ana.histograms.addVecHistograms(TString::Format("Segment_barrel_dzDiffHigh_layer_%ld",i+1),400,0,20,[&](){return layerBarreldzDiffHighValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dzDiffHigh_layer_%ld",i+1),400,0,20,[&](){return layerBarreldzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldAlphaInnerMDSegmentValues[i];});
@@ -164,7 +164,6 @@ void StudySegmentCuts::resetVariables()
             layerEndcapdrtDiffLowValues.push_back(std::vector<float>());
             layerEndcapdrtDiffHighValues.push_back(std::vector<float>());
             layerEndcapdPhiValues.push_back(std::vector<float>());
-            layerEndcapdrtValues.push_back(std::vector<float>());
             layerEndcapdPhiChangeValues.push_back(std::vector<float>());
             layerEndcapdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
             layerEndcapdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
@@ -191,20 +190,21 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
 {
     resetVariables();
 
-    std::vector<SDL::Module*>> moduleList = event.getLowerModulePtrs();
+    std::vector<SDL::Module*> moduleList = event.getLowerModulePtrs();
     for(auto &module:moduleList)
     {
         std::vector<SDL::Segment*> segments = module->getSegmentPtrs();
         for(auto &sg:segments)
         {
+            dPhiValues.push_back((sg->getRecoVars()).at("deltaPhi"));
+            dPhiChangeValues.push_back(sg->getDeltaPhiChange());
+
+            layerdPhiValues.at(module->layer()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
             dzDiffLowValues.push_back(sg->getZOut() - sg->getZLo());
             dzDiffHighValues.push_back(sg->getZHi() - sg->getZOut());
-            dPhiValues.push_back(sg->getRecoVars()["deltaPhi"]);
-            dPhiChangeValues.push_back(sg->getDeltaPhiChange());
 
             layerdzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo());
             layerdzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
-            layerdPhiValues.at(module->layer()-1).push_back(sg->getRecoVars["deltaPhi"]);
             layerdPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
 
             float dPhiChangeInnerMD = (sg->innerMiniDoubletPtr())->getDeltaPhiChange();
@@ -224,17 +224,17 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
 
             if(module->subdet() == SDL::Module::Barrel)
             {
+                barreldPhiValues.push_back((sg->getRecoVars()).at("deltaPhi"));
                 barreldzDiffLowValues.push_back(sg->getZOut() - sg->getZLo());
                 barreldzDiffHighValues.push_back(sg->getZHi() - sg->getZOut());
-                barreldPhiValues.push_back(sg->getRecoVars["deltaPhi"]);
                 barreldPhiChangeValues.push_back(sg->getDeltaPhiChange());
                 barreldAlphaInnerMDSegmentValues.push_back(dAlphaInnerMDSegment);
                 barreldAlphaOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
                 barreldAlphaInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
 
-                layerBarreldzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut - sg->getZLo());
-                layerBarreldzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOu());
-                layerBarreldPhiValues.at(module->layer()-1).push_back(sg->getRecoVars["deltaPhi"]);
+                layerBarreldPhiValues.at(module->layer()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
+                layerBarreldzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo());
+                layerBarreldzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
                 layerBarreldPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
                 layerBarreldAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                 layerBarreldAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
@@ -242,25 +242,25 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
             }
             else if(module->subdet() == SDL::Module::Endcap)
             {
+                endcapdPhiValues.push_back((sg->getRecoVars()).at("deltaPhi"));
                 endcapdrtDiffLowValues.push_back(sg->getRtOut() - sg->getRtLo());
                 endcapdrtDiffHighValues.push_back(sg->getRtHi() - sg->getRtOut());
-                endcapdPhiValues.push_back(sg->getRecoVars["deltaPhi"]);
                 endcapdPhiChangeValues.push_back(sg->getDeltaPhiChange());
                 endcapdAlphaInnerMDSegmentValues.push_back(dAlphaInnerMDSegment);
                 endcapdAlphaOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
                 endcapdAlphaInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
 
+                layerEndcapdPhiValues.at(module->layer()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
                 layerEndcapdrtDiffLowValues.at(module->layer()-1).push_back(sg->getRtOut() - sg->getRtLo());
-                layerEndcapDiffHighValues.at(module->layer()-1).push_back(sg->getRtHi() - sg->getRtOut());
-                layerEndcapdPhiValues.at(module->layer()-1).push_back(sg->getRecoVars["deltaPhi"]);
+                layerEndcapdrtDiffHighValues.at(module->layer()-1).push_back(sg->getRtHi() - sg->getRtOut());
                 layerEndcapdPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
                 layerEndcapdAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                 layerEndcapdAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
                 layerEndcapdAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
 
+                ringEndcapdPhiValues.at(module->ring()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
                 ringEndcapdrtDiffLowValues.at(module->ring()-1).push_back(sg->getRtOut() - sg->getRtLo());
                 ringEndcapdrtDiffHighValues.at(module->ring()-1).push_back(sg->getRtHi() - sg->getRtOut());
-                ringEndcapdPhiValues.at(module->ring()-1).push_back(sg->getRecoVars["deltaPhi"]);
                 ringEndcapdPhiChangeValues.at(module->ring()-1).push_back(sg->getDeltaPhiChange());
                 ringEndcapdAlphaInnerMDSegmentValues.at(module->ring()-1).push_back(dAlphaInnerMDSegment);
                 ringEndcapdAlphaOuterMDSegmentValues.at(module->ring()-1).push_back(dAlphaOuterMDSegment);

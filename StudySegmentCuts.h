@@ -98,7 +98,7 @@ class StudySegmentCuts : public Study
  
         
 
-        studySegmentCuts(const char * studyName);
+        StudySegmentCuts(const char * studyName);
         virtual void bookStudy();
         virtual void resetVariables();
         virtual void doStudy(SDL::Event &event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
