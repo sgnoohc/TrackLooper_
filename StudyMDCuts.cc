@@ -60,6 +60,14 @@ void StudyMDCuts::bookStudy()
     {
         ana.histograms.addVecHistogram(TString::Format("MD_endcap_drt_ring_%ld",i+1),400,-20,20,[&,i](){return ringEndcapdrtValues[i];});
     }
+
+
+    //Rt - Layer mapping in barrel
+    for(size_t i = 0; i < 6; i++)
+    {
+        ana.histograms.addVecHistogram(TString::Format("MD_lowerhit_rt_layer_%ld",i+1),450,0,150,[&,i](){return layerBarrelLowerHitRtValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("MD_upperhit_rt_layer_%ld",i+1),450,0,150,[&,i](){return layerBarrelUpperHitRtValues[i];});
+    }
 }
 
 void StudyMDCuts::resetVariables()
@@ -100,6 +108,9 @@ void StudyMDCuts::resetVariables()
     layerBarrelNormalTilteddPhiChangeValues.clear();
     layerBarrelEndcapTilteddPhiChangeValues.clear();
 
+    layerBarrelLowerHitRtValues.clear();
+    layerBarrelUpperHitRtValues.clear();
+
     for(size_t i = 1; i <= 6; i++)
     {
       layerdzValues.push_back(std::vector<float>());
@@ -133,6 +144,12 @@ void StudyMDCuts::resetVariables()
     for(size_t i = 0; i < 15; i++)
     {
         ringEndcapdrtValues.push_back(std::vector<float>());
+    }
+
+    for(size_t i = 0; i < 15; i++)
+    {
+        layerBarrelLowerHitRtValues.push_back(std::vector<float>());
+        layerBarrelUpperHitRtValues.push_back(std::vector<float>());
     }
 }
 
@@ -189,6 +206,9 @@ void StudyMDCuts::doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int,
                         layerBarrelEndcapTilteddPhiChangeValues[module->layer()-1].push_back(md->getDeltaPhiChange());
                     }
                 }
+
+                layerBarrelLowerHitRtValues.at(module->layer()-1).push_back((md->lowerHitPtr())->rt());
+                layerBarrelUpperHitRtValues.at(module->layer()-1).push_back((md->upperHitPtr())->rt());
             }
 
             else if(module->subdet() == SDL::Module::Endcap)

@@ -60,6 +60,9 @@ class StudyMDCuts : public Study
         std::vector<std::vector<float>> layerBarrelNormalTilteddPhiChangeValues;
         std::vector<std::vector<float>> layerBarrelEndcapTilteddPhiChangeValues;
 
+        std::vector<std::vector<float>> layerBarrelLowerHitRtValues;
+        std::vector<std::vector<float>> layerBarrelUpperHitRtValues;
+
 
         StudyMDCuts(const char * studyName);
         virtual void bookStudy();
