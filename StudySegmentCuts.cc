@@ -48,7 +48,7 @@ void StudySegmentCuts::bookStudy()
 
 
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dz_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffLowValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dzDiffHigh_layer_%ld",i+1),400,0,20,[&](){return layerBarreldzDiffHighValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dzDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldAlphaInnerMDSegmentValues[i];});
