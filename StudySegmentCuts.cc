@@ -315,7 +315,7 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
                 else
                 {
                     //redirect this to innerminidoubletptr somehow
-                    if(SDL::MiniDoublet::isNormalTiltedModule(*module))
+                    if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                     {
                         layerBarrelNormalTilteddPhiValues.at(module->layer()-1).push_back(sg->getRecoVars().at("deltaPhi"));
                         layerBarrelNormalTilteddPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
