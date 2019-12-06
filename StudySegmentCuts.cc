@@ -67,6 +67,27 @@ void StudySegmentCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("Segment_endcap_dAlphaOuterMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdAlphaOuterMDSegmentValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_endcap_dAlphaInnerMDOuterMD_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdAlphaInnerMDOuterMDValues[i];});
         }
+
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiChangeValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaInnerMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaInnerMDSegmentValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaOuterMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaOuterMDSegment[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaInnerMDOuterMD[i];});
+
+        if(i < 3)
+        {
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTitleddhiChangeValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaInnerMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTiltedAlphaInnerMDSegmentValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaOuterMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddAlphaOuterMDSegment[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddAlphaInnerMDOuterMD[i];});
+
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTitleddhiChangeValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaInnerMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTiltedAlphaInnerMDSegmentValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaOuterMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddAlphaOuterMDSegment[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddAlphaInnerMDOuterMD[i];});
+        }
     }
 
 
@@ -124,6 +145,27 @@ void StudySegmentCuts::resetVariables()
     layerBarreldAlphaOuterMDSegmentValues.clear();
     layerBarreldAlphaInnerMDOuterMDValues.clear();
 
+    layerBarrelCenterdPhiValues.clear();
+    layerBarrelNormalTilteddPhiValues.clear();
+    layerBarrelEndcapTilteddPhiValues.clear();
+
+    layerBarrelCenterdPhiChangeValues.clear();
+    layerBarrelNormalTilteddPhiChangeValues.clear();
+    layerBarrelEndcapTilteddPhiChangeValues.clear();
+
+    layerBarrelCenterdAlphaInnerMDSegmentValues.clear();
+    layerBarrelNormalTilteddAlphaInnerMDSegmentValues.clear();
+    layerBarrelEndcapTilteddAlphaInnerMDSegmentValues.clear();
+
+    layerBarrelCenterdAlphaOuterMDSemgentValues.clear();
+    layerBarrelNormalTilteddAlphaOuterMDSegmentValues.clear();
+    layerBarrelEndcapTilteddAlphaOuterMDSegmentValues.clear();
+
+    layerBarrelCenterdAlphaInnerMDOuterMDValues.clear();
+    layerBarrelNormalTilteddAlphaInnerMDOuterMDValues.clear();
+    layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues.clear();
+
+
     layerEndcapdrtDiffLowValues.clear();
     layerEndcapdrtDiffHighValues.clear();
     layerEndcapdPhiValues.clear();
@@ -169,6 +211,28 @@ void StudySegmentCuts::resetVariables()
             layerEndcapdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
             layerEndcapdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
         }
+
+        layerBarrelCenterdPhiValues.push_back(std::vector<float>());
+        layerBarrelCenterdPhiChangeValues.push_back(std::vector<float>());
+        layerBarrelCenterdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+        layerBarrelCenterdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+        layerBarrelCenterdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
+        if(i <= 3)
+        {
+            layerBarrelNormalTilteddPhiValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddPhiChangeValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelNormalTilteddAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
+            layerBarrelEndcapTilteddPhiValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddPhiChangeValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+            layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+        }
+
       
     }
 
@@ -239,6 +303,36 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
                 layerBarreldAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                 layerBarreldAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
                 layerBarreldAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
+
+                if(module->side() == SDL::Module::Center)
+                {
+                    layerBarrelCenterdPhiValues.at(module->layer()-1).push_back(sg->getRecoVars().at("deltaPhi"));
+                    layerBarrelCenterdPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
+                    layerBarrelCenterdAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
+                    layerBarrelCenterdAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
+                    layerBarrelCenterdAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
+                }
+                else
+                {
+                    //redirect this to innerminidoubletptr somehow
+                    if(SDL::MiniDoublet::isNormalTiltedModule(*module))
+                    {
+                        layerBarrelNormalTilteddPhiValues.at(module->layer()-1).push_back(sg->getRecoVars().at("deltaPhi"));
+                        layerBarrelNormalTilteddPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
+                        layerBarrelNormalTilteddAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
+                        layerBarrelNormalTilteddAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
+                        layerBarrelNormalTilteddAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
+                    }
+                    else
+                    {
+                        layerBarrelEndcapTilteddPhiValues.at(module->layer()-1).push_back(sg->getRecoVars().at("deltaPhi"));
+                        layerBarrelEndcapTilteddPhiChangeValues.at(module->layer()-1).push_back(sg->getDeltaPhiChange());
+                        layerBarrelEndcapTilteddAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
+                        layerBarrelEndcapTilteddAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
+                        layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
+                    }
+                }
+
             }
             else if(module->subdet() == SDL::Module::Endcap)
             {
