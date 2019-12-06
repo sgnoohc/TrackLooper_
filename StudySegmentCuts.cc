@@ -72,7 +72,7 @@ void StudySegmentCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaInnerMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaInnerMDSegmentValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaOuterMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaOuterMDSegment[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaInnerMDOuterMD[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_center_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelCenterdAlphaInnerMDOuterMDValues[i];});
 
         if(i < 3)
         {
@@ -80,13 +80,13 @@ void StudySegmentCuts::bookStudy()
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTitleddhiChangeValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaInnerMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTiltedAlphaInnerMDSegmentValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaOuterMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddAlphaOuterMDSegment[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddAlphaInnerMDOuterMD[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_normal_tilted_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelNormalTilteddAlphaInnerMDOuterMDValues[i];});
 
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTitleddhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaInnerMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTiltedAlphaInnerMDSegmentValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaOuterMDSegment_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddAlphaOuterMDSegment[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddAlphaInnerMDOuterMD[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_endcap_tilted_dAlphaInnerMDOuterMD_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarrelEndcapTilteddAlphaInnerMDOuterMDValues[i];});
         }
     }
 
