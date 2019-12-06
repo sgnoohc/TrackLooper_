@@ -160,7 +160,7 @@ void StudySimtrackMatchedSegmentCuts::resetVariables()
     layerBarrelNormalTilteddAlphaInnerMDSegmentValues.clear();
     layerBarrelEndcapTilteddAlphaInnerMDSegmentValues.clear();
 
-    layerBarrelCenterdAlphaOuterMDSemgentValues.clear();
+    layerBarrelCenterdAlphaOuterMDSegmentValues.clear();
     layerBarrelNormalTilteddAlphaOuterMDSegmentValues.clear();
     layerBarrelEndcapTilteddAlphaOuterMDSegmentValues.clear();
 
