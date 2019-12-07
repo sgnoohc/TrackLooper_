@@ -7,8 +7,8 @@ StudySimtrackMatchedSegmentCuts::StudySimtrackMatchedSegmentCuts(const char * st
 
 void StudySimtrackMatchedSegmentCuts::bookStudy()
 {
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffLow"),400,0,20,[&](){return dzDiffLowValues;});
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffHigh"),400,0,20,[&](){return dzDiffHighValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffLow"),1000,0,100,[&](){return dzDiffLowValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffHigh"),1000,0,100,[&](){return dzDiffHighValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhi"),200,-6.28,6.28,[&](){return dPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhiChange"),200,-6.28,6.28,[&](){return dPhiChangeValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDSegment"),200,-6.28,6.28,[&](){return dAlphaInnerMDSegmentValues;});
@@ -17,8 +17,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 
 
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffLow"),400,0,20,[&](){return barreldzDiffLowValues;});
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffHigh"),400,0,20,[&](){return barreldzDiffHighValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffLow"),1000,0,100,[&](){return barreldzDiffLowValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffHigh"),1000,0,100,[&](){return barreldzDiffHighValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhi"),200,-6.28,6.28,[&](){return barreldPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhiChange"),200,-6.28,6.28,[&](){return barreldPhiChangeValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dAlphaInnerMDSegment"),200,-6.28,6.28,[&](){return barreldAlphaInnerMDSegmentValues;});
@@ -27,8 +27,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 
 
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow"),400,0,20,[&](){return endcapdrtDiffLowValues;});
-    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffHigh"),400,0,20,[&](){return endcapdrtDiffHighValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow"),1000,0,100,[&](){return endcapdrtDiffLowValues;});
+    ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffHigh"),1000,0,100,[&](){return endcapdrtDiffHighValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhi"),200,-6.28,6.28,[&](){return endcapdPhiValues;});
     ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhiChange"),200,-6.28,6.28,[&](){return endcapdPhiChangeValues;});
      ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dAlphaInnerMDSegment"),200,-6.28,6.28,[&](){return endcapdAlphaInnerMDSegmentValues;});
@@ -40,8 +40,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
     //one per layer
     for(size_t i = 0; i < 6; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffLow_layer_%ld",i+1),400,0,20,[&,i](){return layerdzDiffLowValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerdzDiffHighValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerdzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dzDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerdzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaInnerMDSegmentValues[i];});
@@ -50,8 +50,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
 
 
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffLow_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffLowValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerBarreldzDiffHighValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarreldzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dzDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarreldzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_barrel_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldAlphaInnerMDSegmentValues[i];});
@@ -63,8 +63,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
         if(i < 5)
         {
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow_layer_%ld",i+1),400,0,20,[&,i](){return layerEndcapdrtDiffLowValues[i];});
-            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dncap_drtDiffHigh_layer_%ld",i+1),400,0,20,[&,i](){return layerEndcapdrtDiffHighValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerEndcapdrtDiffLowValues[i];});
+            ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_dncap_drtDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerEndcapdrtDiffHighValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdPhiChangeValues[i];});
             ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerEndcapdAlphaInnerMDSegmentValues[i];});
@@ -96,8 +96,8 @@ void StudySimtrackMatchedSegmentCuts::bookStudy()
 
     for(size_t i = 0; i < 15; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow_ring_%ld",i+1),400,0,20,[&,i](){return ringEndcapdrtDiffLowValues[i];});
-        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffHigh_ring_%ld",i+1),400,0,20,[&,i](){return ringEndcapdrtDiffHighValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffLow_ring_%ld",i+1),1000,0,100,[&,i](){return ringEndcapdrtDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_drtDiffHigh_ring_%ld",i+1),1000,0,100,[&,i](){return ringEndcapdrtDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhi_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dPhiChange_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("sim_matched_Segment_endcap_dAlphaInnerMDSegment_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdAlphaInnerMDSegmentValues[i];});
