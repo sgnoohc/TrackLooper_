@@ -59,6 +59,7 @@ public:
     std::array<std::vector<float>, NLAYERS> tl_cutflow_by_layer;
 
     std::vector<float> tl_truth_deltaBeta;
+    std::vector<float> tl_truth_deltaBeta_4thCorr;
     std::vector<float> tl_truth_cutflow;
 
     std::array<std::vector<float>, 7> tl_deltaBeta_ptslice;

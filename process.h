@@ -34,6 +34,7 @@
 #include "StudyTrackCandidateSelection.h"
 #include "StudyMiniDoubletEfficiency.h"
 #include "StudySDLEfficiency.h"
+#include "StudyTripletSelection.h"
 
 #include "constants.h"
 

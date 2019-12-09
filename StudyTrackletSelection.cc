@@ -64,6 +64,10 @@ void StudyTrackletSelection::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_truth_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_truth_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_truth_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_truth_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_truth_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_truth_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_truth_deltaBeta_4thCorr; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_cutflow", modename), 8, 0, 8, [&]() { return tl_truth_cutflow; } );
 
     const int nlayers = NLAYERS;
@@ -203,6 +207,8 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
     tl_deltaBeta_4thCorr.clear();
     tl_cutflow.clear();
     tl_truth_cutflow.clear();
+    tl_truth_deltaBeta.clear();
+    tl_truth_deltaBeta_4thCorr.clear();
     for (int ii = 0; ii < 7; ++ii)
     {
         tl_deltaBeta_ptslice[ii].clear();
@@ -959,6 +965,9 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
 
             }
 
+            float deltaBeta_min = 9999;
+            float deltaBeta_4thCorr_min = 9999;
+
             for (auto& tl : tls_of_interest)
             {
 
@@ -988,12 +997,22 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 {
 
                     const float deltaBeta = tl->getDeltaBeta();
+                    const float deltaBeta_4thCorr = tl->getRecoVar("dBeta_4th");
 
-                    tl_truth_deltaBeta.push_back(deltaBeta);
+                    // tl_truth_deltaBeta.push_back(deltaBeta);
+                    // tl_truth_deltaBeta_4thCorr.push_back(deltaBeta_4thCorr);
+
+                    if (abs(deltaBeta) < abs(deltaBeta_min))
+                        deltaBeta_min = deltaBeta;
+                    if (abs(deltaBeta_4thCorr) < abs(deltaBeta_4thCorr_min))
+                        deltaBeta_4thCorr_min = deltaBeta_4thCorr;
 
                 }
 
             }
+
+            tl_truth_deltaBeta.push_back(deltaBeta_min);
+            tl_truth_deltaBeta_4thCorr.push_back(deltaBeta_4thCorr_min);
 
         }
 
