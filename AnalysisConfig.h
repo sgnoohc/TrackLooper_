@@ -22,6 +22,27 @@ public:
     // Number of events to loop over
     int n_events;
 
+    // specific event_index to process
+    int specific_event_index;
+
+    // run efficiency study
+    bool run_eff_study;
+
+    // pt binning options
+    int ptbound_mode;
+
+    // pdg id of the particles to compute efficincies on
+    int pdg_id;
+
+    // verbose of the particles to compute efficincies on
+    int verbose;
+
+    // to print module connection info
+    bool print_conn;
+
+    // to print centroid
+    bool print_centroid;
+
     // Debug boolean
     bool debug;
 
@@ -36,6 +57,12 @@ public:
 
     // Custom Histograms object compatible with RooUtil::Cutflow framework
     RooUtil::Histograms histograms;
+
+    // TTree output for studies
+    TTree* output_ttree;
+
+    // TTreeX to facilitate writing output to ttree
+    RooUtil::TTreeX* tx;
 
 };
 

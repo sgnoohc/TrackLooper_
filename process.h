@@ -28,12 +28,25 @@
 #include "StudySimtrackMatchedMDCuts.h"
 #include "StudySegmentCuts.h"
 #include "StudySimtrackMatchedSegmentCuts.h"
+#include "StudyTrackletEfficiency.h"
+#include "StudyTrackletSelection.h"
+#include "StudyTrackletSelectionOnTruths.h"
+#include "StudySegmentSelection.h"
+#include "StudyHitOccupancy.h"
+#include "StudyMiniDoubletOccupancy.h"
+#include "StudySegmentOccupancy.h"
+#include "StudyTrackCandidateSelection.h"
+#include "StudyMiniDoubletEfficiency.h"
+#include "StudySDLEfficiency.h"
+#include "StudyTripletSelection.h"
 
 #include "constants.h"
 
 #include "AnalysisConfig.h"
 
 
-void printModuleConnectionInfo();
+void printModuleConnectionInfo(std::ofstream&);
+bool hasAll12HitsInBarrel(unsigned int);
+float hitAngle(unsigned int simhitidx);
 
 #endif
