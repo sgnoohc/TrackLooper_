@@ -352,7 +352,6 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-<<<<<<< HEAD
 /*    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
     studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
@@ -390,8 +389,7 @@ int main(int argc, char** argv)
     studies.push_back(new StudySegmentCuts("StudySegmentCuts"));
     studies.push_back(new StudySimtrackMatchedSegmentCuts("StudySimtrackMatchedSegmentCuts"));
 
-=======
-    studies.push_back(new StudyOccupancy("studyOccupancy"));
+/*    studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
     studies.push_back(new StudyLinkedModule("studyLinkedModule"));
     studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
@@ -407,8 +405,7 @@ int main(int argc, char** argv)
                 StudySDLEfficiency::kStudySDLSGEffBB,
                 StudySDLEfficiency::kStudySDLTLEffBBBB,
                 StudySDLEfficiency::kStudySDLTCEffBBBBBB,
-                pt_boundaries));
->>>>>>> fc6fcaebb3bd7f032c09aa1c17955ee0e3db0979
+                pt_boundaries));*/
 
     // book the studies
     for (auto& study : studies)
@@ -640,7 +637,6 @@ int main(int argc, char** argv)
             // ----------------
 
             if (ana.verbose != 0) std::cout << "Reco SDL end" << std::endl;
->>>>>>> fc6fcaebb3bd7f032c09aa1c17955ee0e3db0979
 
         }
         // If efficiency is to be calculated
@@ -663,7 +659,7 @@ int main(int argc, char** argv)
                 // // Select only muon with pt > 1 GeV
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
-
+                cout<<"12 hits check"<<endl;
                 if (not hasAll12HitsInBarrel(isimtrk))
                     continue;
 
@@ -748,19 +744,9 @@ int main(int argc, char** argv)
                 trackevent->createTrackCandidatesFromTracklets();
                 if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
 
-<<<<<<< HEAD
-            // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-//             trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-            trackevent->createMiniDoublets(SDL::Default_MDAlgo);
-
-            // Create mini-doublet CANDIDATES. i.e. create mini-doublet via ALL COMBINATION of hits
-            // trackevent->createSegments(SDL::AllComb_SGAlgo);
-            //trackevent->createSegments(SDL::Default_SGAlgo);
-=======
 
                 // Push to the vector so we have a data-base of per hit, mini-doublets
                 simtrkevents.push_back(std::make_tuple(isimtrk, trackevent));
->>>>>>> fc6fcaebb3bd7f032c09aa1c17955ee0e3db0979
 
             }
 
