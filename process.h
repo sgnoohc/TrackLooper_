@@ -35,10 +35,10 @@
 #include "StudyHitOccupancy.h"
 #include "StudyMiniDoubletOccupancy.h"
 #include "StudySegmentOccupancy.h"
-#include "StudyTrackCandidateSelection.h"
-#include "StudyMiniDoubletEfficiency.h"
-#include "StudySDLEfficiency.h"
-#include "StudyTripletSelection.h"
+//#include "StudyTrackCandidateSelection.h"
+//#include "StudyMiniDoubletEfficiency.h"
+//#include "StudySDLEfficiency.h"
+//#include "StudyTripletSelection.h"
 
 #include "constants.h"
 
