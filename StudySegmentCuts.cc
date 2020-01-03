@@ -38,7 +38,7 @@ void StudySegmentCuts::bookStudy()
     //one per layer
     for(size_t i = 0; i < 6; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("Segment_dzDiffLow_layerw_%ld",i+1),1000,0,100,[&,i](){return layerdzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_dzDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerdzDiffLowValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_dzDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerdzDiffHighValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerdPhiChangeValues[i];});
@@ -47,8 +47,24 @@ void StudySegmentCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("Segment_dAlphaInnerMDOuterMD_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerdAlphaInnerMDOuterMDValues[i];});
 
 
-        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dz_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarreldzDiffLowValues[i];});
+//       ana.histograms.addVecHistogram(TString::Format("Segment_barrel_zLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelzLowValues[i];});
+//       ana.histograms.addVecHistogram(TString::Format("Segment_barrel_zHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelzHighValues[i];});
+       
+        ana.histograms.add2DVecHistogram(TString::Format("Segment_barrel_zLow"),1000,-100,100,TString::Format("z_High_layer_%ld",i+1),1000,-100,100,[&,i](){return layerBarrelzLowValues[i];},[&,i](){return layerBarrelzHighValues[i];});
+
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dzDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarreldzDiffLowValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dzDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarreldzDiffHighValues[i];});
+
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_to_barrel_dzDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelToBarreldzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_to_barrel_dzDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelToBarreldzDiffHighValues[i];});
+
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_to_endcap_dzDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelToEndcapdzDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_to_endcap_dzDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelToEndcapdzDiffHighValues[i];});
+
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_to_endcap_drtDiffLow_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelToEndcapdrtDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_barrel_to_endcap_drtDiffHigh_layer_%ld",i+1),1000,0,100,[&,i](){return layerBarrelToEndcapdrtDiffHighValues[i];});
+
+        
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dPhi_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dPhiChange_layer_%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldPhiChangeValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_barrel_dAlphaInnerMDSegment_layer%ld",i+1),200,-6.28,6.28,[&,i](){return layerBarreldAlphaInnerMDSegmentValues[i];});
@@ -100,6 +116,13 @@ void StudySegmentCuts::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("Segment_endcap_dAlphaInnerMDSegment_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdAlphaInnerMDSegmentValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_endcap_dAlphaOuterMDSegment_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdAlphaOuterMDSegmentValues[i];});
         ana.histograms.addVecHistogram(TString::Format("Segment_endcap_dAlphaInnerMDOuterMD_ring%ld",i+1),200,-6.28,6.28,[&,i](){return ringEndcapdAlphaInnerMDOuterMDValues[i];});
+
+        ana.histograms.addVecHistogram(TString::Format("Segment_endcap_to_endcap_drtDiffLow_ring_%ld",i+1),1000,0,100,[&,i](){return ringEndcapToEndcapdrtDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_endcap_to_endcap_drtDiffHigh_ring_%ld",i+1),1000,0,100,[&,i](){return ringEndcapToEndcapdrtDiffHighValues[i];});
+
+        ana.histograms.addVecHistogram(TString::Format("Segment_endcap_to_barrel_drtDiffLow_ring_%ld",i+1),1000,0,100,[&,i](){return ringEndcapToBarreldrtDiffLowValues[i];});
+        ana.histograms.addVecHistogram(TString::Format("Segment_endcap_to_barrel_drtDiffHigh_ring_%ld",i+1),1000,0,100,[&,i](){return ringEndcapToBarreldrtDiffHighValues[i];});
+
     }
 }
 
@@ -137,8 +160,24 @@ void StudySegmentCuts::resetVariables()
     layerdAlphaOuterMDSegmentValues.clear();
     layerdAlphaInnerMDOuterMDValues.clear();
 
+    layerBarrelzLowValues.clear();
+    layerBarrelzHighValues.clear();
     layerBarreldzDiffLowValues.clear();
     layerBarreldzDiffHighValues.clear();
+   
+    layerBarrelToBarreldzDiffLowValues.clear();
+    layerBarrelToBarreldzDiffHighValues.clear();
+    layerBarrelToEndcapdzDiffLowValues.clear();
+    layerBarrelToEndcapdzDiffHighValues.clear();
+    
+    layerBarrelToEndcapdrtDiffLowValues.clear();
+    layerBarrelToEndcapdrtDiffHighValues.clear();
+
+    ringEndcapToEndcapdrtDiffLowValues.clear();
+    ringEndcapToEndcapdrtDiffHighValues.clear();
+    ringEndcapToBarreldrtDiffLowValues.clear();
+    ringEndcapToBarreldrtDiffHighValues.clear();
+
     layerBarreldPhiValues.clear();
     layerBarreldPhiChangeValues.clear();
     layerBarreldAlphaInnerMDSegmentValues.clear();
@@ -193,8 +232,20 @@ void StudySegmentCuts::resetVariables()
         layerdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
         layerdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
 
+        layerBarrelzLowValues.push_back(std::vector<float>());
+        layerBarrelzHighValues.push_back(std::vector<float>());
+
         layerBarreldzDiffLowValues.push_back(std::vector<float>());
         layerBarreldzDiffHighValues.push_back(std::vector<float>());
+
+        layerBarrelToBarreldzDiffLowValues.push_back(std::vector<float>());
+        layerBarrelToBarreldzDiffHighValues.push_back(std::vector<float>());
+        layerBarrelToEndcapdzDiffLowValues.push_back(std::vector<float>());
+        layerBarrelToEndcapdzDiffHighValues.push_back(std::vector<float>());
+
+        layerBarrelToEndcapdrtDiffLowValues.push_back(std::vector<float>());
+        layerBarrelToEndcapdrtDiffHighValues.push_back(std::vector<float>());
+ 
         layerBarreldPhiValues.push_back(std::vector<float>());
         layerBarreldPhiChangeValues.push_back(std::vector<float>());
         layerBarreldAlphaInnerMDSegmentValues.push_back(std::vector<float>());
@@ -245,6 +296,11 @@ void StudySegmentCuts::resetVariables()
         ringEndcapdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
         ringEndcapdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
         ringEndcapdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
+        ringEndcapToEndcapdrtDiffLowValues.push_back(std::vector<float>());
+        ringEndcapToEndcapdrtDiffHighValues.push_back(std::vector<float>());
+        ringEndcapToBarreldrtDiffHighValues.push_back(std::vector<float>());
+        ringEndcapToBarreldrtDiffLowValues.push_back(std::vector<float>());
     }
 
 }
@@ -296,6 +352,9 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
                 barreldAlphaOuterMDSegmentValues.push_back(dAlphaOuterMDSegment);
                 barreldAlphaInnerMDOuterMDValues.push_back(dAlphaInnerMDOuterMD);
 
+		layerBarrelzLowValues.at(module->layer()-1).push_back(sg->getZLo() - sg->getZIn());
+                layerBarrelzHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZIn());
+
                 layerBarreldPhiValues.at(module->layer()-1).push_back((sg->getRecoVars()).at("deltaPhi"));
                 layerBarreldzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo());
                 layerBarreldzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
@@ -303,6 +362,23 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
                 layerBarreldAlphaInnerMDSegmentValues.at(module->layer()-1).push_back(dAlphaInnerMDSegment);
                 layerBarreldAlphaOuterMDSegmentValues.at(module->layer()-1).push_back(dAlphaOuterMDSegment);
                 layerBarreldAlphaInnerMDOuterMDValues.at(module->layer()-1).push_back(dAlphaInnerMDOuterMD);
+
+                if((((sg->outerMiniDoubletPtr())->lowerHitPtr())->getModule()).subdet() == SDL::Module::Barrel)
+                {
+                    layerBarrelToBarreldzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo());
+                       
+                    layerBarrelToBarreldzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
+                }
+
+                else if((((sg->outerMiniDoubletPtr())->lowerHitPtr())->getModule()).subdet() == SDL::Module::Endcap)
+                {
+                    layerBarrelToEndcapdzDiffLowValues.at(module->layer()-1).push_back(sg->getZOut() - sg->getZLo()); 
+                    layerBarrelToEndcapdzDiffHighValues.at(module->layer()-1).push_back(sg->getZHi() - sg->getZOut());
+
+                    layerBarrelToEndcapdrtDiffLowValues.at(module->layer()-1).push_back(sg->getRtOut() - sg->getRtLo());
+                    layerBarrelToEndcapdrtDiffHighValues.at(module->layer()-1).push_back(sg->getRtHi() - sg->getRtOut());
+
+                }
 
                 if(module->side() == SDL::Module::Center)
                 {
@@ -359,6 +435,19 @@ void StudySegmentCuts::doStudy(SDL::Event &event, std::vector<std::tuple<unsigne
                 ringEndcapdAlphaInnerMDSegmentValues.at(module->ring()-1).push_back(dAlphaInnerMDSegment);
                 ringEndcapdAlphaOuterMDSegmentValues.at(module->ring()-1).push_back(dAlphaOuterMDSegment);
                 ringEndcapdAlphaInnerMDOuterMDValues.at(module->ring()-1).push_back(dAlphaInnerMDOuterMD);
+
+                if((((sg->outerMiniDoubletPtr())->lowerHitPtr())->getModule()).subdet() == SDL::Module::Barrel)
+                {
+                    ringEndcapToBarreldrtDiffLowValues.at(module->ring()-1).push_back(sg->getRtOut() - sg->getRtLo());
+                       
+                    ringEndcapToBarreldrtDiffHighValues.at(module->ring()-1).push_back(sg->getRtHi() - sg->getRtOut());
+                }
+
+                else if((((sg->outerMiniDoubletPtr())->lowerHitPtr())->getModule()).subdet() == SDL::Module::Endcap)
+                {
+                    ringEndcapToEndcapdrtDiffLowValues.at(module->ring()-1).push_back(sg->getRtOut() - sg->getRtLo()); 
+                    ringEndcapToEndcapdrtDiffHighValues.at(module->ring()-1).push_back(sg->getRtHi() - sg->getRtOut());
+                }
             }
         }
     }

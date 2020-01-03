@@ -90,28 +90,17 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
     for(auto &module:moduleList)
     {
       averageLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
-      if((module->getHitPtrs()).size() != 0)
-      {
-            nLayerModules.at(module->layer()-1)++;
-      }
-
+      nLayerModules.at(module->layer()-1)++;
       LayerOccupancy.at(module->layer()-1).push_back((module->getHitPtrs()).size());
-
       if(module->subdet() == SDL::Module::Barrel) //barrel module
       {
         averageOccupancyInBarrel += (module->getHitPtrs()).size();
-        if((module->getHitPtrs()).size() != 0)
-        {
-            nBarrelModules ++;
-        }
+        nBarrelModules ++;
 
         occupancyInBarrel.push_back((module->getHitPtrs()).size());
 
         averageBarrelLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
-        if((module->getHitPtrs()).size() != 0)
-        {
-            nBarrelLayerModules.at(module->layer()-1) ++;
-        }
+        nBarrelLayerModules.at(module->layer()-1) ++;
 
         BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getHitPtrs().size()));
 
@@ -119,28 +108,18 @@ void StudyOccupancy::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned 
       else if(module->subdet() == SDL::Module::Endcap) //endcap module
       {
         averageOccupancyInEndcap += (module->getHitPtrs()).size();
-        if((module->getHitPtrs()).size() != 0)
-        {
-            nEndcapModules ++;
-        }
+        nEndcapModules ++;
 
         occupancyInEndcap.push_back((module->getHitPtrs()).size());
 
         averageEndcapLayerOccupancy.at(module->layer()-1) += (module->getHitPtrs()).size();
-        if((module->getHitPtrs()).size() != 0)
-        {
-            nEndcapLayerModules.at(module->layer()-1) ++;
-        }
+        nEndcapLayerModules.at(module->layer()-1) ++;
 
         EndcapLayerOccupancy.at(module->layer()-1).push_back((module->getHitPtrs().size()));
 
 
         averageEndcapRingOccupancy.at(module->ring()-1) += (module->getHitPtrs()).size();
-
-        if((module->getHitPtrs()).size() != 0)
-        {
-            nEndcapRingModules.at(module->ring()-1) ++;
-        }
+        nEndcapRingModules.at(module->ring()-1) ++;
 
         EndcapRingOccupancy.at(module->ring()-1).push_back((module->getHitPtrs().size()));
 

@@ -44,6 +44,16 @@ class StudySegmentCuts : public Study
         //one vector per layer
         std::vector<std::vector<float>> layerBarreldzDiffLowValues;
         std::vector<std::vector<float>> layerBarreldzDiffHighValues;
+
+        std::vector<std::vector<float>> layerBarrelToBarreldzDiffLowValues;
+        std::vector<std::vector<float>> layerBarrelToBarreldzDiffHighValues;
+        std::vector<std::vector<float>> layerBarrelToEndcapdzDiffLowValues;
+        std::vector<std::vector<float>> layerBarrelToEndcapdzDiffHighValues;
+        std::vector<std::vector<float>> layerBarrelToEndcapdrtDiffLowValues;
+        std::vector<std::vector<float>> layerBarrelToEndcapdrtDiffHighValues;
+
+        std::vector<std::vector<float>> layerBarrelzLowValues;
+        std::vector<std::vector<float>> layerBarrelzHighValues;
         std::vector<std::vector<float>> layerBarreldPhiValues;
         std::vector<std::vector<float>> layerBarreldPhiChangeValues;
         std::vector<std::vector<float>> layerBarreldAlphaInnerMDSegmentValues;
@@ -95,8 +105,11 @@ class StudySegmentCuts : public Study
         std::vector<std::vector<float>> ringEndcapdAlphaInnerMDSegmentValues;
         std::vector<std::vector<float>> ringEndcapdAlphaOuterMDSegmentValues;
         std::vector<std::vector<float>> ringEndcapdAlphaInnerMDOuterMDValues;
- 
-        
+
+        std::vector<std::vector<float>> ringEndcapToEndcapdrtDiffLowValues;
+        std::vector<std::vector<float>> ringEndcapToEndcapdrtDiffHighValues;
+        std::vector<std::vector<float>> ringEndcapToBarreldrtDiffLowValues;
+        std::vector<std::vector<float>> ringEndcapToBarreldrtDiffHighValues;
 
         StudySegmentCuts(const char * studyName);
         virtual void bookStudy();

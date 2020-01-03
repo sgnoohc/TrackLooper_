@@ -352,44 +352,7 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-/*    studies.push_back(new StudyBarreldPhiChangeCutThresholdValidity());
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrel, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelFlat, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTilt, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltHighZ, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffBarrelTiltLowZ, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSCloseRing, pt_boundaries));
-    studies.push_back(new StudyEfficiency("studyEff", StudyEfficiency::kStudyEffEndcapPSLowPt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgAll", StudySegmentEfficiency::kStudyEffAll, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelBarrel", StudySegmentEfficiency::kStudyEffBarrelBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrel", StudySegmentEfficiency::kStudyEffBarrelFlatBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrel", StudySegmentEfficiency::kStudyEffBarrelTiltBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelFlat, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelFlatBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelFlatBarrelTilt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelFlat", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelFlat, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltBarrelTilt", StudySegmentEfficiency::kStudyEffBarrelTiltBarrelTilt, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelEndcap", StudySegmentEfficiency::kStudyEffBarrelEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrelTiltEndcap", StudySegmentEfficiency::kStudyEffBarrelTiltEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgBarrel", StudySegmentEfficiency::kStudyEffBarrel, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap", StudySegmentEfficiency::kStudyEffEndcap, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS", StudySegmentEfficiency::kStudyEffEndcapPS, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPSPS", StudySegmentEfficiency::kStudyEffEndcapPSPS, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcapPS2S", StudySegmentEfficiency::kStudyEffEndcapPS2S, pt_boundaries));
-    studies.push_back(new StudySegmentEfficiency("studyEffSgEndcap2S", StudySegmentEfficiency::kStudyEffEndcap2S, pt_boundaries));
-    studies.push_back(new StudyOccupancy("studyOccupancy"));
-    studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    studies.push_back(new StudyLinkedModule("studyLinkedModule")); */
-
-    studies.push_back(new StudyMDCuts("StudyMDCuts"));
-    studies.push_back(new StudySimtrackMatchedMDCuts("StudySimtrackMatchedMDCuts"));
-    studies.push_back(new StudySegmentCuts("StudySegmentCuts"));
-    studies.push_back(new StudySimtrackMatchedSegmentCuts("StudySimtrackMatchedSegmentCuts"));
-
-/*    studies.push_back(new StudyOccupancy("studyOccupancy"));
+    /*studies.push_back(new StudyOccupancy("studyOccupancy"));
     studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
     studies.push_back(new StudyLinkedModule("studyLinkedModule"));
     studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
@@ -407,6 +370,12 @@ int main(int argc, char** argv)
                 StudySDLEfficiency::kStudySDLTCEffBBBBBB,
                 pt_boundaries));*/
 
+    studies.push_back(new StudyMDCuts("StudyMDCuts"));
+    studies.push_back(new StudySimtrackMatchedMDCuts("StudySimtrackMatchedMDCuts"));
+    studies.push_back(new StudySegmentCuts("StudySegmentCuts"));
+    studies.push_back(new StudySimtrackMatchedSegmentCuts("StudySimtrackMatchedSegmentCuts"));
+
+
     // book the studies
     for (auto& study : studies)
     {
@@ -418,7 +387,8 @@ int main(int argc, char** argv)
 
     SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
     SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
-    SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+//    SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+    SDL::moduleConnectionMap.load("scripts/module_connection_map_data.txt");
 
     // // Following maps to compute centroid of each modules
     std::map<unsigned int, std::vector<float>> module_xs;
@@ -438,7 +408,7 @@ int main(int argc, char** argv)
                 continue;
         }
 
-        if (ana.verbose) std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
+       /* if (ana.verbose)*/ std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
 
         // *****************************************************
         // Print module -> module connection info from sim track
@@ -500,15 +470,15 @@ int main(int argc, char** argv)
         TStopwatch my_timer;
 
         // run_eff_study == 0 then run all the reconstruction
-        if (ana.run_eff_study == 0)
-        {
+        //if (ana.run_eff_study == 0)
+       // {
 
             // Adding hits to modules
             for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
             {
 
-                if (trk.ph2_subdet()[ihit] != 5)
-                    continue;
+        //        if (trk.ph2_subdet()[ihit] != 5)
+        //            continue;
 
                 // Takes two arguments, SDL::Hit, and detId
                 // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
@@ -549,6 +519,8 @@ int main(int argc, char** argv)
             if (ana.verbose != 0) std::cout << "Reco Segment start" << std::endl;
             my_timer.Start(kFALSE);
             event.createSegmentsWithModuleMap();
+//	    cout<<"creating segments"<<endl;
+//            event.createSegments();
             float sg_elapsed = my_timer.RealTime();
             if (ana.verbose != 0) std::cout << "Reco Segment processing time: " << sg_elapsed - md_elapsed << " secs" << std::endl;
             if (ana.verbose != 0) std::cout << "# of Segments produced: " << event.getNumberOfSegments() << std::endl;
@@ -593,7 +565,7 @@ int main(int argc, char** argv)
             if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
             my_timer.Start(kFALSE);
             // event.createTracklets();
-            event.createTrackletsWithModuleMap();
+          //  event.createTrackletsWithModuleMap();
             float tl_elapsed = my_timer.RealTime();
             if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed - tp_elapsed << " secs" << std::endl;
             if (ana.verbose != 0) std::cout << "# of Tracklets produced: " << event.getNumberOfTracklets() << std::endl;
@@ -617,7 +589,7 @@ int main(int argc, char** argv)
             my_timer.Start(kFALSE);
             // event.createTrackCandidatesFromTriplets();
             // event.createTrackCandidates();
-            event.createTrackCandidatesFromTracklets();
+//            event.createTrackCandidatesFromTracklets();
             float tc_elapsed = my_timer.RealTime();
             if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed - tl_elapsed << " secs" << std::endl;
             if (ana.verbose != 0) std::cout << "# of TrackCandidates produced: " << event.getNumberOfTrackCandidates() << std::endl;
@@ -638,10 +610,10 @@ int main(int argc, char** argv)
 
             if (ana.verbose != 0) std::cout << "Reco SDL end" << std::endl;
 
-        }
+//        }
         // If efficiency is to be calculated
-        else
-        {
+//        else
+//        {
 
             // *******************************************************
             // Formation of mini-doublets "candidates" from sim-tracks
@@ -659,9 +631,9 @@ int main(int argc, char** argv)
                 // // Select only muon with pt > 1 GeV
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
-                cout<<"12 hits check"<<endl;
-                if (not hasAll12HitsInBarrel(isimtrk))
-                    continue;
+
+//                if (not hasAll12HitsInBarrel(isimtrk))
+//                    continue;
 
                 // event just for this track
                 SDL::Event* trackevent = new SDL::Event();
@@ -735,13 +707,14 @@ int main(int argc, char** argv)
                 trackevent->createMiniDoublets();
                 if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
                 trackevent->createSegmentsWithModuleMap();
+                //trackevent->createSegments();
                 if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
                 // trackevent->createTrackletsWithModuleMap();
                 trackevent->createTrackletsWithModuleMap();
                 if (ana.verbose != 0) std::cout << "Sim Triplet start" << std::endl;
-                trackevent->createTriplets();
+//                trackevent->createTriplets();
                 if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
-                trackevent->createTrackCandidatesFromTracklets();
+  //              trackevent->createTrackCandidatesFromTracklets();
                 if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
 
 
@@ -751,7 +724,7 @@ int main(int argc, char** argv)
             }
 
 
-        }
+       // }
 
         // Print content in the event
         // (SDL::cout is a modified version of std::cout where each line is prefixed by SDL::)
@@ -1007,8 +980,7 @@ bool hasAll12HitsInBarrel(unsigned int isimtrk)
     }
 
     std::array<bool, 6> has_good_pair_by_layer;
-    has_good_pair_by_layer[0] = false;
-    has_good_pair_by_layer[1] = false;
+    has_good_pair_by_layer[0] = false; has_good_pair_by_layer[1] = false;
     has_good_pair_by_layer[2] = false;
     has_good_pair_by_layer[3] = false;
     has_good_pair_by_layer[4] = false;

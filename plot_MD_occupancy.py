@@ -10,28 +10,22 @@ if len(sys.argv) > 1:
 
 xaxis_range = [0,25] #SUBJECT TO CHANGE
 
-
-def plot_occupancy(hist,prefix,additional_options = None):
+def plot_occupancy(hist,prefix):
     global xaxis_range
     filename_prefix = prefix.replace(" ","_")
-    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_20190918/MD_occupancies/"+filename_prefix
-    xaxis_plot = xaxis_range
-
-    default_options = {
+    filename_prefix = "/home/users/bsathian/public_html/SDL/"+filename_prefix
+    ply.plot_hist(
+        bgs = [hist],
+        legend_labels = [prefix],
+        options = {
         "output_name":filename_prefix+".pdf",
-        "xaxis_range":xaxis_plot,
+        "xaxis_range":xaxis_range,
         "xaxis_label":prefix,
         "title":prefix,
         "legend_percentageinbox":False,
         }
-    options = default_options.copy()
-    if type(additional_options) is dict:
-        options.update(additional_options)
+    )
 
-    ply.plot_hist(
-        bgs = [hist],
-        legend_labels = [prefix],
-        options = options)
 
 
 f = r.TFile(filename)
@@ -65,9 +59,8 @@ endcap_occupancy_hist = f.Get("Root__MD_occupancy_in_endcap")
 barrel_average_occupancy_hist = f.Get("Root__average_MD_occupancy_in_barrel")
 endcap_average_occupancy_hist = f.Get("Root__average_MD_occupancy_in_endcap")
 
-
-plot_occupancy(barrel_occupancy_hist,"barrel mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e7]})
-plot_occupancy(endcap_occupancy_hist,"endcap mini-doublet occupancy",additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e6]})
+plot_occupancy(barrel_occupancy_hist,"barrel mini-doublet occupancy")
+plot_occupancy(endcap_occupancy_hist,"endcap mini-doublet occupancy")
 
 plot_occupancy(barrel_average_occupancy_hist,"barrel average mini-doublet occupancy")
 plot_occupancy(endcap_average_occupancy_hist,"endcap average mini-doublet occupancy")
@@ -75,9 +68,9 @@ plot_occupancy(endcap_average_occupancy_hist,"endcap average mini-doublet occupa
 
 for i in range(len(layer_occupancy_hists)):
     plot_occupancy(layer_occupancy_hists[i],"Mini-doublet Occupancy for layer "+str(i+1))
-    plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Mini-doublet Occupancy for layer "+str(i+1),additional_options = {"yaxis_log":True,"xaxis_range":[0,200],"yaxis_range":[0.1,1e5]})
+    plot_occupancy(layer_barrel_occupancy_hists[i],"Barrel Mini-doublet Occupancy for layer "+str(i+1))
     if i != 5:
-        plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap mini-doublet Occupancy for layer "+str(i+1),additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e5]})
+        plot_occupancy(layer_endcap_occupancy_hists[i],"Endcap mini-doublet Occupancy for layer "+str(i+1))
 
 
 
@@ -89,6 +82,6 @@ for i in range(len(layer_average_occupancy_hists)):
 
 for i in range(len(ring_endcap_average_occupancy_hists)):
     plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap mini-doublet occupancy in ring "+str(i+1))
-    plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap mini-doublet occupancy in ring "+str(i+1),additional_options = {"yaxis_log":True,"xaxis_range":[0,100],"yaxis_range":[0.1,1e5]})
+    plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap mini-doublet occupancy in ring "+str(i+1))
 
 

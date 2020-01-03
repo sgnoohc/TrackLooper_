@@ -18,46 +18,22 @@ class StudyLinkedModule : public Study
     const char *studyname;
     std::vector<float> BarrelLinkedModuleOccupancy;
     std::vector<float> EndcapLinkedModuleOccupancy;
-    std::vector<float> nBarrelLinkedModules;
-    std::vector<float> nEndcapLinkedModules;
-
     float averageBarrelLinkedModuleOccupancy;
     float averageEndcapLinkedModuleOccupancy;
-
-    int nBarrelAverageLinkedModules,nEndcapAverageLinkedModules;
+    int nBarrelLinkedModules,nEndcapLinkedModules;
 
     std::vector<std::vector<float>> LayerBarrelLinkedModuleOccupancy;
-    std::vector<std::vector<float>> nLayerBarrelLinkedModules;
-
-    std::vector<int> nLayerBarrelAverageLinkedModules;
+    std::vector<int> nLayerBarrelLinkedModules;
     std::vector<float> averageLayerBarrelLinkedModuleOccupancy;
-
     std::vector<std::vector<float>> LayerEndcapLinkedModuleOccupancy;
-    std::vector<std::vector<float>> nLayerEndcapLinkedModules;
-
-    std::vector<int> nLayerEndcapAverageLinkedModules;
+    std::vector<int> nLayerEndcapLinkedModules;
     std::vector<float> averageLayerEndcapLinkedModuleOccupancy;
-
     std::vector<std::vector<float>> RingEndcapLinkedModuleOccupancy;
-    std::vector<std::vector<float>> nRingEndcapLinkedModules;
-
-    std::vector<float> nRingEndcapAverageLinkedModules;
+    std::vector<int> nRingEndcapLinkedModules;
     std::vector<float> averageEndcapRingLinkedModuleOccupancy;
-
-    int nBarrelPrimaryModules, nEndcapPrimaryModules;
-    std::vector<int> nBarrelLayerPrimaryModules;
-    std::vector<int> nEndcapLayerPrimaryModules;
-    std::vector<int> nEndcapRingPrimaryModules;
-    
-    std::vector<float> zeroConnectedModuleEndcapLayer;
-    std::vector<float> zeroConnectedModuleEndcapRing;
-
-
 
     StudyLinkedModule(const char* studyName);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
-
-    void prepareStudy();
 };
 #endif
