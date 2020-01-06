@@ -52,6 +52,14 @@ class StudySegmentCuts : public Study
         std::vector<std::vector<float>> layerBarrelToEndcapdrtDiffLowValues;
         std::vector<std::vector<float>> layerBarrelToEndcapdrtDiffHighValues;
 
+        std::vector<std::vector<float>> layerBarrelToBarreldAlphaInnerMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelToBarreldAlphaOuterMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelToBarreldAlphaInnerMDOuterMDValues;
+
+        std::vector<std::vector<float>> layerBarrelToEndcapdAlphaInnerMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelToEndcapdAlphaOuterMDSegmentValues;
+        std::vector<std::vector<float>> layerBarrelToEndcapdAlphaInnerMDOuterMDValues;
+
         std::vector<std::vector<float>> layerBarrelzLowValues;
         std::vector<std::vector<float>> layerBarrelzHighValues;
         std::vector<std::vector<float>> layerBarreldPhiValues;
