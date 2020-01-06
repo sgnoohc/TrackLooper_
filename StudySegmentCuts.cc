@@ -263,6 +263,11 @@ void StudySegmentCuts::resetVariables()
         layerBarrelToBarreldAlphaInnerMDSegmentValues.push_back(std::vector<float>());
         layerBarrelToBarreldAlphaOuterMDSegmentValues.push_back(std::vector<float>());
         layerBarrelToBarreldAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
+        layerBarrelToEndcapdAlphaInnerMDSegmentValues.push_back(std::vector<float>());
+        layerBarrelToEndcapdAlphaOuterMDSegmentValues.push_back(std::vector<float>());
+        layerBarrelToEndcapdAlphaInnerMDOuterMDValues.push_back(std::vector<float>());
+
  
         layerBarreldPhiValues.push_back(std::vector<float>());
         layerBarreldPhiChangeValues.push_back(std::vector<float>());
