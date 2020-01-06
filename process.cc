@@ -387,8 +387,7 @@ int main(int argc, char** argv)
 
     SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
     SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
-//    SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
-    SDL::moduleConnectionMap.load("scripts/module_connection_map_data.txt");
+    SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
 
     // // Following maps to compute centroid of each modules
     std::map<unsigned int, std::vector<float>> module_xs;
