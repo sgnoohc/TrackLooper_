@@ -28,6 +28,9 @@ public:
     // run efficiency study
     bool run_eff_study;
 
+    // run inefficiency study
+    bool run_ineff_study;
+
     // pt binning options
     int ptbound_mode;
 

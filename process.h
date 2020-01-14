@@ -35,14 +35,16 @@
 #include "StudyMiniDoubletEfficiency.h"
 #include "StudySDLEfficiency.h"
 #include "StudyTripletSelection.h"
+#include "StudySDLInefficiency.h"
 
 #include "constants.h"
 
 #include "AnalysisConfig.h"
 
+#include "trkCore.h"
 
 void printModuleConnectionInfo(std::ofstream&);
 bool hasAll12HitsInBarrel(unsigned int);
-float hitAngle(unsigned int simhitidx);
+void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside=false);
 
 #endif

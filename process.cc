@@ -17,19 +17,20 @@ int main(int argc, char** argv)
 
     // Read the options
     options.add_options()
-        ("i,input"        , "Comma separated input file list OR if just a directory is provided it will glob all in the directory BUT must end with '/' for the path", cxxopts::value<std::string>())
-        ("t,tree"         , "Name of the tree in the root file to open and loop over"                                             , cxxopts::value<std::string>())
-        ("o,output"       , "Output file name"                                                                                    , cxxopts::value<std::string>())
-        ("n,nevents"      , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
-        ("x,event_index"  , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
-        ("p,ptbound_mode" , "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
-        ("g,pdg_id"       , "The simhit pdgId match option (default = 13)"                                                        , cxxopts::value<int>()->default_value("13"))
-        ("v,verbose"      , "Verbose mode"                                                                                        , cxxopts::value<int>()->default_value("0"))
-        ("d,debug"        , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
-        ("c,print_conn"   , "Print module connections")
-        ("r,centroid"     , "Print centroid information")
-        ("e,run_eff_study", "Run efficiency study")
-        ("h,help"         , "Print help")
+        ("i,input"          , "Comma separated input file list OR if just a directory is provided it will glob all in the directory BUT must end with '/' for the path", cxxopts::value<std::string>())
+        ("t,tree"           , "Name of the tree in the root file to open and loop over"                                             , cxxopts::value<std::string>())
+        ("o,output"         , "Output file name"                                                                                    , cxxopts::value<std::string>())
+        ("n,nevents"        , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
+        ("x,event_index"    , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
+        ("p,ptbound_mode"   , "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
+        ("g,pdg_id"         , "The simhit pdgId match option (default = 13)"                                                        , cxxopts::value<int>()->default_value("13"))
+        ("v,verbose"        , "Verbose mode"                                                                                        , cxxopts::value<int>()->default_value("0"))
+        ("d,debug"          , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
+        ("c,print_conn"     , "Print module connections")
+        ("r,centroid"       , "Print centroid information")
+        ("e,run_eff_study"  , "Run efficiency study")
+        ("l,run_ineff_study", "Run inefficiency study")
+        ("h,help"           , "Print help")
         ;
 
     auto result = options.parse(argc, argv);
@@ -123,6 +124,17 @@ int main(int argc, char** argv)
     }
 
     //_______________________________________________________________________________
+    // --run_ineff_study
+    if (result.count("run_ineff_study"))
+    {
+        ana.run_ineff_study = true;
+    }
+    else
+    {
+        ana.run_ineff_study = false;
+    }
+
+    //_______________________________________________________________________________
     // --centroid
     if (result.count("centroid"))
     {
@@ -167,10 +179,18 @@ int main(int argc, char** argv)
     std::cout <<  " ana.output_tfile: " << ana.output_tfile->GetName() <<  std::endl;
     std::cout <<  " ana.n_events: " << ana.n_events <<  std::endl;
     std::cout <<  " ana.run_eff_study: " << ana.run_eff_study <<  std::endl;
+    std::cout <<  " ana.run_ineff_study: " << ana.run_ineff_study <<  std::endl;
     std::cout <<  " ana.print_centroid: " << ana.print_centroid <<  std::endl;
     std::cout <<  " ana.print_conn: " << ana.print_conn <<  std::endl;
     std::cout <<  " ana.ptbound_mode: " << ana.ptbound_mode <<  std::endl;
     std::cout <<  "=========================================================" << std::endl;
+
+    // Consistency check
+    if (ana.run_ineff_study and ana.run_eff_study)
+    {
+        RooUtil::error("-e,--run_eff_study and -l,--run_ineff_study both are set to true! Please only set one of them");
+    }
+
 
 //********************************************************************************
 //
@@ -352,23 +372,38 @@ int main(int argc, char** argv)
 
     // List of studies to perform
     std::vector<Study*> studies;
-    studies.push_back(new StudyOccupancy("studyOccupancy"));
-    studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
-    studies.push_back(new StudyLinkedModule("studyLinkedModule"));
-    studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
-    studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
-    studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
-    studies.push_back(new StudyTripletSelection("studySelTPBB1BB2", StudyTripletSelection::kStudySelBB1BB2));
-    studies.push_back(new StudyTripletSelection("studySelTPBB2BB3", StudyTripletSelection::kStudySelBB2BB3));
-    studies.push_back(new StudyTripletSelection("studySelTPBB3BB4", StudyTripletSelection::kStudySelBB3BB4));
-    studies.push_back(new StudyTripletSelection("studySelTPBB4BB5", StudyTripletSelection::kStudySelBB4BB5));
-    // studies.push_back(new StudyTrackCandidateSelection("studySelTCAll", StudyTrackCandidateSelection::kStudySelAll, pt_boundaries));
-    studies.push_back(new StudySDLEfficiency("efficiency",
-                StudySDLEfficiency::kStudySDLMDEffBarrel,
-                StudySDLEfficiency::kStudySDLSGEffBB,
-                StudySDLEfficiency::kStudySDLTLEffBBBB,
-                StudySDLEfficiency::kStudySDLTCEffBBBBBB,
-                pt_boundaries));
+    if (ana.run_eff_study)
+    {
+        studies.push_back(new StudySDLEfficiency("efficiency",
+                    StudySDLEfficiency::kStudySDLMDEffBarrel,
+                    StudySDLEfficiency::kStudySDLSGEffBB,
+                    StudySDLEfficiency::kStudySDLTLEffBBBB,
+                    StudySDLEfficiency::kStudySDLTCEffBBBBBB,
+                    pt_boundaries));
+    }
+    else if (ana.run_ineff_study)
+    {
+        studies.push_back(new StudySDLInefficiency("inefficiency",
+                    StudySDLInefficiency::kStudySDLMDEffBarrel,
+                    StudySDLInefficiency::kStudySDLSGEffBB,
+                    StudySDLInefficiency::kStudySDLTLEffBBBB,
+                    StudySDLInefficiency::kStudySDLTCEffBBBBBB,
+                    pt_boundaries));
+    }
+    else
+    {
+        studies.push_back(new StudyOccupancy("studyOccupancy"));
+        studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
+        studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
+        // studies.push_back(new StudyTripletSelection("studySelTPBB1BB2", StudyTripletSelection::kStudySelBB1BB2));
+        // studies.push_back(new StudyTripletSelection("studySelTPBB2BB3", StudyTripletSelection::kStudySelBB2BB3));
+        // studies.push_back(new StudyTripletSelection("studySelTPBB3BB4", StudyTripletSelection::kStudySelBB3BB4));
+        // studies.push_back(new StudyTripletSelection("studySelTPBB4BB5", StudyTripletSelection::kStudySelBB4BB5));
+        // studies.push_back(new StudyTrackCandidateSelection("studySelTCAll", StudyTrackCandidateSelection::kStudySelAll, pt_boundaries));
+    }
 
     // book the studies
     for (auto& study : studies)
@@ -463,7 +498,7 @@ int main(int argc, char** argv)
         TStopwatch my_timer;
 
         // run_eff_study == 0 then run all the reconstruction
-        if (ana.run_eff_study == 0)
+        if (ana.run_eff_study == 0 and ana.run_ineff_study == 0)
         {
 
             // Adding hits to modules
@@ -487,9 +522,28 @@ int main(int argc, char** argv)
             float elapsed = 0;
 
             // ----------------
+            if (ana.verbose != 0) std::cout << "Summary of hits" << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits: " << event.getNumberOfHits() << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits in layer 1: " << event.getNumberOfHitsByLayerBarrel(0) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits in layer 2: " << event.getNumberOfHitsByLayerBarrel(1) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits in layer 3: " << event.getNumberOfHitsByLayerBarrel(2) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits in layer 4: " << event.getNumberOfHitsByLayerBarrel(3) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits in layer 5: " << event.getNumberOfHitsByLayerBarrel(4) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits in layer 6: " << event.getNumberOfHitsByLayerBarrel(5) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 1: " << event.getNumberOfHitsByLayerBarrelUpperModule(0) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 2: " << event.getNumberOfHitsByLayerBarrelUpperModule(1) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 3: " << event.getNumberOfHitsByLayerBarrelUpperModule(2) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 4: " << event.getNumberOfHitsByLayerBarrelUpperModule(3) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 5: " << event.getNumberOfHitsByLayerBarrelUpperModule(4) << std::endl;
+            if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 6: " << event.getNumberOfHitsByLayerBarrelUpperModule(5) << std::endl;
+            // ----------------
+
+
+            // ----------------
             if (ana.verbose != 0) std::cout << "Reco Mini-Doublet start" << std::endl;
             my_timer.Start();
             event.createMiniDoublets();
+            // event.createPseudoMiniDoubletsFromAnchorModule(); // Useless.....
             float md_elapsed = my_timer.RealTime();
             if (ana.verbose != 0) std::cout << "Reco Mini-doublet processing time: " << md_elapsed << " secs" << std::endl;
             if (ana.verbose != 0) std::cout << "# of Mini-doublets produced: " << event.getNumberOfMiniDoublets() << std::endl;
@@ -530,10 +584,56 @@ int main(int argc, char** argv)
             // if (ana.verbose != 0) std::cout << "# of Segments considered layer 6: " << event.getNumberOfSegmentCandidatesByLayerBarrel(5) << std::endl;
             // ----------------
 
+            if (ana.verbose != 0) std::cout << "Printing connection information" << std::endl;
+            if (ana.verbose != 0)
+            {
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 1);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 2);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 3);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 4);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 5);
+                std::cout << "--------" << std::endl;
+
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 1, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 1);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 2);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 3);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 4);
+                std::cout << "--------" << std::endl;
+
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 2, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 1, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 1);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 2);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 3);
+                std::cout << "--------" << std::endl;
+
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 3, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 2, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 1, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 1);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 2);
+                std::cout << "--------" << std::endl;
+
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 4, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 3, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 2, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 1, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 1);
+                std::cout << "--------" << std::endl;
+
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 5, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 4, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 3, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 2, true);
+                printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 1, true);
+                std::cout << "--------" << std::endl;
+            }
+
             // ----------------
             if (ana.verbose != 0) std::cout << "Reco Triplet start" << std::endl;
             my_timer.Start(kFALSE);
-            // event.createTriplets();
+            event.createTriplets();
             float tp_elapsed = my_timer.RealTime();
             if (ana.verbose != 0) std::cout << "Reco Triplet processing time: " << tp_elapsed - sg_elapsed << " secs" << std::endl;
             if (ana.verbose != 0) std::cout << "# of Triplets produced: " << event.getNumberOfTriplets() << std::endl;
@@ -556,7 +656,8 @@ int main(int argc, char** argv)
             if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
             my_timer.Start(kFALSE);
             // event.createTracklets();
-            event.createTrackletsWithModuleMap();
+            // event.createTrackletsWithModuleMap();
+            event.createTrackletsViaNavigation();
             float tl_elapsed = my_timer.RealTime();
             if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed - tp_elapsed << " secs" << std::endl;
             if (ana.verbose != 0) std::cout << "# of Tracklets produced: " << event.getNumberOfTracklets() << std::endl;
@@ -574,6 +675,48 @@ int main(int argc, char** argv)
             // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 5: " << event.getNumberOfTrackletCandidatesByLayerBarrel(4) << std::endl;
             // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 6: " << event.getNumberOfTrackletCandidatesByLayerBarrel(5) << std::endl;
             // ----------------
+
+            // // ----------------
+            // multiplicities.clear();
+            // total_nmult = 0;
+            // for (auto& segmentPtr : event.getLayer(1, SDL::Layer::Barrel).getSegmentPtrs())
+            // {
+            //     int nmult = 0;
+            //     for (auto& tkl1 : segmentPtr->getListOfOutwardTrackletPtrs())
+            //     {
+            //         for (auto& tkl2 : tkl1->outerSegmentPtr()->getListOfOutwardTrackletPtrs())
+            //         {
+            //             nmult++;
+            //         }
+            //     }
+            //     multiplicities.push_back(nmult);
+            //     total_nmult += nmult;
+            // }
+            // std::cout <<  " total_nmult: " << total_nmult <<  std::endl;
+            // avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
+            // std::cout <<  " avg_mult: " << avg_mult <<  std::endl;
+            // // ----------------
+
+            // // ----------------
+            // multiplicities.clear();
+            // total_nmult = 0;
+            // for (auto& segmentPtr : event.getLayer(5, SDL::Layer::Barrel).getSegmentPtrs())
+            // {
+            //     int nmult = 0;
+            //     for (auto& tkl1 : segmentPtr->getListOfInwardTrackletPtrs())
+            //     {
+            //         for (auto& tkl2 : tkl1->innerSegmentPtr()->getListOfInwardTrackletPtrs())
+            //         {
+            //             nmult++;
+            //         }
+            //     }
+            //     multiplicities.push_back(nmult);
+            //     total_nmult += nmult;
+            // }
+            // std::cout <<  " total_nmult: " << total_nmult <<  std::endl;
+            // avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
+            // std::cout <<  " avg_mult: " << avg_mult <<  std::endl;
+            // // ----------------
 
             // ----------------
             if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
@@ -629,44 +772,19 @@ int main(int argc, char** argv)
                 // event just for this track
                 SDL::Event* trackevent = new SDL::Event();
 
-                std::vector<float> ps;
-
                 // loop over the simulated hits
-                for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
+                for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
                 {
+
+                    // Retrieve the sim hit idx
+                    unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
 
                     // Select only the hits in the outer tracker
                     if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
                         continue;
 
-                    float px = trk.simhit_px()[simhitidx];
-                    float py = trk.simhit_py()[simhitidx];
-                    float pz = trk.simhit_pz()[simhitidx];
-                    float p = sqrt(px*px + py*py + pz*pz);
-                    int detid = trk.simhit_detId()[simhitidx];
-                    SDL::Module module = SDL::Module(detid);
-                    int simhit_particle = trk.simhit_particle()[simhitidx];
-                    float angle = hitAngle(simhitidx);
-
-                    // Select only the sim hits that is matched to the muon
-                    if (abs(simhit_particle) == 13)
-                    {
-                        if (ps.size() > 0)
-                        {
-                            float loss = fabs(ps.back() - p) / ps.back();
-                            if (loss > 0.35)
-                                break;
-                        }
-
-                        if (module.isLower())
-                        {
-                            ps.push_back(p);
-                        }
-
-                        if (abs(angle) > 1.6)
-                            break;
-
-                    }
+                    if (isMuonCurlingHit(isimtrk, ith_hit))
+                        break;
 
                     // list of reco hit matched to this sim hit
                     for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
@@ -694,18 +812,36 @@ int main(int argc, char** argv)
 
                 }
 
-                if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
-                trackevent->createMiniDoublets();
-                if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
-                trackevent->createSegmentsWithModuleMap();
-                if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
-                // trackevent->createTrackletsWithModuleMap();
-                trackevent->createTrackletsWithModuleMap();
-                if (ana.verbose != 0) std::cout << "Sim Triplet start" << std::endl;
-                trackevent->createTriplets();
-                if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
-                trackevent->createTrackCandidatesFromTracklets();
-                if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
+                if (ana.run_ineff_study)
+                {
+                    if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                    trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+                    if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
+                    trackevent->createSegmentsWithModuleMap();
+                    if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
+                    // trackevent->createTrackletsWithModuleMap();
+                    trackevent->createTrackletsWithModuleMap();
+                    if (ana.verbose != 0) std::cout << "Sim Triplet start" << std::endl;
+                    trackevent->createTriplets();
+                    if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
+                    trackevent->createTrackCandidatesFromTracklets();
+                    if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
+                }
+                else
+                {
+                    if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                    trackevent->createMiniDoublets();
+                    if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
+                    trackevent->createSegmentsWithModuleMap();
+                    if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
+                    // trackevent->createTrackletsWithModuleMap();
+                    trackevent->createTrackletsWithModuleMap();
+                    if (ana.verbose != 0) std::cout << "Sim Triplet start" << std::endl;
+                    trackevent->createTriplets();
+                    if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
+                    trackevent->createTrackCandidatesFromTracklets();
+                    if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
+                }
 
 
                 // Push to the vector so we have a data-base of per hit, mini-doublets
@@ -938,13 +1074,39 @@ void printModuleConnectionInfo(std::ofstream& ostrm)
     }
 }
 
+// bool isSDLDenominator(unsigned int isimtrk)
+// {
+
+//     int pdgid = trk.sim_pdgId()[isimtrk];
+//     int abspdgid = trk.sim_pdgId()[isimtrk];
+
+//     // Muon SDL denominator object definition
+//     if (pdgid == 13)
+//     {
+//     }
+
+// }
+
 bool hasAll12HitsInBarrel(unsigned int isimtrk)
 {
 
     // Select only tracks that left all 12 hits in the barrel
     std::array<std::vector<SDL::Module>, 6> layers_modules;
-    for (auto& simhitidx : trk.sim_simHitIdx()[isimtrk])
+
+    std::vector<float> ps;
+
+    for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
     {
+
+        // Retrieve the sim hit idx
+        unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
+
+        // Select only the hits in the outer tracker
+        if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+            continue;
+
+        if (isMuonCurlingHit(isimtrk, ith_hit))
+            break;
 
         // list of reco hit matched to this sim hit
         for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
@@ -1003,28 +1165,102 @@ bool hasAll12HitsInBarrel(unsigned int isimtrk)
     float pt = trk.sim_pt()[isimtrk];
     float eta = trk.sim_eta()[isimtrk];
 
-    // std::cout << std::endl;
-    // std::cout <<  " has_good_pair_by_layer[0]: " << has_good_pair_by_layer[0] <<  " has_good_pair_by_layer[1]: " << has_good_pair_by_layer[1] <<  " has_good_pair_by_layer[2]: " << has_good_pair_by_layer[2] <<  " has_good_pair_by_layer[3]: " << has_good_pair_by_layer[3] <<  " has_good_pair_by_layer[4]: " << has_good_pair_by_layer[4] <<  " has_good_pair_by_layer[5]: " << has_good_pair_by_layer[5] <<  " pt: " << pt <<  " eta: " << eta <<  std::endl;
+    // if (abs((trk.sim_pt()[isimtrk] - 0.71710)) < 0.00001)
+    // {
+    //     std::cout << std::endl;
+    //     std::cout <<  " has_good_pair_by_layer[0]: " << has_good_pair_by_layer[0] <<  " has_good_pair_by_layer[1]: " << has_good_pair_by_layer[1] <<  " has_good_pair_by_layer[2]: " << has_good_pair_by_layer[2] <<  " has_good_pair_by_layer[3]: " << has_good_pair_by_layer[3] <<  " has_good_pair_by_layer[4]: " << has_good_pair_by_layer[4] <<  " has_good_pair_by_layer[5]: " << has_good_pair_by_layer[5] <<  " pt: " << pt <<  " eta: " << eta <<  std::endl;
+    // }
 
     return has_good_pair_all_layer;
 
 }
 
-float hitAngle(unsigned int simhitidx)
+void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside)
 {
 
-    float x = trk.simhit_x()[simhitidx];
-    float y = trk.simhit_y()[simhitidx];
-    float z = trk.simhit_z()[simhitidx];
-    float r3 = sqrt(x*x + y*y + z*z);
-    float px = trk.simhit_px()[simhitidx];
-    float py = trk.simhit_py()[simhitidx];
-    float pz = trk.simhit_pz()[simhitidx];
-    float p = sqrt(px*px + py*py + pz*pz);
-    float rdotp = x*px + y*py + z*pz;
-    rdotp = rdotp / r3;
-    rdotp = rdotp / p;
-    float angle = acos(rdotp);
-    return angle;
-}
+    std::vector<int> multiplicities;
+    int total_nmult = 0;
+    float avg_mult = 0;
 
+    if (not goinside)
+    {
+        // ----------------
+        multiplicities.clear();
+        total_nmult = 0;
+        for (auto& miniDoubletPtr : event.getLayer(layer, SDL::Layer::Barrel).getMiniDoubletPtrs())
+        {
+            int nmult = 0;
+            for (auto& seg1 : miniDoubletPtr->getListOfOutwardSegmentPtrs())
+            {
+                if (depth == 1)
+                    nmult++;
+                for (auto& seg2 : seg1->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                {
+                    if (depth == 2)
+                        nmult++;
+                    for (auto& seg3 : seg2->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                    {
+                        if (depth == 3)
+                            nmult++;
+                        for (auto& seg4 : seg3->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                        {
+                            if (depth == 4)
+                                nmult++;
+                            for (auto& seg5 : seg4->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                            {
+                                if (depth == 5)
+                                    nmult++;
+                            }
+                        }
+                    }
+                }
+            }
+            multiplicities.push_back(nmult);
+            total_nmult += nmult;
+        }
+        avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
+        std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
+    }
+    else
+    {
+
+        // ----------------
+        multiplicities.clear();
+        total_nmult = 0;
+        for (auto& miniDoubletPtr : event.getLayer(layer, SDL::Layer::Barrel).getMiniDoubletPtrs())
+        {
+            int nmult = 0;
+            for (auto& seg1 : miniDoubletPtr->getListOfInwardSegmentPtrs())
+            {
+                if (depth == 1)
+                    nmult++;
+                for (auto& seg2 : seg1->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                {
+                    if (depth == 2)
+                        nmult++;
+                    for (auto& seg3 : seg2->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                    {
+                        if (depth == 3)
+                            nmult++;
+                        for (auto& seg4 : seg3->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                        {
+                            if (depth == 4)
+                                nmult++;
+                            for (auto& seg5 : seg4->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                            {
+                                if (depth == 5)
+                                    nmult++;
+                            }
+                        }
+                    }
+                }
+            }
+            multiplicities.push_back(nmult);
+            total_nmult += nmult;
+        }
+        avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
+        std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
+
+    }
+
+}

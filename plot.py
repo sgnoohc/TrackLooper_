@@ -129,8 +129,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin"):
         # eff.GetYaxis().SetRangeUser(0.985, 1.015)
     if "_eta" in output_name and "tl_" in output_name:
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
-    c1.SaveAs("plots/{}/{}".format(dirname, output_name))
-    c1.SaveAs("plots/{}/{}".format(dirname, output_name.replace("pdf", "png")))
+    c1.SaveAs("plots/{}/{}".format(dirname, output_name.replace(".pdf", "_eff.pdf")))
+    c1.SaveAs("plots/{}/{}".format(dirname, output_name.replace(".pdf", "_eff.png")))
     eff_file.cd()
     eff.SetName(output_name.replace(".png",""))
     eff.Write()
