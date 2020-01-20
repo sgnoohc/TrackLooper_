@@ -7,5 +7,7 @@
 float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
 bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit);
+bool hasAll12HitsInBarrel(unsigned int isimtrk);
+bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs);
 
 #endif

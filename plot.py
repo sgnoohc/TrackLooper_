@@ -14,6 +14,11 @@ option = 1
 if len(sys.argv) > 1:
     option = int(sys.argv[1])
 
+tag = ""
+if len(sys.argv) > 3:
+    tag = sys.argv[3]
+
+
 drawMDplots = False
 drawSGplots =False
 drawSGSelPlots = False
@@ -47,10 +52,14 @@ if option == 7:
 
 eff_file = r.TFile("eff.root", "recreate")
 
-def plot_eff(num_name, den_name, output_name, dirname="lin"):
+def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     f = r.TFile(filename)
     num = f.Get(num_name)
     den = f.Get(den_name)
+
+    suffix = ""
+    if tag != "":
+        suffix = "_" + tag
 
     p.plot_hist(bgs=[den.Clone()],
             data=num.Clone(),
@@ -58,7 +67,7 @@ def plot_eff(num_name, den_name, output_name, dirname="lin"):
                 "yaxis_log":True if "_dxy_" in output_name else False ,
                 "legend_smart":False,
                 "print_yield":False,
-                "output_name":"plots/{}/{}".format(dirname, output_name.replace(".pdf","_numden.pdf")),
+                "output_name":"plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf","_numden.pdf")),
                 # "remove_underflow":True,
                 # "remove_overflow":True,
                 # "yaxis_range": [0.95, 1.05] if "eta" in output_name else [],
@@ -110,6 +119,16 @@ def plot_eff(num_name, den_name, output_name, dirname="lin"):
     eff.GetXaxis().SetTitleSize(0.05)
     eff.GetXaxis().SetLabelSize(0.05)
     eff.GetYaxis().SetLabelSize(0.05)
+    yaxis_max = 0
+    for i in xrange(0, eff.GetN()):
+        if yaxis_max < eff.GetY()[i]:
+            yaxis_max = eff.GetY()[i]
+    print yaxis_max
+    yaxis_min = 999
+    for i in xrange(0, eff.GetN()):
+        if yaxis_min > eff.GetY()[i] and eff.GetY()[i] != 0:
+            yaxis_min = eff.GetY()[i]
+    print yaxis_min
     if "_eta" in output_name and "sg_" not in output_name:
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
     if "_z" in output_name and "sg_" not in output_name:
@@ -120,17 +139,22 @@ def plot_eff(num_name, den_name, output_name, dirname="lin"):
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
     if "_z" in output_name and "sg_" in output_name:
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
-    if "_ptzoom" in output_name and "sg_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.95, 1.05)
-    if "_ptzoom" in output_name and "md_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.98, 1.02)
-    if "_ptzoom" in output_name and "tl_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.9, 1.1)
-        # eff.GetYaxis().SetRangeUser(0.985, 1.015)
+    if "_ptzoom" in output_name:
+        eff.GetYaxis().SetRangeUser(yaxis_max - 0.02, yaxis_max + 0.02)
+    if "_etazoom" in output_name:
+        eff.GetYaxis().SetRangeUser(yaxis_min - 0.02, yaxis_max + 0.02)
+    # if "_ptzoom" in output_name and "sg_" in output_name:
+    #     eff.GetYaxis().SetRangeUser(0.95, 1.05)
+    # if "_ptzoom" in output_name and "md_" in output_name:
+    #     eff.GetYaxis().SetRangeUser(0.98, 1.02)
+    # if "_ptzoom" in output_name and "tl_" in output_name:
+    #     eff.GetYaxis().SetRangeUser(0.9, 1.1)
+    # if "_ptzoom" in output_name and "tc_" in output_name:
+    #     eff.GetYaxis().SetRangeUser(0.9, 1.1)
     if "_eta" in output_name and "tl_" in output_name:
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
-    c1.SaveAs("plots/{}/{}".format(dirname, output_name.replace(".pdf", "_eff.pdf")))
-    c1.SaveAs("plots/{}/{}".format(dirname, output_name.replace(".pdf", "_eff.png")))
+    c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.pdf")))
+    c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.png")))
     eff_file.cd()
     eff.SetName(output_name.replace(".png",""))
     eff.Write()
@@ -142,10 +166,11 @@ if drawMDplots:
     for mdcombo in mdcombos:
 
         for i in xrange(6):
-            plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_pt_by_layer{}.pdf".format(mdcombo, i), "mdeff")
-            plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_ptzoom_by_layer{}.pdf".format(mdcombo, i), "mdeff")
-            plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_eta_by_layer{}.pdf".format(mdcombo, i), "mdeff")
-            plot_eff("Root__md_{}_matched_track_dxy_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_dxy_by_layer{}".format(mdcombo, i), "md_eff_{}_dxy_by_layer{}.pdf".format(mdcombo, i), "mdeff")
+            plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_pt_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
+            plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_ptzoom_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
+            plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_eta_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
+            plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_etazoom_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
+            plot_eff("Root__md_{}_matched_track_dxy_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_dxy_by_layer{}".format(mdcombo, i), "md_eff_{}_dxy_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
 
 if drawSGplots:
 
@@ -153,10 +178,11 @@ if drawSGplots:
 
     for sgcombo in sgcombos:
         for i in xrange(5):
-            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_pt_by_layer{}.pdf".format(sgcombo, i), "sgeff")
-            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_ptzoom_by_layer{}.pdf".format(sgcombo, i), "sgeff")
-            plot_eff("Root__sg_{}_matched_track_eta_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_eta_by_layer{}".format(sgcombo, i), "sg_eff_{}_eta_by_layer{}.pdf".format(sgcombo, i), "sgeff")
-            plot_eff("Root__sg_{}_matched_track_dxy_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_dxy_by_layer{}".format(sgcombo, i), "sg_eff_{}_dxy_by_layer{}.pdf".format(sgcombo, i), "sgeff")
+            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_pt_by_layer{}.pdf".format(sgcombo, i), "sgeff", tag)
+            plot_eff("Root__sg_{}_matched_track_pt_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_pt_by_layer{}".format(sgcombo, i), "sg_eff_{}_ptzoom_by_layer{}.pdf".format(sgcombo, i), "sgeff", tag)
+            plot_eff("Root__sg_{}_matched_track_eta_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_eta_by_layer{}".format(sgcombo, i), "sg_eff_{}_eta_by_layer{}.pdf".format(sgcombo, i), "sgeff", tag)
+            plot_eff("Root__sg_{}_matched_track_eta_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_eta_by_layer{}".format(sgcombo, i), "sg_eff_{}_etazoom_by_layer{}.pdf".format(sgcombo, i), "sgeff", tag)
+            plot_eff("Root__sg_{}_matched_track_dxy_by_layer{}".format(sgcombo, i), "Root__sg_{}_all_track_dxy_by_layer{}".format(sgcombo, i), "sg_eff_{}_dxy_by_layer{}.pdf".format(sgcombo, i), "sgeff", tag)
 
 if drawSGSelPlots:
 
@@ -210,10 +236,11 @@ if drawTLplots:
 
     for tlcombo in tlcombos:
         for i in xrange(3):
-            plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_pt_by_layer{}.pdf".format(tlcombo, i), "tleff")
-            plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_ptzoom_by_layer{}.pdf".format(tlcombo, i), "tleff")
-            plot_eff("Root__tl_{}_matched_track_eta_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_eta_by_layer{}".format(tlcombo, i), "tl_eff_{}_eta_by_layer{}.pdf".format(tlcombo, i), "tleff")
-            plot_eff("Root__tl_{}_matched_track_dxy_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_dxy_by_layer{}".format(tlcombo, i), "tl_eff_{}_dxy_by_layer{}.pdf".format(tlcombo, i), "tleff")
+            plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_pt_by_layer{}.pdf".format(tlcombo, i), "tleff", tag)
+            plot_eff("Root__tl_{}_matched_track_pt_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_pt_by_layer{}".format(tlcombo, i), "tl_eff_{}_ptzoom_by_layer{}.pdf".format(tlcombo, i), "tleff", tag)
+            plot_eff("Root__tl_{}_matched_track_eta_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_eta_by_layer{}".format(tlcombo, i), "tl_eff_{}_eta_by_layer{}.pdf".format(tlcombo, i), "tleff", tag)
+            plot_eff("Root__tl_{}_matched_track_eta_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_eta_by_layer{}".format(tlcombo, i), "tl_eff_{}_etazoom_by_layer{}.pdf".format(tlcombo, i), "tleff", tag)
+            plot_eff("Root__tl_{}_matched_track_dxy_by_layer{}".format(tlcombo, i), "Root__tl_{}_all_track_dxy_by_layer{}".format(tlcombo, i), "tl_eff_{}_dxy_by_layer{}.pdf".format(tlcombo, i), "tleff", tag)
 
 if drawTLSelPlots:
 
@@ -399,10 +426,11 @@ if drawTCplots:
 
     for tccombo in tccombos:
         for i in xrange(1):
-            plot_eff("Root__tc_{}_matched_track_pt_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_pt_by_layer{}".format(tccombo, i), "tc_eff_{}_pt_by_layer{}.pdf".format(tccombo, i), "tceff")
-            plot_eff("Root__tc_{}_matched_track_pt_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_pt_by_layer{}".format(tccombo, i), "tc_eff_{}_ptzoom_by_layer{}.pdf".format(tccombo, i), "tceff")
-            plot_eff("Root__tc_{}_matched_track_eta_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_eta_by_layer{}".format(tccombo, i), "tc_eff_{}_eta_by_layer{}.pdf".format(tccombo, i), "tceff")
-            plot_eff("Root__tc_{}_matched_track_dxy_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_dxy_by_layer{}".format(tccombo, i), "tc_eff_{}_dxy_by_layer{}.pdf".format(tccombo, i), "tceff")
+            plot_eff("Root__tc_{}_matched_track_pt_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_pt_by_layer{}".format(tccombo, i), "tc_eff_{}_pt_by_layer{}.pdf".format(tccombo, i), "tceff", tag)
+            plot_eff("Root__tc_{}_matched_track_pt_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_pt_by_layer{}".format(tccombo, i), "tc_eff_{}_ptzoom_by_layer{}.pdf".format(tccombo, i), "tceff", tag)
+            plot_eff("Root__tc_{}_matched_track_eta_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_eta_by_layer{}".format(tccombo, i), "tc_eff_{}_eta_by_layer{}.pdf".format(tccombo, i), "tceff", tag)
+            plot_eff("Root__tc_{}_matched_track_eta_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_eta_by_layer{}".format(tccombo, i), "tc_eff_{}_etazoom_by_layer{}.pdf".format(tccombo, i), "tceff", tag)
+            plot_eff("Root__tc_{}_matched_track_dxy_by_layer{}".format(tccombo, i), "Root__tc_{}_all_track_dxy_by_layer{}".format(tccombo, i), "tc_eff_{}_dxy_by_layer{}.pdf".format(tccombo, i), "tceff", tag)
 
 if drawTCSelPlots:
 

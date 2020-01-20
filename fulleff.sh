@@ -1,3 +1,4 @@
+#!/bin/bash
 
 TRACKINGNTUPLEDIR=/home/users/phchang/public_html/analysis/sdl/trackingNtuple
 
@@ -72,17 +73,22 @@ PDGID=211
 PTBOUND=0
 fi
 
-CMD="./doAnalysis -i ${SAMPLE} -n -1 -t trackingNtuple/tree -n -1 -e -p ${PTBOUND} -d -g ${PDGID}"
+OUTPUTFILE=fulleff_${SAMPLETAG}.root
+
+rm -f ${OUTPUTFILE}
+
+CMD="./doAnalysis -i ${SAMPLE} -n -1 -t trackingNtuple/tree -n -1 -e -p ${PTBOUND} -o ${OUTPUTFILE} -g ${PDGID}"
 echo $CMD
 ${CMD}
-mv debug.root fulleff_${SAMPLETAG}.root
-python plot.py 1 fulleff_${SAMPLETAG}.root
-python plot.py 2 fulleff_${SAMPLETAG}.root
-python plot.py 3 fulleff_${SAMPLETAG}.root
-python plot.py 4 fulleff_${SAMPLETAG}.root
+mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
+python plot.py 1 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
+python plot.py 2 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
+python plot.py 3 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
+python plot.py 4 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
 
-mkdir results/${SAMPLETAG}/
-cp -r plots/ results/${SAMPLETAG}/
+mkdir -p results/${SAMPLETAG}$2/
+echo "$3" > results/${SAMPLETAG}$2/description.txt
+cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}$2/
 
 # ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 1 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
 # mv debug.root algoeff_md_pt0p5_1p5.root

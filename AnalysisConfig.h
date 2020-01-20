@@ -31,6 +31,9 @@ public:
     // run inefficiency study
     bool run_ineff_study;
 
+    // run MTV study
+    bool run_mtv_study;
+
     // pt binning options
     int ptbound_mode;
 

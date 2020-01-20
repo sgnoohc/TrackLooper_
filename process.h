@@ -36,6 +36,7 @@
 #include "StudySDLEfficiency.h"
 #include "StudyTripletSelection.h"
 #include "StudySDLInefficiency.h"
+#include "StudyMTVEfficiency.h"
 
 #include "constants.h"
 
@@ -44,7 +45,7 @@
 #include "trkCore.h"
 
 void printModuleConnectionInfo(std::ofstream&);
-bool hasAll12HitsInBarrel(unsigned int);
+// bool hasAll12HitsInBarrel(unsigned int);
 void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside=false);
 
 #endif
