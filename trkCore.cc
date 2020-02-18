@@ -121,3 +121,114 @@ bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit)
     return false;
 
 }
+
+//__________________________________________________________________________________________
+bool hasAll12HitsInBarrel(unsigned int isimtrk)
+{
+
+    // Select only tracks that left all 12 hits in the barrel
+    std::array<std::vector<SDL::Module>, 6> layers_modules;
+
+    std::vector<float> ps;
+
+    for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
+    {
+
+        // Retrieve the sim hit idx
+        unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
+
+        // Select only the hits in the outer tracker
+        if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+            continue;
+
+        if (isMuonCurlingHit(isimtrk, ith_hit))
+            break;
+
+        // list of reco hit matched to this sim hit
+        for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
+        {
+            // Get the recohit type
+            int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+
+            // Consider only ph2 hits (i.e. outer tracker hits)
+            if (recohittype == 4)
+            {
+
+                int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+
+                if (trk.ph2_subdet()[ihit] == 5)
+                {
+                    layers_modules[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+                }
+
+            }
+
+        }
+
+    }
+
+    std::array<bool, 6> has_good_pair_by_layer;
+    has_good_pair_by_layer[0] = false;
+    has_good_pair_by_layer[1] = false;
+    has_good_pair_by_layer[2] = false;
+    has_good_pair_by_layer[3] = false;
+    has_good_pair_by_layer[4] = false;
+    has_good_pair_by_layer[5] = false;
+
+    bool has_good_pair_all_layer = true;
+
+    for (int ilayer = 0; ilayer < 6; ++ilayer)
+    {
+
+        bool has_good_pair = false;
+
+        for (unsigned imod = 0; imod < layers_modules[ilayer].size(); ++imod)
+        {
+            for (unsigned jmod = imod + 1; jmod < layers_modules[ilayer].size(); ++jmod)
+            {
+                if (layers_modules[ilayer][imod].partnerDetId() == layers_modules[ilayer][jmod].detId())
+                    has_good_pair = true;
+            }
+        }
+
+        if (not has_good_pair)
+            has_good_pair_all_layer = false;
+
+        has_good_pair_by_layer[ilayer] = has_good_pair;
+
+    }
+
+    float pt = trk.sim_pt()[isimtrk];
+    float eta = trk.sim_eta()[isimtrk];
+
+    // if (abs((trk.sim_pt()[isimtrk] - 0.71710)) < 0.00001)
+    // {
+    //     std::cout << std::endl;
+    //     std::cout <<  " has_good_pair_by_layer[0]: " << has_good_pair_by_layer[0] <<  " has_good_pair_by_layer[1]: " << has_good_pair_by_layer[1] <<  " has_good_pair_by_layer[2]: " << has_good_pair_by_layer[2] <<  " has_good_pair_by_layer[3]: " << has_good_pair_by_layer[3] <<  " has_good_pair_by_layer[4]: " << has_good_pair_by_layer[4] <<  " has_good_pair_by_layer[5]: " << has_good_pair_by_layer[5] <<  " pt: " << pt <<  " eta: " << eta <<  std::endl;
+    // }
+
+    return has_good_pair_all_layer;
+
+}
+
+//__________________________________________________________________________________________
+bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs)
+{
+    std::vector<unsigned int> sim_trk_ihits;
+    for (auto& i_simhit_idx : trk.sim_simHitIdx()[isimtrk])
+    {
+        for (auto& ihit : trk.simhit_hitIdx()[i_simhit_idx])
+        {
+            sim_trk_ihits.push_back(ihit);
+        }
+    }
+
+    std::vector<unsigned int> v_intersection;
+ 
+    std::set_intersection(sim_trk_ihits.begin(), sim_trk_ihits.end(),
+                          hit_idxs.begin(), hit_idxs.end(),
+                          std::back_inserter(v_intersection));
+
+    // If 75% of 12 hits have been found than it is matched
+    return (v_intersection.size() >= 9);
+}

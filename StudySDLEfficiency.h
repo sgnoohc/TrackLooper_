@@ -14,6 +14,8 @@
 
 #include "AnalysisConfig.h"
 
+#include "trkCore.h"
+
 class StudySDLEfficiency : public Study
 {
 
@@ -67,6 +69,12 @@ public:
     std::array<std::vector<float>, NLAYERS> md_all_track_eta_by_layer;
     std::array<std::vector<float>, NLAYERS> md_matched_track_dxy_by_layer;
     std::array<std::vector<float>, NLAYERS> md_all_track_dxy_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_matched_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_all_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_matched_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_all_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_matched_track_dxy_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> md_all_track_dxy_mtv_by_layer;
 
     std::array<std::vector<float>, NLAYERS> sg_matched_track_pt_by_layer;
     std::array<std::vector<float>, NLAYERS> sg_all_track_pt_by_layer;
@@ -74,6 +82,12 @@ public:
     std::array<std::vector<float>, NLAYERS> sg_all_track_eta_by_layer;
     std::array<std::vector<float>, NLAYERS> sg_matched_track_dxy_by_layer;
     std::array<std::vector<float>, NLAYERS> sg_all_track_dxy_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_matched_track_dxy_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> sg_all_track_dxy_mtv_by_layer;
 
     std::array<std::vector<float>, NLAYERS> tl_matched_track_pt_by_layer;
     std::array<std::vector<float>, NLAYERS> tl_all_track_pt_by_layer;
@@ -81,6 +95,12 @@ public:
     std::array<std::vector<float>, NLAYERS> tl_all_track_eta_by_layer;
     std::array<std::vector<float>, NLAYERS> tl_matched_track_dxy_by_layer;
     std::array<std::vector<float>, NLAYERS> tl_all_track_dxy_by_layer;
+    std::array<std::vector<float>, NLAYERS> tl_matched_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tl_all_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tl_matched_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tl_all_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tl_matched_track_dxy_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tl_all_track_dxy_mtv_by_layer;
 
     std::array<std::vector<float>, NLAYERS> tc_matched_track_pt_by_layer;
     std::array<std::vector<float>, NLAYERS> tc_all_track_pt_by_layer;
@@ -88,6 +108,12 @@ public:
     std::array<std::vector<float>, NLAYERS> tc_all_track_eta_by_layer;
     std::array<std::vector<float>, NLAYERS> tc_matched_track_dxy_by_layer;
     std::array<std::vector<float>, NLAYERS> tc_all_track_dxy_by_layer;
+    std::array<std::vector<float>, NLAYERS> tc_matched_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tc_all_track_pt_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tc_matched_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tc_all_track_eta_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tc_matched_track_dxy_mtv_by_layer;
+    std::array<std::vector<float>, NLAYERS> tc_all_track_dxy_mtv_by_layer;
 
     StudySDLEfficiency(
         const char* studyName,

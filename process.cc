@@ -30,6 +30,7 @@ int main(int argc, char** argv)
         ("r,centroid"       , "Print centroid information")
         ("e,run_eff_study"  , "Run efficiency study")
         ("l,run_ineff_study", "Run inefficiency study")
+        ("m,run_mtv_study"  , "Run MTV study")
         ("h,help"           , "Print help")
         ;
 
@@ -135,6 +136,17 @@ int main(int argc, char** argv)
     }
 
     //_______________________________________________________________________________
+    // --run_mtv_study
+    if (result.count("run_mtv_study"))
+    {
+        ana.run_mtv_study = true;
+    }
+    else
+    {
+        ana.run_mtv_study = false;
+    }
+
+    //_______________________________________________________________________________
     // --centroid
     if (result.count("centroid"))
     {
@@ -180,15 +192,19 @@ int main(int argc, char** argv)
     std::cout <<  " ana.n_events: " << ana.n_events <<  std::endl;
     std::cout <<  " ana.run_eff_study: " << ana.run_eff_study <<  std::endl;
     std::cout <<  " ana.run_ineff_study: " << ana.run_ineff_study <<  std::endl;
+    std::cout <<  " ana.run_mtv_study: " << ana.run_mtv_study <<  std::endl;
     std::cout <<  " ana.print_centroid: " << ana.print_centroid <<  std::endl;
     std::cout <<  " ana.print_conn: " << ana.print_conn <<  std::endl;
     std::cout <<  " ana.ptbound_mode: " << ana.ptbound_mode <<  std::endl;
     std::cout <<  "=========================================================" << std::endl;
 
     // Consistency check
-    if (ana.run_ineff_study and ana.run_eff_study)
+    if ((ana.run_ineff_study and ana.run_eff_study) or
+        (ana.run_ineff_study and ana.run_mtv_study) or
+        (ana.run_eff_study and ana.run_mtv_study)
+       )
     {
-        RooUtil::error("-e,--run_eff_study and -l,--run_ineff_study both are set to true! Please only set one of them");
+        RooUtil::error("More than one of -e, -l, or -m option is set! Please only set one of them");
     }
 
 
@@ -390,6 +406,11 @@ int main(int argc, char** argv)
                     StudySDLInefficiency::kStudySDLTCEffBBBBBB,
                     pt_boundaries));
     }
+    else if (ana.run_mtv_study)
+    {
+        studies.push_back(new StudyMTVEfficiency("MTVEfficiency",
+                    pt_boundaries));
+    }
     else
     {
         studies.push_back(new StudyOccupancy("studyOccupancy"));
@@ -498,7 +519,7 @@ int main(int argc, char** argv)
         TStopwatch my_timer;
 
         // run_eff_study == 0 then run all the reconstruction
-        if (ana.run_eff_study == 0 and ana.run_ineff_study == 0)
+        if ((ana.run_eff_study == 0 and ana.run_ineff_study == 0) or ana.run_mtv_study)
         {
 
             // Adding hits to modules
@@ -746,7 +767,7 @@ int main(int argc, char** argv)
 
         }
         // If efficiency is to be calculated
-        else
+        if (ana.run_eff_study or ana.run_ineff_study or ana.run_mtv_study)
         {
 
             // *******************************************************
@@ -766,8 +787,8 @@ int main(int argc, char** argv)
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
 
-                if (not hasAll12HitsInBarrel(isimtrk))
-                    continue;
+                // if (not hasAll12HitsInBarrel(isimtrk))
+                //     continue;
 
                 // event just for this track
                 SDL::Event* trackevent = new SDL::Event();
@@ -780,11 +801,13 @@ int main(int argc, char** argv)
                     unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
 
                     // Select only the hits in the outer tracker
-                    if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+                    // if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+                    //     continue;
+                    if (not (trk.simhit_subdet()[simhitidx] == 5))
                         continue;
 
-                    if (isMuonCurlingHit(isimtrk, ith_hit))
-                        break;
+                    // if (isMuonCurlingHit(isimtrk, ith_hit))
+                    //     break;
 
                     // list of reco hit matched to this sim hit
                     for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
@@ -1087,93 +1110,93 @@ void printModuleConnectionInfo(std::ofstream& ostrm)
 
 // }
 
-bool hasAll12HitsInBarrel(unsigned int isimtrk)
-{
+// bool hasAll12HitsInBarrel(unsigned int isimtrk)
+// {
 
-    // Select only tracks that left all 12 hits in the barrel
-    std::array<std::vector<SDL::Module>, 6> layers_modules;
+//     // Select only tracks that left all 12 hits in the barrel
+//     std::array<std::vector<SDL::Module>, 6> layers_modules;
 
-    std::vector<float> ps;
+//     std::vector<float> ps;
 
-    for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
-    {
+//     for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
+//     {
 
-        // Retrieve the sim hit idx
-        unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
+//         // Retrieve the sim hit idx
+//         unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
 
-        // Select only the hits in the outer tracker
-        if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
-            continue;
+//         // Select only the hits in the outer tracker
+//         if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+//             continue;
 
-        if (isMuonCurlingHit(isimtrk, ith_hit))
-            break;
+//         if (isMuonCurlingHit(isimtrk, ith_hit))
+//             break;
 
-        // list of reco hit matched to this sim hit
-        for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
-        {
-            // Get the recohit type
-            int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+//         // list of reco hit matched to this sim hit
+//         for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
+//         {
+//             // Get the recohit type
+//             int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
 
-            // Consider only ph2 hits (i.e. outer tracker hits)
-            if (recohittype == 4)
-            {
+//             // Consider only ph2 hits (i.e. outer tracker hits)
+//             if (recohittype == 4)
+//             {
 
-                int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+//                 int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
 
-                if (trk.ph2_subdet()[ihit] == 5)
-                {
-                    layers_modules[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
-                }
+//                 if (trk.ph2_subdet()[ihit] == 5)
+//                 {
+//                     layers_modules[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+//                 }
 
-            }
+//             }
 
-        }
+//         }
 
-    }
+//     }
 
-    std::array<bool, 6> has_good_pair_by_layer;
-    has_good_pair_by_layer[0] = false;
-    has_good_pair_by_layer[1] = false;
-    has_good_pair_by_layer[2] = false;
-    has_good_pair_by_layer[3] = false;
-    has_good_pair_by_layer[4] = false;
-    has_good_pair_by_layer[5] = false;
+//     std::array<bool, 6> has_good_pair_by_layer;
+//     has_good_pair_by_layer[0] = false;
+//     has_good_pair_by_layer[1] = false;
+//     has_good_pair_by_layer[2] = false;
+//     has_good_pair_by_layer[3] = false;
+//     has_good_pair_by_layer[4] = false;
+//     has_good_pair_by_layer[5] = false;
 
-    bool has_good_pair_all_layer = true;
+//     bool has_good_pair_all_layer = true;
 
-    for (int ilayer = 0; ilayer < 6; ++ilayer)
-    {
+//     for (int ilayer = 0; ilayer < 6; ++ilayer)
+//     {
 
-        bool has_good_pair = false;
+//         bool has_good_pair = false;
 
-        for (unsigned imod = 0; imod < layers_modules[ilayer].size(); ++imod)
-        {
-            for (unsigned jmod = imod + 1; jmod < layers_modules[ilayer].size(); ++jmod)
-            {
-                if (layers_modules[ilayer][imod].partnerDetId() == layers_modules[ilayer][jmod].detId())
-                    has_good_pair = true;
-            }
-        }
+//         for (unsigned imod = 0; imod < layers_modules[ilayer].size(); ++imod)
+//         {
+//             for (unsigned jmod = imod + 1; jmod < layers_modules[ilayer].size(); ++jmod)
+//             {
+//                 if (layers_modules[ilayer][imod].partnerDetId() == layers_modules[ilayer][jmod].detId())
+//                     has_good_pair = true;
+//             }
+//         }
 
-        if (not has_good_pair)
-            has_good_pair_all_layer = false;
+//         if (not has_good_pair)
+//             has_good_pair_all_layer = false;
 
-        has_good_pair_by_layer[ilayer] = has_good_pair;
+//         has_good_pair_by_layer[ilayer] = has_good_pair;
 
-    }
+//     }
 
-    float pt = trk.sim_pt()[isimtrk];
-    float eta = trk.sim_eta()[isimtrk];
+//     float pt = trk.sim_pt()[isimtrk];
+//     float eta = trk.sim_eta()[isimtrk];
 
-    // if (abs((trk.sim_pt()[isimtrk] - 0.71710)) < 0.00001)
-    // {
-    //     std::cout << std::endl;
-    //     std::cout <<  " has_good_pair_by_layer[0]: " << has_good_pair_by_layer[0] <<  " has_good_pair_by_layer[1]: " << has_good_pair_by_layer[1] <<  " has_good_pair_by_layer[2]: " << has_good_pair_by_layer[2] <<  " has_good_pair_by_layer[3]: " << has_good_pair_by_layer[3] <<  " has_good_pair_by_layer[4]: " << has_good_pair_by_layer[4] <<  " has_good_pair_by_layer[5]: " << has_good_pair_by_layer[5] <<  " pt: " << pt <<  " eta: " << eta <<  std::endl;
-    // }
+//     // if (abs((trk.sim_pt()[isimtrk] - 0.71710)) < 0.00001)
+//     // {
+//     //     std::cout << std::endl;
+//     //     std::cout <<  " has_good_pair_by_layer[0]: " << has_good_pair_by_layer[0] <<  " has_good_pair_by_layer[1]: " << has_good_pair_by_layer[1] <<  " has_good_pair_by_layer[2]: " << has_good_pair_by_layer[2] <<  " has_good_pair_by_layer[3]: " << has_good_pair_by_layer[3] <<  " has_good_pair_by_layer[4]: " << has_good_pair_by_layer[4] <<  " has_good_pair_by_layer[5]: " << has_good_pair_by_layer[5] <<  " pt: " << pt <<  " eta: " << eta <<  std::endl;
+//     // }
 
-    return has_good_pair_all_layer;
+//     return has_good_pair_all_layer;
 
-}
+// }
 
 void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside)
 {
