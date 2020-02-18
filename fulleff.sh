@@ -17,7 +17,7 @@ PTBOUND=4
 fi
 
 if [[ $1 == *"2"* ]]; then
-SAMPLE=trackingNtuple.root
+SAMPLE=/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
 SAMPLETAG=e200
 PDGID=13
 PTBOUND=0
@@ -81,7 +81,7 @@ python plot.py 2 fulleff_${SAMPLETAG}.root
 python plot.py 3 fulleff_${SAMPLETAG}.root
 python plot.py 4 fulleff_${SAMPLETAG}.root
 
-mkdir results/${SAMPLETAG}/
+mkdir -p results/${SAMPLETAG}/
 cp -r plots/ results/${SAMPLETAG}/
 
 # ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 1 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
