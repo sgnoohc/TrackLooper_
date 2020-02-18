@@ -58,18 +58,14 @@ void StudySDLEfficiency::bookStudy()
     // Book Histograms
     const int nlayers = NLAYERS;
 
-<<<<<<< HEAD
     const float etamax = 2.5;
 
     const int eta_nbins = 50;
 
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
     for (int ii = 0; ii < nlayers; ++ii)
     {
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_pt_by_layer%d", md_modename, ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt_by_layer%d", md_modename, ii), pt_boundaries, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
-<<<<<<< HEAD
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_by_layer%d", md_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_by_layer%d", md_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_by_layer%d", md_modename, ii), 50, -10, 10, [&, ii]() { return md_matched_track_dxy_by_layer[ii]; } );
@@ -80,19 +76,12 @@ void StudySDLEfficiency::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_mtv_by_layer%d", md_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_all_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_mtv_by_layer%d", md_modename, ii), 50, -10, 10, [&, ii]() { return md_matched_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_mtv_by_layer%d", md_modename, ii), 50, -10, 10, [&, ii]() { return md_all_track_dxy_mtv_by_layer[ii]; } );
-=======
-        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_by_layer%d", md_modename, ii), 50, -4, 4, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_by_layer%d", md_modename, ii), 50, -4, 4, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_by_layer%d", md_modename, ii), 50, -10, 10, [&, ii]() { return md_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_by_layer%d", md_modename, ii), 50, -10, 10, [&, ii]() { return md_all_track_dxy_by_layer[ii]; } );
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
     }
 
     for (int ii = 0; ii < nlayers; ++ii)
     {
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_pt_by_layer%d", sg_modename, ii), pt_boundaries, [&, ii]() { return sg_matched_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt_by_layer%d", sg_modename, ii), pt_boundaries, [&, ii]() { return sg_all_track_pt_by_layer[ii]; } );
-<<<<<<< HEAD
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_by_layer%d", sg_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_by_layer%d", sg_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_all_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_by_layer%d", sg_modename, ii), 50, -10, 10, [&, ii]() { return sg_matched_track_dxy_by_layer[ii]; } );
@@ -103,19 +92,12 @@ void StudySDLEfficiency::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_mtv_by_layer%d", sg_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_all_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_mtv_by_layer%d", sg_modename, ii), 50, -10, 10, [&, ii]() { return sg_matched_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_mtv_by_layer%d", sg_modename, ii), 50, -10, 10, [&, ii]() { return sg_all_track_dxy_mtv_by_layer[ii]; } );
-=======
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_by_layer%d", sg_modename, ii), 50, -4, 4, [&, ii]() { return sg_matched_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_by_layer%d", sg_modename, ii), 50, -4, 4, [&, ii]() { return sg_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_by_layer%d", sg_modename, ii), 50, -10, 10, [&, ii]() { return sg_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_by_layer%d", sg_modename, ii), 50, -10, 10, [&, ii]() { return sg_all_track_dxy_by_layer[ii]; } );
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
     }
 
     for (int ii = 0; ii < nlayers; ++ii)
     {
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_pt_by_layer%d", tl_modename, ii), pt_boundaries, [&, ii]() { return tl_matched_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_pt_by_layer%d", tl_modename, ii), pt_boundaries, [&, ii]() { return tl_all_track_pt_by_layer[ii]; } );
-<<<<<<< HEAD
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_eta_by_layer%d", tl_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_by_layer%d", tl_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_all_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_by_layer%d", tl_modename, ii), 50, -10, 10, [&, ii]() { return tl_matched_track_dxy_by_layer[ii]; } );
@@ -126,19 +108,12 @@ void StudySDLEfficiency::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_mtv_by_layer%d", tl_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_all_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_mtv_by_layer%d", tl_modename, ii), 50, -10, 10, [&, ii]() { return tl_matched_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_mtv_by_layer%d", tl_modename, ii), 50, -10, 10, [&, ii]() { return tl_all_track_dxy_mtv_by_layer[ii]; } );
-=======
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_eta_by_layer%d", tl_modename, ii), 50, -4, 4, [&, ii]() { return tl_matched_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_by_layer%d", tl_modename, ii), 50, -4, 4, [&, ii]() { return tl_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_by_layer%d", tl_modename, ii), 50, -10, 10, [&, ii]() { return tl_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_by_layer%d", tl_modename, ii), 50, -10, 10, [&, ii]() { return tl_all_track_dxy_by_layer[ii]; } );
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
     }
 
     for (int ii = 0; ii < nlayers; ++ii)
     {
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_pt_by_layer%d", tc_modename, ii), pt_boundaries, [&, ii]() { return tc_matched_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_pt_by_layer%d", tc_modename, ii), pt_boundaries, [&, ii]() { return tc_all_track_pt_by_layer[ii]; } );
-<<<<<<< HEAD
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_eta_by_layer%d", tc_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_by_layer%d", tc_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_by_layer%d", tc_modename, ii), 50, -10, 10, [&, ii]() { return tc_matched_track_dxy_by_layer[ii]; } );
@@ -149,12 +124,6 @@ void StudySDLEfficiency::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_mtv_by_layer%d", tc_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_mtv_by_layer%d", tc_modename, ii), 50, -10, 10, [&, ii]() { return tc_matched_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_mtv_by_layer%d", tc_modename, ii), 50, -10, 10, [&, ii]() { return tc_all_track_dxy_mtv_by_layer[ii]; } );
-=======
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_eta_by_layer%d", tc_modename, ii), 50, -4, 4, [&, ii]() { return tc_matched_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_by_layer%d", tc_modename, ii), 50, -4, 4, [&, ii]() { return tc_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_by_layer%d", tc_modename, ii), 50, -10, 10, [&, ii]() { return tc_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_by_layer%d", tc_modename, ii), 50, -10, 10, [&, ii]() { return tc_all_track_dxy_by_layer[ii]; } );
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
     }
 
 }
@@ -173,15 +142,12 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         md_all_track_eta_by_layer[ii].clear();
         md_matched_track_dxy_by_layer[ii].clear();
         md_all_track_dxy_by_layer[ii].clear();
-<<<<<<< HEAD
         md_matched_track_pt_mtv_by_layer[ii].clear();
         md_all_track_pt_mtv_by_layer[ii].clear();
         md_matched_track_eta_mtv_by_layer[ii].clear();
         md_all_track_eta_mtv_by_layer[ii].clear();
         md_matched_track_dxy_mtv_by_layer[ii].clear();
         md_all_track_dxy_mtv_by_layer[ii].clear();
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
 
         sg_matched_track_pt_by_layer[ii].clear();
         sg_all_track_pt_by_layer[ii].clear();
@@ -189,15 +155,12 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         sg_all_track_eta_by_layer[ii].clear();
         sg_matched_track_dxy_by_layer[ii].clear();
         sg_all_track_dxy_by_layer[ii].clear();
-<<<<<<< HEAD
         sg_matched_track_pt_mtv_by_layer[ii].clear();
         sg_all_track_pt_mtv_by_layer[ii].clear();
         sg_matched_track_eta_mtv_by_layer[ii].clear();
         sg_all_track_eta_mtv_by_layer[ii].clear();
         sg_matched_track_dxy_mtv_by_layer[ii].clear();
         sg_all_track_dxy_mtv_by_layer[ii].clear();
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
 
         tl_matched_track_pt_by_layer[ii].clear();
         tl_all_track_pt_by_layer[ii].clear();
@@ -205,15 +168,12 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         tl_all_track_eta_by_layer[ii].clear();
         tl_matched_track_dxy_by_layer[ii].clear();
         tl_all_track_dxy_by_layer[ii].clear();
-<<<<<<< HEAD
         tl_matched_track_pt_mtv_by_layer[ii].clear();
         tl_all_track_pt_mtv_by_layer[ii].clear();
         tl_matched_track_eta_mtv_by_layer[ii].clear();
         tl_all_track_eta_mtv_by_layer[ii].clear();
         tl_matched_track_dxy_mtv_by_layer[ii].clear();
         tl_all_track_dxy_mtv_by_layer[ii].clear();
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
 
         tc_matched_track_pt_by_layer[ii].clear();
         tc_all_track_pt_by_layer[ii].clear();
@@ -221,15 +181,12 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         tc_all_track_eta_by_layer[ii].clear();
         tc_matched_track_dxy_by_layer[ii].clear();
         tc_all_track_dxy_by_layer[ii].clear();
-<<<<<<< HEAD
         tc_matched_track_pt_mtv_by_layer[ii].clear();
         tc_all_track_pt_mtv_by_layer[ii].clear();
         tc_matched_track_eta_mtv_by_layer[ii].clear();
         tc_all_track_eta_mtv_by_layer[ii].clear();
         tc_matched_track_dxy_mtv_by_layer[ii].clear();
         tc_all_track_dxy_mtv_by_layer[ii].clear();
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
 
     }
 
@@ -237,11 +194,8 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
     // Efficiency calculation
     //***********************
 
-<<<<<<< HEAD
     std::array<float, 6> etabounds = {2.2, 1.8, 1.45, 1.2, 1, 0.8};
 
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
     // Loop over track events
     for (auto& simtrkevent : simtrkevents)
     {
@@ -255,13 +209,10 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         std::array<bool, 6> sg_trackmatch_by_layer; sg_trackmatch_by_layer[0] = false; sg_trackmatch_by_layer[1] = false; sg_trackmatch_by_layer[2] = false; sg_trackmatch_by_layer[3] = false; sg_trackmatch_by_layer[4] = false; sg_trackmatch_by_layer[5] = false;
         std::array<bool, 6> tl_trackmatch_by_layer; tl_trackmatch_by_layer[0] = false; tl_trackmatch_by_layer[1] = false; tl_trackmatch_by_layer[2] = false; tl_trackmatch_by_layer[3] = false; tl_trackmatch_by_layer[4] = false; tl_trackmatch_by_layer[5] = false;
         std::array<bool, 6> tc_trackmatch_by_layer; tc_trackmatch_by_layer[0] = false; tc_trackmatch_by_layer[1] = false; tc_trackmatch_by_layer[2] = false; tc_trackmatch_by_layer[3] = false; tc_trackmatch_by_layer[4] = false; tc_trackmatch_by_layer[5] = false;
-<<<<<<< HEAD
         std::array<bool, 6> md_trackmatch_mtv_by_layer; md_trackmatch_mtv_by_layer[0] = false; md_trackmatch_mtv_by_layer[1] = false; md_trackmatch_mtv_by_layer[2] = false; md_trackmatch_mtv_by_layer[3] = false; md_trackmatch_mtv_by_layer[4] = false; md_trackmatch_mtv_by_layer[5] = false;
         std::array<bool, 6> sg_trackmatch_mtv_by_layer; sg_trackmatch_mtv_by_layer[0] = false; sg_trackmatch_mtv_by_layer[1] = false; sg_trackmatch_mtv_by_layer[2] = false; sg_trackmatch_mtv_by_layer[3] = false; sg_trackmatch_mtv_by_layer[4] = false; sg_trackmatch_mtv_by_layer[5] = false;
         std::array<bool, 6> tl_trackmatch_mtv_by_layer; tl_trackmatch_mtv_by_layer[0] = false; tl_trackmatch_mtv_by_layer[1] = false; tl_trackmatch_mtv_by_layer[2] = false; tl_trackmatch_mtv_by_layer[3] = false; tl_trackmatch_mtv_by_layer[4] = false; tl_trackmatch_mtv_by_layer[5] = false;
         std::array<bool, 6> tc_trackmatch_mtv_by_layer; tc_trackmatch_mtv_by_layer[0] = false; tc_trackmatch_mtv_by_layer[1] = false; tc_trackmatch_mtv_by_layer[2] = false; tc_trackmatch_mtv_by_layer[3] = false; tc_trackmatch_mtv_by_layer[4] = false; tc_trackmatch_mtv_by_layer[5] = false;
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
 
         // Parse pt and eta of this track
         float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
@@ -283,20 +234,14 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
             if (lowerModulePtr_Track->getMiniDoubletPtrs().size() > 0)
             {
                 md_trackmatch_by_layer[layer_idx] = true;
-<<<<<<< HEAD
                 md_trackmatch_mtv_by_layer[layer_idx] = true;
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
             }
 
             // If there is at least one mini-doublet it means this layer had found a mini-doublet for this sim track
             if (lowerModulePtr_Track->getSegmentPtrs().size() > 0)
             {
                 sg_trackmatch_by_layer[layer_idx] = true;
-<<<<<<< HEAD
                 sg_trackmatch_mtv_by_layer[layer_idx] = true;
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
             }
 
         }
@@ -312,25 +257,18 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
             if (layerPtr_Track->getTrackletPtrs().size() > 0)
             {
                 tl_trackmatch_by_layer[layer_idx] = true;
-<<<<<<< HEAD
                 tl_trackmatch_mtv_by_layer[layer_idx] = true;
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
             }
 
             // If there is at least one mini-doublet it means this layer had found a mini-doublet for this sim track
             if (layerPtr_Track->getTrackCandidatePtrs().size() > 0)
             {
                 tc_trackmatch_by_layer[layer_idx] = true;
-<<<<<<< HEAD
                 tc_trackmatch_mtv_by_layer[layer_idx] = true;
-=======
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
             }
 
         }
 
-<<<<<<< HEAD
         // *****************
         // Mini Doublet
         // *****************
@@ -527,57 +465,6 @@ void StudySDLEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
 
                 tc_all_track_dxy_mtv_by_layer[i].push_back(dxy);
                 if (tc_trackmatch_mtv_by_layer[i]) tc_matched_track_dxy_mtv_by_layer[i].push_back(dxy);
-=======
-        for (unsigned int i = 0; i < 6; ++i)
-        {
-
-            // Denominator for specific layers pt efficiency
-            md_all_track_pt_by_layer[i].push_back(pt);
-            sg_all_track_pt_by_layer[i].push_back(pt);
-            tl_all_track_pt_by_layer[i].push_back(pt);
-            tc_all_track_pt_by_layer[i].push_back(pt);
-
-            // Denominator for specific layers eta efficiency (notice the 1 GeV cut)
-            if (trk.sim_pt()[isimtrk] > 1.)
-            {
-                md_all_track_eta_by_layer[i].push_back(eta);
-                sg_all_track_eta_by_layer[i].push_back(eta);
-                tl_all_track_eta_by_layer[i].push_back(eta);
-                tc_all_track_eta_by_layer[i].push_back(eta);
-            }
-
-            if (pt > 0.9)
-            {
-                // Denominator for specific layers dxy efficiency
-                md_all_track_dxy_by_layer[i].push_back(dxy);
-                sg_all_track_dxy_by_layer[i].push_back(dxy);
-                tl_all_track_dxy_by_layer[i].push_back(dxy);
-                tc_all_track_dxy_by_layer[i].push_back(dxy);
-            }
-
-            // Numerators for matched specific layer pt effciency
-            if (md_trackmatch_by_layer[i]) md_matched_track_pt_by_layer[i].push_back(pt);
-            if (sg_trackmatch_by_layer[i]) sg_matched_track_pt_by_layer[i].push_back(pt);
-            if (tl_trackmatch_by_layer[i]) tl_matched_track_pt_by_layer[i].push_back(pt);
-            if (tc_trackmatch_by_layer[i]) tc_matched_track_pt_by_layer[i].push_back(pt);
-
-            // Numerators for matched specific layer eta effciency (notice the 1 GeV cut)
-            if (trk.sim_pt()[isimtrk] > 1.)
-            {
-                if (md_trackmatch_by_layer[i]) md_matched_track_eta_by_layer[i].push_back(eta);
-                if (sg_trackmatch_by_layer[i]) sg_matched_track_eta_by_layer[i].push_back(eta);
-                if (tl_trackmatch_by_layer[i]) tl_matched_track_eta_by_layer[i].push_back(eta);
-                if (tc_trackmatch_by_layer[i]) tc_matched_track_eta_by_layer[i].push_back(eta);
-            }
-
-            if (pt > 0.9)
-            {
-                // Numerator for specific layers dxy efficiency
-                if (md_trackmatch_by_layer[i]) md_matched_track_dxy_by_layer[i].push_back(dxy);
-                if (sg_trackmatch_by_layer[i]) sg_matched_track_dxy_by_layer[i].push_back(dxy);
-                if (tl_trackmatch_by_layer[i]) tl_matched_track_dxy_by_layer[i].push_back(dxy);
-                if (tc_trackmatch_by_layer[i]) tc_matched_track_dxy_by_layer[i].push_back(dxy);
->>>>>>> bde35d90b2bc3a6b737df8ba8934a6ac7ec8fc1c
             }
 
         }
