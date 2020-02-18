@@ -263,22 +263,22 @@ bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned
     //Check if there is at least one pair in an endcap like tilted module
     //in the layer denoted by the parameter "layer"
 
-    bool isTiltedAtLayer = false;
+    bool hasTiltedPairAtLayer = false;
 
     for (unsigned imod = 0; imod < layer_modules.size(); ++imod)
     {
 
-        for (unsigned jmod = imod + 1; jmod < layers_modules[ilayer].size(); ++jmod)
+        for (unsigned jmod = imod + 1; jmod < layer_modules.size(); ++jmod)
         {
-            if (layers_modules[ilayer][imod].partnerDetId() == layers_modules[ilayer][jmod].detId())
+            if (layer_modules[imod].partnerDetId() == layer_modules[jmod].detId())
             {
-                istiltedAtLayer = true;
+                hasTiltedPairAtLayer = true;
             }
                 
         }
     }
 
-    return isTiltedAtLayer;
+    return hasTiltedPairAtLayer;
 }
 
 
