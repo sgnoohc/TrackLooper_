@@ -798,8 +798,8 @@ int main(int argc, char** argv)
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
 
-                // if (not hasAll12HitsInBarrel(isimtrk))
-                //     continue;
+                if (not hasAll12HitsInBarrel(isimtrk))
+                    continue;
 
                 // event just for this track
                 SDL::Event* trackevent = new SDL::Event();
