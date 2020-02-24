@@ -2,12 +2,22 @@
 
 StudyMTVEfficiency::StudyMTVEfficiency(
         const char* studyName,
-        std::vector<float> ptbounds)
+        std::vector<float> ptbounds,
+        int pdgid
+        )
 {
 
     studyname = studyName;
 
     pt_boundaries = ptbounds;
+
+    pdgid_of_study = pdgid;
+
+    dxy_thresh = 2.5;
+
+    dz_thresh = 30;
+
+    pt_thresh = 1.5;
 
 }
 
@@ -20,14 +30,26 @@ void StudyMTVEfficiency::bookStudy()
 
     const int eta_nbins = 50;
 
-    int ii = 0;
+    ana.histograms.addVecHistogram("tc_matched_track_pt_mtv" , pt_boundaries, [&]()                { return tc_matched_track_pt_mtv[0];  } );
+    ana.histograms.addVecHistogram("tc_all_track_pt_mtv"     , pt_boundaries, [&]()                { return tc_all_track_pt_mtv[0];      } );
+    ana.histograms.addVecHistogram("tc_matched_track_eta_mtv", eta_nbins, -1*etamax, etamax, [&]() { return tc_matched_track_eta_mtv[0]; } );
+    ana.histograms.addVecHistogram("tc_all_track_eta_mtv"    , eta_nbins, -1*etamax, etamax, [&]() { return tc_all_track_eta_mtv[0];     } );
+    ana.histograms.addVecHistogram("tc_matched_track_dxy_mtv", 50, -10, 10, [&]()                  { return tc_matched_track_dxy_mtv[0]; } );
+    ana.histograms.addVecHistogram("tc_all_track_dxy_mtv"    , 50, -10, 10, [&]()                  { return tc_all_track_dxy_mtv[0];     } );
 
-    ana.histograms.addVecHistogram("tc_matched_track_pt_mtv" , pt_boundaries, [&, ii]()                { return tc_matched_track_pt_mtv;  } );
-    ana.histograms.addVecHistogram("tc_all_track_pt_mtv"     , pt_boundaries, [&, ii]()                { return tc_all_track_pt_mtv;      } );
-    ana.histograms.addVecHistogram("tc_matched_track_eta_mtv", eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_matched_track_eta_mtv; } );
-    ana.histograms.addVecHistogram("tc_all_track_eta_mtv"    , eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_mtv;     } );
-    ana.histograms.addVecHistogram("tc_matched_track_dxy_mtv", 50, -10, 10, [&, ii]()                  { return tc_matched_track_dxy_mtv; } );
-    ana.histograms.addVecHistogram("tc_all_track_dxy_mtv"    , 50, -10, 10, [&, ii]()                  { return tc_all_track_dxy_mtv;     } );
+    ana.histograms.addVecHistogram("tc_matched_track_pt_mtv_eta0_0p4" , pt_boundaries, [&]()                { return tc_matched_track_pt_mtv[1];  } );
+    ana.histograms.addVecHistogram("tc_all_track_pt_mtv_eta0_0p4"     , pt_boundaries, [&]()                { return tc_all_track_pt_mtv[1];      } );
+    ana.histograms.addVecHistogram("tc_matched_track_eta_mtv_eta0_0p4", eta_nbins, -1*etamax, etamax, [&]() { return tc_matched_track_eta_mtv[1]; } );
+    ana.histograms.addVecHistogram("tc_all_track_eta_mtv_eta0_0p4"    , eta_nbins, -1*etamax, etamax, [&]() { return tc_all_track_eta_mtv[1];     } );
+    ana.histograms.addVecHistogram("tc_matched_track_dxy_mtv_eta0_0p4", 50, -10, 10, [&]()                  { return tc_matched_track_dxy_mtv[1]; } );
+    ana.histograms.addVecHistogram("tc_all_track_dxy_mtv_eta0_0p4"    , 50, -10, 10, [&]()                  { return tc_all_track_dxy_mtv[1];     } );
+
+    ana.histograms.addVecHistogram("tc_matched_track_pt_mtv_eta0p4_0p8" , pt_boundaries, [&]()                { return tc_matched_track_pt_mtv[2];  } );
+    ana.histograms.addVecHistogram("tc_all_track_pt_mtv_eta0p4_0p8"     , pt_boundaries, [&]()                { return tc_all_track_pt_mtv[2];      } );
+    ana.histograms.addVecHistogram("tc_matched_track_eta_mtv_eta0p4_0p8", eta_nbins, -1*etamax, etamax, [&]() { return tc_matched_track_eta_mtv[2]; } );
+    ana.histograms.addVecHistogram("tc_all_track_eta_mtv_eta0p4_0p8"    , eta_nbins, -1*etamax, etamax, [&]() { return tc_all_track_eta_mtv[2];     } );
+    ana.histograms.addVecHistogram("tc_matched_track_dxy_mtv_eta0p4_0p8", 50, -10, 10, [&]()                  { return tc_matched_track_dxy_mtv[2]; } );
+    ana.histograms.addVecHistogram("tc_all_track_dxy_mtv_eta0p4_0p8"    , 50, -10, 10, [&]()                  { return tc_all_track_dxy_mtv[2];     } );
 
 }
 
@@ -37,12 +59,53 @@ void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
 
     // First clear all the output variables that will be used to fill the histograms for this event
 
-    tc_matched_track_pt_mtv .clear();
-    tc_all_track_pt_mtv     .clear();
-    tc_matched_track_eta_mtv.clear();
-    tc_all_track_eta_mtv    .clear();
-    tc_matched_track_dxy_mtv.clear();
-    tc_all_track_dxy_mtv    .clear();
+    for (unsigned int i = 0; i < 3; ++i)
+    {
+        tc_matched_track_pt_mtv [i].clear();
+        tc_all_track_pt_mtv     [i].clear();
+        tc_matched_track_eta_mtv[i].clear();
+        tc_all_track_eta_mtv    [i].clear();
+        tc_matched_track_dxy_mtv[i].clear();
+        tc_all_track_dxy_mtv    [i].clear();
+    }
+
+    // Barrel layer layer 0
+    SDL::Layer barrelLayer0 = event.getLayer(1, SDL::Layer::Barrel);
+
+    //***************************************************************
+    // Preselecting Reco Track Candidates that are worth looking into
+    //***************************************************************
+
+    // track candidates that match the particle of interest
+    std::vector<unsigned int> good_track_candidates;
+
+    // std::cout <<  " barrelLayer0.getTrackCandidatePtrs().size(): " << barrelLayer0.getTrackCandidatePtrs().size() <<  std::endl;
+
+    // Loop over the track candidates and ask whether the hits are matched with this track (MTV like)
+    for (unsigned int itc = 0; itc < barrelLayer0.getTrackCandidatePtrs().size(); ++itc)
+    {
+
+        SDL::TrackCandidate* tcCandPtr = barrelLayer0.getTrackCandidatePtrs()[itc];
+        std::vector<unsigned int> hitidxs;
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+        hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+        if (is75percentFromSimMatchedHits(hitidxs, pdgid_of_study))
+        {
+            good_track_candidates.push_back(itc);
+        }
+    }
+
+    // std::cout <<  " good_track_candidates.size(): " << good_track_candidates.size() <<  std::endl;
 
     //***********************
     // Efficiency calculation
@@ -65,34 +128,34 @@ void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
         float eta = trk.sim_eta()[isimtrk];
         float dxy = trk.sim_pca_dxy()[isimtrk];
+        float dz = trk.sim_pca_dz()[isimtrk];
 
-        // Loop over the layers that contains tracklets and/or track candidates
-        for (auto& layerPtr_Track : event.getLayerPtrs())
+        if (abs(dz) > dz_thresh)
+            continue;
+
+        // Loop over the track candidates and ask whether the hits are matched with this track (MTV like)
+        for (auto& igood_tc_idxs : good_track_candidates)
         {
-            // Parse the layer index later to be used for indexing
-            int layer_idx = layerPtr_Track->layerIdx() - 1;
 
-            // Loop over the track candidates and ask whether the hits are matched with this track (MTV like)
-            for (auto& tcCandPtr : layerPtr_Track->getTrackCandidatePtrs())
+            SDL::TrackCandidate* tcCandPtr = barrelLayer0.getTrackCandidatePtrs()[igood_tc_idxs];
+            std::vector<unsigned int> hitidxs;
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+            if (isMTVMatch(isimtrk, hitidxs))
             {
-                std::vector<unsigned int> hitidxs;
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-                hitidxs.push_back(tcCandPtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-                if (isMTVMatch(isimtrk, hitidxs))
-                {
-                    tc_trackmatch_mtv = true;
-                }
+                tc_trackmatch_mtv = true;
             }
+
         }
 
         // *****************
@@ -101,25 +164,58 @@ void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
 
         float etamaxbound = etabounds[5];
 
-        if (abs(eta) < etamaxbound and abs(dxy) < 3.5)
+        if (abs(eta) < etamaxbound and abs(dxy) < dxy_thresh)
         {
 
-            tc_all_track_pt_mtv.push_back(pt);
-            if (tc_trackmatch_mtv) tc_matched_track_pt_mtv.push_back(pt);
+            tc_all_track_pt_mtv[0].push_back(pt);
+            if (tc_trackmatch_mtv) tc_matched_track_pt_mtv[0].push_back(pt);
+
+            if (abs(eta) < 0.4)
+            {
+                tc_all_track_pt_mtv[1].push_back(pt);
+                if (tc_trackmatch_mtv) tc_matched_track_pt_mtv[1].push_back(pt);
+            }
+            if (abs(eta) > 0.4 and abs(eta) < 0.8)
+            {
+                tc_all_track_pt_mtv[2].push_back(pt);
+                if (tc_trackmatch_mtv) tc_matched_track_pt_mtv[2].push_back(pt);
+            }
         }
 
-        if (abs(pt) > 1.5 and abs(dxy) < 3.5 and abs(eta) < etamaxbound)
+        if (pt > pt_thresh and abs(dxy) < dxy_thresh and abs(eta) < etamaxbound)
         {
 
-            tc_all_track_eta_mtv.push_back(eta);
-            if (tc_trackmatch_mtv) tc_matched_track_eta_mtv.push_back(eta);
+            tc_all_track_eta_mtv[0].push_back(eta);
+            if (tc_trackmatch_mtv) tc_matched_track_eta_mtv[0].push_back(eta);
+
+            if (abs(eta) < 0.4)
+            {
+                tc_all_track_eta_mtv[1].push_back(eta);
+                if (tc_trackmatch_mtv) tc_matched_track_eta_mtv[1].push_back(eta);
+            }
+            if (abs(eta) > 0.4 and abs(eta) < 0.8)
+            {
+                tc_all_track_eta_mtv[2].push_back(eta);
+                if (tc_trackmatch_mtv) tc_matched_track_eta_mtv[2].push_back(eta);
+            }
         }
 
-        if (abs(pt) > 1.5 and abs(eta) < etamaxbound)
+        if (pt > pt_thresh and abs(eta) < etamaxbound)
         {
 
-            tc_all_track_dxy_mtv.push_back(dxy);
-            if (tc_trackmatch_mtv) tc_matched_track_dxy_mtv.push_back(dxy);
+            tc_all_track_dxy_mtv[0].push_back(dxy);
+            if (tc_trackmatch_mtv) tc_matched_track_dxy_mtv[0].push_back(dxy);
+
+            if (abs(eta) < 0.4)
+            {
+                tc_all_track_dxy_mtv[1].push_back(dxy);
+                if (tc_trackmatch_mtv) tc_matched_track_dxy_mtv[1].push_back(dxy);
+            }
+            if (abs(eta) > 0.4 and abs(eta) < 0.8)
+            {
+                tc_all_track_dxy_mtv[2].push_back(dxy);
+                if (tc_trackmatch_mtv) tc_matched_track_dxy_mtv[2].push_back(dxy);
+            }
         }
 
     }

@@ -409,7 +409,10 @@ int main(int argc, char** argv)
     else if (ana.run_mtv_study)
     {
         studies.push_back(new StudyMTVEfficiency("MTVEfficiency",
-                    pt_boundaries));
+                    pt_boundaries,
+                    ana.pdg_id
+                    ));
+        studies.push_back(new StudyConditionalHitEfficiency("ConditionalHitEfficiency", pt_boundaries, ana.pdg_id));
     }
     else
     {
@@ -783,6 +786,14 @@ int main(int argc, char** argv)
                 if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
                     continue;
 
+                // Select hard scatter only
+                if (abs(trk.sim_event()[isimtrk]) != 0)
+                    continue;
+
+                // Select in time only
+                if (abs(trk.sim_bunchCrossing()[isimtrk]) != 0)
+                    continue;
+
                 // // Select only muon with pt > 1 GeV
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
@@ -806,8 +817,8 @@ int main(int argc, char** argv)
                     if (not (trk.simhit_subdet()[simhitidx] == 5))
                         continue;
 
-                    // if (isMuonCurlingHit(isimtrk, ith_hit))
-                    //     break;
+                    if (isMuonCurlingHit(isimtrk, ith_hit))
+                        break;
 
                     // list of reco hit matched to this sim hit
                     for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)

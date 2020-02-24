@@ -230,5 +230,198 @@ bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs)
                           std::back_inserter(v_intersection));
 
     // If 75% of 12 hits have been found than it is matched
+    return (v_intersection.size() > 9);
+}
+
+//__________________________________________________________________________________________
+bool is75percentFromSimMatchedHits(std::vector<unsigned int> hitidxs, int pdgid)
+{
+    std::vector<unsigned int> hitidxs_w_matched_pdgid;
+    for (auto& i_reco_hit : hitidxs)
+    {
+        bool matched = false;
+        for (auto& i_simhit_idx : trk.ph2_simHitIdx()[i_reco_hit])
+        {
+            matched = true;
+            break;
+            // int particle_id = trk.simhit_particle()[i_simhit_idx];
+            // if (abs(pdgid) == abs(particle_id))
+            // {
+            //     matched = true;
+            //     break;
+            // }
+        }
+        if (matched)
+            hitidxs_w_matched_pdgid.push_back(i_reco_hit);
+    }
+
+    std::vector<unsigned int> v_intersection;
+ 
+    std::set_intersection(hitidxs_w_matched_pdgid.begin(), hitidxs_w_matched_pdgid.end(),
+                          hitidxs.begin(), hitidxs.end(),
+                          std::back_inserter(v_intersection));
+
+    // If 75% of 12 hits have been found than it is matched
     return (v_intersection.size() >= 9);
+
+}
+
+//__________________________________________________________________________________________
+TVector3 linePropagateR(const TVector3& r3, const TVector3& p3, double rDest, int& status, bool useClosest, bool verbose)
+{
+  double rt = r3.Pt();
+  double d = rDest - rt;
+
+  double dotPR2D = r3.x()*p3.x() + r3.y()*p3.y();
+
+  double pt = p3.Pt();
+  double p =  p3.Mag();
+  
+  // r3 + p3/p*x*|d| = dest : dest.t = rt + d <=> rt^2 + 2*dotPR2D/p*x*|d| + pt^2/p^2*x^2*d^2 = rt^2 + 2*rt*d + d^2
+  // 2*dotPR2D/p*|d|* x + pt^2/p^2*d^2* x^2 - ( 2*rt*d + d^2) = 0
+  // 2*dotPR2D/p/|d|* x + pt^2/p^2* x^2 - ( 2*rt/d + 1) = 0
+  // x^2 + 2*dotPR2D/p/|d|*(p/pt)^2* x  - ( 2*rt/d + 1)*(p/pt)^2 = 0
+  // - dotPR2D/p/|d|*(p/pt)^2  +/- sqrt( (dotPR2D/p/|d|*(p/pt)^2)^2 + ( 2*rt/d + 1)*(p/pt)^2 )
+  // (p/pt)*( - dotPR2D/pt/|d|  +/- sqrt( (dotPR2D/pt/|d| )^2 + ( 2*rt/d + 1) ) )
+  double bb = dotPR2D/pt/std::abs(d);
+  double disc = bb*bb + (2.*rt/d + 1.);
+  status = 0;
+  if (disc < 0){
+    status = 1;
+    return r3;
+  }
+  double dSign = useClosest ? 1. : -1.;
+  double xxP = (p/pt)*( sqrt(bb*bb + (2.*rt/d + 1.)) - bb);
+  double xxM = (p/pt)*( - sqrt(bb*bb + (2.*rt/d + 1.)) - bb);
+  double xx;
+  if (useClosest){
+    xx = std::abs(xxP) < std::abs(xxM) ? xxP : xxM;
+  } else {
+    xx = std::abs(xxP) < std::abs(xxM) ? xxM : xxP;
+  }
+  TVector3 dest = r3 + p3*(std::abs(d)/p)*xx;
+  if (verbose || std::abs(dest.Pt() - rDest)>0.001){
+    std::cout<<"linePropagateR "<<r3.Pt()<<" "<<r3.Phi()<<" "<<r3.z()<<" "<<pt<<" "<<p
+	     <<" "<<d<<" "<<r3.x()*p3.x()<<" "<<r3.y()*p3.y()<<" "<<dotPR2D<<" "<<bb<<" "<<(2.*rt/d + 1.)<<" "<<bb*bb + (2.*rt/d + 1.)
+	     <<" => "<<rDest
+	     <<" => "<<dest.Pt()<<" "<<dest.Phi()<<" "<<dest.z()
+	     <<std::endl;
+  }
+  return dest;
+
+}
+
+std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVector3& p3, double rDest, int q, int& status, bool useClosest, bool verbose)
+{
+  double epsilon = 0.001;
+  double p = p3.Mag();
+  double kap = (2.99792458e-3*3.8*q/p);
+  
+  auto lastR3 = r3;
+  auto lastT3 = p3.Unit();
+  int nIts = 7;
+
+  while (std::abs(lastR3.Perp() - rDest) > epsilon && nIts >= 0){
+    auto lineEst = linePropagateR(lastR3, lastT3*p, rDest, status, useClosest, verbose);
+    if (status){
+      if (verbose) std::cout<<" failed with status "<<status<<std::endl;
+      return { lineEst, lastT3*p};
+    }
+    if (q==0) return {lineEst, lastT3*p};
+    
+    double dir = (lineEst.x() - lastR3.x())*lastT3.x() + (lineEst.y() - lastR3.y())*lastT3.y() > 0 ? 1. : -1;
+    double dS = (lineEst - lastR3).Mag()*dir;
+    double phi = kap*dS;
+    if (std::abs(phi) > 1) {
+      if (verbose) std::cout<<" return line for very large angle "<<status<<std::endl;
+      return { lineEst, lastT3*p};
+    }
+    double alpha = 1 - sin(phi)/phi;
+    double beta = (1 - cos(phi))/phi;
+    
+    TVector3 tau = lastT3; 
+    
+    TVector3 hEstR3(tau.x()*(1.-alpha) + tau.y()*beta, tau.y()*(1.-alpha) - tau.x()*beta, tau.z());
+    hEstR3 *= dS;
+    hEstR3 += lastR3;
+    lastR3 = hEstR3;
+    
+    TVector3 hEstT3(tau.x()*cos(phi) + tau.y()*sin(phi), tau.y()*cos(phi) - tau.x()*sin(phi), tau.z());
+    lastT3 = hEstT3;
+    --nIts;
+    if (verbose){
+      std::cout<<"nIts "<<nIts<<" rDest "<<rDest<<" dS "<<dS<<" phi "<<phi
+	       <<" r3In ("<<r3.Pt()<<", "<<r3.Eta()<<", "<<r3.Phi()<<")"
+	       <<" p3In ("<<p3.Pt()<<", "<<p3.Eta()<<", "<<p3.Phi()<<")"
+	       <<" r3out ("<<lastR3.Pt()<<", "<<lastR3.Eta()<<", "<<lastR3.Phi()<<")"
+	       <<" p3Out ("<<lastT3.Pt()*p<<", "<<lastT3.Eta()<<", "<<lastT3.Phi()<<")"
+	       <<std::endl;
+    }
+  }
+  status = (std::abs(lastR3.Perp() - rDest) > epsilon);
+  return {lastR3, lastT3*p};
+  
+}
+
+
+void fitCircle(std::vector<float> xs, std::vector<float> ys)
+{
+
+    TCanvas *c1 = new TCanvas("c1","c1",600,600);
+    c1->SetGrid();
+
+    // Generate graph that contains the data
+    TGraph* gr = new TGraph(xs.size());
+    for (unsigned int i = 0; i < xs.size(); ++i)
+    {
+        gr->SetPoint(i,xs[i],ys[i]);
+    }
+
+    c1->DrawFrame(-120,-120,120,120);
+    gr->Draw("p");
+
+    auto chi2Function = [&](const Double_t *par) {
+        // minimisation function computing the sum of squares of residuals
+        // looping at the graph points
+        Int_t np = gr->GetN();
+        Double_t f = 0;
+        Double_t *x = gr->GetX();
+        Double_t *y = gr->GetY();
+        for (Int_t i=0;i<np;i++) {
+            Double_t u = x[i] - par[0];
+            Double_t v = y[i] - par[1];
+            Double_t dr = par[2] - std::sqrt(u*u+v*v);
+            f += dr*dr;
+        }
+        return f;
+    };
+
+    // wrap chi2 funciton in a function object for the fit
+    // 3 is the number of fit parameters (size of array par)
+    ROOT::Math::Functor fcn(chi2Function,3);
+    ROOT::Fit::Fitter  fitter;
+    double pStart[3] = {0,0,1};
+    fitter.SetFCN(fcn, pStart);
+    fitter.Config().ParSettings(0).SetName("x0");
+    fitter.Config().ParSettings(1).SetName("y0");
+    fitter.Config().ParSettings(2).SetName("R");
+
+    // do the fit 
+    bool ok = fitter.FitFCN();
+    if (!ok) {
+        Error("line3Dfit","Line3D Fit failed");
+    }   
+
+    const ROOT::Fit::FitResult & result = fitter.Result();
+
+    result.Print(std::cout);
+
+    //Draw the circle on top of the points
+    TArc *arc = new TArc(result.Parameter(0),result.Parameter(1),result.Parameter(2));
+    arc->SetLineColor(kRed);
+    arc->SetLineWidth(4);
+    arc->SetFillColorAlpha(0, 0.35);
+    arc->Draw();
+    c1->SaveAs("result.pdf");
+
 }

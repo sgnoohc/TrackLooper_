@@ -79,14 +79,15 @@ rm -f ${OUTPUTFILE}
 
 CMD="./doAnalysis -i ${SAMPLE} -n -1 -t trackingNtuple/tree -n -1 -e -p ${PTBOUND} -o ${OUTPUTFILE} -g ${PDGID}"
 echo $CMD
+mkdir -p results/${SAMPLETAG}$2/
 ${CMD}
 mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
+rm -rf plots_${SAMPLETAG}
 python plot.py 1 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
 python plot.py 2 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
 python plot.py 3 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
 python plot.py 4 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
 
-mkdir -p results/${SAMPLETAG}$2/
 echo "$3" > results/${SAMPLETAG}$2/description.txt
 cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}$2/
 

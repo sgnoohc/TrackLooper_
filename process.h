@@ -37,6 +37,7 @@
 #include "StudyTripletSelection.h"
 #include "StudySDLInefficiency.h"
 #include "StudyMTVEfficiency.h"
+#include "StudyConditionalHitEfficiency.h"
 
 #include "constants.h"
 
