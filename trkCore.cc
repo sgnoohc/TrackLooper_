@@ -244,12 +244,8 @@ bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned
 
                 int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
 
-                if(trk.ph2_layer()[ihit] != layer)
-                {
-                    return true;
-                }
 
-                else if(trk.ph2_layer()[ihit] == layer and trk.ph2_subdet()[ihit] == 5 and (not SDL::MiniDoublet::useBarrelLogic(trk.ph2_detId()[ihit])))
+                if(trk.ph2_layer()[ihit] == layer and trk.ph2_subdet()[ihit] == 5 and (not SDL::MiniDoublet::useBarrelLogic(trk.ph2_detId()[ihit])))
                 {
                     layer_modules.push_back(SDL::Module(trk.ph2_detId()[ihit]));
 
@@ -259,7 +255,6 @@ bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned
 
         }
     }
-
     //Check if there is at least one pair in an endcap like tilted module
     //in the layer denoted by the parameter "layer"
 
