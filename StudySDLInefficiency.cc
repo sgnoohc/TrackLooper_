@@ -57,22 +57,37 @@ void StudySDLInefficiency::bookStudy()
 {
     ana.tx->createBranch<float>("pt");
     ana.tx->createBranch<float>("eta");
+    ana.tx->createBranch<float>("dxy");
+    ana.tx->createBranch<float>("dz");
     ana.tx->createBranch<float>("pdgid");
     ana.tx->createBranch<float>("itrk");
 
-    ana.tx->createBranch<vector<float>>("hit_x");
-    ana.tx->createBranch<vector<float>>("hit_y");
-    ana.tx->createBranch<vector<float>>("hit_z");
-    ana.tx->createBranch<vector<int  >>("hit_side");
-    ana.tx->createBranch<vector<int  >>("hit_rod");
-    ana.tx->createBranch<vector<int  >>("hit_module");
-    ana.tx->createBranch<vector<int  >>("hit_subdet");
 
-    ana.tx->createBranch<vector<float>>("md_dz");
-    ana.tx->createBranch<vector<float>>("md_dphi");
-    ana.tx->createBranch<vector<float>>("md_dphichange");
-    ana.tx->createBranch<vector<float>>("md_minicut");
-    ana.tx->createBranch<vector<int  >>("md_pass");
+    for (unsigned int ilayer = 1; ilayer <= 6; ++ilayer)
+    {
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_ncand", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_dz", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_dphi", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_dphichange", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_minicut", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_pass", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_lower_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_lower_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_lower_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_lower_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_upper_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_upper_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_upper_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_upper_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_upper_hit_subdet", ilayer));
+    }
 
 }
 
@@ -90,96 +105,43 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
 
         ana.tx->setBranch<float>("pt", trk.sim_pt()[isimtrk]);
         ana.tx->setBranch<float>("eta", trk.sim_eta()[isimtrk]);
+        ana.tx->setBranch<float>("dxy", trk.sim_pca_dxy()[isimtrk]);
+        ana.tx->setBranch<float>("dz", trk.sim_pca_dz()[isimtrk]);
         ana.tx->setBranch<float>("pdgid", trk.sim_pdgId()[isimtrk]);
         ana.tx->setBranch<float>("itrk", isimtrk);
 
         for (unsigned int ilayer = 1; ilayer <= 6; ilayer++)
         {
 
-            float lower_hit_x      = -999;
-            float lower_hit_y      = -999;
-            float lower_hit_z      = -999;
-            int   lower_hit_side   = -999;
-            int   lower_hit_rod    = -999;
-            int   lower_hit_module = -999;
-            int   lower_hit_subdet = -999;
-
-            float upper_hit_x      = -999;
-            float upper_hit_y      = -999;
-            float upper_hit_z      = -999;
-            int   upper_hit_side   = -999;
-            int   upper_hit_rod    = -999;
-            int   upper_hit_module = -999;
-            int   upper_hit_subdet = -999;
-
-            float md_dz            = -999;
-            float md_dphi          = -999;
-            float md_dphichange    = -999;
-            float md_minicut       = -999;
-            int   md_pass          = -999;
+            ana.tx->pushbackToBranch<int>(TString::Format("md%d_ncand", ilayer), trackevent.getLayer(ilayer, SDL::Layer::Barrel).getMiniDoubletPtrs().size() );
 
             for (auto& mdPtr : trackevent.getLayer(ilayer, SDL::Layer::Barrel).getMiniDoubletPtrs())
             {
 
                 mdPtr->runMiniDoubletAlgo(SDL::Default_MDAlgo);
-
-                if ((md_dphichange == -999) or (md_dphichange > mdPtr->getDeltaPhiChange()))
-                {
-
-                    md_dz            = mdPtr->getDz();
-                    md_dphi          = mdPtr->getDeltaPhi();
-                    md_dphichange    = mdPtr->getDeltaPhiChange();
-                    md_minicut       = mdPtr->getRecoVar("miniCut");
-                    md_pass          = mdPtr->passesMiniDoubletAlgo(SDL::Default_MDAlgo);
-
-                    lower_hit_x      = mdPtr->lowerHitPtr()->x();
-                    lower_hit_y      = mdPtr->lowerHitPtr()->y();
-                    lower_hit_z      = mdPtr->lowerHitPtr()->z();
-                    lower_hit_side   = mdPtr->lowerHitPtr()->getModule().side();
-                    lower_hit_rod    = mdPtr->lowerHitPtr()->getModule().rod();
-                    lower_hit_module = mdPtr->lowerHitPtr()->getModule().module();
-                    lower_hit_subdet = mdPtr->lowerHitPtr()->getModule().subdet();
-                                                                                         
-                    upper_hit_x      = mdPtr->upperHitPtr()->x();
-                    upper_hit_y      = mdPtr->upperHitPtr()->y();
-                    upper_hit_z      = mdPtr->upperHitPtr()->z();
-                    upper_hit_side   = mdPtr->upperHitPtr()->getModule().side();
-                    upper_hit_rod    = mdPtr->upperHitPtr()->getModule().rod();
-                    upper_hit_module = mdPtr->upperHitPtr()->getModule().module();
-                    upper_hit_subdet = mdPtr->upperHitPtr()->getModule().subdet();
-
-                }
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_dz"               , ilayer), mdPtr->getDz()                                   );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_dphi"             , ilayer), mdPtr->getDeltaPhi()                             );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_dphichange"       , ilayer), mdPtr->getDeltaPhiChange()                       );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_minicut"          , ilayer), mdPtr->getRecoVar("miniCut")                     );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_pass"             , ilayer), mdPtr->passesMiniDoubletAlgo(SDL::Default_MDAlgo));
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_lower_hit_x"      , ilayer), mdPtr->lowerHitPtr()->x()                        );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_lower_hit_y"      , ilayer), mdPtr->lowerHitPtr()->y()                        );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_lower_hit_z"      , ilayer), mdPtr->lowerHitPtr()->z()                        );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_lower_hit_rt"     , ilayer), mdPtr->lowerHitPtr()->rt()                       );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_lower_hit_side"   , ilayer), mdPtr->lowerHitPtr()->getModule().side()         );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_lower_hit_rod"    , ilayer), mdPtr->lowerHitPtr()->getModule().rod()          );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_lower_hit_module" , ilayer), mdPtr->lowerHitPtr()->getModule().module()       );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_lower_hit_subdet" , ilayer), mdPtr->lowerHitPtr()->getModule().subdet()       );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_upper_hit_x"      , ilayer), mdPtr->upperHitPtr()->x()                        );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_upper_hit_y"      , ilayer), mdPtr->upperHitPtr()->y()                        );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_upper_hit_z"      , ilayer), mdPtr->upperHitPtr()->z()                        );
+                ana.tx->pushbackToBranch<float>(TString::Format("md%d_upper_hit_rt"     , ilayer), mdPtr->upperHitPtr()->rt()                       );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_upper_hit_side"   , ilayer), mdPtr->upperHitPtr()->getModule().side()         );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_upper_hit_rod"    , ilayer), mdPtr->upperHitPtr()->getModule().rod()          );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_upper_hit_module" , ilayer), mdPtr->upperHitPtr()->getModule().module()       );
+                ana.tx->pushbackToBranch<int  >(TString::Format("md%d_upper_hit_subdet" , ilayer), mdPtr->upperHitPtr()->getModule().subdet()       );
 
             }
-
-            if (md_dphichange == -999)
-            {
-                std::cout <<  " ilayer: " << ilayer <<  std::endl;
-                unsigned int size = trackevent.getLayer(ilayer, SDL::Layer::Barrel).getMiniDoubletPtrs().size();
-                std::cout <<  " size: " << size <<  std::endl;
-            }
-
-            ana.tx->pushbackToBranch<float>("md_dz"         , md_dz        );
-            ana.tx->pushbackToBranch<float>("md_dphi"       , md_dphi      );
-            ana.tx->pushbackToBranch<float>("md_dphichange" , md_dphichange);
-            ana.tx->pushbackToBranch<float>("md_minicut"    , md_minicut   );
-            ana.tx->pushbackToBranch<int  >("md_pass"       , md_pass      );
-
-            ana.tx->pushbackToBranch<float>("hit_x"      , lower_hit_x      );
-            ana.tx->pushbackToBranch<float>("hit_y"      , lower_hit_y      );
-            ana.tx->pushbackToBranch<float>("hit_z"      , lower_hit_z      );
-            ana.tx->pushbackToBranch<int  >("hit_side"   , lower_hit_side   );
-            ana.tx->pushbackToBranch<int  >("hit_rod"    , lower_hit_rod    );
-            ana.tx->pushbackToBranch<int  >("hit_module" , lower_hit_module );
-            ana.tx->pushbackToBranch<int  >("hit_subdet" , lower_hit_subdet );
-
-            ana.tx->pushbackToBranch<float>("hit_x"      , upper_hit_x      );
-            ana.tx->pushbackToBranch<float>("hit_y"      , upper_hit_y      );
-            ana.tx->pushbackToBranch<float>("hit_z"      , upper_hit_z      );
-            ana.tx->pushbackToBranch<int  >("hit_side"   , upper_hit_side   );
-            ana.tx->pushbackToBranch<int  >("hit_rod"    , upper_hit_rod    );
-            ana.tx->pushbackToBranch<int  >("hit_module" , upper_hit_module );
-            ana.tx->pushbackToBranch<int  >("hit_subdet" , upper_hit_subdet );
 
         }
 

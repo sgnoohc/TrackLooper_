@@ -24,22 +24,24 @@ public:
 
     std::vector<float> pt_boundaries;
 
-    std::vector<float> tc_matched_track_pt;
-    std::vector<float> tc_all_track_pt;
-    std::vector<float> tc_matched_track_eta;
-    std::vector<float> tc_all_track_eta;
-    std::vector<float> tc_matched_track_dxy;
-    std::vector<float> tc_all_track_dxy;
-    std::vector<float> tc_matched_track_pt_mtv;
-    std::vector<float> tc_all_track_pt_mtv;
-    std::vector<float> tc_matched_track_eta_mtv;
-    std::vector<float> tc_all_track_eta_mtv;
-    std::vector<float> tc_matched_track_dxy_mtv;
-    std::vector<float> tc_all_track_dxy_mtv;
+    int pdgid_of_study;
+
+    float dxy_thresh;
+    float dz_thresh;
+    float pt_thresh;
+
+    std::array<std::vector<float>, 3> tc_matched_track_pt_mtv;
+    std::array<std::vector<float>, 3> tc_all_track_pt_mtv;
+    std::array<std::vector<float>, 3> tc_matched_track_eta_mtv;
+    std::array<std::vector<float>, 3> tc_all_track_eta_mtv;
+    std::array<std::vector<float>, 3> tc_matched_track_dxy_mtv;
+    std::array<std::vector<float>, 3> tc_all_track_dxy_mtv;
 
     StudyMTVEfficiency(
         const char* studyName,
-        std::vector<float> ptbounds);
+        std::vector<float> ptbounds,
+        int pdgid
+        );
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 

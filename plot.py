@@ -28,6 +28,7 @@ drawTLSelPlots = False
 drawTCplots = False
 drawTCSelPlots = False
 drawTPSelPlots = False
+drawMTVplots = False
 
 if option == 1:
     drawMDplots = True
@@ -50,6 +51,9 @@ if option == 6:
 if option == 7:
     drawTPSelPlots = True
 
+if option == 8:
+    drawMTVplots = True
+
 eff_file = r.TFile("eff.root", "recreate")
 
 def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
@@ -61,6 +65,12 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     if tag != "":
         suffix = "_" + tag
 
+    if "_pt" in output_name:
+        den.SetBinContent(1, 0)
+        num.SetBinContent(1, 0)
+        den.SetBinError(1, 0)
+        num.SetBinError(1, 0)
+
     p.plot_hist(bgs=[den.Clone()],
             data=num.Clone(),
             options={
@@ -68,7 +78,7 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
                 "legend_smart":False,
                 "print_yield":False,
                 "output_name":"plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf","_numden.pdf")),
-                # "remove_underflow":True,
+                # "remove_underflow": True if "_pt_mtv_numden" in output_name else False,
                 # "remove_overflow":True,
                 # "yaxis_range": [0.95, 1.05] if "eta" in output_name else [],
                 "yaxis_range": [0.1, den.GetMaximum() * 1000] if "_dxy_" in output_name else [],
@@ -86,6 +96,7 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
                 # "divide_by_bin_width":True,
                 "print_yield":True,
                 "xaxis_log":True if "_pt" in output_name else False,
+                # "xaxis_log":False,
                 "no_ratio":True,
                 # "remove_overflow": True,
                 },
@@ -129,19 +140,19 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         if yaxis_min > eff.GetY()[i] and eff.GetY()[i] != 0:
             yaxis_min = eff.GetY()[i]
     print yaxis_min
-    if "_eta" in output_name and "sg_" not in output_name:
-        eff.GetYaxis().SetRangeUser(0.9, 1.005)
-    if "_z" in output_name and "sg_" not in output_name:
+    if "eff_eta" in output_name and "sg_" not in output_name:
+        eff.GetYaxis().SetRangeUser(0, 1.005)
+    if "eff_z" in output_name and "sg_" not in output_name:
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
     if "barrelflat_eta" in output_name:
         eff.GetYaxis().SetRangeUser(0.97, 1.03)
-    if "_eta" in output_name and "sg_" in output_name:
+    if "eff_eta" in output_name and "sg_" in output_name:
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
-    if "_z" in output_name and "sg_" in output_name:
+    if "eff_z" in output_name and "sg_" in output_name:
         eff.GetYaxis().SetRangeUser(0.98, 1.02)
-    if "_ptzoom" in output_name:
-        eff.GetYaxis().SetRangeUser(yaxis_max - 0.02, yaxis_max + 0.02)
-    if "_etazoom" in output_name:
+    if "eff_ptzoom" in output_name:
+        eff.GetYaxis().SetRangeUser(yaxis_max - 0.12, yaxis_max + 0.02)
+    if "eff_etazoom" in output_name:
         eff.GetYaxis().SetRangeUser(yaxis_min - 0.02, yaxis_max + 0.02)
     # if "_ptzoom" in output_name and "sg_" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.95, 1.05)
@@ -151,7 +162,7 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     #     eff.GetYaxis().SetRangeUser(0.9, 1.1)
     # if "_ptzoom" in output_name and "tc_" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.9, 1.1)
-    if "_eta" in output_name and "tl_" in output_name:
+    if "eff_eta" in output_name and "tl_" in output_name:
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.pdf")))
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.png")))
@@ -619,4 +630,21 @@ if drawTPSelPlots:
             filter_pattern="Root__tp_{}_deltaBeta".format(tpcombo),
             extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False},
             )
+
+if drawMTVplots:
+   plot_eff("Root__tc_matched_track_pt_mtv", "Root__tc_all_track_pt_mtv", "tc_eff_pt_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_pt_mtv", "Root__tc_all_track_pt_mtv", "tc_eff_ptzoom_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_eta_mtv", "Root__tc_all_track_eta_mtv", "tc_eff_eta_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_eta_mtv", "Root__tc_all_track_eta_mtv", "tc_eff_etazoom_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_dxy_mtv", "Root__tc_all_track_dxy_mtv", "tc_eff_dxy_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_pt_mtv_eta0_0p4.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_ptzoom_mtv_eta0_0p4.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_eta_mtv_eta0_0p4.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_etazoom_mtv_eta0_0p4.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_dxy_mtv_eta0_0p4", "Root__tc_all_track_dxy_mtv_eta0_0p4", "tc_eff_dxy_mtv_eta0_0p4.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_pt_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_ptzoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_eta_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_etazoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_dxy_mtv_eta0p4_0p8", "Root__tc_all_track_dxy_mtv_eta0p4_0p8", "tc_eff_dxy_mtv_eta0p4_0p8.pdf", "mtveff", tag)
 
