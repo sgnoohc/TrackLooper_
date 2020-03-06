@@ -154,8 +154,10 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         eff.GetYaxis().SetRangeUser(yaxis_max - 0.12, yaxis_max + 0.02)
     if "eff_etazoom" in output_name:
         eff.GetYaxis().SetRangeUser(yaxis_min - 0.02, yaxis_max + 0.02)
-    # if "_ptzoom" in output_name and "sg_" in output_name:
-    #     eff.GetYaxis().SetRangeUser(0.95, 1.05)
+    if "_ptzoom" in output_name and "sg_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.95, 1.05)
+    if "_ptzoom" in output_name and "md_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.95, 1.05)
     # if "_ptzoom" in output_name and "md_" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.98, 1.02)
     # if "_ptzoom" in output_name and "tl_" in output_name:
@@ -172,7 +174,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
 
 if drawMDplots:
 
-    mdcombos = ["barrel"]
+    # mdcombos = ["barrel"]
+    mdcombos = ["bbbbbb", "bbbbbe", "bbbbee", "bbbeee", "bbeeee", "beeeee"]
 
     for mdcombo in mdcombos:
 
@@ -185,7 +188,8 @@ if drawMDplots:
 
 if drawSGplots:
 
-    sgcombos = ["bb"]
+    # sgcombos = ["bbbbbb"]
+    sgcombos = ["bbbbbb", "bbbbbe", "bbbbee", "bbbeee", "bbeeee", "beeeee"]
 
     for sgcombo in sgcombos:
         for i in xrange(5):
@@ -243,7 +247,8 @@ if drawSGTruthSelPlots:
 
 if drawTLplots:
 
-    tlcombos = ["bbbb"]
+    # tlcombos = ["bbbbbb"]
+    tlcombos = ["bbbbbb", "bbbbbe", "bbbbee", "bbbeee", "bbeeee", "beeeee"]
 
     for tlcombo in tlcombos:
         for i in xrange(3):
@@ -433,7 +438,8 @@ if drawTLSelPlots:
                 )
 
 if drawTCplots:
-    tccombos = ["bbbbbb"]
+    # tccombos = ["bbbbbb"]
+    tccombos = ["bbbbbb", "bbbbbe", "bbbbee", "bbbeee", "bbeeee", "beeeee"]
 
     for tccombo in tccombos:
         for i in xrange(1):

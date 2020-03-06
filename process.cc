@@ -390,12 +390,18 @@ int main(int argc, char** argv)
     std::vector<Study*> studies;
     if (ana.run_eff_study)
     {
-        studies.push_back(new StudySDLEfficiency("efficiency",
-                    StudySDLEfficiency::kStudySDLMDEffBarrel,
-                    StudySDLEfficiency::kStudySDLSGEffBB,
-                    StudySDLEfficiency::kStudySDLTLEffBBBB,
-                    StudySDLEfficiency::kStudySDLTCEffBBBBBB,
-                    pt_boundaries));
+        // studies.push_back(new StudySDLEfficiency("efficiency",
+        //             StudySDLEfficiency::kStudySDLMDEffBarrel,
+        //             StudySDLEfficiency::kStudySDLSGEffBB,
+        //             StudySDLEfficiency::kStudySDLTLEffBBBB,
+        //             StudySDLEfficiency::kStudySDLTCEffBBBBBB,
+        //             pt_boundaries));
+        studies.push_back(new StudySDLEfficiencyv2("eff_bbbbbb", StudySDLEfficiencyv2::kStudySDLBBBBBB, pt_boundaries));
+        studies.push_back(new StudySDLEfficiencyv2("eff_bbbbbe", StudySDLEfficiencyv2::kStudySDLBBBBBE, pt_boundaries));
+        studies.push_back(new StudySDLEfficiencyv2("eff_bbbbee", StudySDLEfficiencyv2::kStudySDLBBBBEE, pt_boundaries));
+        studies.push_back(new StudySDLEfficiencyv2("eff_bbbeee", StudySDLEfficiencyv2::kStudySDLBBBEEE, pt_boundaries));
+        studies.push_back(new StudySDLEfficiencyv2("eff_bbeeee", StudySDLEfficiencyv2::kStudySDLBBEEEE, pt_boundaries));
+        studies.push_back(new StudySDLEfficiencyv2("eff_beeeee", StudySDLEfficiencyv2::kStudySDLBEEEEE, pt_boundaries));
     }
     else if (ana.run_ineff_study)
     {
@@ -798,8 +804,8 @@ int main(int argc, char** argv)
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
 
-                if (not hasAll12HitsInBarrel(isimtrk))
-                    continue;
+                // if (not hasAll12HitsInBarrel(isimtrk))
+                //     continue;
 
                 // event just for this track
                 SDL::Event* trackevent = new SDL::Event();
@@ -814,8 +820,8 @@ int main(int argc, char** argv)
                     // Select only the hits in the outer tracker
                     // if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
                     //     continue;
-                    if (not (trk.simhit_subdet()[simhitidx] == 5))
-                        continue;
+                    // if (not (trk.simhit_subdet()[simhitidx] == 5))
+                    //     continue;
 
                     if (isMuonCurlingHit(isimtrk, ith_hit))
                         break;

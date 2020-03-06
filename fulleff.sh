@@ -77,25 +77,12 @@ OUTPUTFILE=fulleff_${SAMPLETAG}.root
 
 rm -f ${OUTPUTFILE}
 
-CMD="./doAnalysis -i ${SAMPLE} -n -1 -t trackingNtuple/tree -n -1 -e -p ${PTBOUND} -o ${OUTPUTFILE} -g ${PDGID}"
+CMD="./doAnalysis -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTFILE} -g ${PDGID}"
 echo $CMD
 mkdir -p results/${SAMPLETAG}$2/
 ${CMD}
 mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
-rm -rf plots_${SAMPLETAG}
-python plot.py 1 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
-python plot.py 2 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
-python plot.py 3 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
-python plot.py 4 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
-
 echo "$3" > results/${SAMPLETAG}$2/description.txt
-cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}$2/
 
-# ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 1 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
-# mv debug.root algoeff_md_pt0p5_1p5.root
-# ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 2 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
-# mv debug.root algoeff_sg_pt0p5_1p5.root
-# ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 3 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
-# mv debug.root algoeff_tl_pt0p5_1p5.root
-# ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 4 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
-# mv debug.root algoeff_tc_pt0p5_1p5.root
+# plotting
+sh fulleff_plot.sh ${SAMPLETAG} $2
