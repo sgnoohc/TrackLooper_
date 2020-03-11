@@ -15,6 +15,7 @@ float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
 bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit);
 bool hasAll12HitsInBarrel(unsigned int isimtrk);
+bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel);
 bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs);
 bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned int isimtrk);
 bool is75percentFromSimMatchedHits(std::vector<unsigned int> hit_idxs, int pdgid);

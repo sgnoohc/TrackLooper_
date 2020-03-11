@@ -38,6 +38,7 @@
 #include "StudySDLInefficiency.h"
 #include "StudyMTVEfficiency.h"
 #include "StudyConditionalHitEfficiency.h"
+#include "StudySDLEfficiencyv2.h"
 
 #include "constants.h"
 

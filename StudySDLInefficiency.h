@@ -14,6 +14,8 @@
 
 #include "AnalysisConfig.h"
 
+#include "trkCore.h"
+
 class StudySDLInefficiency : public Study
 {
 
