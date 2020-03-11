@@ -281,6 +281,10 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
             if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
                 continue;
 
+            // Select only the muon hits
+            if (not (trk.simhit_particle()[simhitidx] == ana.pdg_id))
+                continue;
+
             // Exclude what I think is muon curling hit
             if (isMuonCurlingHit(isimtrk, ith_hit))
                 break;
