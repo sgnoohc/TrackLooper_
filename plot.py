@@ -71,10 +71,16 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         den.SetBinError(1, 0)
         num.SetBinError(1, 0)
 
+    yaxis_log = False
+    if "_dxy_" in output_name:
+        yaxis_log = True
+    if "_etalog_" in output_name:
+        yaxis_log = True
+
     p.plot_hist(bgs=[den.Clone()],
             data=num.Clone(),
             options={
-                "yaxis_log":True if "_dxy_" in output_name else False ,
+                "yaxis_log":yaxis_log,
                 "legend_smart":False,
                 "print_yield":False,
                 "output_name":"plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf","_numden.pdf")),
@@ -97,7 +103,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
                 "print_yield":True,
                 "xaxis_log":True if "_pt" in output_name else False,
                 # "xaxis_log":False,
-                "no_ratio":True,
+                # "no_ratio":True,
+                "ratio_binomial_errors":True,
                 # "remove_overflow": True,
                 },
         )
@@ -154,10 +161,14 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         eff.GetYaxis().SetRangeUser(yaxis_max - 0.12, yaxis_max + 0.02)
     if "eff_etazoom" in output_name:
         eff.GetYaxis().SetRangeUser(yaxis_min - 0.02, yaxis_max + 0.02)
-    if "_ptzoom" in output_name and "sg_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.95, 1.05)
     if "_ptzoom" in output_name and "md_" in output_name:
-        eff.GetYaxis().SetRangeUser(0.95, 1.05)
+        eff.GetYaxis().SetRangeUser(0.93, 1.05)
+    if "_ptzoom" in output_name and "sg_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.90, 1.05)
+    if "_ptzoom" in output_name and "tl_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.87, 1.05)
+    if "_ptzoom" in output_name and "tc_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.82, 1.05)
     # if "_ptzoom" in output_name and "md_" in output_name:
     #     eff.GetYaxis().SetRangeUser(0.98, 1.02)
     # if "_ptzoom" in output_name and "tl_" in output_name:
@@ -184,7 +195,9 @@ if drawMDplots:
             plot_eff("Root__md_{}_matched_track_pt_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_pt_by_layer{}".format(mdcombo, i), "md_eff_{}_ptzoom_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
             plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_eta_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
             plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_etazoom_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
+            plot_eff("Root__md_{}_matched_track_eta_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_eta_by_layer{}".format(mdcombo, i), "md_eff_{}_etalog_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
             plot_eff("Root__md_{}_matched_track_dxy_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_dxy_by_layer{}".format(mdcombo, i), "md_eff_{}_dxy_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
+            plot_eff("Root__md_{}_matched_track_dz_by_layer{}".format(mdcombo, i), "Root__md_{}_all_track_dz_by_layer{}".format(mdcombo, i), "md_eff_{}_dz_by_layer{}.pdf".format(mdcombo, i), "mdeff", tag)
 
 if drawSGplots:
 

@@ -73,6 +73,20 @@ PDGID=211
 PTBOUND=0
 fi
 
+if [[ $1 == *"10"* ]]; then
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root
+SAMPLETAG=pt0p5_3p0
+PDGID=13
+PTBOUND=5
+fi
+
+if [[ $1 == *"11"* ]]; then
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_10_pt0p5_5p0.root
+SAMPLETAG=pt0p5_5p0
+PDGID=13
+PTBOUND=6
+fi
+
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
 
 rm -f ${OUTPUTFILE}
