@@ -3,3 +3,5 @@ doAnalysis
 debug.root
 *.pdf
 plots/
+plots_*/
+scripts/moduleconnection*.txt
