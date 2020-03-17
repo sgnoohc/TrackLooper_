@@ -97,6 +97,16 @@ mkdir -p results/${SAMPLETAG}$2/
 ${CMD}
 mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
 echo "$3" > results/${SAMPLETAG}$2/description.txt
+git status >> results/${SAMPLETAG}$2/description.txt
+git log >> results/${SAMPLETAG}$2/description.txt
+git diff >> results/${SAMPLETAG}$2/description.txt
+cd SDL/
+git status >> ../results/${SAMPLETAG}$2/description.txt
+git log >> ../results/${SAMPLETAG}$2/description.txt
+git diff >> ../results/${SAMPLETAG}$2/description.txt
+cd ../
 
 # plotting
 sh fulleff_plot.sh ${SAMPLETAG} $2
+
+echo ">>> results are in results/${SAMPLETAG}$2"

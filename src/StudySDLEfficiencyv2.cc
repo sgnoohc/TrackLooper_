@@ -199,7 +199,8 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     //***********************
 
     // Eta bounds
-    std::array<float, 6> etabounds_bbbbbb = {2.2, 1.8, 1.45, 1.2, 1, 0.8};
+    // std::array<float, 6> etabounds_bbbbbb = {2.2, 1.8, 1.45, 1.2, 1, 0.8};
+    std::array<float, 6> etabounds_bbbbbb = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
     std::array<float, 6> etabounds_bbbbbe = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
     std::array<float, 6> etabounds_bbbbee = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
     std::array<float, 6> etabounds_bbbeee = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
@@ -208,7 +209,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
 
     // Eta inner bounds
     std::array<float, 6> etainnerbounds_bbbbbb = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    std::array<float, 6> etainnerbounds_bbbbbe = {0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
+    std::array<float, 6> etainnerbounds_bbbbbe = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     std::array<float, 6> etainnerbounds_bbbbee = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     std::array<float, 6> etainnerbounds_bbbeee = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     std::array<float, 6> etainnerbounds_bbeeee = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -293,27 +294,27 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
         switch (eff_mode)
         {
             case kStudySDLBBBBBB:
-                if (not hasAll12HitsInBarrel(isimtrk))
+                if (not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6))
                     continue;
                 break;
             case kStudySDLBBBBBE:
-                if (not hasAll12HitsWithNBarrel(isimtrk, 5))
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
                     continue;
                 break;
             case kStudySDLBBBBEE:
-                if (not hasAll12HitsWithNBarrel(isimtrk, 4))
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
                     continue;
                 break;
             case kStudySDLBBBEEE:
-                if (not hasAll12HitsWithNBarrel(isimtrk, 3))
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
                     continue;
                 break;
             case kStudySDLBBEEEE:
-                if (not hasAll12HitsWithNBarrel(isimtrk, 2))
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
                     continue;
                 break;
             case kStudySDLBEEEEE:
-                if (not hasAll12HitsWithNBarrel(isimtrk, 1))
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 1) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
                     continue;
                 break;
             default:
