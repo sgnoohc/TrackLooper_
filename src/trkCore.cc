@@ -123,6 +123,195 @@ bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit)
 }
 
 //__________________________________________________________________________________________
+bool hasAll12HitsWithNBarrelUsingModuleMap(unsigned int isimtrk, int nbarrel, bool usesimhits)
+{
+
+    // Select only tracks that left all 12 hits in the barrel
+    std::array<std::vector<SDL::Module>, 6> layers_modules_barrel; // Watch out for duplicates in this vector, do not count with this for unique count.
+    std::array<std::vector<SDL::Module>, 6> layers_modules_endcap; // Watch out for duplicates in this vector, do not count with this for unique count.
+
+    std::vector<float> ps;
+
+    for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
+    {
+
+        // Retrieve the sim hit idx
+        unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
+
+        // Select only the hits in the outer tracker
+        if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+            continue;
+
+        if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
+            continue;
+
+        if (isMuonCurlingHit(isimtrk, ith_hit))
+            break;
+
+        if (not usesimhits)
+        {
+
+            // list of reco hit matched to this sim hit
+            for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
+            {
+                // Get the recohit type
+                int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+
+                // Consider only ph2 hits (i.e. outer tracker hits)
+                if (recohittype == 4)
+                {
+
+                    int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+
+                    if (trk.ph2_subdet()[ihit] == 5)
+                    {
+                        layers_modules_barrel[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+                    }
+                    if (trk.ph2_subdet()[ihit] == 4)
+                    {
+                        layers_modules_endcap[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+                    }
+
+                }
+
+            }
+
+        }
+        else
+        {
+
+            if (trk.simhit_hitIdx()[simhitidx].size() > 0)
+            {
+
+                if (trk.simhit_subdet()[simhitidx] == 5)
+                {
+                    layers_modules_barrel[trk.simhit_layer()[simhitidx] - 1].push_back(SDL::Module(trk.simhit_detId()[simhitidx]));
+                }
+                if (trk.simhit_subdet()[simhitidx] == 4)
+                {
+                    layers_modules_endcap[trk.simhit_layer()[simhitidx] - 1].push_back(SDL::Module(trk.simhit_detId()[simhitidx]));
+                }
+            }
+
+            // // list of reco hit matched to this sim hit
+            // for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
+            // {
+            //     // Get the recohit type
+            //     int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+
+            //     // Consider only ph2 hits (i.e. outer tracker hits)
+            //     if (recohittype == 4)
+            //     {
+
+            //         int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+
+            //         if (trk.ph2_subdet()[ihit] == 5)
+            //         {
+            //             layers_modules_barrel[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+            //         }
+            //         if (trk.ph2_subdet()[ihit] == 4)
+            //         {
+            //             layers_modules_endcap[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+            //         }
+
+            //     }
+
+            // }
+
+        }
+
+    }
+
+    // Aggregating good pair modules (i.e. a double module with each side having non-zero reco hits.)
+    std::array<std::vector<unsigned int>, 6> layers_good_paired_modules; // Watch out for duplicates in this vector, do not count with this for unique count.
+
+    for (int logical_ilayer = 0; logical_ilayer < 6; ++logical_ilayer)
+    {
+        // Raw layer number
+        bool is_ilayer_barrel = logical_ilayer < nbarrel;
+        int raw_ilayer = is_ilayer_barrel ? logical_ilayer: logical_ilayer - nbarrel;
+        const std::array<std::vector<SDL::Module>, 6>& layers_modules = is_ilayer_barrel ? layers_modules_barrel : layers_modules_endcap;
+
+        // Then get the module in the ilayer and check that it has a good module pair
+        // Loop over modules in the given raw_ilayer and match the pairs and if a good pair of modules have hits in each module
+        // then save the lower modules to layers_good_paired_modules.
+        // NOTE there may be duplicates being pushed to layers_good_paired_modules
+        // Do not count with these vectors
+        for (unsigned imod = 0; imod < layers_modules[raw_ilayer].size(); ++imod)
+        {
+            for (unsigned jmod = imod + 1; jmod < layers_modules[raw_ilayer].size(); ++jmod)
+            {
+                // if two modules are a good pair
+                if (layers_modules[raw_ilayer][imod].partnerDetId() == layers_modules[raw_ilayer][jmod].detId())
+                {
+                    // add the lower module one to the good_paired_modules list
+                    if (layers_modules[raw_ilayer][imod].isLower())
+                    {
+                        if (std::find(
+                                    layers_good_paired_modules[logical_ilayer].begin(),
+                                    layers_good_paired_modules[logical_ilayer].end(),
+                                    layers_modules[raw_ilayer][imod].detId()) == layers_good_paired_modules[logical_ilayer].end())
+                            layers_good_paired_modules[logical_ilayer].push_back(layers_modules[raw_ilayer][imod].detId());
+                    }
+                    else
+                    {
+                        if (std::find(
+                                    layers_good_paired_modules[logical_ilayer].begin(),
+                                    layers_good_paired_modules[logical_ilayer].end(),
+                                    layers_modules[raw_ilayer][imod].partnerDetId()) == layers_good_paired_modules[logical_ilayer].end())
+                        layers_good_paired_modules[logical_ilayer].push_back(layers_modules[raw_ilayer][imod].partnerDetId());
+                    }
+                }
+            }
+        }
+    }
+
+    return checkModuleConnectionsAreGood(layers_good_paired_modules);
+
+}
+
+//__________________________________________________________________________________________
+bool checkModuleConnectionsAreGood(std::array<std::vector<unsigned int>, 6>& layers_good_paired_modules)
+{
+    // Dumbest possible solution
+    for (auto& module0 : layers_good_paired_modules[0])
+    {
+        const std::vector<unsigned int>& connectedModule1s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module0);
+        for (auto& module1 : layers_good_paired_modules[1])
+        {
+            if (std::find(connectedModule1s.begin(), connectedModule1s.end(), module1) == connectedModule1s.end())
+                break;
+            const std::vector<unsigned int>& connectedModule2s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module1);
+            for (auto& module2 : layers_good_paired_modules[2])
+            {
+                if (std::find(connectedModule2s.begin(), connectedModule2s.end(), module2) == connectedModule2s.end())
+                    break;
+                const std::vector<unsigned int>& connectedModule3s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module2);
+                for (auto& module3 : layers_good_paired_modules[3])
+                {
+                    if (std::find(connectedModule3s.begin(), connectedModule3s.end(), module3) == connectedModule3s.end())
+                        break;
+                    const std::vector<unsigned int>& connectedModule4s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module3);
+                    for (auto& module4 : layers_good_paired_modules[4])
+                    {
+                        if (std::find(connectedModule4s.begin(), connectedModule4s.end(), module4) == connectedModule4s.end())
+                            break;
+                        const std::vector<unsigned int>& connectedModule5s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module4);
+                        for (auto& module5 : layers_good_paired_modules[5])
+                        {
+                            if (std::find(connectedModule5s.begin(), connectedModule5s.end(), module5) == connectedModule5s.end())
+                                break;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+//__________________________________________________________________________________________
 bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel)
 {
 
@@ -141,6 +330,9 @@ bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel)
         // Select only the hits in the outer tracker
         if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
             continue;
+
+        // if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
+        //     continue;
 
         if (isMuonCurlingHit(isimtrk, ith_hit))
             break;
@@ -234,6 +426,7 @@ bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel)
 
     }
 
+
     float pt = trk.sim_pt()[isimtrk];
     float eta = trk.sim_eta()[isimtrk];
 
@@ -265,6 +458,9 @@ bool hasAll12HitsInBarrel(unsigned int isimtrk)
         // Select only the hits in the outer tracker
         if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
             continue;
+
+        // if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
+        //     continue;
 
         if (isMuonCurlingHit(isimtrk, ith_hit))
             break;

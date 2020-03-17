@@ -28,5 +28,5 @@ $(EXE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
 clean:
-	rm -f *.o $(EXE)
+	rm -f $(OBJECTS) *.o $(EXE)
 	rm -f SDL/*.o

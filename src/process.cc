@@ -808,7 +808,7 @@ int main(int argc, char** argv)
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
 
-                // if (not hasAll12HitsWithNBarrel(isimtrk, 5))
+                // if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6) or hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5)))
                 //     continue;
                 // if (not hasAll12HitsInBarrel(isimtrk))
                 //     continue;
