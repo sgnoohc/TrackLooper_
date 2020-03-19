@@ -61,6 +61,10 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     num = f.Get(num_name)
     den = f.Get(den_name)
 
+    if "_eta" in output_name:
+        num.Rebin(2)
+        den.Rebin(2)
+
     suffix = ""
     if tag != "":
         suffix = "_" + tag
@@ -177,6 +181,9 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     #     eff.GetYaxis().SetRangeUser(0.9, 1.1)
     if "eff_eta" in output_name and "tl_" in output_name:
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
+    if "_pt_by" in output_name and "tc_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.0, 1.1)
+    c1.SetGrid()
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.pdf")))
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.png")))
     eff_file.cd()
