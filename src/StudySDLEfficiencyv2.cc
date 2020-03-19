@@ -291,65 +291,95 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
         unsigned int& isimtrk = std::get<0>(simtrkevent);
         SDL::Event& trackevent = *(std::get<1>(simtrkevent));
 
+        switch (eff_mode)
+        {
+            case kStudySDLBBBBBB:
+                if (not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6))
+                    continue;
+                break;
+            case kStudySDLBBBBBE:
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+                    continue;
+                break;
+            case kStudySDLBBBBEE:
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+                    continue;
+                break;
+            case kStudySDLBBBEEE:
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+                    continue;
+                break;
+            case kStudySDLBBEEEE:
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+                    continue;
+                break;
+            case kStudySDLBEEEEE:
+                if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 1) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+                    continue;
+                break;
+            default:
+                break;
+        }
+
         // switch (eff_mode)
         // {
         //     case kStudySDLBBBBBB:
-        //         if (not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6))
+        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
         //             continue;
         //         break;
         //     case kStudySDLBBBBBE:
-        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5)))
         //             continue;
         //         break;
         //     case kStudySDLBBBBEE:
-        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4)))
         //             continue;
         //         break;
         //     case kStudySDLBBBEEE:
-        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3)))
         //             continue;
         //         break;
         //     case kStudySDLBBEEEE:
-        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2)))
         //             continue;
         //         break;
         //     case kStudySDLBEEEEE:
-        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 1) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+        //         if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 1)))
         //             continue;
         //         break;
         //     default:
         //         break;
         // }
 
-        switch (eff_mode)
-        {
-            case kStudySDLBBBBBB:
-                if (not (hasAll12HitsWithNBarrel(isimtrk, 6)))
-                    continue;
-                break;
-            case kStudySDLBBBBBE:
-                if (not (hasAll12HitsWithNBarrel(isimtrk, 5)))
-                    continue;
-                break;
-            case kStudySDLBBBBEE:
-                if (not (hasAll12HitsWithNBarrel(isimtrk, 4)))
-                    continue;
-                break;
-            case kStudySDLBBBEEE:
-                if (not (hasAll12HitsWithNBarrel(isimtrk, 3)))
-                    continue;
-                break;
-            case kStudySDLBBEEEE:
-                if (not (hasAll12HitsWithNBarrel(isimtrk, 2)))
-                    continue;
-                break;
-            case kStudySDLBEEEEE:
-                if (not (hasAll12HitsWithNBarrel(isimtrk, 1)))
-                    continue;
-                break;
-            default:
-                break;
-        }
+        // switch (eff_mode)
+        // {
+        //     case kStudySDLBBBBBB:
+        //         if (not (hasAll12HitsWithNBarrel(isimtrk, 6)))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBBBBE:
+        //         if (not (hasAll12HitsWithNBarrel(isimtrk, 5)))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBBBEE:
+        //         if (not (hasAll12HitsWithNBarrel(isimtrk, 4)))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBBEEE:
+        //         if (not (hasAll12HitsWithNBarrel(isimtrk, 3)))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBEEEE:
+        //         if (not (hasAll12HitsWithNBarrel(isimtrk, 2)))
+        //             continue;
+        //         break;
+        //     case kStudySDLBEEEEE:
+        //         if (not (hasAll12HitsWithNBarrel(isimtrk, 1)))
+        //             continue;
+        //         break;
+        //     default:
+        //         break;
+        // }
 
         // Create list of booleans
         std::array<bool, 6> md_trackmatch_by_layer; md_trackmatch_by_layer[0] = false; md_trackmatch_by_layer[1] = false; md_trackmatch_by_layer[2] = false; md_trackmatch_by_layer[3] = false; md_trackmatch_by_layer[4] = false; md_trackmatch_by_layer[5] = false;
