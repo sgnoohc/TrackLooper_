@@ -320,6 +320,7 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
                 ana.tx->pushbackToBranch<float>(TString::Format("md%d_dphi"             , ilayer), mdPtr->getDeltaPhi()                             );
                 ana.tx->pushbackToBranch<float>(TString::Format("md%d_dphichange"       , ilayer), mdPtr->getDeltaPhiChange()                       );
                 ana.tx->pushbackToBranch<float>(TString::Format("md%d_minicut"          , ilayer), mdPtr->getRecoVar("miniCut")                     );
+                ana.tx->pushbackToBranch<float>(TSTring::Format("md%d_drdz"             , ilayer), mdPtr->getRecoVar("drdz")                        );
                 ana.tx->pushbackToBranch<int  >(TString::Format("md%d_pass"             , ilayer), mdPtr->passesMiniDoubletAlgo(SDL::Default_MDAlgo));
                 ana.tx->pushbackToBranch<float>(TString::Format("md%d_lower_hit_x"      , ilayer), mdPtr->lowerHitPtr()->x()                        );
                 ana.tx->pushbackToBranch<float>(TString::Format("md%d_lower_hit_y"      , ilayer), mdPtr->lowerHitPtr()->y()                        );
@@ -355,6 +356,7 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
                 ana.tx->pushbackToBranch<float>(TString::Format("mdendcap%d_dphi"             , ilayer), mdPtr->getDeltaPhi()                             );
                 ana.tx->pushbackToBranch<float>(TString::Format("mdendcap%d_dphichange"       , ilayer), mdPtr->getDeltaPhiChange()                       );
                 ana.tx->pushbackToBranch<float>(TString::Format("mdendcap%d_minicut"          , ilayer), mdPtr->getRecoVar("miniCut")                     );
+                ana.tx->pushbackToBranch<float>(TSTring::Format("mdendcap%d_drdz"             , ilayer), mdPtr->getRecoVar("drdz")                        );
                 ana.tx->pushbackToBranch<int  >(TString::Format("mdendcap%d_pass"             , ilayer), mdPtr->passesMiniDoubletAlgo(SDL::Default_MDAlgo));
                 ana.tx->pushbackToBranch<float>(TString::Format("mdendcap%d_lower_hit_x"      , ilayer), mdPtr->lowerHitPtr()->x()                        );
                 ana.tx->pushbackToBranch<float>(TString::Format("mdendcap%d_lower_hit_y"      , ilayer), mdPtr->lowerHitPtr()->y()                        );
