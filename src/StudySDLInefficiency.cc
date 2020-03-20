@@ -85,6 +85,7 @@ void StudySDLInefficiency::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_dphi", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_dphichange", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_minicut", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("md%d_drdz",ilayer));
         ana.tx->createBranch<vector<int  >>(TString::Format("md%d_pass", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_lower_hit_x", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_lower_hit_y", ilayer));
@@ -111,6 +112,7 @@ void StudySDLInefficiency::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_dphi", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_dphichange", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_minicut", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_drdz",ilayer));
         ana.tx->createBranch<vector<int  >>(TString::Format("mdendcap%d_pass", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_lower_hit_x", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_lower_hit_y", ilayer));
