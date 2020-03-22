@@ -133,27 +133,73 @@ void StudySDLInefficiency::bookStudy()
     for (unsigned int ilayer = 1; ilayer <= 3; ++ilayer)
     {
         ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_ncand", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_dz", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_dphi", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_dphichange", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_minicut", ilayer));
         ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_pass", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_lower_hit_x", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_lower_hit_y", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_lower_hit_z", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_lower_hit_rt", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_lower_hit_side", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_lower_hit_rod", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_lower_hit_module", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_lower_hit_subdet", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_upper_hit_x", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_upper_hit_y", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_upper_hit_z", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_upper_hit_rt", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_upper_hit_side", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_upper_hit_rod", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_upper_hit_module", ilayer));
-        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_upper_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_passbits", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_algo", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_lower_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_lower_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_lower_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_lower_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_upper_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_innerMd_upper_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_upper_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_upper_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_innerMd_upper_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_lower_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_lower_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_lower_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_lower_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_upper_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_innerSg_outerMd_upper_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_upper_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_upper_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_innerSg_outerMd_upper_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_lower_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_lower_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_lower_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_lower_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_upper_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_innerMd_upper_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_upper_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_upper_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_innerMd_upper_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_lower_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_lower_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_lower_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_lower_hit_subdet", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_upper_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_outerSg_outerMd_upper_hit_rt", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_upper_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_upper_hit_rod", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("tl%d_outerSg_outerMd_upper_hit_subdet", ilayer));
 
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaAv", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaAv_0th", ilayer));
@@ -164,6 +210,7 @@ void StudySDLInefficiency::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaIn", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaInRHmax", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaInRHmin", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaIn_cut", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaIn_0th", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaIn_1st", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_betaIn_1stCorr", ilayer));
@@ -241,7 +288,16 @@ void StudySDLInefficiency::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zGeom", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zIn", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zLo", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zHi", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zLoPointed", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zHiPointed", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("tl%d_zOut", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_kZ", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_rtLo_point", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_rtHi_point", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_deltaPhiPos", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_dPhi", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("tl%d_sdlCut", ilayer));
 
     }
 
@@ -377,11 +433,82 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
 
         }
 
-        for (unsigned int ilayer = 1; ilayer <= 2; ilayer++)
+        for (unsigned int ilayer = 1; ilayer <= 3; ilayer++)
         {
 
+            ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_ncand", ilayer), trackevent.getLayer(ilayer, SDL::Layer::Barrel).getTrackletPtrs().size() );
             for (auto& tlPtr : trackevent.getLayer(ilayer, SDL::Layer::Barrel).getTrackletPtrs())
             {
+
+                tlPtr->runTrackletAlgo(SDL::Default_TLAlgo);
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_pass", ilayer), tlPtr->passesTrackletAlgo(SDL::Default_TLAlgo));
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_passbits", ilayer), tlPtr->getPassBitsDefaultAlgo());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_algo", ilayer), tlPtr->getRecoVar("algo"));
+
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_lower_hit_x"      , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_lower_hit_y"      , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_lower_hit_z"      , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_lower_hit_rt"     , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_lower_hit_side"   , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_lower_hit_rod"    , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_lower_hit_module" , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_lower_hit_subdet" , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_upper_hit_x"      , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_upper_hit_y"      , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_upper_hit_z"      , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_innerMd_upper_hit_rt"     , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_upper_hit_side"   , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_upper_hit_rod"    , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_upper_hit_module" , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_innerMd_upper_hit_subdet" , ilayer), tlPtr->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_lower_hit_x"      , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_lower_hit_y"      , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_lower_hit_z"      , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_lower_hit_rt"     , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_lower_hit_side"   , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_lower_hit_rod"    , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_lower_hit_module" , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_lower_hit_subdet" , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_upper_hit_x"      , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_upper_hit_y"      , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_upper_hit_z"      , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_innerSg_outerMd_upper_hit_rt"     , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_upper_hit_side"   , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_upper_hit_rod"    , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_upper_hit_module" , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_innerSg_outerMd_upper_hit_subdet" , ilayer), tlPtr->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_lower_hit_x"      , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_lower_hit_y"      , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_lower_hit_z"      , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_lower_hit_rt"     , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_lower_hit_side"   , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_lower_hit_rod"    , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_lower_hit_module" , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_lower_hit_subdet" , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_upper_hit_x"      , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_upper_hit_y"      , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_upper_hit_z"      , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_innerMd_upper_hit_rt"     , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_upper_hit_side"   , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_upper_hit_rod"    , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_upper_hit_module" , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_innerMd_upper_hit_subdet" , ilayer), tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_lower_hit_x"      , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_lower_hit_y"      , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_lower_hit_z"      , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_lower_hit_rt"     , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_lower_hit_side"   , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_lower_hit_rod"    , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_lower_hit_module" , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_lower_hit_subdet" , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet());
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_upper_hit_x"      , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->x()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_upper_hit_y"      , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->y()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_upper_hit_z"      , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->z()                 );
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_outerSg_outerMd_upper_hit_rt"     , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->rt()                );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_upper_hit_side"   , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().side()  );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_upper_hit_rod"    , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().rod()   );
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_upper_hit_module" , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().module());
+                ana.tx->pushbackToBranch<int  >(TString::Format("tl%d_outerSg_outerMd_upper_hit_subdet" , ilayer), tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->getModule().subdet());
 
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaAv", ilayer), tlPtr->getRecoVar("betaAv"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaAv_0th", ilayer), tlPtr->getRecoVar("betaAv_0th"));
@@ -392,6 +519,7 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaIn", ilayer), tlPtr->getRecoVar("betaIn"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaInRHmax", ilayer), tlPtr->getRecoVar("betaInRHmax"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaInRHmin", ilayer), tlPtr->getRecoVar("betaInRHmin"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaIn_cut", ilayer), tlPtr->getRecoVar("betaIn_cut"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaIn_0th", ilayer), tlPtr->getRecoVar("betaIn_0th"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaIn_1st", ilayer), tlPtr->getRecoVar("betaIn_1st"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_betaIn_1stCorr", ilayer), tlPtr->getRecoVar("betaIn_1stCorr"));
@@ -469,8 +597,17 @@ void StudySDLInefficiency::doStudy(SDL::Event& event, std::vector<std::tuple<uns
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zGeom", ilayer), tlPtr->getRecoVar("zGeom"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zIn", ilayer), tlPtr->getRecoVar("zIn"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zLo", ilayer), tlPtr->getRecoVar("zLo"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zHi", ilayer), tlPtr->getRecoVar("zHi"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zLoPointed", ilayer), tlPtr->getRecoVar("zLoPointed"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zHiPointed", ilayer), tlPtr->getRecoVar("zHiPointed"));
                 ana.tx->pushbackToBranch<float>(TString::Format("tl%d_zOut", ilayer), tlPtr->getRecoVar("zOut"));
 
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_kZ", ilayer), tlPtr->getRecoVar("kZ"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_rtLo_point", ilayer), tlPtr->getRecoVar("rtLo_point"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_rtHi_point", ilayer), tlPtr->getRecoVar("rtHi_point"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_deltaPhiPos", ilayer), tlPtr->getRecoVar("deltaPhiPos"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_dPhi", ilayer), tlPtr->getRecoVar("dPhi"));
+                ana.tx->pushbackToBranch<float>(TString::Format("tl%d_sdlCut", ilayer), tlPtr->getRecoVar("sdlCut"));
 
             }
 

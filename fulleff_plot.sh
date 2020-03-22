@@ -7,10 +7,16 @@ if [ -z $1 ]; then
     echo "Job tag information for the plotter is not provided"
 fi
 
-rm -rf plots_${SAMPLETAG}
-rm -rf results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
-python plot.py 1 results/${SAMPLETAG}${JOBTAG}/${OUTPUTFILE} ${SAMPLETAG}
-python plot.py 2 results/${SAMPLETAG}${JOBTAG}/${OUTPUTFILE} ${SAMPLETAG}
-python plot.py 3 results/${SAMPLETAG}${JOBTAG}/${OUTPUTFILE} ${SAMPLETAG}
-python plot.py 4 results/${SAMPLETAG}${JOBTAG}/${OUTPUTFILE} ${SAMPLETAG}
-cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
+# rm -rf plots_${SAMPLETAG}
+# rm -rf results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
+
+cd results/${SAMPLETAG}${JOBTAG}/
+python ../../plot.py 1 ${OUTPUTFILE} ${SAMPLETAG} > plot_1.log &
+python ../../plot.py 2 ${OUTPUTFILE} ${SAMPLETAG} > plot_2.log &
+python ../../plot.py 3 ${OUTPUTFILE} ${SAMPLETAG} > plot_3.log &
+python ../../plot.py 4 ${OUTPUTFILE} ${SAMPLETAG} > plot_4.log &
+sleep 1
+echo "<== Submitted parallel jobs ..."
+wait
+
+# cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}

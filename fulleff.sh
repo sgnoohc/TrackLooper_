@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap "kill 0" EXIT
+
 TRACKINGNTUPLEDIR=/home/users/phchang/public_html/analysis/sdl/trackingNtuple
 
 if [[ $1 == *"1"* ]]; then
@@ -87,15 +89,28 @@ PDGID=13
 PTBOUND=6
 fi
 
+OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
+OUTPUTDIR=results/${SAMPLETAG}$2/
 
-rm -f ${OUTPUTFILE}
+mkdir -p ${OUTPUTDIR}
+rm -f ${OUTPUTDIR}/${OUTPUTFILE}
+rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
+rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.log
 
-CMD="./doAnalysis -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTFILE} -g ${PDGID}"
-echo $CMD
-mkdir -p results/${SAMPLETAG}$2/
-${CMD}
-mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
+NJOBS=16
+for i in $(seq 0 $((NJOBS-1))); do
+    (set -x ;./doAnalysis -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
+done
+
+sleep 1
+echo "<== Submitted parallel jobs ..."
+wait
+
+# Hadding outputs
+hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
+
+# Writing some descriptive file
 echo "$3" > results/${SAMPLETAG}$2/description.txt
 git status >> results/${SAMPLETAG}$2/description.txt
 git log >> results/${SAMPLETAG}$2/description.txt

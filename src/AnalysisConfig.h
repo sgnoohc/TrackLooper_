@@ -31,6 +31,9 @@ public:
     // run inefficiency study
     bool run_ineff_study;
 
+    // run inefficiency study
+    int mode_write_ineff_study_debug_ntuple; // 0 = MDs, 1 = SGs, 2 = TLs, 3 = TCs
+
     // run MTV study
     bool run_mtv_study;
 
@@ -54,6 +57,13 @@ public:
 
     // TChain that holds the input TTree's
     TChain* events_tchain;
+
+    // Jobs to split (if this number is positive, then we will skip certain number of events)
+    // If there are N events, and was asked to split 2 ways, then depending on job_index, it will run over first half or latter half
+    int nsplit_jobs;
+
+    // Job index (assuming nsplit_jobs is set, the job_index determine where to loop over)
+    int job_index;
 
     // Custom Looper object to facilitate looping over many files
     RooUtil::Looper<trktree> looper;
