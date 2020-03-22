@@ -25,12 +25,14 @@ int main(int argc, char** argv)
         ("p,ptbound_mode"   , "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
         ("g,pdg_id"         , "The simhit pdgId match option (default = 13)"                                                        , cxxopts::value<int>()->default_value("13"))
         ("v,verbose"        , "Verbose mode"                                                                                        , cxxopts::value<int>()->default_value("0"))
+        ("l,run_ineff_study", "Write debug ntuples 0 = MDs, 1 = SGs, 2 = TLs, 3 = TCs"                                              , cxxopts::value<int>()->default_value("-1"))
         ("d,debug"          , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
         ("c,print_conn"     , "Print module connections")
         ("r,centroid"       , "Print centroid information")
         ("e,run_eff_study"  , "Run efficiency study")
-        ("l,run_ineff_study", "Run inefficiency study")
         ("m,run_mtv_study"  , "Run MTV study")
+        ("j,nsplit_jobs"    , "Enable splitting jobs by N blocks (--job_index must be set)", cxxopts::value<int>())
+        ("I,job_index"      , "job_index of split jobs (--nsplit_jobs must be set. index starts from 0. i.e. 0, 1, 2, 3, etc...)", cxxopts::value<int>())
         ("h,help"           , "Print help")
         ;
 
@@ -128,11 +130,15 @@ int main(int argc, char** argv)
     // --run_ineff_study
     if (result.count("run_ineff_study"))
     {
-        ana.run_ineff_study = true;
-    }
-    else
-    {
-        ana.run_ineff_study = false;
+        ana.mode_write_ineff_study_debug_ntuple = result["run_ineff_study"].as<int>();
+        if (result["run_ineff_study"].as<int>() >= 0)
+        {
+            ana.run_ineff_study = true;
+        }
+        else
+        {
+            ana.run_ineff_study = false;
+        }
     }
 
     //_______________________________________________________________________________
@@ -178,6 +184,64 @@ int main(int argc, char** argv)
     ana.pdg_id = result["pdg_id"].as<int>();
 
     //_______________________________________________________________________________
+    // --nsplit_jobs
+    if (result.count("nsplit_jobs"))
+    {
+        ana.nsplit_jobs = result["nsplit_jobs"].as<int>();
+        if (ana.nsplit_jobs <= 0)
+        {
+            std::cout << options.help() << std::endl;
+            std::cout << "ERROR: option string --nsplit_jobs" << ana.nsplit_jobs << " has zero or negative value!" << std::endl;
+            std::cout << "I am not sure what this means..." << std::endl;
+            exit(1);
+        }
+    }
+    else
+    {
+        ana.nsplit_jobs = -1;
+    }
+
+    //_______________________________________________________________________________
+    // --job_index
+    if (result.count("job_index"))
+    {
+        ana.job_index = result["job_index"].as<int>();
+        if (ana.job_index < 0)
+        {
+            std::cout << options.help() << std::endl;
+            std::cout << "ERROR: option string --job_index" << ana.job_index << " has negative value!" << std::endl;
+            std::cout << "I am not sure what this means..." << std::endl;
+            exit(1);
+        }
+    }
+    else
+    {
+        ana.job_index = -1;
+    }
+
+    // Sanity check for split jobs (if one is set the other must be set too)
+    if (result.count("job_index") or result.count("nsplit_jobs"))
+    {
+        // If one is not provided then throw error
+        if ( not (result.count("job_index") and result.count("nsplit_jobs")))
+        {
+            std::cout << options.help() << std::endl;
+            std::cout << "ERROR: option string --job_index and --nsplit_jobs must be set at the same time!" << std::endl;
+            exit(1);
+        }
+        // If it is set then check for sanity
+        else
+        {
+            if (ana.job_index >= ana.nsplit_jobs)
+            {
+                std::cout << options.help() << std::endl;
+                std::cout << "ERROR: --job_index >= --nsplit_jobs ! This does not make sense..." << std::endl;
+                exit(1);
+            }
+        }
+    }
+
+    //_______________________________________________________________________________
     // --verbose
     ana.verbose = result["verbose"].as<int>();
 
@@ -196,6 +260,8 @@ int main(int argc, char** argv)
     std::cout <<  " ana.print_centroid: " << ana.print_centroid <<  std::endl;
     std::cout <<  " ana.print_conn: " << ana.print_conn <<  std::endl;
     std::cout <<  " ana.ptbound_mode: " << ana.ptbound_mode <<  std::endl;
+    std::cout <<  " ana.nsplit_jobs: " << ana.nsplit_jobs <<  std::endl;
+    std::cout <<  " ana.job_index: " << ana.job_index <<  std::endl;
     std::cout <<  "=========================================================" << std::endl;
 
     // Consistency check
@@ -388,7 +454,8 @@ int main(int argc, char** argv)
     else if (ana.ptbound_mode == 5)
         pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0}; // lowpt
     else if (ana.ptbound_mode == 6)
-        pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0}; // lowpt
+        pt_boundaries = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0, 3.0, 4.0, 5.0}; // lowpt
+        // pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0}; // lowpt
 
     // List of studies to perform
     std::vector<Study*> studies;
@@ -409,12 +476,18 @@ int main(int argc, char** argv)
     }
     else if (ana.run_ineff_study)
     {
-        studies.push_back(new StudySDLInefficiency("inefficiency",
-                    StudySDLInefficiency::kStudySDLMDEffBarrel,
-                    StudySDLInefficiency::kStudySDLSGEffBB,
-                    StudySDLInefficiency::kStudySDLTLEffBBBB,
-                    StudySDLInefficiency::kStudySDLTCEffBBBBBB,
-                    pt_boundaries));
+        switch (ana.mode_write_ineff_study_debug_ntuple)
+        {
+            case 0: studies.push_back(new StudySDLMiniDoubletDebugNtupleWriter()); break;
+            case 1: studies.push_back(new StudySDLSegmentDebugNtupleWriter()); break;
+            case 2: studies.push_back(new StudySDLTrackletDebugNtupleWriter()); break;
+            case 3: studies.push_back(new StudySDLTrackCandidateDebugNtupleWriter()); break;
+            default:
+                std::cout << options.help() << std::endl;
+                std::cout << "ERROR: ana.mode_write_ineff_study_debug_ntuple not recognized! value = " << ana.mode_write_ineff_study_debug_ntuple << std::endl;
+                exit(1);
+                break;
+        }
     }
     else if (ana.run_mtv_study)
     {
@@ -467,6 +540,13 @@ int main(int argc, char** argv)
         if (ana.specific_event_index >= 0)
         {
             if ((int)ana.looper.getCurrentEventIndex() != ana.specific_event_index)
+                continue;
+        }
+
+        // If splitting jobs are requested then determine whether to process the event or not based on remainder
+        if (result.count("job_index") and result.count("nsplit_jobs"))
+        {
+            if (ana.looper.getNEventsProcessed() % ana.nsplit_jobs != (unsigned int) ana.job_index)
                 continue;
         }
 
@@ -808,6 +888,8 @@ int main(int argc, char** argv)
                 // if (trk.sim_pt()[isimtrk] < 1)
                 //     continue;
 
+                // if (not (hasAll12HitsWithNBarrel(isimtrk, 2)))
+                //     continue;
                 // if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6) or hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5)))
                 //     continue;
                 // if (not hasAll12HitsInBarrel(isimtrk))
@@ -860,18 +942,42 @@ int main(int argc, char** argv)
 
                 if (ana.run_ineff_study)
                 {
-                    if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
-                    trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
-                    if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
-                    trackevent->createSegmentsWithModuleMap();
-                    if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
-                    // trackevent->createTrackletsWithModuleMap();
-                    trackevent->createTrackletsWithModuleMap();
-                    if (ana.verbose != 0) std::cout << "Sim Triplet start" << std::endl;
-                    trackevent->createTriplets();
-                    if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
-                    trackevent->createTrackCandidatesFromTracklets();
-                    if (ana.verbose != 0) std::cout << "Sim SDL end" << std::endl;
+                    switch (ana.mode_write_ineff_study_debug_ntuple)
+                    {
+                        case 0: // MD
+                            if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                            trackevent->createMiniDoublets(SDL::AllComb_MDAlgo);
+                            break;
+                        case 1:
+                            if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                            trackevent->createMiniDoublets();
+                            if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
+                            trackevent->createSegmentsWithModuleMap(SDL::AllComb_SGAlgo);
+                            break;
+                        case 2:
+                            if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                            trackevent->createMiniDoublets();
+                            if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
+                            trackevent->createSegmentsWithModuleMap();
+                            if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
+                            trackevent->createTrackletsWithModuleMap(SDL::AllComb_TLAlgo);
+                            break;
+                        case 3:
+                            if (ana.verbose != 0) std::cout << "Sim Mini-Doublet start" << std::endl;
+                            trackevent->createMiniDoublets();
+                            if (ana.verbose != 0) std::cout << "Sim Segment start" << std::endl;
+                            trackevent->createSegmentsWithModuleMap();
+                            if (ana.verbose != 0) std::cout << "Sim Tracklet start" << std::endl;
+                            trackevent->createTrackletsWithModuleMap();
+                            if (ana.verbose != 0) std::cout << "Sim TrackCandidate start" << std::endl;
+                            trackevent->createTrackCandidatesFromTracklets(SDL::AllComb_TCAlgo);
+                            break;
+                        default:
+                            std::cout << options.help() << std::endl;
+                            std::cout << "ERROR: ana.mode_write_ineff_study_debug_ntuple not recognized! value = " << ana.mode_write_ineff_study_debug_ntuple << std::endl;
+                            exit(1);
+                            break;
+                    }
                 }
                 else
                 {

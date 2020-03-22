@@ -183,6 +183,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         eff.GetYaxis().SetRangeUser(0.9, 1.005)
     if "_pt_by" in output_name and "tc_" in output_name:
         eff.GetYaxis().SetRangeUser(0.0, 1.1)
+    if "_etazoom_by" in output_name:
+        eff.GetYaxis().SetRangeUser(yaxis_min - 0.02, yaxis_max + 0.02)
     c1.SetGrid()
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.pdf")))
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.png")))

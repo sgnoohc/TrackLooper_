@@ -39,6 +39,10 @@
 #include "StudyMTVEfficiency.h"
 #include "StudyConditionalHitEfficiency.h"
 #include "StudySDLEfficiencyv2.h"
+#include "StudySDLMiniDoubletDebugNtupleWriter.h"
+#include "StudySDLSegmentDebugNtupleWriter.h"
+#include "StudySDLTrackletDebugNtupleWriter.h"
+#include "StudySDLTrackCandidateDebugNtupleWriter.h"
 
 #include "constants.h"
 
