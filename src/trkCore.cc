@@ -142,8 +142,8 @@ bool hasAll12HitsWithNBarrelUsingModuleMap(unsigned int isimtrk, int nbarrel, bo
         if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
             continue;
 
-        // if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
-        //     continue;
+        if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
+            continue;
 
         if (isMuonCurlingHit(isimtrk, ith_hit))
             break;
