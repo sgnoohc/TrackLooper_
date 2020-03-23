@@ -39,7 +39,7 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_outerMD_segment",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_outerMD",ilayer));
 
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_sdSlope",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_sdCut",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_segment_threshold",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_outerMD_segment_threshold",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_outerMD_threshold",ilayer));
@@ -79,7 +79,7 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_outerMD_segment",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD",ilayer));
 
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_sdSlope",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_sdCut",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_segment_threshold",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_outerMD_segment_threshold",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD_threshold",ilayer));
@@ -189,7 +189,7 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_outerMD_segment",ilayer),sgPtr->getdAlphaOuterMDSegment());
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_outerMD",ilayer),sgPtr->getdAlphaInnerMDOuterMD());
 
-                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_sdSlope",ilayer),sgPtr->getRecoVar("sdSlope"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_sdCut",ilayer),sgPtr->getRecoVar("sdCut"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_segment"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_outerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_outerMD_segment"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_outerMD_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_outerMD"));
@@ -245,7 +245,7 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_outerMD_segment",ilayer),sgPtr->getdAlphaOuterMDSegment());
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD",ilayer),sgPtr->getdAlphaInnerMDOuterMD());
 
-                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_sdSlope",ilayer),sgPtr->getRecoVar("sdSlope"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_sdCut",ilayer),sgPtr->getRecoVar("sdCut"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_segment"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_outerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_outerMD_segment"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_outerMD"));
