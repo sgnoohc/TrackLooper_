@@ -182,7 +182,7 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
             {
                 sgPtr->runSegmentAlgo(SDL::Default_SGAlgo);
 
-                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dphi", ilayer),sgPtr->getRecoVars("deltaPhi"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dphi", ilayer),sgPtr->getRecoVar("deltaPhi"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dphichange", ilayer),sgPtr->getDeltaPhiChange());
     
                 ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_segment",ilayer),sgPtr->getdAlphaInnerMDSegment());
@@ -238,7 +238,7 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
                 sgPtr->runSegmentAlgo(SDL::Default_SGAlgo);
 
 
-                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dphi", ilayer),sgPtr->getDeltaPhi());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dphi", ilayer),sgPtr->getRecoVar("deltaPhi"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dphichange", ilayer),sgPtr->getDeltaPhiChange());
     
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_segment",ilayer),sgPtr->getdAlphaInnerMDSegment());
