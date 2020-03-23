@@ -49,12 +49,20 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
 
         ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_pass", ilayer));
 
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_anchor_hit_x", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_anchor_hit_y", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_anchor_hit_z", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_anchor_hit_x", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_anchor_hit_y", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_anchor_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_lower_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_lower_hit_z", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_upper_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_upper_hit_z", ilayer));
+
 
         ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_inner_md_lower_hit_side", ilayer));
         ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_outer_md_lower_hit_side", ilayer));
@@ -93,10 +101,23 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_y", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtIn",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtOut",ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_z", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_anchor_hit_x", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_anchor_hit_y", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_anchor_hit_z", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_lower_hit_y",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_lower_hit_z",ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_lower_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_lower_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_lower_hit_z", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_upper_hit_y",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_upper_hit_z",ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_upper_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_upper_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_upper_hit_z", ilayer));
+
 
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_lower_hit_side", ilayer));
         ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_outer_md_lower_hit_side", ilayer));
@@ -281,6 +302,9 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
 
                 ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_inner_md_subdet", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet());
                 ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_outer_md_subdet", ilayer),(sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_RtIn",ilayer),(sgPtr->getRtIn()));
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_RtOut",ilayer),(sgPtr->getRtOut()));
 
             }
         }
