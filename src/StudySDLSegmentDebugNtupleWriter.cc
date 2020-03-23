@@ -28,6 +28,90 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
     ana.tx->createBranch<vector<float>>("ph2_y");
     ana.tx->createBranch<vector<float>>("ph2_z");
 
+    //segment specific stuff
+    for(unsigned int ilayer = 1; ilayer <=6; ilayer++)
+    {
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_ncand", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dphi", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dphichange", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_segment",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_outerMD_segment",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_outerMD",ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_sdSlope",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_segment_threshold",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_outerMD_segment_threshold",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_dAlpha_innerMD_outerMD_threshold",ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_zLo",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_zHi",ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_pass", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_anchor_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_anchor_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_inner_md_anchor_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_anchor_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_anchor_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sg%d_outer_md_anchor_hit_z", ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_inner_md_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_outer_md_lower_hit_side", ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_inner_md_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_inner_md_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_outer_md_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_outer_md_upper_hit_module", ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_inner_md_subdet", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sg%d_outer_md_subdet", ilayer));
+
+    }
+
+    for(unsigned int ilayer = 1; ilayer <=5; ilayer++)
+    {
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_ncand", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dphi", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dphichange", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_segment",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_outerMD_segment",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD",ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_sdSlope",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_segment_threshold",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_outerMD_segment_threshold",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD_threshold",ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtLo",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtHi",ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_pass", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtIn"ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtOut",ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_z", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_anchor_hit_x", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_anchor_hit_y", ilayer));
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_anchor_hit_z", ilayer));
+
+        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_outer_md_lower_hit_side", ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_inner_md_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_inner_md_upper_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_outer_md_lower_hit_module", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_outer_md_upper_hit_module", ilayer));
+
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_inner_md_subdet", ilayer));
+        ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_outer_md_subdet", ilayer));
+
+    }
+
+
 }
 
 void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
@@ -88,6 +172,117 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
                 ana.tx->pushbackToBranch<float>("ph2_z", trk.ph2_z()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
             }
 
+        }
+
+        for(unsigned int ilayer = 1; ilayer <= 6; ilayer++)
+        {
+            ana.tx->pushBackToBranch<int>(TString::Format("sg%d_ncand",ilayer),trackevent.getLayer(ilayer,SDL::Layer::Barrel).getSegmentPtrs().size());
+
+            for(auto &sgPtr:trackevent.getLayer(ilayer,SDL::Layer::Barrel).getSegmentPtrs())
+            {
+                sgPtr->runSegmentAlgo(SDL::Default_SGAlgo);
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dphi", ilayer),sgPtr->getRecoVars("deltaPhi"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dphichange", ilayer),sgPtr->getDeltaPhiChange());
+    
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_segment",ilayer),sgPtr->getdAlphaInnerMDSegment());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_outerMD_segment",ilayer),sgPtr->getdAlphaOuterMDSegment());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_outerMD",ilayer),sgPtr->getdAlphaInnerMDOuterMD());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_sdSlope",ilayer),sg->getRecoVar("sdSlope"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_segment"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_outerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_outerMD_segment"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_dAlpha_innerMD_outerMD_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_outerMD"));
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_zLo",ilayer),sgPtr->getZLo());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_zHi",ilayer),sgPtr->getZHi());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_pass", ilayer),sgPtr->passesSegmentAlgo(SDL::Default_SGAlgo));
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_inner_md_lower_hit_x", ilayer),sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_inner_md_lower_hit_y", ilayer),sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_inner_md_lower_hit_z", ilayer),sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->z());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_inner_md_upper_hit_x", ilayer),sgPtr->innerMiniDoubletPtr()->upperHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_inner_md_upper_hit_y", ilayer),sgPtr->innerMiniDoubletPtr()->upperHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_inner_md_upper_hit_z", ilayer),sgPtr->innerMiniDoubletPtr()->upperHitPtr()->z());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_outer_md_lower_hit_x", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_outer_md_lower_hit_y", ilayer),sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_outer_md_lower_hit_z", ilayer),sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->z());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_outer_md_upper_hit_x", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_outer_md_upper_hit_y", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sg%d_outer_md_upper_hit_z", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->z());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_inner_md_lower_hit_side", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).side());
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_outer_md_lower_hit_side", ilayer),(sgPtr->innerMiniDoubletPtr()->upperHitPtr()->getModule()).side());
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_inner_md_lower_hit_module", ilayer),(sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).side());
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_inner_md_upper_hit_module", ilayer),(sgPtr->outerMiniDoubletPtr()->upperHitPtr()->getModule()).side());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_outer_md_lower_hit_module", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).module());
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_outer_md_upper_hit_module", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).module());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_inner_md_subdet", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet());
+                ana.tx->pushbackToBranch<int>(TString::Format("sg%d_outer_md_subdet", ilayer),(sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet());
+
+            }
+        }
+
+        for(unsigned int ilayer = 1; ilayer <= 5; ilayer++)
+        {
+            ana.tx->pushBackToBranch<int>(TString::Format("sgendcap%d_ncand",ilayer),trackevent.getLayer(ilayer,SDL::Layer::Endcap).getSegmentPtrs().size());
+
+            for(auto &sgPtr:trackevent.getLayer(ilayer,SDL::Layer::Endcap).getSegmentPtrs())
+            {
+                sgPtr->runSegmentAlgo(SDL::Default_SGAlgo);
+
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dphi", ilayer),sgPtr->getDeltaPhi());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dphichange", ilayer),sgPtr->getDeltaPhiChange());
+    
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_segment",ilayer),sgPtr->getdAlphaInnerMDSegment());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_outerMD_segment",ilayer),sgPtr->getdAlphaOuterMDSegment());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD",ilayer),sgPtr->getdAlphaInnerMDOuterMD());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_sdSlope",ilayer),sg->getRecoVar("sdSlope"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_segment"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_outerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_outerMD_segment"));
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_outerMD"));
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_zLo",ilayer),sgPtr->getZLo());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_zHi",ilayer),sgPtr->getZHi());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_pass", ilayer),sgPtr->passesSegmentAlgo(SDL::Default_SGAlgo));
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_inner_md_lower_hit_x", ilayer),sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_inner_md_lower_hit_y", ilayer),sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_inner_md_lower_hit_z", ilayer),sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->z());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_inner_md_upper_hit_x", ilayer),sgPtr->innerMiniDoubletPtr()->upperHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_inner_md_upper_hit_y", ilayer),sgPtr->innerMiniDoubletPtr()->upperHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_inner_md_upper_hit_z", ilayer),sgPtr->innerMiniDoubletPtr()->upperHitPtr()->z());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_outer_md_lower_hit_x", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_outer_md_lower_hit_y", ilayer),sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_outer_md_lower_hit_z", ilayer),sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->z());
+
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_outer_md_upper_hit_x", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->x());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_outer_md_upper_hit_y", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->y());
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_outer_md_upper_hit_z", ilayer),sgPtr->outerMiniDoubletPtr()->upperHitPtr()->z());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_inner_md_lower_hit_side", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).side());
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_outer_md_lower_hit_side", ilayer),(sgPtr->innerMiniDoubletPtr()->upperHitPtr()->getModule()).side());
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_inner_md_lower_hit_module", ilayer),(sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).side());
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_inner_md_upper_hit_module", ilayer),(sgPtr->outerMiniDoubletPtr()->upperHitPtr()->getModule()).side());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_outer_md_lower_hit_module", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).module());
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_outer_md_upper_hit_module", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).module());
+
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_inner_md_subdet", ilayer),(sgPtr->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet());
+                ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_outer_md_subdet", ilayer),(sgPtr->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet());
+
+            }
         }
 
         ana.tx->fill();
