@@ -97,8 +97,6 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
 
         ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_pass", ilayer));
 
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_x", ilayer));
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_anchor_hit_y", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtIn",ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_RtOut",ilayer));
 
@@ -119,7 +117,7 @@ void StudySDLSegmentDebugNtupleWriter::bookStudy()
         ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_outer_md_upper_hit_z", ilayer));
 
 
-        ana.tx->createBranch<vector<float>>(TString::Format("sgendcap%d_inner_md_lower_hit_side", ilayer));
+        ana.tx->createBranch<vector<int>>(TString::Format("sgendcap%d_inner_md_lower_hit_side", ilayer));
         ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_outer_md_lower_hit_side", ilayer));
 
         ana.tx->createBranch<vector<int  >>(TString::Format("sgendcap%d_inner_md_lower_hit_module", ilayer));
@@ -271,8 +269,6 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_outerMD_segment_threshold",ilayer),sgPtr->getRecoVar("dAlpha_outerMD_segment"));
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_dAlpha_innerMD_outerMD_threshold",ilayer),sgPtr->getRecoVar("dAlpha_innerMD_outerMD"));
 
-                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_zLo",ilayer),sgPtr->getZLo());
-                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_zHi",ilayer),sgPtr->getZHi());
 
                 ana.tx->pushbackToBranch<int>(TString::Format("sgendcap%d_pass", ilayer),sgPtr->passesSegmentAlgo(SDL::Default_SGAlgo));
 
@@ -305,6 +301,10 @@ void StudySDLSegmentDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<st
 
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_RtIn",ilayer),(sgPtr->getRtIn()));
                 ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_RtOut",ilayer),(sgPtr->getRtOut()));
+
+		ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_RtLo",ilayer),(sgPtr->getRtLo()));
+                ana.tx->pushbackToBranch<float>(TString::Format("sgendcap%d_RtHi",ilayer),(sgPtr->getRtHi()));
+
 
             }
         }
