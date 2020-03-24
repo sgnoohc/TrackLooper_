@@ -534,7 +534,8 @@ int main(int argc, char** argv)
     // Book Histograms
     ana.cutflow.bookHistograms(ana.histograms); // if just want to book everywhere
 
-    SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
+    // SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
+    SDL::endcapGeometry.load("scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
     SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
     SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
 
@@ -560,6 +561,7 @@ int main(int argc, char** argv)
         ana.tx->createBranch<int>("module");
         ana.tx->createBranch<int>("ring");
         ana.tx->createBranch<int>("isPS");
+        ana.tx->createBranch<int>("isStrip");
         ana.tx->createBranch<vector<float>>("x");
         ana.tx->createBranch<vector<float>>("y");
         ana.tx->createBranch<vector<float>>("z");
@@ -1107,6 +1109,7 @@ int main(int argc, char** argv)
             ana.tx->setBranch<int>("module", module.module());
             ana.tx->setBranch<int>("ring", module.ring());
             ana.tx->setBranch<int>("isPS", module.moduleType() == SDL::Module::PS);
+            ana.tx->setBranch<int>("isStrip", module.moduleLayerType() == SDL::Module::Strip);
             for (auto& hit_coord : hit_coords)
             {
                 ana.tx->pushbackToBranch<float>("x", hit_coord[0]);

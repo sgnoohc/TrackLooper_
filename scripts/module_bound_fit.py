@@ -351,11 +351,11 @@ def save_planes(t):
 
 def save_plane(event, lines):
 
-    # if not ((event.side == 1 or event.side == 2) and event.subdet == 5):
-    # if not ((event.side == 2) and event.subdet == 5 and event.layer == 1):
-    if not (event.side == 3 and event.subdet == 5):
-    # if not (event.subdet == 4 and event.isPS == 1):
-        return
+    # # if not ((event.side == 1 or event.side == 2) and event.subdet == 5):
+    # # if not ((event.side == 2) and event.subdet == 5 and event.layer == 1):
+    # if not (event.side == 3 and event.subdet == 5):
+    # # if not (event.subdet == 4 and event.isPS == 1):
+    #     return
 
     # Number of points = m
     m = int(len(event.x))
@@ -367,6 +367,12 @@ def save_plane(event, lines):
         points[1][ihit] = y
         points[2][ihit] = z
         # print(x, y, z)
+
+    # Obtain centroid
+    centroid = get_centroid(points)
+    phi = n.arctan2(centroid[1], centroid[0])
+    if phi > 0 and phi < 2.1:
+        return
 
     if event.subdet == 5 and event.side != 3:
 
@@ -546,10 +552,43 @@ def fit_all_planes(t):
         fit_plane(event)
         break
 
+def write_centroids(t):
+
+    f = open("centroids.txt", "w")
+
+    for index, event in enumerate(t):
+
+        if not (event.subdet == 4):
+            continue 
+
+        # Number of points = m
+        m = int(len(event.x))
+
+        # Read the points data for this module
+        points = n.zeros((3, m))
+        for ihit, (x, y, z) in enumerate(zip(event.x, event.y, event.z)):
+            points[0][ihit] = x
+            points[1][ihit] = y
+            points[2][ihit] = z
+            # print(x, y, z)
+
+        # Obtain centroid
+        centroid = get_centroid(points)
+
+        # phi
+        phi = n.arctan2(centroid[1], centroid[0])
+        r = math.sqrt(centroid[0]**2 + centroid[1]**2)
+        z = centroid[2]
+
+        f.write("{} {} {} {}\n".format(event.detId, r, phi, z))
+
+
 if __name__ == "__main__":
 
     f = r.TFile("debug.root")
     t = f.Get("tree")
 
-    save_planes(t)
+    # save_planes(t)
+
+    write_centroids(t)
 
