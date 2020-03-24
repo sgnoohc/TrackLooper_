@@ -20,6 +20,7 @@ bool hasAll12HitsInBarrel(unsigned int isimtrk);
 bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel);
 bool hasAll12HitsWithNBarrelUsingModuleMap(unsigned int isimtrk, int nbarrel, bool usesimhits=false);
 bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs);
+bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned int isimtrk);
 bool is75percentFromSimMatchedHits(std::vector<unsigned int> hit_idxs, int pdgid);
 TVector3 linePropagateR(const TVector3& r3, const TVector3& p3, double rDest, int& status, bool useClosest = true, bool verbose = false);
 std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVector3& p3, double rDest, int q, int& status, bool useClosest = true, bool verbose = false);

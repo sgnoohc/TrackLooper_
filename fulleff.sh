@@ -20,7 +20,7 @@ PTBOUND=4
 fi
 
 if [[ $1 == *"2"* ]]; then
-SAMPLE=trackingNtuple.root
+SAMPLE=/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
 SAMPLETAG=e200
 PDGID=13
 PTBOUND=0

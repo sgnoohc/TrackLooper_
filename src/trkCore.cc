@@ -532,6 +532,73 @@ bool hasAll12HitsInBarrel(unsigned int isimtrk)
 
 }
 
+
+
+bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned int isimtrk)
+{
+    //Checking done only for the layer specified by "layer", otherwise function returns true always
+    std::vector<SDL::Module> layer_modules;
+
+
+    for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
+    {
+
+        // Retrieve the sim hit idx
+        unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
+
+        // Select only the hits in the outer tracker
+        if (not (trk.simhit_subdet()[simhitidx] == 4 or trk.simhit_subdet()[simhitidx] == 5))
+            continue;
+
+        if (isMuonCurlingHit(isimtrk, ith_hit))
+            break;
+
+        // list of reco hit matched to this sim hit
+        for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[simhitidx].size(); ++irecohit)
+        {
+            // Get the recohit type
+            int recohittype = trk.simhit_hitType()[simhitidx][irecohit];
+
+            // Consider only ph2 hits (i.e. outer tracker hits)
+            if (recohittype == 4)
+            {
+
+                int ihit = trk.simhit_hitIdx()[simhitidx][irecohit];
+
+
+                if(trk.ph2_layer()[ihit] == layer and trk.ph2_subdet()[ihit] == 5 and (not SDL::MiniDoublet::useBarrelLogic(trk.ph2_detId()[ihit])))
+                {
+                    layer_modules.push_back(SDL::Module(trk.ph2_detId()[ihit]));
+
+                }
+
+            }
+
+        }
+    }
+    //Check if there is at least one pair in an endcap like tilted module
+    //in the layer denoted by the parameter "layer"
+
+    bool hasTiltedPairAtLayer = false;
+
+    for (unsigned imod = 0; imod < layer_modules.size(); ++imod)
+    {
+
+        for (unsigned jmod = imod + 1; jmod < layer_modules.size(); ++jmod)
+        {
+            if (layer_modules[imod].partnerDetId() == layer_modules[jmod].detId())
+            {
+                hasTiltedPairAtLayer = true;
+            }
+                
+        }
+    }
+
+    return hasTiltedPairAtLayer;
+}
+
+
+
 //__________________________________________________________________________________________
 bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs)
 {
