@@ -9,7 +9,7 @@ r.gROOT.SetBatch(True)
 # t = f.Get("tree")
 
 t = r.TChain("tree")
-t.Add("debug_ntuple_output/debug_20200321_1733_*.root")
+t.Add("debug_ntuple_output/debug_202003242242_*.root")
 
 c1 = r.TCanvas()
 
@@ -22,9 +22,10 @@ def pt_eff():
     root_binbounds = array('d', [0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0])
     hdenom = r.TH1F("hdenom", "", len(binbounds) - 1, root_binbounds)
     hnumer = r.TH1F("hnumer", "", len(binbounds) - 1, root_binbounds)
-    t.Draw("pt>>hdenom","is_trk_bbbbbe == 1 && abs(dxy) < 3.5", "goffe")
+    t.Draw("pt>>hdenom","(is_trk_bbbbee == 1) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5", "goffe")
     hdenom.Draw()
-    t.Draw("pt>>hnumer","is_trk_bbbbbe == 1 && abs(dxy) < 3.5 && (Sum$(md5_pass)) > 0", "goffe")
+    # t.Draw("pt>>hnumer","(is_trk_bbbbee == 1) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) > 0", "goffe")
+    t.Draw("pt>>hnumer","(pt>1.4) && (abs(dxy) < 3.5) && (is_trk_bbbbee == 1) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) == 0", "goffe")
     hnumer.Draw()
     c1.SaveAs("hnumer.pdf")
     hnumer.Print("all")
@@ -109,14 +110,21 @@ def draw_on_bulk():
 
 def draw_debug():
     c1 = r.TCanvas()
-    t.Draw("tl3_passbits", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(Sum$(tl3_pass)==0)");
+    # t.Draw("TMath::Log2(tl3_passbits+1)>>(8,0,8)", "(is_trk_bbbbee==1)&&(is_trk_bbbbbe==0)&&(is_trk_bbbbbb==0)&&abs(dxy)<3.5&&pt>1.4&&(Sum$(tl3_pass)==0)");
+    # t.Draw("(TMath::Log2(tl3_passbits+1)*(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4)) + (-999)*(!(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))))>>(10,-2,8)", "(pt>1.4) && (abs(dxy) < 3.5) && (is_trk_bbbbee == 1) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) == 0");
+    t.Draw("TMath::Log2(tl3_passbits+1) * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==4 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4)>>(10,-2,8)", "(pt>1.4) && (abs(dxy) < 3.5) && (is_trk_bbbeee == 1) && (is_trk_bbbbee == 0) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==4 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) == 0");
+    # t.Draw("(tl3_dBeta*tl3_dBeta)-tl3_dBetaCut2", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(Sum$(tl3_pass)==0)&&(tl3_passbits>0)");
+    # t.Draw("tl3_dBetaCut2-(tl3_dBeta*tl3_dBeta)", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
+    # t.Draw("tl3_dBetaCut2-(tl3_dBeta*tl3_dBeta)", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
+    # t.Draw("tl3_outerSg_outerMd_lower_hit_subdet", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
+    # t.Draw("tl3_betacormode", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
     c1.SaveAs("debug.pdf")
 
 if __name__ == "__main__":
 
-    pt_eff()
     # eta_eff()
     # bad_event()
     # save_bulk()
     # draw_on_bulk()
-    # draw_debug()
+    # pt_eff()
+    draw_debug()
