@@ -112,12 +112,17 @@ def draw_debug():
     c1 = r.TCanvas()
     # t.Draw("TMath::Log2(tl3_passbits+1)>>(8,0,8)", "(is_trk_bbbbee==1)&&(is_trk_bbbbbe==0)&&(is_trk_bbbbbb==0)&&abs(dxy)<3.5&&pt>1.4&&(Sum$(tl3_pass)==0)");
     # t.Draw("(TMath::Log2(tl3_passbits+1)*(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4)) + (-999)*(!(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))))>>(10,-2,8)", "(pt>1.4) && (abs(dxy) < 3.5) && (is_trk_bbbbee == 1) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) == 0");
-    t.Draw("TMath::Log2(tl3_passbits+1) * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==4 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4)>>(10,-2,8)", "(pt>1.4) && (abs(dxy) < 3.5) && (is_trk_bbbeee == 1) && (is_trk_bbbbee == 0) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==4 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) == 0");
+    t.Draw("TMath::Log2(tl3_passbits+1) * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4)>>(10,-2,8)", "(pt>1.4) && (abs(dxy) < 3.5) && (is_trk_bbbbee == 1) && (is_trk_bbbbee == 1) && (is_trk_bbbbbe == 0) && (is_trk_bbbbbb == 0) && abs(dxy) < 3.5 && (Sum$(tl3_pass * (tl3_innerSg_innerMd_lower_hit_subdet==5 && tl3_innerSg_outerMd_lower_hit_subdet==5 && tl3_outerSg_innerMd_lower_hit_subdet==4 && tl3_outerSg_outerMd_lower_hit_subdet==4))) == 0");
     # t.Draw("(tl3_dBeta*tl3_dBeta)-tl3_dBetaCut2", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(Sum$(tl3_pass)==0)&&(tl3_passbits>0)");
     # t.Draw("tl3_dBetaCut2-(tl3_dBeta*tl3_dBeta)", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
     # t.Draw("tl3_dBetaCut2-(tl3_dBeta*tl3_dBeta)", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
     # t.Draw("tl3_outerSg_outerMd_lower_hit_subdet", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
     # t.Draw("tl3_betacormode", "is_trk_bbbbbe==1&&abs(dxy)<3.5&&pt>1.4&&(tl3_passbits>62)");
+    c1.SaveAs("debug.pdf")
+
+def draw_deltaBeta():
+    c1 = r.TCanvas()
+    t.Draw("tl1_dBeta", "tl1_passbits>=63")
     c1.SaveAs("debug.pdf")
 
 if __name__ == "__main__":
@@ -128,3 +133,4 @@ if __name__ == "__main__":
     # draw_on_bulk()
     # pt_eff()
     draw_debug()
+    # draw_deltaBeta()
