@@ -31,7 +31,7 @@ void StudySDLMiniDoubletDebugNtupleWriter::bookStudy()
 
     for (unsigned int ilayer = 1; ilayer <= 6; ++ilayer)
     {
-        ana.tx->createBranch<vector<int  >>(TString::Format("md%d_ncand", ilayer));
+        ana.tx->createBranch<int  >(TString::Format("md%d_ncand", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_dz", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_dphi", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("md%d_dphichange", ilayer));
@@ -57,7 +57,7 @@ void StudySDLMiniDoubletDebugNtupleWriter::bookStudy()
 
     for (unsigned int ilayer = 1; ilayer <= 5; ++ilayer)
     {
-        ana.tx->createBranch<vector<int  >>(TString::Format("mdendcap%d_ncand", ilayer));
+        ana.tx->createBranch<int  >(TString::Format("mdendcap%d_ncand", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_dz", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_dphi", ilayer));
         ana.tx->createBranch<vector<float>>(TString::Format("mdendcap%d_dphichange", ilayer));
@@ -146,7 +146,7 @@ void StudySDLMiniDoubletDebugNtupleWriter::doStudy(SDL::Event& event, std::vecto
         for (unsigned int ilayer = 1; ilayer <= 6; ilayer++)
         {
 
-            ana.tx->pushbackToBranch<int>(TString::Format("md%d_ncand", ilayer), trackevent.getLayer(ilayer, SDL::Layer::Barrel).getMiniDoubletPtrs().size() );
+            ana.tx->setBranch<int>(TString::Format("md%d_ncand", ilayer), trackevent.getLayer(ilayer, SDL::Layer::Barrel).getMiniDoubletPtrs().size() );
 
             for (auto& mdPtr : trackevent.getLayer(ilayer, SDL::Layer::Barrel).getMiniDoubletPtrs())
             {
@@ -181,7 +181,7 @@ void StudySDLMiniDoubletDebugNtupleWriter::doStudy(SDL::Event& event, std::vecto
         for (unsigned int ilayer = 1; ilayer <= 5; ilayer++)
         {
 
-            ana.tx->pushbackToBranch<int>(TString::Format("mdendcap%d_ncand", ilayer), trackevent.getLayer(ilayer, SDL::Layer::Endcap).getMiniDoubletPtrs().size() );
+            ana.tx->setBranch<int>(TString::Format("mdendcap%d_ncand", ilayer), trackevent.getLayer(ilayer, SDL::Layer::Endcap).getMiniDoubletPtrs().size() );
 
             for (auto& mdPtr : trackevent.getLayer(ilayer, SDL::Layer::Endcap).getMiniDoubletPtrs())
             {
