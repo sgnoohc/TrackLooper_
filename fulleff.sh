@@ -89,6 +89,21 @@ PDGID=13
 PTBOUND=6
 fi
 
+if [[ $1 == *"12"* ]]; then
+SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo.root
+SAMPLETAG=pu200_pdgid211_PUinfo
+PDGID=211
+PTBOUND=0
+fi
+
+if [[ $1 == *"13"* ]]; then
+SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo.root
+SAMPLETAG=pu200_pdgid13_PUinfo
+PDGID=13
+PTBOUND=0
+fi
+
+
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
 OUTPUTDIR=results/${SAMPLETAG}$2/
