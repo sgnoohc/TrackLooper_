@@ -128,12 +128,12 @@ hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
 # Writing some descriptive file
 echo "$3" > results/${SAMPLETAG}$2/description.txt
 git status >> results/${SAMPLETAG}$2/description.txt
-git log >> results/${SAMPLETAG}$2/description.txt
 git diff >> results/${SAMPLETAG}$2/description.txt
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}$2/description.txt
 cd SDL/
 git status >> ../results/${SAMPLETAG}$2/description.txt
-git log >> ../results/${SAMPLETAG}$2/description.txt
 git diff >> ../results/${SAMPLETAG}$2/description.txt
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}$2/description.txt
 cd ../
 
 # plotting

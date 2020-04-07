@@ -49,6 +49,9 @@ public:
     // to print module connection info
     bool print_conn;
 
+    // to print module boundary info
+    bool print_boundary;
+
     // to print centroid
     bool print_centroid;
 
@@ -80,6 +83,10 @@ public:
     // TTreeX to facilitate writing output to ttree
     RooUtil::TTreeX* tx;
 
+    // Module boundaries related info
+    std::map<int, std::array<float, 6>> moduleBoundaries;
+    std::map<int, std::vector<std::vector<float>>> moduleSimHits;
+    std::map<int, int> modulePopulation;
 };
 
 extern AnalysisConfig ana;

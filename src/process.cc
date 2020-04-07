@@ -28,6 +28,7 @@ int main(int argc, char** argv)
         ("l,run_ineff_study", "Write debug ntuples 0 = MDs, 1 = SGs, 2 = TLs, 3 = TCs"                                              , cxxopts::value<int>()->default_value("-1"))
         ("d,debug"          , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
         ("c,print_conn"     , "Print module connections")
+        ("b,print_boundary" , "Print module boundaries")
         ("r,centroid"       , "Print centroid information")
         ("e,run_eff_study"  , "Run efficiency study")
         ("m,run_mtv_study"  , "Run MTV study")
@@ -113,6 +114,17 @@ int main(int argc, char** argv)
     else
     {
         ana.print_conn = false;
+    }
+
+    //_______________________________________________________________________________
+    // --print_boundary
+    if (result.count("print_boundary"))
+    {
+        ana.print_boundary = true;
+    }
+    else
+    {
+        ana.print_boundary = false;
     }
 
     //_______________________________________________________________________________
@@ -259,6 +271,7 @@ int main(int argc, char** argv)
     std::cout <<  " ana.run_mtv_study: " << ana.run_mtv_study <<  std::endl;
     std::cout <<  " ana.print_centroid: " << ana.print_centroid <<  std::endl;
     std::cout <<  " ana.print_conn: " << ana.print_conn <<  std::endl;
+    std::cout <<  " ana.print_boundary: " << ana.print_boundary <<  std::endl;
     std::cout <<  " ana.ptbound_mode: " << ana.ptbound_mode <<  std::endl;
     std::cout <<  " ana.nsplit_jobs: " << ana.nsplit_jobs <<  std::endl;
     std::cout <<  " ana.job_index: " << ana.job_index <<  std::endl;
@@ -521,7 +534,8 @@ int main(int argc, char** argv)
     // Book Histograms
     ana.cutflow.bookHistograms(ana.histograms); // if just want to book everywhere
 
-    SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
+    // SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
+    SDL::endcapGeometry.load("scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
     SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
     SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
 
@@ -532,6 +546,26 @@ int main(int argc, char** argv)
 
     // connection information
     std::ofstream module_connection_log_output("conn.txt");
+
+    // module boundary information to be written out in case module boundary info is asked to be printed
+    std::ofstream module_boundary_output_info("module_boundary.txt");
+
+    // Write the simhits in a given module to the output TTree
+    if (ana.print_boundary)
+    {
+        ana.tx->createBranch<int>("detId");
+        ana.tx->createBranch<int>("subdet");
+        ana.tx->createBranch<int>("side");
+        ana.tx->createBranch<int>("layer");
+        ana.tx->createBranch<int>("rod");
+        ana.tx->createBranch<int>("module");
+        ana.tx->createBranch<int>("ring");
+        ana.tx->createBranch<int>("isPS");
+        ana.tx->createBranch<int>("isStrip");
+        ana.tx->createBranch<vector<float>>("x");
+        ana.tx->createBranch<vector<float>>("y");
+        ana.tx->createBranch<vector<float>>("z");
+    }
 
     // Looping input file
     while (ana.looper.nextEvent())
@@ -559,6 +593,16 @@ int main(int argc, char** argv)
         {
             // Print the module connection info and do nothing else on the event
             printModuleConnectionInfo(module_connection_log_output);
+            continue;
+        }
+
+        // *****************************************************
+        // Print module boundaries
+        // *****************************************************
+        if (ana.print_boundary)
+        {
+            // Print the module connection info and do nothing else on the event
+            processModuleBoundaryInfo();
             continue;
         }
 
@@ -1034,6 +1078,49 @@ int main(int argc, char** argv)
         // <--------------------------
     }
 
+    if (ana.print_boundary)
+    {
+        for (auto mb : ana.moduleBoundaries)
+        {
+            int detid = mb.first;
+            std::array<float, 6> bounds = mb.second;
+            float zmin = bounds[0];
+            float zmax = bounds[1];
+            float phimin = bounds[2];
+            float phimax = bounds[3];
+            float rtmin = bounds[4];
+            float rtmax = bounds[5];
+            float zlen = abs(zmax - zmin);
+            float philen = abs(phimax - phimin);
+            float rtlen = abs(rtmax - rtmin);
+            module_boundary_output_info <<  " detid: " << detid <<  " zlen: " << zlen <<  " philen: " << philen <<  " rtlen: " << rtlen <<  " zmax: " << zmax <<  " zmin: " << zmin <<  " phimax: " << phimax <<  " phimin: " << phimin <<  " rtmax: " << rtmax <<  " rtmin: " << rtmin <<  std::endl;
+            // std::cout <<  " detid: " << detid <<  " zlen: " << zlen <<  " philen: " << philen <<  " rtlen: " << rtlen <<  " zmax: " << zmax <<  " zmin: " << zmin <<  " phimax: " << phimax <<  " phimin: " << phimin <<  " rtmax: " << rtmax <<  " rtmin: " << rtmin <<  std::endl;
+        }
+        for (auto ms : ana.moduleSimHits)
+        {
+            int detid = ms.first;
+            std::vector<std::vector<float>>& hit_coords = ms.second;
+            SDL::Module module(detid);
+            ana.tx->setBranch<int>("detId", detid);
+            ana.tx->setBranch<int>("subdet", module.subdet());
+            ana.tx->setBranch<int>("side", module.side());
+            ana.tx->setBranch<int>("layer", module.layer());
+            ana.tx->setBranch<int>("rod", module.rod());
+            ana.tx->setBranch<int>("module", module.module());
+            ana.tx->setBranch<int>("ring", module.ring());
+            ana.tx->setBranch<int>("isPS", module.moduleType() == SDL::Module::PS);
+            ana.tx->setBranch<int>("isStrip", module.moduleLayerType() == SDL::Module::Strip);
+            for (auto& hit_coord : hit_coords)
+            {
+                ana.tx->pushbackToBranch<float>("x", hit_coord[0]);
+                ana.tx->pushbackToBranch<float>("y", hit_coord[1]);
+                ana.tx->pushbackToBranch<float>("z", hit_coord[2]);
+            }
+            ana.tx->fill();
+            ana.tx->clear();
+        }
+    }
+
     if (ana.print_centroid)
     {
 
@@ -1090,6 +1177,105 @@ int main(int argc, char** argv)
 
     // The below can be sometimes crucial
     delete ana.output_tfile;
+}
+
+int layer(int lay, int det)
+{
+    //try to restore the SLHC indexing:
+    // barrel: 5-10 OT
+    // endcap: 11-15 OT disks
+    // IT is not handled: "4" layers are filled from seed layer counting (no geometry ref)
+    if (det == 4) return 10 + lay; //OT endcap
+    if (det == 5) return 4 + lay; //OT barrel
+    return lay;
+}
+
+void processModuleBoundaryInfo()
+{
+    int iidOld = -1;
+
+    constexpr int nBoundPoints = 6;
+    constexpr int nLayersB = 10; //barrel layers
+    std::array<float, nBoundPoints>* cbound;
+
+    int dpop = 0;
+    int* cpop = nullptr;
+    std::array<float, nBoundPoints> dbound {999, -999, 999, -999, 999, -999}; //zmin, zmax, phimin, phimax, rtmin, rtmax
+
+    std::array<int, nLayersB + 1> hitsBarrelLayer {};
+    auto nPh2 = trk.ph2_isBarrel().size();
+    for (auto iph2 = 0U; iph2 < nPh2; ++iph2)
+    {
+        bool isBarrel = trk.ph2_isBarrel()[iph2];
+        int lay = layer(trk.ph2_layer()[iph2], trk.ph2_detId()[iph2]);
+        hitsBarrelLayer[lay]++;
+        int iid = trk.ph2_detId()[iph2];
+
+        SDL::Module module = SDL::Module(iid);
+
+        // if (not (module.layer() == 1 and module.subdet() == SDL::Module::Barrel and module.side() == SDL::Module::Center and module.rod() == 1 and module.module() == 1))
+        //     continue;
+
+        if (iidOld != iid)
+        {
+            iidOld = iid;
+            if (ana.modulePopulation.find(iid) == ana.modulePopulation.end())
+            {
+                ana.modulePopulation[iid] = dpop;
+                ana.moduleBoundaries[iid] = dbound;
+            }
+            cpop = &ana.modulePopulation[iid];
+            cbound = &ana.moduleBoundaries[iid];
+        }
+
+        //look at all associated simhits, ignoring double-counting
+        auto const& ph2shV = trk.ph2_simHitIdx()[iph2];
+        auto nPh2sh = ph2shV.size();
+        for (auto iph2sh = 0U; iph2sh < nPh2sh; ++iph2sh)
+        {
+            const float x = trk.simhit_x()[ph2shV[iph2sh]];
+            const float y = trk.simhit_y()[ph2shV[iph2sh]];
+            const float rt = sqrt(x * x + y * y);
+            // const float z = isBarrel ? trk.simhit_z()[ph2shV[iph2sh]] : rt;
+            const float z = trk.simhit_z()[ph2shV[iph2sh]];
+
+            if (z == 0)
+                continue;
+
+            float phi = atan2(y, x);
+
+            std::vector<float> simhit_coords = {x, y, z};
+            ana.moduleSimHits[iid].push_back(simhit_coords);
+
+            if ((*cbound)[0] > z)
+                (*cbound)[0] = z;
+            if ((*cbound)[1] < z)
+                (*cbound)[1] = z;
+
+            if (*cpop == 0)
+            {
+                (*cbound)[2] = phi;
+                (*cbound)[3] = phi;
+                (*cbound)[4] = rt;
+                (*cbound)[5] = rt;
+            }
+            else
+            {
+                if (sin((*cbound)[2] - phi) > 0)
+                    (*cbound)[2] = phi;
+                if (sin((*cbound)[3] - phi) < 0)
+                    (*cbound)[3] = phi;
+
+                if ((*cbound)[4] > rt)
+                    (*cbound)[4] = rt;
+                if ((*cbound)[5] < rt)
+                    (*cbound)[5] = rt;
+            }
+
+            (*cpop)++;
+        }
+    }
+
 }
 
 void printModuleConnectionInfo(std::ofstream& ostrm)
