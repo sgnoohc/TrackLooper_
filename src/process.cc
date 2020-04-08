@@ -663,8 +663,8 @@ int main(int argc, char** argv)
             for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
             {
 
-                if (trk.ph2_subdet()[ihit] != 5)
-                    continue;
+//                if (trk.ph2_subdet()[ihit] != 5)
+//                    continue;
 
                 // Takes two arguments, SDL::Hit, and detId
                 // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
