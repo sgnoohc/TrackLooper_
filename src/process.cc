@@ -515,6 +515,7 @@ int main(int argc, char** argv)
         studies.push_back(new StudyOccupancy("studyOccupancy"));
         studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
         studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+        studies.push_back(new StudySegmentOccupancy("studySegmentOccupancy"));
         studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
         studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
         studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
