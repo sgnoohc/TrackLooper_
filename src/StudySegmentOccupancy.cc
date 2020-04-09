@@ -51,6 +51,7 @@ void StudySegmentOccupancy::doStudy(SDL::Event &event, std::vector<std::tuple<un
     std::vector<int> nLayerModules = {0,0,0,0,0,0};
     averageBarrelLayerOccupancy.clear();
     averageBarrelLayerOccupancy = {0,0,0,0,0,0};
+    std::vector<int> nBarrelLayerModules = {0,0,0,0,0,0};
     averageEndcapLayerOccupancy.clear();
     averageEndcapLayerOccupancy = {0,0,0,0,0,0};
     std::vector<int> nEndcapLayerModules = {0,0,0,0,0,0};
