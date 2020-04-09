@@ -10,7 +10,7 @@ fi
 # rm -rf plots_${SAMPLETAG}
 # rm -rf results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
 
-cd results/${SAMPLETAG}${JOBTAG}/
+cd results/${SAMPLETAG}_${JOBTAG}/
 python ../../plot.py 1 ${OUTPUTFILE} ${SAMPLETAG} > plot_1.log &
 python ../../plot.py 2 ${OUTPUTFILE} ${SAMPLETAG} > plot_2.log &
 python ../../plot.py 3 ${OUTPUTFILE} ${SAMPLETAG} > plot_3.log &
@@ -19,4 +19,4 @@ sleep 1
 echo "<== Submitted parallel jobs ..."
 wait
 
-# cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
+# cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}_${JOBTAG}/plots_${SAMPLETAG}

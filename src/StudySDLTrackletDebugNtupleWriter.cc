@@ -28,6 +28,16 @@ void StudySDLTrackletDebugNtupleWriter::bookStudy()
     ana.tx->createBranch<vector<float>>("ph2_y");
     ana.tx->createBranch<vector<float>>("ph2_z");
 
+    ana.tx->createBranch<vector<float>>("simhit_x_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("simhit_y_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("simhit_z_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("simhit_px_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("simhit_py_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("simhit_pz_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("ph2_x_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("ph2_y_pdgid_matched");
+    ana.tx->createBranch<vector<float>>("ph2_z_pdgid_matched");
+
 
     for (unsigned int ilayer = 1; ilayer <= 3; ++ilayer)
     {
@@ -258,6 +268,22 @@ void StudySDLTrackletDebugNtupleWriter::doStudy(SDL::Event& event, std::vector<s
                 ana.tx->pushbackToBranch<float>("ph2_x", trk.ph2_x()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
                 ana.tx->pushbackToBranch<float>("ph2_y", trk.ph2_y()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
                 ana.tx->pushbackToBranch<float>("ph2_z", trk.ph2_z()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
+            }
+
+            if (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk])
+            {
+                ana.tx->pushbackToBranch<float>("simhit_x_pdgid_matched", trk.simhit_x()[simhitidx]);
+                ana.tx->pushbackToBranch<float>("simhit_y_pdgid_matched", trk.simhit_y()[simhitidx]);
+                ana.tx->pushbackToBranch<float>("simhit_z_pdgid_matched", trk.simhit_z()[simhitidx]);
+                ana.tx->pushbackToBranch<float>("simhit_px_pdgid_matched", trk.simhit_px()[simhitidx]);
+                ana.tx->pushbackToBranch<float>("simhit_py_pdgid_matched", trk.simhit_py()[simhitidx]);
+                ana.tx->pushbackToBranch<float>("simhit_pz_pdgid_matched", trk.simhit_pz()[simhitidx]);
+                for (unsigned int ireco_hit = 0; ireco_hit < trk.simhit_hitIdx()[simhitidx].size(); ++ireco_hit)
+                {
+                    ana.tx->pushbackToBranch<float>("ph2_x_pdgid_matched", trk.ph2_x()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
+                    ana.tx->pushbackToBranch<float>("ph2_y_pdgid_matched", trk.ph2_y()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
+                    ana.tx->pushbackToBranch<float>("ph2_z_pdgid_matched", trk.ph2_z()[trk.simhit_hitIdx()[simhitidx][ireco_hit]]);
+                }
             }
 
         }

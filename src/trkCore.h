@@ -12,6 +12,7 @@
 #include "Fit/Fitter.h"
 #include "AnalysisConfig.h"
 #include "SDL/ModuleConnectionMap.h"
+#include "SDL/Event.h"
 
 float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
@@ -28,5 +29,6 @@ std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVe
 bool checkModuleConnectionsAreGood(std::array<std::vector<unsigned int>, 6>& layers_good_paired_modules);
 
 void fitCircle(std::vector<float> x, std::vector<float> y);
+void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside=false);
 
 #endif
