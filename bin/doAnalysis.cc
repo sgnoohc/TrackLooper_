@@ -1,4 +1,4 @@
-#include "process.h"
+#include "doAnalysis.h"
 
 // ./process INPUTFILEPATH OUTPUTFILE [NEVENTS]
 int main(int argc, char** argv)
