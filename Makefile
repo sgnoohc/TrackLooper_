@@ -21,12 +21,12 @@ CFLAGS      = $(ROOTCFLAGS) -Wall -Wno-unused-function -g -O2 -fPIC -fno-var-tra
 EXTRACFLAGS = $(shell rooutil-config)
 EXTRAFLAGS  = -fPIC -ITMultiDrawTreePlayer -Wunused-variable -lTMVA -lEG -lGenVector -lXMLIO -lMLP -lTreePlayer
 
-all: doAnalysis
+all: doAnalysis mtv
 
-mtv: $(OBJECTS) mtv.o
+mtv: $(OBJECTS) bin/mtv.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
-doAnalysis: $(OBJECTS) process.o
+doAnalysis: $(OBJECTS) bin/process.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
 %.o: %.cc
