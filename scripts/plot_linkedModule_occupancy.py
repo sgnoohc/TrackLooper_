@@ -4,16 +4,28 @@ import ROOT as r
 import numpy as np
 import sys,os
 
-filename = "debug.root"
+filename = "../occupancy_studies/debug_all.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
-xaxis_range = [0,25] #SUBJECT TO CHANGE
 
 def plot_occupancy(hist,prefix):
-    global xaxis_range
     filename_prefix = prefix.replace(" ","_")
-    filename_prefix = "/home/users/bsathian/public_html/SDL/"+filename_prefix
+    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Linked_module_Occupancies_20200407/"+filename_prefix
+    #Fancy way to find xaxis range
+    nonzero_flag = False
+    xaxis_left = 0
+    for i in range(1,hist.GetNbinsX()):
+        if hist.GetBinContent(i) != 0:
+            if i > 2 and nonzero_flag == False:
+                xaxis_left = hist.GetBinLowEdge(i-2)
+            nonzero_flag = True
+        if hist.GetBinContent(i) == 0 and (hist.GetBinContent(i+1) - hist.GetBinContent(i)) == 0 and nonzero_flag == True:
+            print(hist.GetBinLowEdge(i))
+            xaxis_range = [xaxis_left,hist.GetBinLowEdge(i+3)]
+            break
+        xaxis_range = [0,100]
+
     ply.plot_hist(
         bgs = [hist],
         legend_labels = [prefix],
