@@ -4,6 +4,14 @@ trap "kill 0" EXIT
 
 TRACKINGNTUPLEDIR=/home/users/phchang/public_html/analysis/sdl/trackingNtuple
 
+if [ -z $1 ]; then
+    echo "Usage:"
+    echo ""
+    echo "  sh fulleff.sh SAMPLE TAG DESCRIPTION"
+    echo ""
+    exit
+fi
+
 if [[ $1 == *"1"* ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root
@@ -89,9 +97,39 @@ PDGID=13
 PTBOUND=6
 fi
 
+if [[ $1 == *"12"* ]]; then
+SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
+SAMPLETAG=pu200_w_truth_pdgid13
+PDGID=13
+PTBOUND=0
+fi
+
+if [[ $1 == *"13"* ]]; then
+SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
+SAMPLETAG=pu200_w_truth_pdgid211
+PDGID=211
+PTBOUND=0
+fi
+
+if [[ $1 == *"14"* ]]; then
+SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
+SAMPLETAG=pu200_w_truth_pdgid11
+PDGID=11
+PTBOUND=0
+fi
+
+if [[ $1 == *"15"* ]]; then
+SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
+SAMPLETAG=pu200_w_truth_charged
+PDGID=11
+PTBOUND=0
+fi
+
+JOBTAG=$2
+
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
-OUTPUTDIR=results/${SAMPLETAG}$2/
+OUTPUTDIR=results/${SAMPLETAG}_${JOBTAG}/
 
 mkdir -p ${OUTPUTDIR}
 rm -f ${OUTPUTDIR}/${OUTPUTFILE}
@@ -111,17 +149,17 @@ wait
 hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
 
 # Writing some descriptive file
-echo "$3" > results/${SAMPLETAG}$2/description.txt
-git status >> results/${SAMPLETAG}$2/description.txt
-git diff >> results/${SAMPLETAG}$2/description.txt
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}$2/description.txt
+echo "$3" > results/${SAMPLETAG}_${JOBTAG}/description.txt
+git status >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+git diff >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
 cd SDL/
-git status >> ../results/${SAMPLETAG}$2/description.txt
-git diff >> ../results/${SAMPLETAG}$2/description.txt
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}$2/description.txt
+git status >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
+git diff >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
 cd ../
 
 # plotting
-sh fulleff_plot.sh ${SAMPLETAG} $2
+sh fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
 
-echo ">>> results are in results/${SAMPLETAG}$2"
+echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"

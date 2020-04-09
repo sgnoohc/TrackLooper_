@@ -24,10 +24,15 @@ public:
         kStudySelBarrelBarrelBarrelBarrel,
         kStudySelBarrelBarrelEndcapEndcap,
         kStudySelBB1BB3,
+        kStudySelBB1BE3,
+        kStudySelBB1EE3,
         kStudySelBB1BB4,
         kStudySelBB1BB5,
         kStudySelBB2BB4,
+        kStudySelBB2BE4,
         kStudySelBB3BB5,
+        kStudySelBB3BE5,
+        kStudySelEE1EE3,
         kStudySelSpecific,
     };
 
@@ -61,6 +66,12 @@ public:
     std::vector<float> tl_truth_deltaBeta;
     std::vector<float> tl_truth_deltaBeta_4thCorr;
     std::vector<float> tl_truth_cutflow;
+
+    std::vector<float> tl_matched_track_deltaBeta;
+    std::vector<float> tl_matched_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_unmatched_track_deltaBeta;
+    std::vector<float> tl_unmatched_track_deltaBeta_4thCorr;
 
     std::array<std::vector<float>, 7> tl_deltaBeta_ptslice;
     std::array<std::array<std::vector<float>, 7>, NLAYERS> tl_deltaBeta_ptslice_by_layer;

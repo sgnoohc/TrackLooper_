@@ -11,10 +11,15 @@ StudyTrackletSelection::StudyTrackletSelection(const char* studyName, StudyTrack
         case kStudySelBarrelBarrelBarrelBarrel: modename = "barrelbarrelbarrelbarrel"; break;
         case kStudySelBarrelBarrelEndcapEndcap: modename = "barrelbarrelendcapendcap"; break;
         case kStudySelBB1BB3: modename = "bb1bb3"; break;
+        case kStudySelBB1BE3: modename = "bb1be3"; break;
+        case kStudySelBB1EE3: modename = "bb1ee3"; break;
         case kStudySelBB1BB4: modename = "bb1bb4"; break;
         case kStudySelBB1BB5: modename = "bb1bb5"; break;
         case kStudySelBB2BB4: modename = "bb2bb4"; break;
+        case kStudySelBB2BE4: modename = "bb2be4"; break;
         case kStudySelBB3BB5: modename = "bb3bb5"; break;
+        case kStudySelBB3BE5: modename = "bb3be5"; break;
+        case kStudySelEE1EE3: modename = "ee1ee3"; break;
         case kStudySelSpecific: modename = "specific"; break;
         default: modename = "UNDEFINED"; break;
     }
@@ -69,6 +74,24 @@ void StudyTrackletSelection::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_truth_deltaBeta_4thCorr; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_truth_deltaBeta_4thCorr; } );
     ana.histograms.addVecHistogram(TString::Format("tl_truth_%s_cutflow", modename), 8, 0, 8, [&]() { return tl_truth_cutflow; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_unmatched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_unmatched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_unmatched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_unmatched_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
 
     const int nlayers = NLAYERS;
     for (int ii = 0; ii < nlayers; ++ii)
@@ -209,6 +232,10 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
     tl_truth_cutflow.clear();
     tl_truth_deltaBeta.clear();
     tl_truth_deltaBeta_4thCorr.clear();
+    tl_matched_track_deltaBeta.clear();
+    tl_matched_track_deltaBeta_4thCorr.clear();
+    tl_unmatched_track_deltaBeta.clear();
+    tl_unmatched_track_deltaBeta_4thCorr.clear();
     for (int ii = 0; ii < 7; ++ii)
     {
         tl_deltaBeta_ptslice[ii].clear();
@@ -260,10 +287,10 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
             const SDL::Module& outerSgOuterMDLowerHitModule = tl->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule();
             const int innerSgInnerLayerIdx = innerSgInnerMDLowerHitModule.layer();
             const int outerSgInnerLayerIdx = outerSgInnerMDLowerHitModule.layer();
-            const bool innerSgInnerLayerBarrel = innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel;
-            const bool outerSgInnerLayerBarrel = outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel;
-            const bool innerSgOuterLayerBarrel = innerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel;
-            const bool outerSgOuterLayerBarrel = outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel;
+            const bool innerSgInnerLayerBarrel = (innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel);
+            const bool outerSgInnerLayerBarrel = (outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Barrel);
+            const bool innerSgOuterLayerBarrel = (innerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel);
+            const bool outerSgOuterLayerBarrel = (outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Barrel);
             const bool outerSgInnerLayerEndcap = outerSgInnerMDLowerHitModule.subdet() == SDL::Module::Endcap;
             const bool innerSgInnerLayerEndcap = innerSgInnerMDLowerHitModule.subdet() == SDL::Module::Endcap;
             const bool outerSgOuterLayerEndcap = outerSgOuterMDLowerHitModule.subdet() == SDL::Module::Endcap;
@@ -317,6 +344,28 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               ))
                                                                       continue;
                                                                   break;
+                case kStudySelBB1BE3:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 1
+                                                                              and outerSgInnerLayerIdx == 3
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBB1EE3:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 1
+                                                                              and outerSgInnerLayerIdx == 1
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
                 case kStudySelBB1BB4:
                                                                   if (not (
                                                                               innerSgInnerLayerIdx == 1
@@ -350,6 +399,17 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               ))
                                                                       continue;
                                                                   break;
+                case kStudySelBB2BE4:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 2
+                                                                              and outerSgInnerLayerIdx == 4
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
                 case kStudySelBB3BB5:
                                                                   if (not (
                                                                               innerSgInnerLayerIdx == 3
@@ -358,6 +418,28 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               and outerSgInnerLayerBarrel
                                                                               and innerSgOuterLayerBarrel
                                                                               and outerSgOuterLayerBarrel
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBB3BE5:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 3
+                                                                              and outerSgInnerLayerIdx == 5
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelEE1EE3:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 1
+                                                                              and outerSgInnerLayerIdx == 3
+                                                                              and innerSgInnerLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
                                                                               ))
                                                                       continue;
                                                                   break;
@@ -381,9 +463,20 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
 
         }
 
+        // if (mode == kStudySelBB3BE5)
+        // {
+        //     std::cout <<  " layerPtr->getTrackletPtrs().size(): " << layerPtr->getTrackletPtrs().size() <<  std::endl;
+        //     std::cout <<  " tls_of_interest.size(): " << tls_of_interest.size() <<  std::endl;
+        // }
+
         // If no tls of interest are found then skip
         if (tls_of_interest.size() == 0)
             continue;
+
+        // if (mode == kStudySelBB3BE5)
+        // {
+        //     std::cout << " have BB3BE5 tracklets" << std::endl;
+        // }
 
         // // Ghost removing
         // std::vector<int> tls_of_interest_mask;
@@ -576,109 +669,183 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 tl_deltaBeta_by_layer[layer_idx].push_back(deltaBeta);
                 tl_deltaBeta_dcut_by_layer[layer_idx].push_back(deltaBetaCut);
 
-                if (fabs(deltaBeta) > 0.01 and fabs(deltaBeta) < 0.02)
+                std::vector<int> ph2_idxs = {
+                    tl->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+                    tl->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+                    tl->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+                    tl->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+                    tl->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+                    tl->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+                    tl->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+                    tl->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+                };
+
+                std::vector<unsigned int> all_trk_idxs;
+                std::array<vector<unsigned int>, 8> simTrkIdxs;
+
+                for (unsigned int ihit = 0; ihit < ph2_idxs.size(); ++ihit)
                 {
-
-                    // std::cout << tl << std::endl;
-                    const std::vector<int>& simhitidx_innerSg_innerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_innerSg_innerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_innerSg_outerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_innerSg_outerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_outerSg_innerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_outerSg_innerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_outerSg_outerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx()];
-                    const std::vector<int>& simhitidx_outerSg_outerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()];
-
-                    const int& simhitidx_innerSg_innerMD_lowerHit = simhitidx_innerSg_innerMD_lowerHit_vector.size() > 0 ? simhitidx_innerSg_innerMD_lowerHit_vector[0] : -999;
-                    const int& simhitidx_innerSg_innerMD_upperHit = simhitidx_innerSg_innerMD_upperHit_vector.size() > 0 ? simhitidx_innerSg_innerMD_upperHit_vector[0] : -999;
-                    const int& simhitidx_innerSg_outerMD_lowerHit = simhitidx_innerSg_outerMD_lowerHit_vector.size() > 0 ? simhitidx_innerSg_outerMD_lowerHit_vector[0] : -999;
-                    const int& simhitidx_innerSg_outerMD_upperHit = simhitidx_innerSg_outerMD_upperHit_vector.size() > 0 ? simhitidx_innerSg_outerMD_upperHit_vector[0] : -999;
-                    const int& simhitidx_outerSg_innerMD_lowerHit = simhitidx_outerSg_innerMD_lowerHit_vector.size() > 0 ? simhitidx_outerSg_innerMD_lowerHit_vector[0] : -999;
-                    const int& simhitidx_outerSg_innerMD_upperHit = simhitidx_outerSg_innerMD_upperHit_vector.size() > 0 ? simhitidx_outerSg_innerMD_upperHit_vector[0] : -999;
-                    const int& simhitidx_outerSg_outerMD_lowerHit = simhitidx_outerSg_outerMD_lowerHit_vector.size() > 0 ? simhitidx_outerSg_outerMD_lowerHit_vector[0] : -999;
-                    const int& simhitidx_outerSg_outerMD_upperHit = simhitidx_outerSg_outerMD_upperHit_vector.size() > 0 ? simhitidx_outerSg_outerMD_upperHit_vector[0] : -999;
-
-                    int simhit_particle_innerSg_innerMD_lowerHit = simhitidx_innerSg_innerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_innerMD_lowerHit] : -999;
-                    int simhit_particle_innerSg_innerMD_upperHit = simhitidx_innerSg_innerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_innerMD_upperHit] : -999;
-                    int simhit_particle_innerSg_outerMD_lowerHit = simhitidx_innerSg_outerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_outerMD_lowerHit] : -999;
-                    int simhit_particle_innerSg_outerMD_upperHit = simhitidx_innerSg_outerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_outerMD_upperHit] : -999;
-                    int simhit_particle_outerSg_innerMD_lowerHit = simhitidx_outerSg_innerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_innerMD_lowerHit] : -999;
-                    int simhit_particle_outerSg_innerMD_upperHit = simhitidx_outerSg_innerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_innerMD_upperHit] : -999;
-                    int simhit_particle_outerSg_outerMD_lowerHit = simhitidx_outerSg_outerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_outerMD_lowerHit] : -999;
-                    int simhit_particle_outerSg_outerMD_upperHit = simhitidx_outerSg_outerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_outerMD_upperHit] : -999;
-
-                    int simhit_simTrkIdx_innerSg_innerMD_lowerHit = simhitidx_innerSg_innerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_innerMD_lowerHit] : -999;
-                    int simhit_simTrkIdx_innerSg_innerMD_upperHit = simhitidx_innerSg_innerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_innerMD_upperHit] : -999;
-                    int simhit_simTrkIdx_innerSg_outerMD_lowerHit = simhitidx_innerSg_outerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_outerMD_lowerHit] : -999;
-                    int simhit_simTrkIdx_innerSg_outerMD_upperHit = simhitidx_innerSg_outerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_outerMD_upperHit] : -999;
-                    int simhit_simTrkIdx_outerSg_innerMD_lowerHit = simhitidx_outerSg_innerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_innerMD_lowerHit] : -999;
-                    int simhit_simTrkIdx_outerSg_innerMD_upperHit = simhitidx_outerSg_innerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_innerMD_upperHit] : -999;
-                    int simhit_simTrkIdx_outerSg_outerMD_lowerHit = simhitidx_outerSg_outerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_outerMD_lowerHit] : -999;
-                    int simhit_simTrkIdx_outerSg_outerMD_upperHit = simhitidx_outerSg_outerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_outerMD_upperHit] : -999;
-
-                    // std::cout <<  " =============dbeta 0.01 to 0.02===========" << std::endl;
-                    // std::cout <<  " ==============simhit_particle=============" << std::endl;
-                    // std::cout <<  " simhit_particle_innerSg_innerMD_lowerHit: " << simhit_particle_innerSg_innerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_innerSg_innerMD_upperHit: " << simhit_particle_innerSg_innerMD_upperHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_innerSg_outerMD_lowerHit: " << simhit_particle_innerSg_outerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_innerSg_outerMD_upperHit: " << simhit_particle_innerSg_outerMD_upperHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_outerSg_innerMD_lowerHit: " << simhit_particle_outerSg_innerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_outerSg_innerMD_upperHit: " << simhit_particle_outerSg_innerMD_upperHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_outerSg_outerMD_lowerHit: " << simhit_particle_outerSg_outerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_particle_outerSg_outerMD_upperHit: " << simhit_particle_outerSg_outerMD_upperHit <<  std::endl;
-
-                    // std::cout <<  " ==============simhit_simTrkIdx============" << std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_innerSg_innerMD_lowerHit: " << simhit_simTrkIdx_innerSg_innerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_innerSg_innerMD_upperHit: " << simhit_simTrkIdx_innerSg_innerMD_upperHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_innerSg_outerMD_lowerHit: " << simhit_simTrkIdx_innerSg_outerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_innerSg_outerMD_upperHit: " << simhit_simTrkIdx_innerSg_outerMD_upperHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_outerSg_innerMD_lowerHit: " << simhit_simTrkIdx_outerSg_innerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_outerSg_innerMD_upperHit: " << simhit_simTrkIdx_outerSg_innerMD_upperHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_outerSg_outerMD_lowerHit: " << simhit_simTrkIdx_outerSg_outerMD_lowerHit <<  std::endl;
-                    // std::cout <<  " simhit_simTrkIdx_outerSg_outerMD_upperHit: " << simhit_simTrkIdx_outerSg_outerMD_upperHit <<  std::endl;
-
-                    // std::cout << std::endl;
-                    // std::cout <<  "dbeta failed";
-                    // std::cout <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_innerSg_innerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_innerSg_innerMD_upperHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_innerSg_outerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_innerSg_outerMD_upperHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_outerSg_innerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_outerSg_innerMD_upperHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_outerSg_outerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_particle_outerSg_outerMD_upperHit;
-                    // std::cout <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_innerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_innerMD_upperHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_outerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_outerMD_upperHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_innerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_innerMD_upperHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_outerMD_lowerHit <<  " : ";
-                    // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_outerMD_upperHit;
-                    // std::cout <<  " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_innerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_innerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_innerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_innerMD_upperHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_outerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_outerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_outerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_outerMD_upperHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_innerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_innerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_innerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_innerMD_upperHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_outerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_outerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_outerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_outerMD_upperHit] : -99);
-                    // std::cout <<  " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_innerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_innerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_innerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_innerMD_upperHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_outerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_outerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_outerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_outerMD_upperHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_innerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_innerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_innerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_innerMD_upperHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_outerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_outerMD_lowerHit] : -99) << " : ";
-                    // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_outerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_outerMD_upperHit] : -99);
-                    // std::cout << std::endl;
-
-
+                    unsigned int ph2_idx = ph2_idxs[ihit];
+                    for (auto& simhitidx : trk.ph2_simHitIdx()[ph2_idx])
+                    {
+                        unsigned int trkidx = trk.simhit_simTrkIdx()[simhitidx];
+                        simTrkIdxs[ihit].push_back(trkidx);
+                        if (std::find(all_trk_idxs.begin(), all_trk_idxs.end(), trkidx) == all_trk_idxs.end())
+                        {
+                            all_trk_idxs.push_back(trkidx);
+                        }
+                    }
                 }
+
+                bool matched = true;
+                for (auto& idx_to_check : all_trk_idxs)
+                {
+                    for (unsigned int ihit = 0; ihit < ph2_idxs.size(); ++ihit)
+                    {
+                        if (simTrkIdxs[ihit].size() == 0)
+                        {
+                            matched = false;
+                            break;
+                        }
+
+                        if (std::find(simTrkIdxs[ihit].begin(), simTrkIdxs[ihit].end(), idx_to_check) == simTrkIdxs[ihit].end())
+                        {
+                            matched = false;
+                            break;
+                        }
+                    }
+
+                    if (not matched)
+                        break;
+                }
+
+                if (matched)
+                {
+                    tl_matched_track_deltaBeta.push_back(deltaBeta);
+                    tl_matched_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                }
+                else
+                {
+                    tl_unmatched_track_deltaBeta.push_back(deltaBeta);
+                    tl_unmatched_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                }
+
+
+                // std::cout << "debug print" << std::endl;
+                // for (unsigned int ihit = 0; ihit < ph2_idxs.size(); ++ihit)
+                // {
+                //     std::cout << ihit << ":";
+                //     for (auto& simtrkidx : simTrkIdxs[ihit])
+                //     {
+                //         std::cout << " " << simtrkidx;
+                //     }
+                //     std::cout << std::endl;
+                // }
+
+
+                // if (fabs(deltaBeta) > 0.01 and fabs(deltaBeta) < 0.02)
+                // {
+
+                //     // std::cout << tl << std::endl;
+                //     const std::vector<int>& simhitidx_innerSg_innerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_innerSg_innerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_innerSg_outerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_innerSg_outerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_outerSg_innerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_outerSg_innerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_outerSg_outerMD_lowerHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx()];
+                //     const std::vector<int>& simhitidx_outerSg_outerMD_upperHit_vector = trk.ph2_simHitIdx()[tl->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()];
+
+                //     const int& simhitidx_innerSg_innerMD_lowerHit = simhitidx_innerSg_innerMD_lowerHit_vector.size() > 0 ? simhitidx_innerSg_innerMD_lowerHit_vector[0] : -999;
+                //     const int& simhitidx_innerSg_innerMD_upperHit = simhitidx_innerSg_innerMD_upperHit_vector.size() > 0 ? simhitidx_innerSg_innerMD_upperHit_vector[0] : -999;
+                //     const int& simhitidx_innerSg_outerMD_lowerHit = simhitidx_innerSg_outerMD_lowerHit_vector.size() > 0 ? simhitidx_innerSg_outerMD_lowerHit_vector[0] : -999;
+                //     const int& simhitidx_innerSg_outerMD_upperHit = simhitidx_innerSg_outerMD_upperHit_vector.size() > 0 ? simhitidx_innerSg_outerMD_upperHit_vector[0] : -999;
+                //     const int& simhitidx_outerSg_innerMD_lowerHit = simhitidx_outerSg_innerMD_lowerHit_vector.size() > 0 ? simhitidx_outerSg_innerMD_lowerHit_vector[0] : -999;
+                //     const int& simhitidx_outerSg_innerMD_upperHit = simhitidx_outerSg_innerMD_upperHit_vector.size() > 0 ? simhitidx_outerSg_innerMD_upperHit_vector[0] : -999;
+                //     const int& simhitidx_outerSg_outerMD_lowerHit = simhitidx_outerSg_outerMD_lowerHit_vector.size() > 0 ? simhitidx_outerSg_outerMD_lowerHit_vector[0] : -999;
+                //     const int& simhitidx_outerSg_outerMD_upperHit = simhitidx_outerSg_outerMD_upperHit_vector.size() > 0 ? simhitidx_outerSg_outerMD_upperHit_vector[0] : -999;
+
+                //     int simhit_particle_innerSg_innerMD_lowerHit = simhitidx_innerSg_innerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_innerMD_lowerHit] : -999;
+                //     int simhit_particle_innerSg_innerMD_upperHit = simhitidx_innerSg_innerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_innerMD_upperHit] : -999;
+                //     int simhit_particle_innerSg_outerMD_lowerHit = simhitidx_innerSg_outerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_outerMD_lowerHit] : -999;
+                //     int simhit_particle_innerSg_outerMD_upperHit = simhitidx_innerSg_outerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_innerSg_outerMD_upperHit] : -999;
+                //     int simhit_particle_outerSg_innerMD_lowerHit = simhitidx_outerSg_innerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_innerMD_lowerHit] : -999;
+                //     int simhit_particle_outerSg_innerMD_upperHit = simhitidx_outerSg_innerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_innerMD_upperHit] : -999;
+                //     int simhit_particle_outerSg_outerMD_lowerHit = simhitidx_outerSg_outerMD_lowerHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_outerMD_lowerHit] : -999;
+                //     int simhit_particle_outerSg_outerMD_upperHit = simhitidx_outerSg_outerMD_upperHit >= 0 ? trk.simhit_particle()[simhitidx_outerSg_outerMD_upperHit] : -999;
+
+                //     int simhit_simTrkIdx_innerSg_innerMD_lowerHit = simhitidx_innerSg_innerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_innerMD_lowerHit] : -999;
+                //     int simhit_simTrkIdx_innerSg_innerMD_upperHit = simhitidx_innerSg_innerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_innerMD_upperHit] : -999;
+                //     int simhit_simTrkIdx_innerSg_outerMD_lowerHit = simhitidx_innerSg_outerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_outerMD_lowerHit] : -999;
+                //     int simhit_simTrkIdx_innerSg_outerMD_upperHit = simhitidx_innerSg_outerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_innerSg_outerMD_upperHit] : -999;
+                //     int simhit_simTrkIdx_outerSg_innerMD_lowerHit = simhitidx_outerSg_innerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_innerMD_lowerHit] : -999;
+                //     int simhit_simTrkIdx_outerSg_innerMD_upperHit = simhitidx_outerSg_innerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_innerMD_upperHit] : -999;
+                //     int simhit_simTrkIdx_outerSg_outerMD_lowerHit = simhitidx_outerSg_outerMD_lowerHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_outerMD_lowerHit] : -999;
+                //     int simhit_simTrkIdx_outerSg_outerMD_upperHit = simhitidx_outerSg_outerMD_upperHit >= 0 ? trk.simhit_simTrkIdx()[simhitidx_outerSg_outerMD_upperHit] : -999;
+
+                //     // std::cout <<  " =============dbeta 0.01 to 0.02===========" << std::endl;
+                //     // std::cout <<  " ==============simhit_particle=============" << std::endl;
+                //     // std::cout <<  " simhit_particle_innerSg_innerMD_lowerHit: " << simhit_particle_innerSg_innerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_innerSg_innerMD_upperHit: " << simhit_particle_innerSg_innerMD_upperHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_innerSg_outerMD_lowerHit: " << simhit_particle_innerSg_outerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_innerSg_outerMD_upperHit: " << simhit_particle_innerSg_outerMD_upperHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_outerSg_innerMD_lowerHit: " << simhit_particle_outerSg_innerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_outerSg_innerMD_upperHit: " << simhit_particle_outerSg_innerMD_upperHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_outerSg_outerMD_lowerHit: " << simhit_particle_outerSg_outerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_particle_outerSg_outerMD_upperHit: " << simhit_particle_outerSg_outerMD_upperHit <<  std::endl;
+
+                //     // std::cout <<  " ==============simhit_simTrkIdx============" << std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_innerSg_innerMD_lowerHit: " << simhit_simTrkIdx_innerSg_innerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_innerSg_innerMD_upperHit: " << simhit_simTrkIdx_innerSg_innerMD_upperHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_innerSg_outerMD_lowerHit: " << simhit_simTrkIdx_innerSg_outerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_innerSg_outerMD_upperHit: " << simhit_simTrkIdx_innerSg_outerMD_upperHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_outerSg_innerMD_lowerHit: " << simhit_simTrkIdx_outerSg_innerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_outerSg_innerMD_upperHit: " << simhit_simTrkIdx_outerSg_innerMD_upperHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_outerSg_outerMD_lowerHit: " << simhit_simTrkIdx_outerSg_outerMD_lowerHit <<  std::endl;
+                //     // std::cout <<  " simhit_simTrkIdx_outerSg_outerMD_upperHit: " << simhit_simTrkIdx_outerSg_outerMD_upperHit <<  std::endl;
+
+                //     // std::cout << std::endl;
+                //     // std::cout <<  "dbeta failed";
+                //     // std::cout <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_innerSg_innerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_innerSg_innerMD_upperHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_innerSg_outerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_innerSg_outerMD_upperHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_outerSg_innerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_outerSg_innerMD_upperHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_outerSg_outerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_particle_outerSg_outerMD_upperHit;
+                //     // std::cout <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_innerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_innerMD_upperHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_outerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_innerSg_outerMD_upperHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_innerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_innerMD_upperHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_outerMD_lowerHit <<  " : ";
+                //     // std::cout << std::setw(4) << simhit_simTrkIdx_outerSg_outerMD_upperHit;
+                //     // std::cout <<  " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_innerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_innerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_innerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_innerMD_upperHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_outerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_outerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_innerSg_outerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_innerSg_outerMD_upperHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_innerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_innerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_innerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_innerMD_upperHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_outerMD_lowerHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_outerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(8) << (simhit_simTrkIdx_outerSg_outerMD_upperHit ? trk.sim_pt()[simhit_simTrkIdx_outerSg_outerMD_upperHit] : -99);
+                //     // std::cout <<  " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_innerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_innerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_innerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_innerMD_upperHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_outerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_outerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_innerSg_outerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_innerSg_outerMD_upperHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_innerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_innerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_innerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_innerMD_upperHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_outerMD_lowerHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_outerMD_lowerHit] : -99) << " : ";
+                //     // std::cout << std::setw(4) << (simhit_simTrkIdx_outerSg_outerMD_upperHit ? trk.sim_pdgId()[simhit_simTrkIdx_outerSg_outerMD_upperHit] : -99);
+                //     // std::cout << std::endl;
+
+
+                // }
 
                 // if (mode == kStudySelBB1BB3)
                 //     ana.tx->setBranch<int>("tl_leg", 1);
@@ -942,6 +1109,17 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                     and outerSgInnerLayerBarrel
                                                                     and innerSgOuterLayerBarrel
                                                                     and outerSgOuterLayerBarrel
+                                                                ))
+                                                            continue;
+                                                        break;
+                    case kStudySelBB3BE5:
+                                                        if (not (
+                                                                    innerSgInnerLayerIdx == 3
+                                                                    and outerSgInnerLayerIdx == 5
+                                                                    and innerSgInnerLayerBarrel
+                                                                    and outerSgInnerLayerBarrel
+                                                                    and innerSgOuterLayerBarrel
+                                                                    and outerSgOuterLayerEndcap
                                                                 ))
                                                             continue;
                                                         break;

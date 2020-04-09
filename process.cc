@@ -314,131 +314,6 @@ int main(int argc, char** argv)
 //
 //********************************************************************************
 
-    // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-    // Quick tutorial on RooUtil::Cutflow object cut tree formation
-    // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-    //
-    // The RooUtil::Cutflow object facilitates creating a tree structure of cuts
-    //
-    // To add cuts to each node of the tree with cuts defined, use "addCut" or "addCutToLastActiveCut"
-    // The "addCut" or "addCutToLastActiveCut" accepts three argument, <name>, and two lambda's that define the cut selection, and the weight to apply to that cut stage
-    //
-    // e.g. To create following cut-tree structure one does
-    //
-    //             (Root) <--- Always exists as soon as RooUtil::Cutflow object is created. But this is basically hidden underneath and users do not have to care
-    //                |
-    //            CutWeight
-    //            |       |
-    //     CutPreSel1    CutPreSel2
-    //       |                  |
-    //     CutSel1           CutSel2
-    //
-    //
-    //   code:
-    //
-    //      // Create the object (Root node is created as soon as the instance is created)
-    //      RooUtil::Cutflow cutflow;
-    //
-    //      cutflow.addCut("CutWeight"                 , <lambda> , <lambda>); // CutWeight is added below "Root"-node
-    //      cutflow.addCutToLastActiveCut("CutPresel1" , <lambda> , <lambda>); // The last "active" cut is "CutWeight" since I just added that. So "CutPresel1" is added below "CutWeight"
-    //      cutflow.addCutToLastActiveCut("CutSel1"    , <lambda> , <lambda>); // The last "active" cut is "CutPresel1" since I just added that. So "CutSel1" is added below "CutPresel1"
-    //
-    //      cutflow.getCut("CutWeight"); // By "getting" the cut object, this makes the "CutWeight" the last "active" cut.
-    //      cutflow.addCutToLastActiveCut("CutPresel2" , <lambda> , <lambda>); // The last "active" cut is "CutWeight" since I "getCut" on it. So "CutPresel2" is added below "CutWeight"
-    //      cutflow.addCutToLastActiveCut("CutSel2"    , <lambda> , <lambda>); // The last "active" cut is "CutPresel2" since I just added that. So "CutSel2" is added below "CutPresel1"
-    //
-    // (Side note: "UNITY" lambda is defined in the framework to just return 1. This so that use don't have to type [&]() {return 1;} so many times.)
-    //
-    // Once the cutflow is formed, create cutflow histograms can be created by calling RooUtil::Cutflow::bookCutflows())
-    // This function looks through the terminating nodes of the tree structured cut tree. and creates a histogram that will fill the yields
-    // For the example above, there are two terminationg nodes, "CutSel1", and "CutSel2"
-    // So in this case Root::Cutflow::bookCutflows() will create two histograms. (Actually four histograms.)
-    //
-    //  - TH1F* type object :  CutSel1_cutflow (4 bins, with first bin labeled "Root", second bin labeled "CutWeight", third bin labeled "CutPreSel1", fourth bin labeled "CutSel1")
-    //  - TH1F* type object :  CutSel2_cutflow (...)
-    //  - TH1F* type object :  CutSel1_rawcutflow (...)
-    //  - TH1F* type object :  CutSel2_rawcutflow (...)
-    //                                ^
-    //                                |
-    // NOTE: There is only one underscore "_" between <CutName>_cutflow or <CutName>_rawcutflow
-    //
-    // And later in the loop when RooUtil::Cutflow::fill() function is called, the tree structure will be traversed through and the appropriate yields will be filled into the histograms
-    //
-    // After running the loop check for the histograms in the output root file
-
-    // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-    // Quick tutorial on RooUtil::Histograms object
-    // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-    //
-    // The RooUtil::Histograms object facilitates book keeping histogram definitions
-    // And in conjunction with RooUtil::Cutflow object, one can book same histograms across different cut stages easily without copy pasting codes many times by hand.
-    //
-    // The histogram addition happens in two steps.
-    // 1. Defining histograms
-    // 2. Booking histograms to cuts
-    //
-    // Histograms are defined via following functions
-    //
-    //      RooUtil::Histograms::addHistogram       : Typical 1D histogram (TH1F*) "Fill()" called once per event
-    //      RooUtil::Histograms::addVecHistogram    : Typical 1D histogram (TH1F*) "Fill()" called multiple times per event
-    //      RooUtil::Histograms::add2DHistogram     : Typical 2D histogram (TH2F*) "Fill()" called once per event
-    //      RooUtil::Histograms::add2DVecHistogram  : Typical 2D histogram (TH2F*) "Fill()" called multiple times per event
-    // e.g.
-    //
-    //    RooUtil::Histograms histograms;
-    //    histograms.addHistogram   ("MllSS"    , 180 , 0. , 300. , [&]() { return www.MllSS()  ; }); // The lambda returns float
-    //    histograms.addVecHistogram("AllLepPt" , 180 , 0. , 300. , [&]() { return www.lep_pt() ; }); // The lambda returns vector<float>
-    //
-    // The addVecHistogram will have lambda to return vector<float> and it will loop over the values and call TH1F::Fill() for each item
-    //
-    // To book histograms to cuts one uses
-    //
-    //      RooUtil::Cutflow::bookHistogramsForCut()
-    //      RooUtil::Cutflow::bookHistogramsForCutAndBelow()
-    //      RooUtil::Cutflow::bookHistogramsForCutAndAbove()
-    //      RooUtil::Cutflow::bookHistogramsForEndCuts()
-    //
-    // e.g. Given a tree like the following, we can book histograms to various cuts as we want
-    //
-    //              Root
-    //                |
-    //            CutWeight
-    //            |       |
-    //     CutPreSel1    CutPreSel2
-    //       |                  |
-    //     CutSel1           CutSel2
-    //
-    // For example,
-    //
-    //    1. book a set of histograms to one cut:
-    //
-    //       cutflow.bookHistogramsForCut(histograms, "CutPreSel2")
-    //
-    //    2. book a set of histograms to a cut and below
-    //
-    //       cutflow.bookHistogramsForCutAndBelow(histograms, "CutWeight") // will book a set of histograms to CutWeight, CutPreSel1, CutPreSel2, CutSel1, and CutSel2
-    //
-    //    3. book a set of histograms to a cut and above (... useless...?)
-    //
-    //       cutflow.bookHistogramsForCutAndAbove(histograms, "CutPreSel2") // will book a set of histograms to CutPreSel2, CutWeight (nothing happens to Root node)
-    //
-    //    4. book a set of histograms to a terminating nodes
-    //
-    //       cutflow.bookHistogramsForEndCuts(histograms) // will book a set of histograms to CutSel1 and CutSel2
-    //
-    // The naming convention of the booked histograms are as follows
-    //
-    //   cutflow.bookHistogramsForCut(histograms, "CutSel1");
-    //
-    //  - TH1F* type object : CutSel1__MllSS;
-    //  - TH1F* type object : CutSel1__AllLepPt;
-    //                               ^^
-    //                               ||
-    // NOTE: There are two underscores "__" between <CutName>__<HistogramName>
-    //
-    // And later in the loop when RooUtil::CutName::fill() function is called, the tree structure will be traversed through and the appropriate histograms will be filled with appropriate variables
-    // After running the loop check for the histograms in the output root file
-
     // Set the cutflow object output file
     ana.cutflow.setTFile(ana.output_tfile);
     // ana.cutflow.addCut("CutWeight", UNITY, UNITY);
@@ -518,6 +393,11 @@ int main(int argc, char** argv)
         studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
         studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
         studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB1BE3", StudyTrackletSelection::kStudySelBB1BE3));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB2BE4", StudyTrackletSelection::kStudySelBB2BE4));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB3BE5", StudyTrackletSelection::kStudySelBB3BE5));
+        studies.push_back(new StudyTrackletSelection("studySelTlBB1EE3", StudyTrackletSelection::kStudySelBB1EE3));
+        studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3", StudyTrackletSelection::kStudySelEE1EE3));
         // studies.push_back(new StudyTripletSelection("studySelTPBB1BB2", StudyTripletSelection::kStudySelBB1BB2));
         // studies.push_back(new StudyTripletSelection("studySelTPBB2BB3", StudyTripletSelection::kStudySelBB2BB3));
         // studies.push_back(new StudyTripletSelection("studySelTPBB3BB4", StudyTripletSelection::kStudySelBB3BB4));
@@ -663,8 +543,18 @@ int main(int argc, char** argv)
             for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
             {
 
-                if (trk.ph2_subdet()[ihit] != 5)
-                    continue;
+                // if (trk.ph2_subdet()[ihit] != 5)
+                //     continue;
+
+                // if (trk.sim_pt()[trk.simhit_simTrkIdx()[trk.ph2_simHitIdx()[ihit][0]]] < 2.5)
+                //     continue;
+
+                for (auto& isimhit : trk.ph2_simHitIdx()[ihit])
+                {
+                    int isimtrk = trk.simhit_simTrkIdx()[isimhit];
+                    if (trk.sim_pt()[isimtrk] < 2.5)
+                        continue;
+                }
 
                 // Takes two arguments, SDL::Hit, and detId
                 // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
@@ -916,13 +806,23 @@ int main(int argc, char** argv)
             for (unsigned int isimtrk = 0; isimtrk < trk.sim_q().size(); ++isimtrk)
             {
 
-                // Select only muon tracks
-                if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
-                    continue;
+                // Then select all charged particle
+                if (ana.pdg_id == 1)
+                {
+                    // Select only muon tracks
+                    if (abs(trk.sim_q()[isimtrk]) == 0)
+                        continue;
+                }
+                else
+                {
+                    // Select only muon tracks
+                    if (abs(trk.sim_pdgId()[isimtrk]) != ana.pdg_id)
+                        continue;
+                }
 
-                // Select hard scatter only
-                if (abs(trk.sim_event()[isimtrk]) != 0)
-                    continue;
+                // // Select hard scatter only
+                // if (abs(trk.sim_event()[isimtrk]) != 0)
+                //     continue;
 
                 // Select in time only
                 if (abs(trk.sim_bunchCrossing()[isimtrk]) != 0)
@@ -1513,92 +1413,3 @@ void printModuleConnectionInfo(std::ofstream& ostrm)
 
 // }
 
-void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside)
-{
-
-    std::vector<int> multiplicities;
-    int total_nmult = 0;
-    float avg_mult = 0;
-
-    if (not goinside)
-    {
-        // ----------------
-        multiplicities.clear();
-        total_nmult = 0;
-        for (auto& miniDoubletPtr : event.getLayer(layer, SDL::Layer::Barrel).getMiniDoubletPtrs())
-        {
-            int nmult = 0;
-            for (auto& seg1 : miniDoubletPtr->getListOfOutwardSegmentPtrs())
-            {
-                if (depth == 1)
-                    nmult++;
-                for (auto& seg2 : seg1->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
-                {
-                    if (depth == 2)
-                        nmult++;
-                    for (auto& seg3 : seg2->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
-                    {
-                        if (depth == 3)
-                            nmult++;
-                        for (auto& seg4 : seg3->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
-                        {
-                            if (depth == 4)
-                                nmult++;
-                            for (auto& seg5 : seg4->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
-                            {
-                                if (depth == 5)
-                                    nmult++;
-                            }
-                        }
-                    }
-                }
-            }
-            multiplicities.push_back(nmult);
-            total_nmult += nmult;
-        }
-        avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
-        std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
-    }
-    else
-    {
-
-        // ----------------
-        multiplicities.clear();
-        total_nmult = 0;
-        for (auto& miniDoubletPtr : event.getLayer(layer, SDL::Layer::Barrel).getMiniDoubletPtrs())
-        {
-            int nmult = 0;
-            for (auto& seg1 : miniDoubletPtr->getListOfInwardSegmentPtrs())
-            {
-                if (depth == 1)
-                    nmult++;
-                for (auto& seg2 : seg1->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
-                {
-                    if (depth == 2)
-                        nmult++;
-                    for (auto& seg3 : seg2->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
-                    {
-                        if (depth == 3)
-                            nmult++;
-                        for (auto& seg4 : seg3->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
-                        {
-                            if (depth == 4)
-                                nmult++;
-                            for (auto& seg5 : seg4->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
-                            {
-                                if (depth == 5)
-                                    nmult++;
-                            }
-                        }
-                    }
-                }
-            }
-            multiplicities.push_back(nmult);
-            total_nmult += nmult;
-        }
-        avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
-        std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
-
-    }
-
-}

@@ -103,6 +103,8 @@ NEVENTS=252
 DOPARALLEL=true
 fi
 
+JOBTAG=$2
+
 # If need to run parallel run in parallel
 if [ $DOPARALLEL = true ]; then
     echo "Running parallel"
@@ -128,8 +130,8 @@ fi
 #
 # Aggregate result
 #
-mkdir -p results/${SAMPLETAG}$2/
-mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
+mkdir -p results/${SAMPLETAG}_${JOBTAG}/
+mv ${OUTPUTFILE} results/${SAMPLETAG}_${JOBTAG}/
 
 #
 # Plotting
@@ -137,10 +139,10 @@ mv ${OUTPUTFILE} results/${SAMPLETAG}$2/
 OUTPUTFILE=fulleff_${SAMPLETAG}_mtv.root
 rm -rf plots/
 rm -rf plots_${SAMPLETAG}
-python plot.py 8 results/${SAMPLETAG}$2/${OUTPUTFILE} ${SAMPLETAG}
+python plot.py 8 results/${SAMPLETAG}_${JOBTAG}/${OUTPUTFILE} ${SAMPLETAG}
 
-echo "$3" > results/${SAMPLETAG}$2/description.txt
-cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}$2/
+echo "$3" > results/${SAMPLETAG}_${JOBTAG}/description.txt
+cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}_${JOBTAG}/
 
 # ./doAnalysis -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root -n -1 -t trackingNtuple/tree -n -1 -e 1 -p 3 -o muonpt0p95to1p05_sgeff_.root -d
 # mv debug.root algoeff_md_pt0p5_1p5.root

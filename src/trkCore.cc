@@ -813,3 +813,94 @@ void fitCircle(std::vector<float> xs, std::vector<float> ys)
     c1->SaveAs("result.pdf");
 
 }
+
+//__________________________________________________________________________________________
+void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside)
+{
+
+    std::vector<int> multiplicities;
+    int total_nmult = 0;
+    float avg_mult = 0;
+
+    if (not goinside)
+    {
+        // ----------------
+        multiplicities.clear();
+        total_nmult = 0;
+        for (auto& miniDoubletPtr : event.getLayer(layer, SDL::Layer::Barrel).getMiniDoubletPtrs())
+        {
+            int nmult = 0;
+            for (auto& seg1 : miniDoubletPtr->getListOfOutwardSegmentPtrs())
+            {
+                if (depth == 1)
+                    nmult++;
+                for (auto& seg2 : seg1->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                {
+                    if (depth == 2)
+                        nmult++;
+                    for (auto& seg3 : seg2->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                    {
+                        if (depth == 3)
+                            nmult++;
+                        for (auto& seg4 : seg3->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                        {
+                            if (depth == 4)
+                                nmult++;
+                            for (auto& seg5 : seg4->outerMiniDoubletPtr()->getListOfOutwardSegmentPtrs())
+                            {
+                                if (depth == 5)
+                                    nmult++;
+                            }
+                        }
+                    }
+                }
+            }
+            multiplicities.push_back(nmult);
+            total_nmult += nmult;
+        }
+        avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
+        std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
+    }
+    else
+    {
+
+        // ----------------
+        multiplicities.clear();
+        total_nmult = 0;
+        for (auto& miniDoubletPtr : event.getLayer(layer, SDL::Layer::Barrel).getMiniDoubletPtrs())
+        {
+            int nmult = 0;
+            for (auto& seg1 : miniDoubletPtr->getListOfInwardSegmentPtrs())
+            {
+                if (depth == 1)
+                    nmult++;
+                for (auto& seg2 : seg1->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                {
+                    if (depth == 2)
+                        nmult++;
+                    for (auto& seg3 : seg2->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                    {
+                        if (depth == 3)
+                            nmult++;
+                        for (auto& seg4 : seg3->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                        {
+                            if (depth == 4)
+                                nmult++;
+                            for (auto& seg5 : seg4->innerMiniDoubletPtr()->getListOfInwardSegmentPtrs())
+                            {
+                                if (depth == 5)
+                                    nmult++;
+                            }
+                        }
+                    }
+                }
+            }
+            multiplicities.push_back(nmult);
+            total_nmult += nmult;
+        }
+        avg_mult = ((float) total_nmult) / ((float) multiplicities.size());
+        std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
+
+    }
+
+}
