@@ -31,7 +31,7 @@ public:
     std::vector<std::vector<float>> EndcapLayerOccupancy;
     std::vector<std::vector<float>> EndcapRingOccupancy;
 
-    StudySegmentOccupancy(const char* studyName, StudySegmentOccupancy::StudySegmentOccupancyMode mode_);
+    StudySegmentOccupancy(const char* studyName);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 
