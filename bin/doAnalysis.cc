@@ -425,10 +425,14 @@ int main(int argc, char** argv)
     std::map<unsigned int, std::vector<float>> module_zs;
 
     // connection information
-    std::ofstream module_connection_log_output("conn.txt");
+    std::ofstream module_connection_log_output;
+    if (ana.print_conn)
+        module_connection_log_output.open("conn.txt");
 
     // module boundary information to be written out in case module boundary info is asked to be printed
-    std::ofstream module_boundary_output_info("module_boundary.txt");
+    std::ofstream module_boundary_output_info;
+    if (ana.print_boundary)
+        module_boundary_output_info.open("module_boundary.txt");
 
     // Write the simhits in a given module to the output TTree
     if (ana.print_boundary)

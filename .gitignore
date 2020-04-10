@@ -1,4 +1,6 @@
 doAnalysis
+mtv
+results/
 *.o
 debug.root
 *.pdf
