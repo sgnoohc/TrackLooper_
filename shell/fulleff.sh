@@ -118,27 +118,13 @@ PTBOUND=6
 fi
 
 if [[ $1 == *"12"* ]]; then
-<<<<<<< HEAD
-SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo.root
-SAMPLETAG=pu200_pdgid211_PUinfo
-PDGID=211
-=======
 SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
 SAMPLETAG=pu200_w_truth_pdgid13
 PDGID=13
->>>>>>> aa77d6545045420e0d535e59fc98ab98a13d85e6
 PTBOUND=0
 fi
 
 if [[ $1 == *"13"* ]]; then
-<<<<<<< HEAD
-SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo.root
-SAMPLETAG=pu200_pdgid13_PUinfo
-PDGID=13
-PTBOUND=0
-fi
-
-=======
 SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
 SAMPLETAG=pu200_w_truth_pdgid211
 PDGID=211
@@ -160,7 +146,6 @@ PTBOUND=0
 fi
 
 JOBTAG=$2
->>>>>>> aa77d6545045420e0d535e59fc98ab98a13d85e6
 
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
