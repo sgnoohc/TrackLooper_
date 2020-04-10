@@ -1,16 +1,36 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 trap "kill 0" EXIT
 
 TRACKINGNTUPLEDIR=/home/users/phchang/public_html/analysis/sdl/trackingNtuple
 
-if [ -z $1 ]; then
+usage() {
     echo "Usage:"
     echo ""
-    echo "  sh fulleff.sh SAMPLE TAG DESCRIPTION"
+    echo "  sh $0 SAMPLE TAG [DESCRIPTION]"
     echo ""
+    echo "  SAMPLE = 1  : pt 0.5 to 2.0 hundred-mu-gun sample"
+    echo "           2  : e 0 to 200 ten-mu-gun sample"
+    echo "           3  : pu200 ttbar (252 events without sim info on pileup tracks) with doAnalysis option --pdg_id == 13"
+    echo "           4  : pu200 ttbar (252 events without sim info on pileup tracks) with doAnalysis option --pdg_id == 211"
+    echo "           5  : pu200 ttbar (252 events without sim info on pileup tracks) with doAnalysis option --pdg_id == 11"
+    echo "           6  : DO NOT USE: displaced SUSY stuff (not sure what)"
+    echo "           7  : pu200 ctau100 of some SUSY? with doAnalysis option --pdg_id == 13"
+    echo "           8  : pu200 ctau100 of some SUSY? with doAnalysis option --pdg_id == 211"
+    echo "           9  : pu200 ctau100 of some SUSY? with doAnalysis option --pdg_id == 11"
+    echo "           10 : pt 0.5 to 3.0 hundred-mu-gun sample"
+    echo "           11 : pt 0.5 to 5.0 ten-mu-gun sample"
+    echo "           12 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 13"
+    echo "           13 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 211"
+    echo "           14 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 11"
+    echo "           15 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 1 (1 means all charged particle)"
     exit
-fi
+}
+
+if [ -z $1 ]; then usage; fi
+if [ -z $2 ]; then usage; fi
 
 if [[ $1 == *"1"* ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root
@@ -160,6 +180,6 @@ git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(
 cd ../
 
 # plotting
-sh fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
+sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
 
 echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"

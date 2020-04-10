@@ -7,5 +7,7 @@
     source rooutil/thisrooutil.sh # set rooutil
     source rooutil/root.sh # set ROOT
     make clean;
-    make -j;
+    make -j all;
+
+## Running efficiency plot
 
