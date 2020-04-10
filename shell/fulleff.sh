@@ -2,6 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+SDLBASE=$(dirname $DIR)
+
 trap "kill 0" EXIT
 
 TRACKINGNTUPLEDIR=/home/users/phchang/public_html/analysis/sdl/trackingNtuple
@@ -149,7 +151,7 @@ JOBTAG=$2
 
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
-OUTPUTDIR=results/${SAMPLETAG}_${JOBTAG}/
+OUTPUTDIR=${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/
 
 # Only if the directory does not exist one runs it again
 if [ ! -d "${OUTPUTDIR}" ]; then
@@ -172,14 +174,14 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
     
     # Writing some descriptive file
-    echo "$3" > results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git status >> results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git diff >> results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+    echo "$3" > ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git status >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git diff >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
     cd SDL/
-    git status >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git diff >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git status >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git diff >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
     cd ../
 
     # plotting
@@ -189,7 +191,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     echo ""
     
     echo "Creating HTML from markdown"
-    cd results/${SAMPLETAG}_${JOBTAG}/
+    cd ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/
     sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
     
     echo ""
@@ -199,7 +201,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     }
     
     export -f getlink
-    echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"
+    echo ">>> results are in $DIR/../results/${SAMPLETAG}_${JOBTAG}"
     echo ">>> results can also be viewed via following link:"
     echo ">>>   $(getlink)"
 
