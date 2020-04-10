@@ -185,6 +185,24 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     # plotting
     sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
 
+    # Creating html for easier efficiency plots viewing
+    echo ""
+    
+    echo "Creating HTML from markdown"
+    cd results/${SAMPLETAG}_${JOBTAG}/
+    sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
+    
+    echo ""
+    
+    function getlink {
+        echo ${PWD/\/home\/users\/phchang\/public_html/http:\/\/snt:tas@uaf-10.t2.ucsd.edu\/~$USER/}/$1
+    }
+    
+    export -f getlink
+    echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"
+    echo ">>> results can also be viewed via following link:"
+    echo ">>>   $(getlink)"
+
 else
 
     echo "The command has been already ran before"
@@ -192,20 +210,3 @@ else
     echo "Delete $OUTPUTDIR to re-run"
 
 fi
-
-echo ""
-
-echo "Creating HTML from markdown"
-cd results/${SAMPLETAG}_${JOBTAG}/
-sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
-
-echo ""
-
-function getlink {
-    echo ${PWD/\/home\/users\/phchang\/public_html/http:\/\/snt:tas@uaf-10.t2.ucsd.edu\/~$USER/}/$1
-}
-
-export -f getlink
-echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"
-echo ">>> results can also be viewed via following link:"
-echo ">>>   $(getlink)"
