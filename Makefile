@@ -1,6 +1,6 @@
 # Simple makefile
 
-EXES=bin/doAnalysis bin/mtv
+EXES=bin/doAnalysis bin/mtv bin/tracklet
 
 SOURCES=$(wildcard src/*.cc) $(wildcard SDL/*.cc)
 OBJECTS=$(SOURCES:.cc=.o)

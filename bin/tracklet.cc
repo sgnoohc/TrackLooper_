@@ -1,4 +1,4 @@
-#include "mtv.h"
+#include "tracklet.h"
 
 // ./process INPUTFILEPATH OUTPUTFILE [NEVENTS]
 int main(int argc, char** argv)
@@ -247,7 +247,17 @@ int main(int argc, char** argv)
     // List of studies to perform
     std::vector<Study*> studies;
 
-    studies.push_back(new StudyMTVEfficiency("MTVEfficiency", pt_boundaries, ana.pdg_id));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
+    studies.push_back(new StudySDLEfficiencyv2("eff_bbbbbb", StudySDLEfficiencyv2::kStudySDLBBBBBB, pt_boundaries));
+
+    // studies.push_back(new StudyMTVEfficiency("MTVEfficiency", pt_boundaries, ana.pdg_id));
+    // studies.push_back(new StudyTrackletSelection("studySelTlBB1BE3", StudyTrackletSelection::kStudySelBB1BE3));
+    // studies.push_back(new StudyTrackletSelection("studySelTlBB2BE4", StudyTrackletSelection::kStudySelBB2BE4));
+    // studies.push_back(new StudyTrackletSelection("studySelTlBB3BE5", StudyTrackletSelection::kStudySelBB3BE5));
+    // studies.push_back(new StudyTrackletSelection("studySelTlBB1EE3", StudyTrackletSelection::kStudySelBB1EE3));
+    // studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3", StudyTrackletSelection::kStudySelEE1EE3));
 
     // book the studies
     for (auto& study : studies)
