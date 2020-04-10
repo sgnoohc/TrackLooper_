@@ -151,36 +151,47 @@ OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
 OUTPUTDIR=results/${SAMPLETAG}_${JOBTAG}/
 
-mkdir -p ${OUTPUTDIR}
-rm -f ${OUTPUTDIR}/${OUTPUTFILE}
-rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
-rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.log
+# Only if the directory does not exist one runs it again
+if [ ! -d "${OUTPUTDIR}" ]; then
 
-NJOBS=16
-for i in $(seq 0 $((NJOBS-1))); do
-    (set -x ;./bin/doAnalysis -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
-done
+    mkdir -p ${OUTPUTDIR}
+    rm -f ${OUTPUTDIR}/${OUTPUTFILE}
+    rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
+    rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.log
+    
+    NJOBS=16
+    for i in $(seq 0 $((NJOBS-1))); do
+        (set -x ;./bin/doAnalysis -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
+    done
+    
+    sleep 1
+    echo "<== Submitted parallel jobs ..."
+    wait
+    
+    # Hadding outputs
+    hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
+    
+    # Writing some descriptive file
+    echo "$3" > results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git status >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git diff >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+    cd SDL/
+    git status >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git diff >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
+    cd ../
 
-sleep 1
-echo "<== Submitted parallel jobs ..."
-wait
+    # plotting
+    sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
 
-# Hadding outputs
-hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
+else
 
-# Writing some descriptive file
-echo "$3" > results/${SAMPLETAG}_${JOBTAG}/description.txt
-git status >> results/${SAMPLETAG}_${JOBTAG}/description.txt
-git diff >> results/${SAMPLETAG}_${JOBTAG}/description.txt
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
-cd SDL/
-git status >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
-git diff >> ../results/${SAMPLETAG}_${JOBTAG}/description.txt
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> results/${SAMPLETAG}_${JOBTAG}/description.txt
-cd ../
+    echo "The command has been already ran before"
+    echo "i.e. $OUTPUTDIR already exists"
+    echo "Delete $OUTPUTDIR to re-run"
 
-# plotting
-sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
+fi
 
 echo ""
 
@@ -188,4 +199,13 @@ echo "Creating HTML from markdown"
 cd results/${SAMPLETAG}_${JOBTAG}/
 sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
 
+echo ""
+
+function getlink {
+    echo ${PWD/\/home\/users\/phchang\/public_html/http:\/\/snt:tas@uaf-10.t2.ucsd.edu\/~$USER/}/$1
+}
+
+export -f getlink
 echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"
+echo ">>> results can also be viewed via following link:"
+echo ">>>   $(getlink)"
