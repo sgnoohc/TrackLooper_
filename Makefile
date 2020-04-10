@@ -26,7 +26,7 @@ all: doAnalysis mtv
 mtv: $(OBJECTS) bin/mtv.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
-doAnalysis: $(OBJECTS) bin/process.o
+doAnalysis: $(OBJECTS) bin/doAnalysis.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
 %.o: %.cc
