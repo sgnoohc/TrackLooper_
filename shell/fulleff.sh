@@ -182,4 +182,10 @@ cd ../
 # plotting
 sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
 
+echo ""
+
+echo "Creating HTML from markdown"
+cd results/${SAMPLETAG}_${JOBTAG}/
+sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
+
 echo ">>> results are in results/${SAMPLETAG}_${JOBTAG}"
