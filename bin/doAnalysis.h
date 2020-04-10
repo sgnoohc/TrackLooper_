@@ -23,6 +23,7 @@
 #include "StudyBarreldPhiChangeCutThresholdValidity.h"
 #include "StudyOccupancy.h"
 #include "StudyMDOccupancy.h"
+#include "StudySegmentOccupancy.h"
 #include "StudyLinkedModule.h"
 #include "StudyTrackletEfficiency.h"
 #include "StudyTrackletSelection.h"

@@ -4,16 +4,26 @@ import ROOT as r
 import numpy as np
 import sys,os
 
-filename = "debug.root"
+filename = "../occupancy_studies/debug_all.root"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
-xaxis_range = [0,50] #SUBJECT TO CHANGE
+#xaxis_range = [0,50] #SUBJECT TO CHANGE
 
 def plot_occupancy(hist,prefix):
-    global xaxis_range
     filename_prefix = prefix.replace(" ","_")
-    filename_prefix = "/home/users/bsathian/public_html/SDL/"+filename_prefix
+    filename_prefix = "/home/users/bsathian/public_html/SDL/SDL_Occupancies_20200407/SDL_Hit_Occupancies_20200407/"+filename_prefix
+    #Fancy way to find xaxis range
+    nonzero_flag = False
+    xaxis_range = [0,100]
+    for i in range(1,hist.GetNbinsX()-1):
+        if hist.GetBinContent(i) != 0:
+            if i > 2 and nonzero_flag == False:
+                xaxis_range[0] = hist.GetBinLowEdge(i-2)
+            nonzero_flag = True
+        if hist.GetBinContent(i) != 0 and hist.GetBinContent(i+1) == 0 and nonzero_flag == True:
+            xaxis_range[1] = hist.GetBinLowEdge(i+2)
+        #xaxis_range = [0,100]
     ply.plot_hist(
         bgs = [hist],
         legend_labels = [prefix],
@@ -21,7 +31,9 @@ def plot_occupancy(hist,prefix):
         "output_name":filename_prefix+".pdf",
         "xaxis_range":xaxis_range,
         "xaxis_label":prefix,
-        "plot_title":prefix,
+        "yaxis_log":True,
+        "yaxis_range":[0.1,2e5],
+        "title":prefix,
         "legend_percentageinbox":False,
         }
     )
@@ -83,5 +95,4 @@ for i in range(len(layer_average_occupancy_hists)):
 for i in range(len(ring_endcap_average_occupancy_hists)):
     plot_occupancy(ring_endcap_average_occupancy_hists[i],"Average endcap occupancy in ring "+str(i+1))
     plot_occupancy(ring_endcap_occupancy_hists[i],"Endcap occupancy in ring "+str(i+1))
-
 

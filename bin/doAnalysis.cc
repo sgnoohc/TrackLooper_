@@ -390,6 +390,7 @@ int main(int argc, char** argv)
         studies.push_back(new StudyOccupancy("studyOccupancy"));
         studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
         studies.push_back(new StudyLinkedModule("studyLinkedModule"));
+        studies.push_back(new StudySegmentOccupancy("studySegmentOccupancy"));
         studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
         studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
         studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
@@ -547,6 +548,10 @@ int main(int argc, char** argv)
             for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
             {
 
+
+//                if (trk.ph2_subdet()[ihit] != 5)
+//                    continue;
+
                 // if (trk.ph2_subdet()[ihit] != 5)
                 //     continue;
 
@@ -559,6 +564,7 @@ int main(int argc, char** argv)
                     if (trk.sim_pt()[isimtrk] < 2.5)
                         continue;
                 }
+
 
                 // Takes two arguments, SDL::Hit, and detId
                 // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
