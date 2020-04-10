@@ -2,6 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+TRACKLOOPERBASE=$(dirname $DIR)
+
 SAMPLETAG=$1
 JOBTAG=$2
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
@@ -13,11 +15,11 @@ fi
 # rm -rf plots_${SAMPLETAG}
 # rm -rf results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
 
-cd results/${SAMPLETAG}_${JOBTAG}/
-python $DIR/../python/plot.py 1 ${OUTPUTFILE} ${SAMPLETAG} > plot_1.log &
-python $DIR/../python/plot.py 2 ${OUTPUTFILE} ${SAMPLETAG} > plot_2.log &
-python $DIR/../python/plot.py 3 ${OUTPUTFILE} ${SAMPLETAG} > plot_3.log &
-python $DIR/../python/plot.py 4 ${OUTPUTFILE} ${SAMPLETAG} > plot_4.log &
+cd ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/
+python ${TRACKLOOPERBASE}/python/plot.py 1 ${OUTPUTFILE} ${SAMPLETAG} > plot_1.log &
+python ${TRACKLOOPERBASE}/python/plot.py 2 ${OUTPUTFILE} ${SAMPLETAG} > plot_2.log &
+python ${TRACKLOOPERBASE}/python/plot.py 3 ${OUTPUTFILE} ${SAMPLETAG} > plot_3.log &
+python ${TRACKLOOPERBASE}/python/plot.py 4 ${OUTPUTFILE} ${SAMPLETAG} > plot_4.log &
 sleep 1
 echo "<== Submitted parallel jobs ..."
 wait

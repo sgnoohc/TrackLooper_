@@ -416,9 +416,9 @@ int main(int argc, char** argv)
     ana.cutflow.bookHistograms(ana.histograms); // if just want to book everywhere
 
     // SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
-    SDL::endcapGeometry.load("scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
-    SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
-    SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+    SDL::endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
+    SDL::tiltedGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/tilted_orientation_data.txt");
+    SDL::moduleConnectionMap.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
 
     // // Following maps to compute centroid of each modules
     std::map<unsigned int, std::vector<float>> module_xs;

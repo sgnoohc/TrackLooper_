@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-SDLBASE=$(dirname $DIR)
+TRACKLOOPERBASE=$(dirname $DIR)
 
 trap "kill 0" EXIT
 
@@ -151,7 +151,7 @@ JOBTAG=$2
 
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
-OUTPUTDIR=${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/
+OUTPUTDIR=${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/
 
 # Only if the directory does not exist one runs it again
 if [ ! -d "${OUTPUTDIR}" ]; then
@@ -163,7 +163,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     
     NJOBS=16
     for i in $(seq 0 $((NJOBS-1))); do
-        (set -x ;./bin/doAnalysis -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
+        (set -x ;$TRACKLOOPERBASE/bin/doAnalysis -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -e -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
     done
     
     sleep 1
@@ -174,14 +174,14 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
     
     # Writing some descriptive file
-    echo "$3" > ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git status >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git diff >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    cd SDL/
-    git status >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git diff >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    echo "$3" > ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git status >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git diff >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    cd ${TRACKLOOPERBASE}/SDL/
+    git status >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git diff >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
     cd ../
 
     # plotting
@@ -191,7 +191,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     echo ""
     
     echo "Creating HTML from markdown"
-    cd ${SDLBASE}/results/${SAMPLETAG}_${JOBTAG}/
+    cd ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/
     sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
     
     echo ""
