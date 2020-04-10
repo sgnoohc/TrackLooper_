@@ -13,6 +13,7 @@ if [ -z $1 ]; then
 fi
 
 TAG=$1
+OBJECT=$2
 
 if [ -z $2 ]; then
     OBJECT=0

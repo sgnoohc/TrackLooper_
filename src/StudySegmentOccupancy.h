@@ -2,9 +2,7 @@
 #define StudySegmentOccupancy_h
 
 #include "SDL/Event.h"
-
 #include "Study.h"
-
 #include <vector>
 #include <tuple>
 
@@ -18,19 +16,22 @@ class StudySegmentOccupancy : public Study
 {
 
 public:
-    enum StudySegmentOccupancyMode
-    {
-        kStudyAll = 1,
-    };
+    const char * studyname;
+    std::vector<float> occupancyInBarrel;
+    std::vector<float> occupancyInEndcap;
+    float averageOccupancyInBarrel;
+    float averageOccupancyInEndcap;
+    std::vector<float> averageLayerOccupancy;
+    std::vector<float> averageBarrelLayerOccupancy;
+    std::vector<float> averageEndcapLayerOccupancy;
+    std::vector<float> averageEndcapRingOccupancy;
 
-    const char* studyname;
-    StudySegmentOccupancyMode mode;
-    const char* modename;
-    std::array<int, NLAYERS> n_in_lower_modules_by_layer;
-    std::array<int, NLAYERS> n_in_upper_modules_by_layer;
-    std::array<int, NLAYERS> n_in_both_modules_by_layer;
+    std::vector<std::vector<float>> LayerOccupancy;
+    std::vector<std::vector<float>> BarrelLayerOccupancy;
+    std::vector<std::vector<float>> EndcapLayerOccupancy;
+    std::vector<std::vector<float>> EndcapRingOccupancy;
 
-    StudySegmentOccupancy(const char* studyName, StudySegmentOccupancy::StudySegmentOccupancyMode mode_);
+    StudySegmentOccupancy(const char* studyName);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 
