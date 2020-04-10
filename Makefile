@@ -1,6 +1,6 @@
 # Simple makefile
 
-EXE=doAnalysis
+EXES=bin/doAnalysis bin/mtv
 
 SOURCES=$(wildcard src/*.cc) $(wildcard SDL/*.cc)
 OBJECTS=$(SOURCES:.cc=.o)
@@ -21,17 +21,14 @@ CFLAGS      = $(ROOTCFLAGS) -Wall -Wno-unused-function -g -O2 -fPIC -fno-var-tra
 EXTRACFLAGS = $(shell rooutil-config)
 EXTRAFLAGS  = -fPIC -ITMultiDrawTreePlayer -Wunused-variable -lTMVA -lEG -lGenVector -lXMLIO -lMLP -lTreePlayer
 
-all: doAnalysis mtv
+all: $(EXES)
 
-mtv: $(OBJECTS) bin/mtv.o
-	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
-
-doAnalysis: $(OBJECTS) bin/doAnalysis.o
+bin/%: $(OBJECTS) bin/%.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
 %.o: %.cc
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
 clean:
-	rm -f $(OBJECTS) *.o $(EXE)
+	rm -f $(OBJECTS) bin/*.o $(EXES)
 	rm -f SDL/*.o
