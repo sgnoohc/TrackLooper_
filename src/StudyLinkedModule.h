@@ -32,6 +32,14 @@ class StudyLinkedModule : public Study
     std::vector<int> nRingEndcapLinkedModules;
     std::vector<float> averageEndcapRingLinkedModuleOccupancy;
 
+    std::vector<std::vector<float>> EndcapInnerRingLinkedModuleOccupancy;
+    std::vector<float> averageEndcapInnerRingLinkedModuleOccupancy;
+    std::vector<int> nInnerRingEndcapLinkedModules;
+    std::vector<float> averageEndcapOuterRingLinkedModuleOccupancy;
+    std::vector<std::vector<float>> EndcapOuterRingLinkedModuleOccupancy;
+    std::vector<int> nOuterRingEndcapLinkedModules;
+    std::vector<std::vector<std::vector<float>>> EndcapLayerRingLinkedModuleOccupancy;
+
     StudyLinkedModule(const char* studyName);
     virtual void bookStudy();
     virtual void doStudy(SDL::Event &event,std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);

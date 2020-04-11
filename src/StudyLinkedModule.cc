@@ -41,6 +41,23 @@ void StudyLinkedModule::bookStudy()
 
       ana.histograms.addHistogram(TString::Format("Average_number_of_Linked_Modules_in_endcap_for_ring_%d",i+1),500,0,500,[&,i](){return nRingEndcapLinkedModules.at(i);});
     }
+
+    for(int i=0; i<15;i++)
+    {
+        for(int j=0; j<6; j++)
+        {
+            ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_layer_%d_ring_%d",j+1,i+1),500,0,500,[&,i,j](){return EndcapLayerRingLinkedModuleOccupancy[j][i];});
+        }
+        ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_inner_endcap_for_ring_%d",i+1),5000,0,500,[&,i](){return averageEndcapInnerRingLinkedModuleOccupancy[i];});
+        ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_inner_endcap_for_ring_%d",i+1),500,0,500,[&,i](){return EndcapInnerRingLinkedModuleOccupancy[i];});
+        ana.histograms.addHistogram(TString::Format("average_number_of_Linked_modules_in_inner_endcap_for_ring_%d",i+1),500,0,500,[&,i](){return nInnerRingEndcapLinkedModules[i];});
+
+        ana.histograms.addHistogram(TString::Format("average_Linked_MD_occupancy_in_outer_endcap_for_ring_%d",i+1),5000,0,500,[&,i](){return averageEndcapOuterRingLinkedModuleOccupancy[i];});
+        ana.histograms.addVecHistogram(TString::Format("Linked_MD_occupancy_in_outer_endcap_for_ring_%d",i+1),500,0,500,[&,i](){return EndcapOuterRingLinkedModuleOccupancy[i];});
+        ana.histograms.addHistogram(TString::Format("average_number_of_Linked_modules_in_outer_endcap_for_ring_%d",i+1),500,0,500,[&,i](){return nOuterRingEndcapLinkedModules[i];});
+
+
+    }
 }
 
 
@@ -69,16 +86,45 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
 
     averageEndcapRingLinkedModuleOccupancy.clear();
     nRingEndcapLinkedModules.clear();
+    averageEndcapInnerRingLinkedModuleOccupancy.clear();
+    averageEndcapOuterRingLinkedModuleOccupancy.clear();
+    nInnerRingEndcapLinkedModules.clear();
+    nOuterRingEndcapLinkedModules.clear();
+    EndcapLayerRingLinkedModuleOccupancy.clear();
+
     for(int i=0;i<15;i++)
     {
       averageEndcapRingLinkedModuleOccupancy.push_back(0);
+      averageEndcapInnerRingLinkedModuleOccupancy.push_back(0);
+      averageEndcapOuterRingLinkedModuleOccupancy.push_back(0);
+
       nRingEndcapLinkedModules.push_back(0);
+      nInnerRingEndcapLinkedModules.push_back(0);
+      nOuterRingEndcapLinkedModules.push_back(0);
+    }
+    
+    //construct the elaborate 3D vector
+    for(int i = 0; i<6;i++)
+    {
+        EndcapLayerRingLinkedModuleOccupancy.push_back(std::vector<std::vector<float>>());
+    }
+    for(int i = 0; i<6;i++)
+    {
+        for(int j = 0; j<15; j++)
+        {
+            EndcapLayerRingLinkedModuleOccupancy[i].push_back(std::vector<float>());
+        }
     }
     std::vector<int> nEndcapRingModules(15,0);
+    std::vector<int> nInnerRingEndcapModules(15,0);
+    std::vector<int> nOuterRingEndcapModules(15,0);
 
     LayerBarrelLinkedModuleOccupancy.clear();
     LayerEndcapLinkedModuleOccupancy.clear();
+
     RingEndcapLinkedModuleOccupancy.clear();
+    EndcapInnerRingLinkedModuleOccupancy.clear();
+    EndcapOuterRingLinkedModuleOccupancy.clear();
 
     for(int i=0;i<6;i++)
     {
@@ -89,6 +135,8 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
     for(int i=0;i<15;i++)
     {
       RingEndcapLinkedModuleOccupancy.push_back(std::vector<float>());
+      EndcapInnerRingLinkedModuleOccupancy.push_back(std::vector<float>());
+      EndcapOuterRingLinkedModuleOccupancy.push_back(std::vector<float>());
     }
 
 
@@ -127,23 +175,48 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
       {
         if((module->getMiniDoubletPtrs()).size() != 0)
         {
-          nEndcapLinkedModules += nConnectedModules;
-          nLayerEndcapLinkedModules.at(module->layer()-1) += nConnectedModules;
-          nRingEndcapLinkedModules.at(module->ring()-1) += nConnectedModules;
+            nEndcapLinkedModules += nConnectedModules;
+            nLayerEndcapLinkedModules.at(module->layer()-1) += nConnectedModules;
+            nRingEndcapLinkedModules.at(module->ring()-1) += nConnectedModules;
 
-          EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
-          averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;
-          nEndcapModules++;
+            EndcapLinkedModuleOccupancy.push_back(connectedModuleOccupancy);
+            averageEndcapLinkedModuleOccupancy += connectedModuleOccupancy;
+            nEndcapModules++;
 
-          LayerEndcapLinkedModuleOccupancy.at(module->layer()-1).push_back(connectedModuleOccupancy);
-          averageLayerEndcapLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
-          nEndcapLayerModules.at(module->layer()-1)++;
+            LayerEndcapLinkedModuleOccupancy.at(module->layer()-1).push_back(connectedModuleOccupancy);
+            averageLayerEndcapLinkedModuleOccupancy.at(module->layer()-1) += connectedModuleOccupancy;
+            nEndcapLayerModules.at(module->layer()-1)++;
 
-          RingEndcapLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
-          averageEndcapRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
-          nEndcapRingModules.at(module->ring()-1) ++;
+            RingEndcapLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
+            averageEndcapRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
+            nEndcapRingModules.at(module->ring()-1) ++;
+
+            if(module->layer() < 3) //1 and 2 ->  inner
+            {
+                nInnerRingEndcapLinkedModules.at(module->ring()-1) += nConnectedModules;
+                EndcapInnerRingLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
+                averageEndcapInnerRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;   
+                nInnerRingEndcapModules.at(module->ring()-1)++;
+            }
+            else
+            {
+                nOuterRingEndcapLinkedModules.at(module->ring()-1) += nConnectedModules;
+                EndcapOuterRingLinkedModuleOccupancy.at(module->ring()-1).push_back(connectedModuleOccupancy);
+                averageEndcapOuterRingLinkedModuleOccupancy.at(module->ring()-1) += connectedModuleOccupancy;
+                nOuterRingEndcapModules.at(module->ring()-1)++;
+
+            }
+
+            EndcapLayerRingLinkedModuleOccupancy[module->layer()-1][module->ring()-1].push_back(connectedModuleOccupancy);
         }
       }
+
+
+
+
+      //split by layer and ring : innerLayer and outerLayer
+      
+
     }
 
     averageBarrelLinkedModuleOccupancy = (nBarrelModules != 0) ? averageBarrelLinkedModuleOccupancy / nBarrelModules : 0;
@@ -167,6 +240,11 @@ void StudyLinkedModule::doStudy(SDL::Event &event,std::vector<std::tuple<unsigne
     {
       averageEndcapRingLinkedModuleOccupancy.at(i) = (nEndcapRingModules.at(i) !=0) ? averageEndcapRingLinkedModuleOccupancy.at(i)/nEndcapRingModules.at(i) : 0;
 
+      averageEndcapInnerRingLinkedModuleOccupancy.at(i) = (nInnerRingEndcapModules[i] != 0) ? averageEndcapInnerRingLinkedModuleOccupancy.at(i)/nInnerRingEndcapModules[i] : 0;
+      averageEndcapOuterRingLinkedModuleOccupancy.at(i) = (nOuterRingEndcapModules[i] != 0) ? averageEndcapOuterRingLinkedModuleOccupancy.at(i)/nOuterRingEndcapModules[i] : 0;
+
       nRingEndcapLinkedModules[i] = (nEndcapRingModules.at(i) != 0) ? nRingEndcapLinkedModules[i]/nEndcapRingModules.at(i) : 0;
+      nInnerRingEndcapLinkedModules[i] = (nInnerRingEndcapModules.at(i) != 0) ? nInnerRingEndcapLinkedModules[i]/nInnerRingEndcapModules[i] : 0;
+      nOuterRingEndcapLinkedModules[i] = (nOuterRingEndcapModules.at(i) != 0) ? nOuterRingEndcapLinkedModules[i]/nOuterRingEndcapModules[i] : 0;
     }
 }
