@@ -46,15 +46,15 @@ def goodBarrelTracks(t, simtrk_idx):
     for simhitidx in t.sim_simHitIdx[simtrk_idx]:
 
         # If not a correct sim hit skip
-        if t.simhit_particle()[simhitidx] != t.sim_pdgId()[simhitidx]:
+        if t.simhit_particle[simhitidx] != t.sim_pdgId[simtrk_idx]:
             continue
 
         # Check it is barrel
-        if t.simhit_subdet()[simhitidx] != 5:
+        if t.simhit_subdet[simhitidx] != 5:
             continue
 
         # Add the layer index
-        layer_idx_with_hits.append(t.simhit_layer())
+        layer_idx_with_hits.append(t.simhit_layer[simhitidx])
 
     print(layer_idx_with_hits)
 
