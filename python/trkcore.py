@@ -2,6 +2,8 @@
 
 import ROOT as r
 r.gROOT.SetBatch(True)
+
+# SDL package
 r.gROOT.ProcessLine(".L SDL/sdl.so")
 r.gROOT.ProcessLine(".L SDL/Algo.h")
 r.gROOT.ProcessLine(".L SDL/Constants.h")
@@ -24,6 +26,10 @@ r.gROOT.ProcessLine(".L SDL/Triplet.h")
 r.SDL.endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/endcap_orientation_data_v2.txt");
 r.SDL.tiltedGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/tilted_orientation_data.txt");
 r.SDL.moduleConnectionMap.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+
+# RooUtil package
+r.gROOT.ProcessLine(".L rooutil/rooutil.so")
+r.gROOT.ProcessLine(".L rooutil/rooutil.h")
 
 ##############################################################
 #
@@ -61,7 +67,8 @@ def getSDLEvent(t, verbose=0):
     for hit_idx, (x, y, z, subdet, layer, detid) in enumerate(zip(t.ph2_x, t.ph2_y, t.ph2_z, t.ph2_subdet, t.ph2_layer, t.ph2_detId)):
 
         # Then it is in outer tracker
-        if subdet == 5 or subdet == 4:
+        # if subdet == 5 or subdet == 4:
+        if subdet == 5:
 
             # Add the hit to the SDL::Event
             sdlEvent.addHitToModule(r.SDL.Hit(x, y, z, hit_idx), t.ph2_detId[hit_idx])
@@ -110,14 +117,12 @@ def getSDLEvent(t, verbose=0):
         print("# of Segments produced layer 3: {}" .format( sdlEvent.getNumberOfSegmentsByLayerBarrel(2)))
         print("# of Segments produced layer 4: {}" .format( sdlEvent.getNumberOfSegmentsByLayerBarrel(3)))
         print("# of Segments produced layer 5: {}" .format( sdlEvent.getNumberOfSegmentsByLayerBarrel(4)))
-        print("# of Segments produced layer 6: {}" .format( sdlEvent.getNumberOfSegmentsByLayerBarrel(5)))
         print("# of Segments considered: {}" .format( sdlEvent.getNumberOfSegmentCandidates()))
         print("# of Segments considered layer 1: {}" .format( sdlEvent.getNumberOfSegmentCandidatesByLayerBarrel(0)))
         print("# of Segments considered layer 2: {}" .format( sdlEvent.getNumberOfSegmentCandidatesByLayerBarrel(1)))
         print("# of Segments considered layer 3: {}" .format( sdlEvent.getNumberOfSegmentCandidatesByLayerBarrel(2)))
         print("# of Segments considered layer 4: {}" .format( sdlEvent.getNumberOfSegmentCandidatesByLayerBarrel(3)))
         print("# of Segments considered layer 5: {}" .format( sdlEvent.getNumberOfSegmentCandidatesByLayerBarrel(4)))
-        print("# of Segments considered layer 6: {}" .format( sdlEvent.getNumberOfSegmentCandidatesByLayerBarrel(5)))
 
     # Run tracklets
     sdlEvent.createTrackletsWithModuleMap();
@@ -127,16 +132,10 @@ def getSDLEvent(t, verbose=0):
         print("# of Tracklets produced layer 1: {}" .format( sdlEvent.getNumberOfTrackletsByLayerBarrel(0)))
         print("# of Tracklets produced layer 2: {}" .format( sdlEvent.getNumberOfTrackletsByLayerBarrel(1)))
         print("# of Tracklets produced layer 3: {}" .format( sdlEvent.getNumberOfTrackletsByLayerBarrel(2)))
-        print("# of Tracklets produced layer 4: {}" .format( sdlEvent.getNumberOfTrackletsByLayerBarrel(3)))
-        print("# of Tracklets produced layer 5: {}" .format( sdlEvent.getNumberOfTrackletsByLayerBarrel(4)))
-        print("# of Tracklets produced layer 6: {}" .format( sdlEvent.getNumberOfTrackletsByLayerBarrel(5)))
         print("# of Tracklets considered: {}" .format( sdlEvent.getNumberOfTrackletCandidates()))
         print("# of Tracklets considered layer 1: {}" .format( sdlEvent.getNumberOfTrackletCandidatesByLayerBarrel(0)))
         print("# of Tracklets considered layer 2: {}" .format( sdlEvent.getNumberOfTrackletCandidatesByLayerBarrel(1)))
         print("# of Tracklets considered layer 3: {}" .format( sdlEvent.getNumberOfTrackletCandidatesByLayerBarrel(2)))
-        print("# of Tracklets considered layer 4: {}" .format( sdlEvent.getNumberOfTrackletCandidatesByLayerBarrel(3)))
-        print("# of Tracklets considered layer 5: {}" .format( sdlEvent.getNumberOfTrackletCandidatesByLayerBarrel(4)))
-        print("# of Tracklets considered layer 6: {}" .format( sdlEvent.getNumberOfTrackletCandidatesByLayerBarrel(5)))
 
     # Run track candidates
     sdlEvent.createTrackCandidatesFromTracklets();
@@ -184,7 +183,7 @@ def isTrueSegment(sg, t):
         outerMD_trk_idx.append(t.simhit_simTrkIdx[simhitidx])
 
     # Intersection of two list
-    common_trk_idx = [value for value in innerMD_trk_idx if value in outerMD_trk_idx] 
+    common_trk_idx = [value for value in innerMD_trk_idx if value in outerMD_trk_idx]
 
     return len(common_trk_idx) > 0
 
