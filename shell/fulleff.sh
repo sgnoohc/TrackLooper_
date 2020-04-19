@@ -151,7 +151,7 @@ JOBTAG=$2
 
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
-OUTPUTDIR=${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/
+OUTPUTDIR=${TRACKLOOPERBASE}/results/algo_eff/${SAMPLETAG}_${JOBTAG}/
 
 # Only if the directory does not exist one runs it again
 if [ ! -d "${OUTPUTDIR}" ]; then
@@ -174,14 +174,14 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
     
     # Writing some descriptive file
-    echo "$3" > ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git status >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git diff >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    echo "$3" > ${OUTPUTDIR}/description.txt
+    git status >> ${OUTPUTDIR}/description.txt
+    git diff >> ${OUTPUTDIR}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${OUTPUTDIR}/description.txt
     cd ${TRACKLOOPERBASE}/SDL/
-    git status >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git diff >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/description.txt
+    git status >> ${OUTPUTDIR}/description.txt
+    git diff >> ${OUTPUTDIR}/description.txt
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit >> ${OUTPUTDIR}/description.txt
     cd ../
 
     # plotting
@@ -191,8 +191,8 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     echo ""
     
     echo "Creating HTML from markdown"
-    cd ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/
-    sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG}
+    cd ${OUTPUTDIR}/
+    sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG} algo_eff
     
     echo ""
     
@@ -201,7 +201,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     }
     
     export -f getlink
-    echo ">>> results are in $DIR/../results/${SAMPLETAG}_${JOBTAG}"
+    echo ">>> results are in ${OUTPUTDIR}"
     echo ">>> results can also be viewed via following link:"
     echo ">>>   $(getlink)"
 

@@ -79,7 +79,7 @@ void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
     // track candidates that match the particle of interest
     std::vector<unsigned int> good_track_candidates;
 
-    // std::cout <<  " barrelLayer0.getTrackCandidatePtrs().size(): " << barrelLayer0.getTrackCandidatePtrs().size() <<  std::endl;
+    std::cout <<  " barrelLayer0.getTrackCandidatePtrs().size(): " << barrelLayer0.getTrackCandidatePtrs().size() <<  std::endl;
 
     // Loop over the track candidates and ask whether the hits are matched with this track (MTV like)
     for (unsigned int itc = 0; itc < barrelLayer0.getTrackCandidatePtrs().size(); ++itc)
@@ -105,7 +105,7 @@ void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
         }
     }
 
-    // std::cout <<  " good_track_candidates.size(): " << good_track_candidates.size() <<  std::endl;
+    std::cout <<  " good_track_candidates.size(): " << good_track_candidates.size() <<  std::endl;
 
     //***********************
     // Efficiency calculation
@@ -113,9 +113,16 @@ void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsig
 
     std::array<float, 6> etabounds = {2.2, 1.8, 1.45, 1.2, 1, 0.8};
 
+    std::cout <<  " simtrkevents.size(): " << simtrkevents.size() <<  std::endl;
+
+    int nprocessed = 0;
+
     // Loop over track events
     for (auto& simtrkevent : simtrkevents)
     {
+
+        std::cout <<  " nprocessed: " << nprocessed <<  std::endl;
+        nprocessed++;
 
         // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
         unsigned int& isimtrk = std::get<0>(simtrkevent);
