@@ -15,7 +15,7 @@ fi
 # rm -rf plots_${SAMPLETAG}
 # rm -rf results/${SAMPLETAG}${JOBTAG}/plots_${SAMPLETAG}
 
-cd ${TRACKLOOPERBASE}/results/${SAMPLETAG}_${JOBTAG}/
+cd ${TRACKLOOPERBASE}/results/algo_eff/${SAMPLETAG}_${JOBTAG}/
 python ${TRACKLOOPERBASE}/python/plot.py 1 ${OUTPUTFILE} ${SAMPLETAG} > plot_1.log &
 python ${TRACKLOOPERBASE}/python/plot.py 2 ${OUTPUTFILE} ${SAMPLETAG} > plot_2.log &
 python ${TRACKLOOPERBASE}/python/plot.py 3 ${OUTPUTFILE} ${SAMPLETAG} > plot_3.log &

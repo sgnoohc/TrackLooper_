@@ -248,16 +248,25 @@ int main(int argc, char** argv)
     std::vector<Study*> studies;
 
     studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
-    studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
-    studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
-    studies.push_back(new StudySDLEfficiencyv2("eff_bbbbbb", StudySDLEfficiencyv2::kStudySDLBBBBBB, pt_boundaries));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB1BE3", StudyTrackletSelection::kStudySelBB1BE3));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB1EE3", StudyTrackletSelection::kStudySelBB1EE3));
+    studies.push_back(new StudyTrackletSelection("studySelTlBE1EE3", StudyTrackletSelection::kStudySelBE1EE3));
+    studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3", StudyTrackletSelection::kStudySelEE1EE3));
 
-    // studies.push_back(new StudyMTVEfficiency("MTVEfficiency", pt_boundaries, ana.pdg_id));
-    // studies.push_back(new StudyTrackletSelection("studySelTlBB1BE3", StudyTrackletSelection::kStudySelBB1BE3));
-    // studies.push_back(new StudyTrackletSelection("studySelTlBB2BE4", StudyTrackletSelection::kStudySelBB2BE4));
-    // studies.push_back(new StudyTrackletSelection("studySelTlBB3BE5", StudyTrackletSelection::kStudySelBB3BE5));
-    // studies.push_back(new StudyTrackletSelection("studySelTlBB1EE3", StudyTrackletSelection::kStudySelBB1EE3));
-    // studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3", StudyTrackletSelection::kStudySelEE1EE3));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB2BE4", StudyTrackletSelection::kStudySelBB2BE4));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB2EE4", StudyTrackletSelection::kStudySelBB2EE4));
+    studies.push_back(new StudyTrackletSelection("studySelTlBE2EE4", StudyTrackletSelection::kStudySelBE2EE4));
+    studies.push_back(new StudyTrackletSelection("studySelTlEE2EE4", StudyTrackletSelection::kStudySelEE2EE4));
+
+    studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB3BE5", StudyTrackletSelection::kStudySelBB3BE5));
+    studies.push_back(new StudyTrackletSelection("studySelTlBB3EE5", StudyTrackletSelection::kStudySelBB3EE5));
+    studies.push_back(new StudyTrackletSelection("studySelTlBE3EE5", StudyTrackletSelection::kStudySelBE3EE5));
+    // EE3EE5 is impossible
+
+    studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3AllPS", StudyTrackletSelection::kStudySelEE1EE3AllPS));
+    studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3All2S", StudyTrackletSelection::kStudySelEE1EE3All2S));
 
     // book the studies
     for (auto& study : studies)
@@ -473,8 +482,8 @@ int main(int argc, char** argv)
         if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
         my_timer.Start(kFALSE);
         // event.createTracklets();
-        // event.createTrackletsWithModuleMap();
-        event.createTrackletsViaNavigation();
+        // event.createTrackletsWithModuleMap(SDL::DefaultNm1_TLAlgo);
+        event.createTrackletsViaNavigation(SDL::DefaultNm1_TLAlgo);
         float tl_elapsed = my_timer.RealTime();
         if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed - tp_elapsed << " secs" << std::endl;
         if (ana.verbose != 0) std::cout << "# of Tracklets produced: " << event.getNumberOfTracklets() << std::endl;
@@ -493,29 +502,29 @@ int main(int argc, char** argv)
         // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 6: " << event.getNumberOfTrackletCandidatesByLayerBarrel(5) << std::endl;
         // ----------------
 
-        // ----------------
-        if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
-        my_timer.Start(kFALSE);
-        // event.createTrackCandidatesFromTriplets();
-        // event.createTrackCandidates();
-        event.createTrackCandidatesFromTracklets();
-        float tc_elapsed = my_timer.RealTime();
-        if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed - tl_elapsed << " secs" << std::endl;
-        if (ana.verbose != 0) std::cout << "# of TrackCandidates produced: " << event.getNumberOfTrackCandidates() << std::endl;
-        if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 1-2-3-4-5-6: " << event.getNumberOfTrackCandidatesByLayerBarrel(0) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 2: " << event.getNumberOfTrackCandidatesByLayerBarrel(1) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 3: " << event.getNumberOfTrackCandidatesByLayerBarrel(2) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 4: " << event.getNumberOfTrackCandidatesByLayerBarrel(3) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 5: " << event.getNumberOfTrackCandidatesByLayerBarrel(4) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 6: " << event.getNumberOfTrackCandidatesByLayerBarrel(5) << std::endl;
-        if (ana.verbose != 0) std::cout << "# of TrackCandidates considered: " << event.getNumberOfTrackCandidateCandidates() << std::endl;
-        if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 1-2-3-4-5-6: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(0) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 2: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(1) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 3: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(2) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 4: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(3) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 5: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(4) << std::endl;
-        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 6: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(5) << std::endl;
-        // ----------------
+        // // ----------------
+        // if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
+        // my_timer.Start(kFALSE);
+        // // event.createTrackCandidatesFromTriplets();
+        // // event.createTrackCandidates();
+        // event.createTrackCandidatesFromTracklets();
+        // float tc_elapsed = my_timer.RealTime();
+        // if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed - tl_elapsed << " secs" << std::endl;
+        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced: " << event.getNumberOfTrackCandidates() << std::endl;
+        // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 1-2-3-4-5-6: " << event.getNumberOfTrackCandidatesByLayerBarrel(0) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 2: " << event.getNumberOfTrackCandidatesByLayerBarrel(1) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 3: " << event.getNumberOfTrackCandidatesByLayerBarrel(2) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 4: " << event.getNumberOfTrackCandidatesByLayerBarrel(3) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 5: " << event.getNumberOfTrackCandidatesByLayerBarrel(4) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 6: " << event.getNumberOfTrackCandidatesByLayerBarrel(5) << std::endl;
+        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered: " << event.getNumberOfTrackCandidateCandidates() << std::endl;
+        // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 1-2-3-4-5-6: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(0) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 2: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(1) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 3: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(2) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 4: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(3) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 5: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(4) << std::endl;
+        // // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 6: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(5) << std::endl;
+        // // ----------------
 
         if (ana.verbose != 0) std::cout << "Reco SDL end" << std::endl;
 

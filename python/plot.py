@@ -192,6 +192,26 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     eff.SetName(output_name.replace(".png",""))
     eff.Write()
 
+def pos_neg_tracklet_comparison(filename, tlcombo, ptrange, suffix, do_und_ov_flow, plot_range="_maxzoom", iteration="_4thCorr"):
+
+    tfile = r.TFile(filename)
+    hist_neg = tfile.Get("Root__tl_matched_neg_{}_track_{}_deltaBeta{}{}".format(ptrange, tlcombo, iteration, plot_range))
+    hist_pos = tfile.Get("Root__tl_matched_pos_{}_track_{}_deltaBeta{}{}".format(ptrange, tlcombo, iteration, plot_range))
+    output_name = "Root__tl_matched_posnegcomp_{}_track_{}_deltaBeta{}{}".format(ptrange, tlcombo, iteration, plot_range)
+
+    try:
+        p.plot_hist(bgs=[hist_neg.Clone()],
+                data=hist_pos.Clone(),
+                options={
+                    "output_name": "plots/tracklet{}/{}".format(suffix, output_name+".pdf"),
+                    "nbins":45,
+                    "yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow,
+                    "ratio_range":[0., 3.],
+                    },
+                )
+    except:
+        print(ptrange, tlcombo, filename)
+
 if drawMDplots:
 
     # mdcombos = ["barrel"]
@@ -282,7 +302,26 @@ if drawTLplots:
 
 if drawTLSelPlots:
 
-    tlcombos = ["bb1bb3", "bb1bb4", "bb1bb5", "bb2bb4", "bb3bb5", "bb3be5", "bb1be3", "bb2be4", "ee1ee3", "bb1ee3", "all"]
+    # tlcombos = ["bb1bb3", "bb1bb4", "bb1bb5", "bb2bb4", "bb3bb5", "bb3be5", "bb1be3", "bb2be4", "ee1ee3", "bb1ee3", "all"]
+    tlcombos = [
+            "bb1bb3",
+            "bb1be3",
+            "bb1ee3",
+            "be1ee3",
+            "ee1ee3",
+
+            "bb2bb4",
+            "bb2be4",
+            "bb2ee4",
+            "be2ee4",
+            "ee2ee4",
+
+            "bb3bb5",
+            "bb3be5",
+            "bb3ee5",
+            "be3ee5",
+            ]
+    # tlcombos = ["bb1bb3", "bb2bb4", "bb3bb5"]
 
     for tlcombo in tlcombos:
 
@@ -290,54 +329,54 @@ if drawTLSelPlots:
 
             suffix = "" if do_und_ov_flow else "_w_overflow"
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_betaIn".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_betaIn".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_betaOut".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_betaOut".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_midpoint".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_midpoint".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_3rdCorr".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_3rdCorr".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_4thCorr".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_4thCorr".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_3rdCorr_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_3rdCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+            #     )
 
             p.dump_plot(fnames=[filename],
                 dirname="plots/tracklet{}".format(suffix),
@@ -346,160 +385,336 @@ if drawTLSelPlots:
                 extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
                 )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_matched_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_matched_track_{}_deltaBeta_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_track_{}_deltaBeta_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_unmatched_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_unmatched_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_unmatched_track_{}_deltaBeta_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_unmatched_track_{}_deltaBeta_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_standard".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_standard".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_midpoint_standard".format(tlcombo),
-                # extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_midpoint_standard".format(tlcombo),
+            #     # extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_3rdCorr_standard".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_3rdCorr_standard".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_zoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_zoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_slava".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_slava".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet_log{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta".format(tlcombo),
-                extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet_log{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta".format(tlcombo),
+            #     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_cutflow".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_cutflow".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet_log{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_cutflow".format(tlcombo),
-                extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet_log{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_cutflow".format(tlcombo),
+            #     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":True},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_{}_deltaBeta_postCut".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "nbins":1},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_{}_deltaBeta_postCut".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "nbins":1},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet_log{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
-                extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet_log{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_deltaBeta".format(tlcombo),
+            #     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet_log{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
-                extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet_log{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet_log{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr".format(tlcombo),
-                extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet_log{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_deltaBeta_4thCorr".format(tlcombo),
+            #     extraoptions={"yaxis_log":True, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
 
-            p.dump_plot(fnames=[filename],
-                dirname="plots/tracklet{}".format(suffix),
-                dogrep=False,
-                filter_pattern="Root__tl_truth_{}_cutflow".format(tlcombo),
-                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-                )
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_truth_{}_cutflow".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pt2_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pt1peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pt1p5peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pt2peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pt2p5peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pt3peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pos_pt1peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pos_pt1p5peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pos_pt2peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pos_pt2p5peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_pos_pt3peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_neg_pt1peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_neg_pt1p5peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_neg_pt2peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_neg_pt2p5peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__tl_matched_neg_pt3peak_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__pt_v_tl_matched_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__pt_v_tl_matched_pos_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # p.dump_plot(fnames=[filename],
+            #     dirname="plots/tracklet{}".format(suffix),
+            #     dogrep=False,
+            #     filter_pattern="Root__pt_v_tl_matched_neg_track_{}_deltaBeta_4thCorr_maxzoom".format(tlcombo),
+            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+            #     )
+
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow)
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow)
+
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom")
+
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "")
+
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow, "_maxzoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow, "_maxzoom", "")
+
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom", "")
+
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "", "")
+            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "", "")
+
 
 if drawTCplots:
     # tccombos = ["bbbbbb"]

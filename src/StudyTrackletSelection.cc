@@ -13,13 +13,21 @@ StudyTrackletSelection::StudyTrackletSelection(const char* studyName, StudyTrack
         case kStudySelBB1BB3: modename = "bb1bb3"; break;
         case kStudySelBB1BE3: modename = "bb1be3"; break;
         case kStudySelBB1EE3: modename = "bb1ee3"; break;
-        case kStudySelBB1BB4: modename = "bb1bb4"; break;
-        case kStudySelBB1BB5: modename = "bb1bb5"; break;
+        case kStudySelBE1EE3: modename = "be1ee3"; break;
+        case kStudySelEE1EE3: modename = "ee1ee3"; break;
         case kStudySelBB2BB4: modename = "bb2bb4"; break;
         case kStudySelBB2BE4: modename = "bb2be4"; break;
+        case kStudySelBB2EE4: modename = "bb2ee4"; break;
+        case kStudySelBE2EE4: modename = "be2ee4"; break;
+        case kStudySelEE2EE4: modename = "ee2ee4"; break;
         case kStudySelBB3BB5: modename = "bb3bb5"; break;
         case kStudySelBB3BE5: modename = "bb3be5"; break;
-        case kStudySelEE1EE3: modename = "ee1ee3"; break;
+        case kStudySelBB3EE5: modename = "bb3ee5"; break;
+        case kStudySelBE3EE5: modename = "be3ee5"; break;
+        case kStudySelBB1BB4: modename = "bb1bb4"; break;
+        case kStudySelBB1BB5: modename = "bb1bb5"; break;
+        case kStudySelEE1EE3AllPS: modename = "ee1ee3allPS"; break;
+        case kStudySelEE1EE3All2S: modename = "ee1ee3all2S"; break;
         case kStudySelSpecific: modename = "specific"; break;
         default: modename = "UNDEFINED"; break;
     }
@@ -84,6 +92,240 @@ void StudyTrackletSelection::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
     ana.histograms.addVecHistogram(TString::Format("tl_matched_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
 
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt2_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt2_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt2_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt2_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt2_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt2_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt2_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt2_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt1peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt1p5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt1p5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt2peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt2p5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt2p5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pt3peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pt3peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt1peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt1p5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt2peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt2p5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt3peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt3peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt10peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt10_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt10_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt10_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt10_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt10_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt20_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt20_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt20_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt20_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt20_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_pos_pt50_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_pos_pt50_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_pos_pt50_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_pos_pt50_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_pos_pt50_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt1peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt1p5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt2peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt2p5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt3peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt3peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt5peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt5peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10peak_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt10peak_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt10_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt10_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt10_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt10_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt10_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt10_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt20_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt20_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt20_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt20_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt20_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt20_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt50_track_deltaBeta; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_4thCorr", modename), 180, -0.15, 0.15, [&]() { return tl_matched_neg_pt50_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_matched_neg_pt50_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_matched_neg_pt50_track_deltaBeta_4thCorr; } );
+    ana.histograms.addVecHistogram(TString::Format("tl_matched_neg_pt50_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_matched_neg_pt50_track_deltaBeta_4thCorr; } );
+
     ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta", modename), 180, -0.15, 0.15, [&]() { return tl_unmatched_track_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_unmatched_track_deltaBeta; } );
     ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_unmatched_track_deltaBeta; } );
@@ -92,6 +334,10 @@ void StudyTrackletSelection::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr_zoom", modename), 180, -0.06, 0.06, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
     ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr_maxzoom", modename), 180, -0.04, 0.04, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
     ana.histograms.addVecHistogram(TString::Format("tl_unmatched_track_%s_deltaBeta_4thCorr_slava", modename), 400, -0.15, 0.15, [&]() { return tl_unmatched_track_deltaBeta_4thCorr; } );
+
+    ana.histograms.add2DVecHistogram("pt", 50, 0., 50., TString::Format("tl_matched_track_%s_deltaBeta_4thCorr_maxzoom", modename), 50, -0.04, 0.04, [&]() { return tl_matched_track_pt; }, [&]() { return tl_matched_track_deltaBeta_4thCorr; } );
+    ana.histograms.add2DVecHistogram("pt", 50, 0., 50., TString::Format("tl_matched_pos_track_%s_deltaBeta_4thCorr_maxzoom", modename), 50, -0.04, 0.04, [&]() { return tl_matched_pos_track_pt; }, [&]() { return tl_matched_pos_track_deltaBeta_4thCorr; } );
+    ana.histograms.add2DVecHistogram("pt", 50, 0., 50., TString::Format("tl_matched_neg_track_%s_deltaBeta_4thCorr_maxzoom", modename), 50, -0.04, 0.04, [&]() { return tl_matched_neg_track_pt; }, [&]() { return tl_matched_neg_track_deltaBeta_4thCorr; } );
 
     const int nlayers = NLAYERS;
     for (int ii = 0; ii < nlayers; ++ii)
@@ -234,6 +480,85 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
     tl_truth_deltaBeta_4thCorr.clear();
     tl_matched_track_deltaBeta.clear();
     tl_matched_track_deltaBeta_4thCorr.clear();
+    tl_matched_track_pt.clear();
+    tl_matched_pt2_track_deltaBeta.clear();
+    tl_matched_pt2_track_deltaBeta_4thCorr.clear();
+    tl_matched_pt2_track_pt.clear();
+    tl_matched_pt1peak_track_deltaBeta.clear();
+    tl_matched_pt1peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pt1peak_track_pt.clear();
+    tl_matched_pt1p5peak_track_deltaBeta.clear();
+    tl_matched_pt1p5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pt1p5peak_track_pt.clear();
+    tl_matched_pt2peak_track_deltaBeta.clear();
+    tl_matched_pt2peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pt2peak_track_pt.clear();
+    tl_matched_pt2p5peak_track_deltaBeta.clear();
+    tl_matched_pt2p5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pt2p5peak_track_pt.clear();
+    tl_matched_pt3peak_track_deltaBeta.clear();
+    tl_matched_pt3peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pt3peak_track_pt.clear();
+    tl_matched_pos_track_deltaBeta.clear();
+    tl_matched_pos_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_track_pt.clear();
+    tl_matched_pos_pt1peak_track_deltaBeta.clear();
+    tl_matched_pos_pt1peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt1peak_track_pt.clear();
+    tl_matched_pos_pt1p5peak_track_deltaBeta.clear();
+    tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt1p5peak_track_pt.clear();
+    tl_matched_pos_pt2peak_track_deltaBeta.clear();
+    tl_matched_pos_pt2peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt2peak_track_pt.clear();
+    tl_matched_pos_pt2p5peak_track_deltaBeta.clear();
+    tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt2p5peak_track_pt.clear();
+    tl_matched_pos_pt3peak_track_deltaBeta.clear();
+    tl_matched_pos_pt3peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt3peak_track_pt.clear();
+    tl_matched_pos_pt5peak_track_deltaBeta.clear();
+    tl_matched_pos_pt5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt5peak_track_pt.clear();
+    tl_matched_pos_pt10peak_track_deltaBeta.clear();
+    tl_matched_pos_pt10peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt10peak_track_pt.clear();
+    tl_matched_pos_pt10_track_deltaBeta.clear();
+    tl_matched_pos_pt10_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt10_track_pt.clear();
+    tl_matched_pos_pt20_track_deltaBeta.clear();
+    tl_matched_pos_pt20_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt20_track_pt.clear();
+    tl_matched_pos_pt50_track_deltaBeta.clear();
+    tl_matched_pos_pt50_track_deltaBeta_4thCorr.clear();
+    tl_matched_pos_pt50_track_pt.clear();
+    tl_matched_neg_track_deltaBeta.clear();
+    tl_matched_neg_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_track_pt.clear();
+    tl_matched_neg_pt1peak_track_deltaBeta.clear();
+    tl_matched_neg_pt1peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt1peak_track_pt.clear();
+    tl_matched_neg_pt1p5peak_track_deltaBeta.clear();
+    tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt1p5peak_track_pt.clear();
+    tl_matched_neg_pt2peak_track_deltaBeta.clear();
+    tl_matched_neg_pt2peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt2peak_track_pt.clear();
+    tl_matched_neg_pt2p5peak_track_deltaBeta.clear();
+    tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt2p5peak_track_pt.clear();
+    tl_matched_neg_pt3peak_track_deltaBeta.clear();
+    tl_matched_neg_pt3peak_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt3peak_track_pt.clear();
+    tl_matched_neg_pt10_track_deltaBeta.clear();
+    tl_matched_neg_pt10_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt10_track_pt.clear();
+    tl_matched_neg_pt20_track_deltaBeta.clear();
+    tl_matched_neg_pt20_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt20_track_pt.clear();
+    tl_matched_neg_pt50_track_deltaBeta.clear();
+    tl_matched_neg_pt50_track_deltaBeta_4thCorr.clear();
+    tl_matched_neg_pt50_track_pt.clear();
     tl_unmatched_track_deltaBeta.clear();
     tl_unmatched_track_deltaBeta_4thCorr.clear();
     for (int ii = 0; ii < 7; ++ii)
@@ -338,8 +663,8 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               innerSgInnerLayerIdx == 1
                                                                               and outerSgInnerLayerIdx == 3
                                                                               and innerSgInnerLayerBarrel
-                                                                              and outerSgInnerLayerBarrel
                                                                               and innerSgOuterLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
                                                                               and outerSgOuterLayerBarrel
                                                                               ))
                                                                       continue;
@@ -349,8 +674,8 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               innerSgInnerLayerIdx == 1
                                                                               and outerSgInnerLayerIdx == 3
                                                                               and innerSgInnerLayerBarrel
-                                                                              and outerSgInnerLayerBarrel
                                                                               and innerSgOuterLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
                                                                               and outerSgOuterLayerEndcap
                                                                               ))
                                                                       continue;
@@ -366,25 +691,55 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               ))
                                                                       continue;
                                                                   break;
-                case kStudySelBB1BB4:
+                case kStudySelBE1EE3:
                                                                   if (not (
                                                                               innerSgInnerLayerIdx == 1
-                                                                              and outerSgInnerLayerIdx == 4
+                                                                              and outerSgInnerLayerIdx == 2
                                                                               and innerSgInnerLayerBarrel
-                                                                              and outerSgInnerLayerBarrel
-                                                                              and innerSgOuterLayerBarrel
-                                                                              and outerSgOuterLayerBarrel
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
                                                                               ))
                                                                       continue;
                                                                   break;
-                case kStudySelBB1BB5:
+                case kStudySelEE1EE3:
                                                                   if (not (
                                                                               innerSgInnerLayerIdx == 1
-                                                                              and outerSgInnerLayerIdx == 5
-                                                                              and innerSgInnerLayerBarrel
-                                                                              and outerSgInnerLayerBarrel
-                                                                              and innerSgOuterLayerBarrel
-                                                                              and outerSgOuterLayerBarrel
+                                                                              and outerSgInnerLayerIdx == 3
+                                                                              and innerSgInnerLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelEE1EE3AllPS:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 1
+                                                                              and outerSgInnerLayerIdx == 3
+                                                                              and innerSgInnerLayerEndcap
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              and innerSgInnerLayerPS
+                                                                              and innerSgOuterLayerPS
+                                                                              and outerSgInnerLayerPS
+                                                                              and outerSgOuterLayerPS
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelEE1EE3All2S:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 1
+                                                                              and outerSgInnerLayerIdx == 3
+                                                                              and innerSgInnerLayerEndcap
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              and (not innerSgInnerLayerPS)
+                                                                              and (not innerSgOuterLayerPS)
+                                                                              and (not outerSgInnerLayerPS)
+                                                                              and (not outerSgOuterLayerPS)
                                                                               ))
                                                                       continue;
                                                                   break;
@@ -406,6 +761,39 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               and innerSgInnerLayerBarrel
                                                                               and outerSgInnerLayerBarrel
                                                                               and innerSgOuterLayerBarrel
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBB2EE4:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 2
+                                                                              and outerSgInnerLayerIdx == 1
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBE2EE4:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 2
+                                                                              and outerSgInnerLayerIdx == 2
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelEE2EE4:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 2
+                                                                              and outerSgInnerLayerIdx == 4
+                                                                              and innerSgInnerLayerEndcap
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
                                                                               and outerSgOuterLayerEndcap
                                                                               ))
                                                                       continue;
@@ -432,14 +820,47 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                                                                               ))
                                                                       continue;
                                                                   break;
-                case kStudySelEE1EE3:
+                case kStudySelBB3EE5:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 3
+                                                                              and outerSgInnerLayerIdx == 1
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBE3EE5:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 3
+                                                                              and outerSgInnerLayerIdx == 2
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerEndcap
+                                                                              and outerSgOuterLayerEndcap
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBB1BB4:
                                                                   if (not (
                                                                               innerSgInnerLayerIdx == 1
-                                                                              and outerSgInnerLayerIdx == 3
-                                                                              and innerSgInnerLayerEndcap
-                                                                              and outerSgInnerLayerEndcap
-                                                                              and innerSgOuterLayerEndcap
-                                                                              and outerSgOuterLayerEndcap
+                                                                              and outerSgInnerLayerIdx == 4
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgOuterLayerBarrel
+                                                                              ))
+                                                                      continue;
+                                                                  break;
+                case kStudySelBB1BB5:
+                                                                  if (not (
+                                                                              innerSgInnerLayerIdx == 1
+                                                                              and outerSgInnerLayerIdx == 5
+                                                                              and innerSgInnerLayerBarrel
+                                                                              and outerSgInnerLayerBarrel
+                                                                              and innerSgOuterLayerBarrel
+                                                                              and outerSgOuterLayerBarrel
                                                                               ))
                                                                       continue;
                                                                   break;
@@ -698,6 +1119,9 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                 }
 
                 bool matched = true;
+                float matched_track_pt = 0;
+                float matched_track_eta = 0;
+                int matched_track_charge = 0;
                 for (auto& idx_to_check : all_trk_idxs)
                 {
                     for (unsigned int ihit = 0; ihit < ph2_idxs.size(); ++ihit)
@@ -715,14 +1139,164 @@ void StudyTrackletSelection::doStudy(SDL::Event& event, std::vector<std::tuple<u
                         }
                     }
 
+                    // Once it reaches here at least once, I take the first one and say this is a good one
+                    matched_track_pt = trk.sim_pt()[idx_to_check];
+                    matched_track_eta = trk.sim_eta()[idx_to_check];
+                    matched_track_charge = trk.sim_q()[idx_to_check];
+
                     if (not matched)
                         break;
                 }
 
-                if (matched)
+                if (matched and matched_track_eta > 0)
                 {
                     tl_matched_track_deltaBeta.push_back(deltaBeta);
                     tl_matched_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                    tl_matched_track_pt.push_back(matched_track_pt);
+                    if (matched_track_pt >= 2.)
+                    {
+                        tl_matched_pt2_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pt2_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pt2_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 0.9 and matched_track_pt <= 1.1)
+                    {
+                        tl_matched_pt1peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pt1peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pt1peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 1.4 and matched_track_pt <= 1.6)
+                    {
+                        tl_matched_pt1p5peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pt1p5peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pt1p5peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 1.9 and matched_track_pt <= 2.1)
+                    {
+                        tl_matched_pt2peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pt2peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pt2peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 2.4 and matched_track_pt <= 2.6)
+                    {
+                        tl_matched_pt2p5peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pt2p5peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pt2p5peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 2.9 and matched_track_pt <= 3.1)
+                    {
+                        tl_matched_pt3peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pt3peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pt3peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_charge > 0)
+                    {
+                        tl_matched_pos_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 0.9 and matched_track_pt <= 1.1 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt1peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt1peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt1peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 1.4 and matched_track_pt <= 1.6 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt1p5peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt1p5peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 1.9 and matched_track_pt <= 2.1 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt2peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt2peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt2peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 2.4 and matched_track_pt <= 2.6 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt2p5peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt2p5peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 2.9 and matched_track_pt <= 3.1 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt3peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt3peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt3peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 10 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt10_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt10_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt10_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 20 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt20_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt20_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt20_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 50 and matched_track_charge > 0)
+                    {
+                        tl_matched_pos_pt50_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_pos_pt50_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_pos_pt50_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_charge < 0)
+                    {
+                        tl_matched_neg_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 0.9 and matched_track_pt <= 1.1 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt1peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt1peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt1peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 1.4 and matched_track_pt <= 1.6 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt1p5peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt1p5peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 1.9 and matched_track_pt <= 2.1 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt2peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt2peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt2peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 2.4 and matched_track_pt <= 2.6 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt2p5peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt2p5peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 2.9 and matched_track_pt <= 3.1 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt3peak_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt3peak_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt3peak_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 10 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt10_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt10_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt10_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 20 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt20_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt20_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt20_track_pt.push_back(matched_track_pt);
+                    }
+                    if (matched_track_pt >= 50 and matched_track_charge < 0)
+                    {
+                        tl_matched_neg_pt50_track_deltaBeta.push_back(deltaBeta);
+                        tl_matched_neg_pt50_track_deltaBeta_4thCorr.push_back(tl->getRecoVar("dBeta_4th"));
+                        tl_matched_neg_pt50_track_pt.push_back(matched_track_pt);
+                    }
                 }
                 else
                 {

@@ -26,13 +26,21 @@ public:
         kStudySelBB1BB3,
         kStudySelBB1BE3,
         kStudySelBB1EE3,
-        kStudySelBB1BB4,
-        kStudySelBB1BB5,
+        kStudySelBE1EE3,
+        kStudySelEE1EE3,
         kStudySelBB2BB4,
         kStudySelBB2BE4,
+        kStudySelBB2EE4,
+        kStudySelBE2EE4,
+        kStudySelEE2EE4,
         kStudySelBB3BB5,
         kStudySelBB3BE5,
-        kStudySelEE1EE3,
+        kStudySelBB3EE5,
+        kStudySelBE3EE5,
+        kStudySelBB1BB4,
+        kStudySelBB1BB5,
+        kStudySelEE1EE3AllPS,
+        kStudySelEE1EE3All2S,
         kStudySelSpecific,
     };
 
@@ -67,8 +75,121 @@ public:
     std::vector<float> tl_truth_deltaBeta_4thCorr;
     std::vector<float> tl_truth_cutflow;
 
+    std::vector<float> tl_matched_track_pt;
     std::vector<float> tl_matched_track_deltaBeta;
     std::vector<float> tl_matched_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pt2_track_pt;
+    std::vector<float> tl_matched_pt2_track_deltaBeta;
+    std::vector<float> tl_matched_pt2_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pt1peak_track_pt;
+    std::vector<float> tl_matched_pt1peak_track_deltaBeta;
+    std::vector<float> tl_matched_pt1peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pt1p5peak_track_pt;
+    std::vector<float> tl_matched_pt1p5peak_track_deltaBeta;
+    std::vector<float> tl_matched_pt1p5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pt2peak_track_pt;
+    std::vector<float> tl_matched_pt2peak_track_deltaBeta;
+    std::vector<float> tl_matched_pt2peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pt2p5peak_track_pt;
+    std::vector<float> tl_matched_pt2p5peak_track_deltaBeta;
+    std::vector<float> tl_matched_pt2p5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pt3peak_track_pt;
+    std::vector<float> tl_matched_pt3peak_track_deltaBeta;
+    std::vector<float> tl_matched_pt3peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_track_pt;
+    std::vector<float> tl_matched_pos_track_deltaBeta;
+    std::vector<float> tl_matched_pos_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt1peak_track_pt;
+    std::vector<float> tl_matched_pos_pt1peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt1peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt1p5peak_track_pt;
+    std::vector<float> tl_matched_pos_pt1p5peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt1p5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt2peak_track_pt;
+    std::vector<float> tl_matched_pos_pt2peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt2peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt2p5peak_track_pt;
+    std::vector<float> tl_matched_pos_pt2p5peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt2p5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt3peak_track_pt;
+    std::vector<float> tl_matched_pos_pt3peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt3peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt5peak_track_pt;
+    std::vector<float> tl_matched_pos_pt5peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt10peak_track_pt;
+    std::vector<float> tl_matched_pos_pt10peak_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt10peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt10_track_pt;
+    std::vector<float> tl_matched_pos_pt10_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt10_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt20_track_pt;
+    std::vector<float> tl_matched_pos_pt20_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt20_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_pos_pt50_track_pt;
+    std::vector<float> tl_matched_pos_pt50_track_deltaBeta;
+    std::vector<float> tl_matched_pos_pt50_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_track_pt;
+    std::vector<float> tl_matched_neg_track_deltaBeta;
+    std::vector<float> tl_matched_neg_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt1peak_track_pt;
+    std::vector<float> tl_matched_neg_pt1peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt1peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt1p5peak_track_pt;
+    std::vector<float> tl_matched_neg_pt1p5peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt1p5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt2peak_track_pt;
+    std::vector<float> tl_matched_neg_pt2peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt2peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt2p5peak_track_pt;
+    std::vector<float> tl_matched_neg_pt2p5peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt2p5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt3peak_track_pt;
+    std::vector<float> tl_matched_neg_pt3peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt3peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt5peak_track_pt;
+    std::vector<float> tl_matched_neg_pt5peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt5peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt10peak_track_pt;
+    std::vector<float> tl_matched_neg_pt10peak_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt10peak_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt10_track_pt;
+    std::vector<float> tl_matched_neg_pt10_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt10_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt20_track_pt;
+    std::vector<float> tl_matched_neg_pt20_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt20_track_deltaBeta_4thCorr;
+
+    std::vector<float> tl_matched_neg_pt50_track_pt;
+    std::vector<float> tl_matched_neg_pt50_track_deltaBeta;
+    std::vector<float> tl_matched_neg_pt50_track_deltaBeta_4thCorr;
 
     std::vector<float> tl_unmatched_track_deltaBeta;
     std::vector<float> tl_unmatched_track_deltaBeta_4thCorr;
