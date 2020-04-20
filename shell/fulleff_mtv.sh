@@ -28,6 +28,7 @@ usage() {
     echo "           13 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 211"
     echo "           14 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 11"
     echo "           15 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 1 (1 means all charged particle)"
+    echo "           16 : pt 0.5 to 50  hundred-mu-gun sample"
     exit
 }
 
@@ -172,6 +173,15 @@ SAMPLETAG=pu200_w_truth_charged
 PDGID=0
 PTBOUND=0
 DOPARALLEL=true
+fi
+
+if [[ $1 == "16" ]]; then
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_50.root,${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root
+SAMPLETAG=pt0p5_2p0_50
+PDGID=13
+PTBOUND=7
+NEVENTS=-1
+DOPARALLEL=false
 fi
 
 JOBTAG=$2

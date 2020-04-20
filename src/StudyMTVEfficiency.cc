@@ -23,6 +23,11 @@ StudyMTVEfficiency::StudyMTVEfficiency(
 
 void StudyMTVEfficiency::bookStudy()
 {
+    bookStudy_v2();
+}
+
+void StudyMTVEfficiency::bookStudy_v1()
+{
     // Book Histograms
     const int nlayers = NLAYERS;
 
@@ -53,6 +58,37 @@ void StudyMTVEfficiency::bookStudy()
 
 }
 
+void StudyMTVEfficiency::bookStudy_v2()
+{
+    // Book Histograms
+    const int nlayers = NLAYERS;
+
+    const float etamax = 2.5;
+
+    const int eta_nbins = 50;
+
+    const float phimax = 3.1416;
+
+    const int phi_nbins = 1080;
+
+    ana.histograms.addVecHistogram("tc_matched_track_pt_mtv" , pt_boundaries, [&]()                { return tc_matched_track_pt_mtv[0];  } );
+    ana.histograms.addVecHistogram("tc_all_track_pt_mtv"     , pt_boundaries, [&]()                { return tc_all_track_pt_mtv[0];      } );
+    ana.histograms.addVecHistogram("tc_matched_track_eta_mtv", eta_nbins, -1*etamax, etamax, [&]() { return tc_matched_track_eta_mtv[0]; } );
+    ana.histograms.addVecHistogram("tc_all_track_eta_mtv"    , eta_nbins, -1*etamax, etamax, [&]() { return tc_all_track_eta_mtv[0];     } );
+    ana.histograms.addVecHistogram("tc_matched_track_phi_mtv", phi_nbins, -1*phimax, phimax, [&]() { return tc_matched_track_phi_mtv[0]; } );
+    ana.histograms.addVecHistogram("tc_all_track_phi_mtv"    , phi_nbins, -1*phimax, phimax, [&]() { return tc_all_track_phi_mtv[0];     } );
+    ana.histograms.addVecHistogram("tc_matched_track_dxy_mtv", 50, -10, 10, [&]()                  { return tc_matched_track_dxy_mtv[0]; } );
+    ana.histograms.addVecHistogram("tc_all_track_dxy_mtv"    , 50, -10, 10, [&]()                  { return tc_all_track_dxy_mtv[0];     } );
+
+    ana.histograms.addVecHistogram("tc_notmatched_trackcandidate_pt_mtv" , pt_boundaries, [&]()                { return tc_matched_track_pt_mtv[1];  } ); // NOTE: Name of the variable is a MISNOMER!!
+    ana.histograms.addVecHistogram("tc_all_trackcandidate_pt_mtv"        , pt_boundaries, [&]()                { return tc_all_track_pt_mtv[1];      } ); // NOTE: Name of the variable is a MISNOMER!!
+    ana.histograms.addVecHistogram("tc_notmatched_trackcandidate_eta_mtv", eta_nbins, -1*etamax, etamax, [&]() { return tc_matched_track_eta_mtv[1]; } ); // NOTE: Name of the variable is a MISNOMER!!
+    ana.histograms.addVecHistogram("tc_all_trackcandidate_eta_mtv"       , eta_nbins, -1*etamax, etamax, [&]() { return tc_all_track_eta_mtv[1];     } ); // NOTE: Name of the variable is a MISNOMER!!
+    ana.histograms.addVecHistogram("tc_notmatched_trackcandidate_dxy_mtv", 50, -10, 10, [&]()                  { return tc_matched_track_dxy_mtv[1]; } ); // NOTE: Name of the variable is a MISNOMER!!
+    ana.histograms.addVecHistogram("tc_all_trackcandidate_dxy_mtv"       , 50, -10, 10, [&]()                  { return tc_all_track_dxy_mtv[1];     } ); // NOTE: Name of the variable is a MISNOMER!!
+
+}
+
 void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     doStudy_v2(event, simtrkevents);
@@ -70,50 +106,63 @@ void StudyMTVEfficiency::doStudy_v2(SDL::Event& event, std::vector<std::tuple<un
         tc_all_track_pt_mtv     [i].clear();
         tc_matched_track_eta_mtv[i].clear();
         tc_all_track_eta_mtv    [i].clear();
+        tc_matched_track_phi_mtv[i].clear();
+        tc_all_track_phi_mtv    [i].clear();
         tc_matched_track_dxy_mtv[i].clear();
         tc_all_track_dxy_mtv    [i].clear();
     }
 
-    // std::cout << "denominators" << std::endl;
+    // Renaming the variables so I don't get confused
+    vector<float>& tc_matched_sim_track_pt_mtv  = tc_matched_track_pt_mtv [0];
+    vector<float>& tc_all_sim_track_pt_mtv      = tc_all_track_pt_mtv     [0];
+    vector<float>& tc_matched_sim_track_eta_mtv = tc_matched_track_eta_mtv[0];
+    vector<float>& tc_all_sim_track_eta_mtv     = tc_all_track_eta_mtv    [0];
+    vector<float>& tc_matched_sim_track_phi_mtv = tc_matched_track_phi_mtv[0];
+    vector<float>& tc_all_sim_track_phi_mtv     = tc_all_track_phi_mtv    [0];
+    vector<float>& tc_matched_sim_track_dxy_mtv = tc_matched_track_dxy_mtv[0];
+    vector<float>& tc_all_sim_track_dxy_mtv     = tc_all_track_dxy_mtv    [0];
 
-    // std::cout <<  " trk.sim_pt().size(): " << trk.sim_pt().size() <<  std::endl;
+    // Renaming the variables so I don't get confused
+    vector<float>& tc_notmatched_trackcandidate_pt_mtv  = tc_matched_track_pt_mtv [0];
+    vector<float>& tc_all_trackcandidate_pt_mtv         = tc_all_track_pt_mtv     [0];
+    vector<float>& tc_notmatched_trackcandidate_eta_mtv = tc_matched_track_eta_mtv[0];
+    vector<float>& tc_all_trackcandidate_eta_mtv        = tc_all_track_eta_mtv    [0];
+    vector<float>& tc_notmatched_trackcandidate_phi_mtv = tc_matched_track_phi_mtv[0];
+    vector<float>& tc_all_trackcandidate_phi_mtv        = tc_all_track_phi_mtv    [0];
+    vector<float>& tc_notmatched_trackcandidate_dxy_mtv = tc_matched_track_dxy_mtv[0];
+    vector<float>& tc_all_trackcandidate_dxy_mtv        = tc_all_track_dxy_mtv    [0];
 
+    // The denominators are selected here
     for (unsigned int isimtrk = 0; isimtrk < trk.sim_pt().size(); ++isimtrk)
     {
         float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
         float eta = trk.sim_eta()[isimtrk];
+        float phi = trk.sim_phi()[isimtrk];
         float dxy = trk.sim_pca_dxy()[isimtrk];
         float dz = trk.sim_pca_dz()[isimtrk];
 
-        // if (abs(dz) > dz_thresh)
-        //     continue;
+        if (abs(dz) > dz_thresh)
+            continue;
 
         if (goodBarrelTrack(isimtrk, pdgid_of_study))
         {
             if (abs(dxy) < dxy_thresh and abs(eta) < 0.8)
-                tc_all_track_pt_mtv[0].push_back(pt);
+                tc_all_sim_track_pt_mtv.push_back(pt);
             if (abs(dxy) < dxy_thresh and abs(pt) > pt_thresh)
-                tc_all_track_eta_mtv[0].push_back(eta);
+                tc_all_sim_track_eta_mtv.push_back(eta);
             if (abs(eta) < 0.8 and abs(pt) > pt_thresh)
-                tc_all_track_dxy_mtv[0].push_back(dxy);
-
-            // std::cout << isimtrk << std::endl;
+                tc_all_sim_track_dxy_mtv.push_back(dxy);
+            if (abs(eta) < 0.8 and abs(dxy) < dxy_thresh)
+                tc_all_sim_track_phi_mtv.push_back(phi);
         }
 
     }
 
-    // std::cout << "numerators" << std::endl;
-
-    // int size = event.getLayer(1,SDL::Layer::Barrel).getTrackCandidatePtrs().size();
-    // std::cout <<  " size: " << size <<  std::endl;
-
-    // Loop over track candidates to get numerators
-    vector<int> numer_trk_idxs;
+    // The numerators are selected here
+    vector<int> numer_trk_idxs; // For efficiency
     for (auto& tc : event.getLayer(1, SDL::Layer::Barrel).getTrackCandidatePtrs())
     {
         vector<int> matched_simtrk_idxs = matchedSimTrkIdxs(tc);
-
-        // std::cout <<  " matched_simtrk_idxs.size(): " << matched_simtrk_idxs.size() <<  std::endl;
 
         // If there is a good matched sim track
         for (auto& matched_simtrk_idx : matched_simtrk_idxs)
@@ -121,35 +170,38 @@ void StudyMTVEfficiency::doStudy_v2(SDL::Event& event, std::vector<std::tuple<un
             if (std::find(numer_trk_idxs.begin(), numer_trk_idxs.end(), matched_simtrk_idx) == numer_trk_idxs.end())
                 numer_trk_idxs.push_back(matched_simtrk_idx);
         }
-
     }
 
+    // Loop over to fill the efficiency related numerator object
     for (auto& numer_trk_idx : numer_trk_idxs)
     {
-        // std::cout << tc << std::endl;
 
-        // std::cout <<  " matched_simtrk_idx: " << matched_simtrk_idx <<  std::endl;
+        // Then get the values and fill
+        float pt = std::min((double) trk.sim_pt()[numer_trk_idx], 49.999);
+        float eta = trk.sim_eta()[numer_trk_idx];
+        float phi = trk.sim_phi()[numer_trk_idx];
+        float dxy = trk.sim_pca_dxy()[numer_trk_idx];
+        float dz = trk.sim_pca_dz()[numer_trk_idx];
+
+        if (abs(dz) > dz_thresh)
+            continue;
 
         // And is a denominator track
         if (goodBarrelTrack(numer_trk_idx, pdgid_of_study))
         {
-            // Then get the values and fill
-            float pt = std::min((double) trk.sim_pt()[numer_trk_idx], 49.999);
-            float eta = trk.sim_eta()[numer_trk_idx];
-            float dxy = trk.sim_pca_dxy()[numer_trk_idx];
-            float dz = trk.sim_pca_dz()[numer_trk_idx];
-
             if (abs(dxy) < dxy_thresh and abs(eta) < 0.8)
-                tc_matched_track_pt_mtv[0].push_back(pt);
+                tc_matched_sim_track_pt_mtv.push_back(pt);
             if (abs(dxy) < dxy_thresh and abs(pt) > pt_thresh)
-                tc_matched_track_eta_mtv[0].push_back(eta);
+                tc_matched_sim_track_eta_mtv.push_back(eta);
             if (abs(eta) < 0.8 and abs(pt) > pt_thresh)
-                tc_matched_track_dxy_mtv[0].push_back(dxy);
-
+                tc_matched_sim_track_dxy_mtv.push_back(dxy);
+            if (abs(eta) < 0.8 and abs(dxy) < dxy_thresh)
+                tc_matched_sim_track_phi_mtv.push_back(phi);
         }
+
     }
 
-
+    // Loop over to 
 
 }
 

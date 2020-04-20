@@ -65,6 +65,10 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         num.Rebin(2)
         den.Rebin(2)
 
+    if "_phi" in output_name:
+        num.Rebin(5)
+        den.Rebin(5)
+
     suffix = ""
     if tag != "":
         suffix = "_" + tag
@@ -922,14 +926,15 @@ if drawMTVplots:
    plot_eff("Root__tc_matched_track_eta_mtv", "Root__tc_all_track_eta_mtv", "tc_eff_eta_mtv.pdf", "mtveff", tag)
    plot_eff("Root__tc_matched_track_eta_mtv", "Root__tc_all_track_eta_mtv", "tc_eff_etazoom_mtv.pdf", "mtveff", tag)
    plot_eff("Root__tc_matched_track_dxy_mtv", "Root__tc_all_track_dxy_mtv", "tc_eff_dxy_mtv.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_pt_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_ptzoom_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_eta_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_etazoom_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_dxy_mtv_eta0_0p4", "Root__tc_all_track_dxy_mtv_eta0_0p4", "tc_eff_dxy_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_pt_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_ptzoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_eta_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_etazoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_dxy_mtv_eta0p4_0p8", "Root__tc_all_track_dxy_mtv_eta0p4_0p8", "tc_eff_dxy_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_phi_mtv", "Root__tc_all_track_phi_mtv", "tc_eff_phi_mtv.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_pt_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_ptzoom_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_eta_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_etazoom_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_dxy_mtv_eta0_0p4", "Root__tc_all_track_dxy_mtv_eta0_0p4", "tc_eff_dxy_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_pt_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_ptzoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_eta_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_etazoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_dxy_mtv_eta0p4_0p8", "Root__tc_all_track_dxy_mtv_eta0p4_0p8", "tc_eff_dxy_mtv_eta0p4_0p8.pdf", "mtveff", tag)
 
