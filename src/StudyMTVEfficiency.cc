@@ -17,7 +17,7 @@ StudyMTVEfficiency::StudyMTVEfficiency(
 
     dz_thresh = 30;
 
-    pt_thresh = 1.5;
+    pt_thresh = 0.9;
 
 }
 
@@ -54,6 +54,106 @@ void StudyMTVEfficiency::bookStudy()
 }
 
 void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+{
+    doStudy_v2(event, simtrkevents);
+}
+
+void StudyMTVEfficiency::doStudy_v2(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+{
+    // Each do study is performed per event
+
+    // First clear all the output variables that will be used to fill the histograms for this event
+
+    for (unsigned int i = 0; i < 3; ++i)
+    {
+        tc_matched_track_pt_mtv [i].clear();
+        tc_all_track_pt_mtv     [i].clear();
+        tc_matched_track_eta_mtv[i].clear();
+        tc_all_track_eta_mtv    [i].clear();
+        tc_matched_track_dxy_mtv[i].clear();
+        tc_all_track_dxy_mtv    [i].clear();
+    }
+
+    // std::cout << "denominators" << std::endl;
+
+    // std::cout <<  " trk.sim_pt().size(): " << trk.sim_pt().size() <<  std::endl;
+
+    for (unsigned int isimtrk = 0; isimtrk < trk.sim_pt().size(); ++isimtrk)
+    {
+        float pt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
+        float eta = trk.sim_eta()[isimtrk];
+        float dxy = trk.sim_pca_dxy()[isimtrk];
+        float dz = trk.sim_pca_dz()[isimtrk];
+
+        // if (abs(dz) > dz_thresh)
+        //     continue;
+
+        if (goodBarrelTrack(isimtrk, pdgid_of_study))
+        {
+            if (abs(dxy) < dxy_thresh and abs(eta) < 0.8)
+                tc_all_track_pt_mtv[0].push_back(pt);
+            if (abs(dxy) < dxy_thresh and abs(pt) > pt_thresh)
+                tc_all_track_eta_mtv[0].push_back(eta);
+            if (abs(eta) < 0.8 and abs(pt) > pt_thresh)
+                tc_all_track_dxy_mtv[0].push_back(dxy);
+
+            // std::cout << isimtrk << std::endl;
+        }
+
+    }
+
+    // std::cout << "numerators" << std::endl;
+
+    // int size = event.getLayer(1,SDL::Layer::Barrel).getTrackCandidatePtrs().size();
+    // std::cout <<  " size: " << size <<  std::endl;
+
+    // Loop over track candidates to get numerators
+    vector<int> numer_trk_idxs;
+    for (auto& tc : event.getLayer(1, SDL::Layer::Barrel).getTrackCandidatePtrs())
+    {
+        vector<int> matched_simtrk_idxs = matchedSimTrkIdxs(tc);
+
+        // std::cout <<  " matched_simtrk_idxs.size(): " << matched_simtrk_idxs.size() <<  std::endl;
+
+        // If there is a good matched sim track
+        for (auto& matched_simtrk_idx : matched_simtrk_idxs)
+        {
+            if (std::find(numer_trk_idxs.begin(), numer_trk_idxs.end(), matched_simtrk_idx) == numer_trk_idxs.end())
+                numer_trk_idxs.push_back(matched_simtrk_idx);
+        }
+
+    }
+
+    for (auto& numer_trk_idx : numer_trk_idxs)
+    {
+        // std::cout << tc << std::endl;
+
+        // std::cout <<  " matched_simtrk_idx: " << matched_simtrk_idx <<  std::endl;
+
+        // And is a denominator track
+        if (goodBarrelTrack(numer_trk_idx, pdgid_of_study))
+        {
+            // Then get the values and fill
+            float pt = std::min((double) trk.sim_pt()[numer_trk_idx], 49.999);
+            float eta = trk.sim_eta()[numer_trk_idx];
+            float dxy = trk.sim_pca_dxy()[numer_trk_idx];
+            float dz = trk.sim_pca_dz()[numer_trk_idx];
+
+            if (abs(dxy) < dxy_thresh and abs(eta) < 0.8)
+                tc_matched_track_pt_mtv[0].push_back(pt);
+            if (abs(dxy) < dxy_thresh and abs(pt) > pt_thresh)
+                tc_matched_track_eta_mtv[0].push_back(eta);
+            if (abs(eta) < 0.8 and abs(pt) > pt_thresh)
+                tc_matched_track_dxy_mtv[0].push_back(dxy);
+
+        }
+    }
+
+
+
+}
+
+void StudyMTVEfficiency::doStudy_v1(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     // Each do study is performed per event
 

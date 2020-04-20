@@ -34,7 +34,7 @@ usage() {
 if [ -z $1 ]; then usage; fi
 if [ -z $2 ]; then usage; fi
 
-if [[ $1 == *"1"* ]]; then
+if [[ $1 == "1" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p5_1p5_10MuGun.root
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root
 SAMPLETAG=pt0p5_2p0
@@ -49,98 +49,98 @@ PDGID=13
 PTBOUND=4
 fi
 
-if [[ $1 == *"2"* ]]; then
+if [[ $1 == "2" ]]; then
 SAMPLE=/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
 SAMPLETAG=e200
 PDGID=13
 PTBOUND=0
 fi
 
-if [[ $1 == *"3"* ]]; then
+if [[ $1 == "3" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_TTbar_PU200.root
 SAMPLETAG=pu200_pdgid13
 PDGID=13
 PTBOUND=0
 fi
 
-if [[ $1 == *"4"* ]]; then
+if [[ $1 == "4" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_TTbar_PU200.root
 SAMPLETAG=pu200_pdgid211
 PDGID=211
 PTBOUND=0
 fi
 
-if [[ $1 == *"5"* ]]; then
+if [[ $1 == "5" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_TTbar_PU200.root
 SAMPLETAG=pu200_pdgid11
 PDGID=11
 PTBOUND=0
 fi
 
-if [[ $1 == *"6"* ]]; then
+if [[ $1 == "6" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_DisplacedSUSY_stopToChi_Gravitino_M_1000_700_10mm.root
 SAMPLETAG=pu200_displaced_pdgid13
 PDGID=13
 PTBOUND=0
 fi
 
-if [[ $1 == *"7"* ]]; then
+if [[ $1 == "7" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_GMSB_L100_Ctau100.root
 SAMPLETAG=pu200_displaced_gmsb_ctau100_pdgid13
 PDGID=13
 PTBOUND=0
 fi
 
-if [[ $1 == *"8"* ]]; then
+if [[ $1 == "8" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_GMSB_L100_Ctau100.root
 SAMPLETAG=pu200_displaced_gmsb_ctau100_pdgid11
 PDGID=11
 PTBOUND=0
 fi
 
-if [[ $1 == *"9"* ]]; then
+if [[ $1 == "9" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0_mtd5/src/trackingNtuple_GMSB_L100_Ctau100.root
 SAMPLETAG=pu200_displaced_gmsb_ctau100_pdgid211
 PDGID=211
 PTBOUND=0
 fi
 
-if [[ $1 == *"10"* ]]; then
+if [[ $1 == "10" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root
 SAMPLETAG=pt0p5_3p0
 PDGID=13
 PTBOUND=5
 fi
 
-if [[ $1 == *"11"* ]]; then
+if [[ $1 == "11" ]]; then
 SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_10_pt0p5_5p0.root
 SAMPLETAG=pt0p5_5p0
 PDGID=13
 PTBOUND=6
 fi
 
-if [[ $1 == *"12"* ]]; then
+if [[ $1 == "12" ]]; then
 SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
 SAMPLETAG=pu200_w_truth_pdgid13
 PDGID=13
 PTBOUND=0
 fi
 
-if [[ $1 == *"13"* ]]; then
+if [[ $1 == "13" ]]; then
 SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
 SAMPLETAG=pu200_w_truth_pdgid211
 PDGID=211
 PTBOUND=0
 fi
 
-if [[ $1 == *"14"* ]]; then
+if [[ $1 == "14" ]]; then
 SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
 SAMPLETAG=pu200_w_truth_pdgid11
 PDGID=11
 PTBOUND=0
 fi
 
-if [[ $1 == *"15"* ]]; then
+if [[ $1 == "15" ]]; then
 SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_with_PUinfo_500_evts.root
 SAMPLETAG=pu200_w_truth_charged
 PDGID=11

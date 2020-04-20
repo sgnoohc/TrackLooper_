@@ -482,8 +482,8 @@ int main(int argc, char** argv)
         if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
         my_timer.Start(kFALSE);
         // event.createTracklets();
-        // event.createTrackletsWithModuleMap(SDL::DefaultNm1_TLAlgo);
-        event.createTrackletsViaNavigation(SDL::DefaultNm1_TLAlgo);
+        event.createTrackletsWithModuleMap(SDL::DefaultNm1_TLAlgo);
+        // event.createTrackletsViaNavigation(SDL::DefaultNm1_TLAlgo);
         float tl_elapsed = my_timer.RealTime();
         if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed - tp_elapsed << " secs" << std::endl;
         if (ana.verbose != 0) std::cout << "# of Tracklets produced: " << event.getNumberOfTracklets() << std::endl;
