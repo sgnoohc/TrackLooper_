@@ -34,6 +34,8 @@ public:
     std::array<std::vector<float>, 3> tc_all_track_pt_mtv;
     std::array<std::vector<float>, 3> tc_matched_track_eta_mtv;
     std::array<std::vector<float>, 3> tc_all_track_eta_mtv;
+    std::array<std::vector<float>, 3> tc_matched_track_phi_mtv;
+    std::array<std::vector<float>, 3> tc_all_track_phi_mtv;
     std::array<std::vector<float>, 3> tc_matched_track_dxy_mtv;
     std::array<std::vector<float>, 3> tc_all_track_dxy_mtv;
 
@@ -43,7 +45,11 @@ public:
         int pdgid
         );
     virtual void bookStudy();
+    virtual void bookStudy_v1();
+    virtual void bookStudy_v2();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+    virtual void doStudy_v1(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+    virtual void doStudy_v2(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 
 };
 

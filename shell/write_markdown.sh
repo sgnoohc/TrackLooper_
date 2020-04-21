@@ -107,38 +107,38 @@ else
     echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_numden)" >> ${MDFILE}.md
     echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_numden)" >> ${MDFILE}.md
     echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_numden)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "#### Efficiency (eta plots with pt > 1.5 and the rest have |eta| < 0.4)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
-    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
-    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
-    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
-    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "#### Numerator and Denominator overlay (eta plots with pt > 1.5 and the rest have |eta| < 0.4)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
-    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
-    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
-    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
-    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "#### Efficiency (eta plots with pt > 1.5 and the rest have |eta| > 0.4 and |eta| < 0.8)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
-    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
-    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
-    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
-    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "#### Numerator and Denominator overlay (eta plots with pt > 1.5 and the rest have |eta| > 0.4 and |eta| < 0.8)" >> ${MDFILE}.md
-    echo "" >> ${MDFILE}.md
-    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
-    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
-    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
-    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
-    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "#### Efficiency (eta plots with pt > 1.5 and the rest have |eta| < 0.4)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
+    # echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
+    # echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
+    # echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
+    # echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0_0p4_eff)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "#### Numerator and Denominator overlay (eta plots with pt > 1.5 and the rest have |eta| < 0.4)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
+    # echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
+    # echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
+    # echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
+    # echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0_0p4_numden)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "#### Efficiency (eta plots with pt > 1.5 and the rest have |eta| > 0.4 and |eta| < 0.8)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
+    # echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
+    # echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
+    # echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
+    # echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0p4_0p8_eff)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "#### Numerator and Denominator overlay (eta plots with pt > 1.5 and the rest have |eta| > 0.4 and |eta| < 0.8)" >> ${MDFILE}.md
+    # echo "" >> ${MDFILE}.md
+    # echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
+    # echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
+    # echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
+    # echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
+    # echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eta0p4_0p8_numden)" >> ${MDFILE}.md
 
 fi
 

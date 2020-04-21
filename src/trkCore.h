@@ -13,10 +13,12 @@
 #include "AnalysisConfig.h"
 #include "SDL/ModuleConnectionMap.h"
 #include "SDL/Event.h"
+#include "SDL/TrackCandidate.h"
 
 float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
 bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit);
+bool goodBarrelTrack(unsigned int isimtrk, int pdgid=0);
 bool hasAll12HitsInBarrel(unsigned int isimtrk);
 bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel);
 bool hasAll12HitsWithNBarrelUsingModuleMap(unsigned int isimtrk, int nbarrel, bool usesimhits=false);
@@ -30,5 +32,8 @@ bool checkModuleConnectionsAreGood(std::array<std::vector<unsigned int>, 6>& lay
 
 void fitCircle(std::vector<float> x, std::vector<float> y);
 void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside=false);
+
+std::vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc);
+void perm(vector<int> intermediate, size_t n, vector<vector<int>>& va);
 
 #endif

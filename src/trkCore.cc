@@ -441,6 +441,47 @@ bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel)
 }
 
 //__________________________________________________________________________________________
+// Check for at least one sim hit in each layer and nothing more
+bool goodBarrelTrack(unsigned int isimtrk, int pdgid)
+{
+
+    std::vector<int> layers;
+
+    for (unsigned int ith_hit = 0; ith_hit < trk.sim_simHitIdx()[isimtrk].size(); ++ith_hit)
+    {
+
+        // Retrieve the sim hit idx
+        unsigned int simhitidx = trk.sim_simHitIdx()[isimtrk][ith_hit];
+
+        // Select only the hits in barrel
+        if (not (trk.simhit_subdet()[simhitidx] == 5))
+            continue;
+
+        // Select only sim hits matching the particle pdgid
+        if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
+            continue;
+
+        // if pdgid is provided then check that the pdgid 
+        if (pdgid != 0)
+            if (not (trk.sim_pdgId()[isimtrk] == abs(pdgid)))
+                continue;
+
+        // add to layers
+        layers.push_back(trk.simhit_layer()[simhitidx]);
+
+    }
+
+    if (not (std::find(layers.begin(), layers.end(), 1) != layers.end())) return false;
+    if (not (std::find(layers.begin(), layers.end(), 2) != layers.end())) return false;
+    if (not (std::find(layers.begin(), layers.end(), 3) != layers.end())) return false;
+    if (not (std::find(layers.begin(), layers.end(), 4) != layers.end())) return false;
+    if (not (std::find(layers.begin(), layers.end(), 5) != layers.end())) return false;
+    if (not (std::find(layers.begin(), layers.end(), 6) != layers.end())) return false;
+    return true;
+
+}
+
+//__________________________________________________________________________________________
 bool hasAll12HitsInBarrel(unsigned int isimtrk)
 {
 
@@ -902,5 +943,107 @@ void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer
         std::cout <<  " layer: " << layer <<  " depth: " << depth <<  " total_nmult: " << total_nmult <<  " avg_mult: " << avg_mult <<  " goinside: " << goinside <<  std::endl;
 
     }
+
+}
+
+//__________________________________________________________________________________________
+vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
+{
+
+    std::vector<int> hitidxs = {
+        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+        };
+
+    std::vector<vector<int>> simtrk_idxs;
+    std::vector<int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto& hitidx : hitidxs)
+    {
+        std::vector<int> simtrk_idxs_per_hit;
+        for (auto& simhit_idx : trk.ph2_simHitIdx()[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+        if (simtrk_idxs_per_hit.size() == 0)
+        {
+            simtrk_idxs_per_hit.push_back(-1);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), -1) == unique_idxs.end())
+                unique_idxs.push_back(-1);
+        }
+        simtrk_idxs.push_back(simtrk_idxs_per_hit);
+    }
+
+    // // print
+    // std::cout << "va print" << std::endl;
+    // for (auto& vec : simtrk_idxs)
+    // {
+    //     for (auto& idx : vec)
+    //     {
+    //         std::cout << idx << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << "va print end" << std::endl;
+
+    // Compute all permutations
+    std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm = [&](vector<vector<int>>& result, vector<int> intermediate, size_t n, vector<vector<int>>& va)
+    {
+        if (va.size() > n)
+        {
+            for (auto x : va[n])
+            {
+                intermediate.push_back(x);
+                perm(result, intermediate, n+1, va);
+            }
+        }
+        else
+        {
+            result.push_back(intermediate);
+        }
+    };
+
+    vector<vector<int>> allperms;
+    perm(allperms, vector<int>(), 0, simtrk_idxs);
+
+    // for (auto& iperm : allperms)
+    // {
+    //     for (auto& idx : iperm)
+    //         std::cout << idx << " ";
+    //     std::cout << std::endl;
+    // }
+
+    std::vector<int> matched_sim_trk_idxs;
+    for (auto& trkidx_perm : allperms)
+    {
+        std::vector<int> counts;
+        for (auto& unique_idx : unique_idxs)
+        {
+            int cnt = std::count(trkidx_perm.begin(), trkidx_perm.end(), unique_idx);
+            counts.push_back(cnt);
+        }
+        auto result = std::max_element(counts.begin(), counts.end());
+        int rawidx = std::distance(counts.begin(), result);
+        int trkidx = unique_idxs[rawidx];
+        if (trkidx < 0)
+            continue;
+        if (counts[rawidx] > 9)
+            matched_sim_trk_idxs.push_back(trkidx);
+    }
+
+    return matched_sim_trk_idxs;
 
 }

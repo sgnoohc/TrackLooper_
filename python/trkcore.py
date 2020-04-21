@@ -27,9 +27,9 @@ r.SDL.endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLoo
 r.SDL.tiltedGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/tilted_orientation_data.txt");
 r.SDL.moduleConnectionMap.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
 
-# RooUtil package
-r.gROOT.ProcessLine(".L rooutil/rooutil.so")
-r.gROOT.ProcessLine(".L rooutil/rooutil.h")
+# # RooUtil package
+# r.gROOT.ProcessLine(".L rooutil/rooutil.so")
+# r.gROOT.ProcessLine(".L rooutil/rooutil.h")
 
 ##############################################################
 #
@@ -38,8 +38,8 @@ r.gROOT.ProcessLine(".L rooutil/rooutil.h")
 ##############################################################
 
 #_____________________________________________________________
-# Track object
-class Track():
+# SimTrack object
+class SimTrack():
     def __init__(self, t, simtrk_idx):
         self.simtrk_idx = simtrk_idx
         self.pt = t.sim_pt[simtrk_idx]
@@ -157,6 +157,137 @@ def getSDLEvent(t, verbose=0):
 
     return sdlEvent
 
+##############################################################
+#
+# Doing some calculation with tracking ntuples
+#
+##############################################################
+
+#_____________________________________________________________
+# Good barrel tracks is where at least one sim hit with correct pdgid land on each layer
+# Does not require pair of hits land on each layer.
+# Does not require that the paired hits land on module pairs.
+# Does not care whether a single layer has 4 hits
+# Only one sim hit with correct pdgid is needed per layer to pass the requirement
+# Input: TTree event, and sim trk index
+def goodBarrelTracks(t, simtrk_idx, pdgid=0):
+
+    # List of layer index with the simhit with correct pdgid
+    # Check this later to get the list
+    layer_idx_with_hits = []
+
+    # Loop over the sim hit index
+    for simhitidx in t.sim_simHitIdx[simtrk_idx]:
+
+        # If not a correct sim hit skip
+        if t.simhit_particle[simhitidx] != t.sim_pdgId[simtrk_idx]:
+            continue
+
+        # Check it is barrel
+        if t.simhit_subdet[simhitidx] != 5:
+            continue
+
+        # If pdgId condition is called require the pdgid
+        if pdgid:
+            if t.sim_pdgId[simtrk_idx] != abs(pdgid):
+                continue
+
+        # Add the layer index
+        layer_idx_with_hits.append(t.simhit_layer[simhitidx])
+
+    if sorted(list(set(layer_idx_with_hits))) == [1, 2, 3, 4, 5, 6]:
+        return True
+    else:
+        return False
+
+#_____________________________________________________________
+# Get list of goodBarrelTracks
+def listOfGoodBarrelTracks(t, pdgid=0):
+
+    list_of_good_barrel_tracks = []
+
+    # Loop over sim tracks
+    for simtrk_idx, pt in enumerate(t.sim_pt):
+
+        # Ask whether this is a good denominator
+        if goodBarrelTracks(t, simtrk_idx, pdgid):
+
+            list_of_good_barrel_tracks.append(SimTrack(t, simtrk_idx))
+
+    return list_of_good_barrel_tracks
+
+#_____________________________________________________________
+# matched sim track indices of Track Candidate
+# It could potentially return more than one
+def matchedSimTrkIdxs(trkcand, t):
+    # Aggregate 12 hit idxs
+    hitidxs = []
+    hitidxs.append(trkcand.innerTrackletPtr().innerSegmentPtr().innerMiniDoubletPtr().lowerHitPtr().idx())
+    hitidxs.append(trkcand.innerTrackletPtr().innerSegmentPtr().innerMiniDoubletPtr().upperHitPtr().idx())
+    hitidxs.append(trkcand.innerTrackletPtr().innerSegmentPtr().outerMiniDoubletPtr().lowerHitPtr().idx())
+    hitidxs.append(trkcand.innerTrackletPtr().innerSegmentPtr().outerMiniDoubletPtr().upperHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().innerSegmentPtr().innerMiniDoubletPtr().lowerHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().innerSegmentPtr().innerMiniDoubletPtr().upperHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().innerSegmentPtr().outerMiniDoubletPtr().lowerHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().innerSegmentPtr().outerMiniDoubletPtr().upperHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().outerSegmentPtr().innerMiniDoubletPtr().lowerHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().outerSegmentPtr().innerMiniDoubletPtr().upperHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().outerSegmentPtr().outerMiniDoubletPtr().lowerHitPtr().idx())
+    hitidxs.append(trkcand.outerTrackletPtr().outerSegmentPtr().outerMiniDoubletPtr().upperHitPtr().idx())
+
+    # Get sim trk idx
+    # if no match add -1
+    simtrk_idxs = []
+    for hitidx in hitidxs:
+        simtrk_idxs_per_hit = []
+        for simhit_idx in t.ph2_simHitIdx[hitidx]:
+            simtrk_idxs_per_hit.append(t.simhit_simTrkIdx[simhit_idx])
+        if len(simtrk_idxs_per_hit) == 0:
+            simtrk_idxs_per_hit.append(-1)
+        simtrk_idxs.append(simtrk_idxs_per_hit)
+
+    # Obtain all permutatin
+    # [ [ 12, [ 12], [13], [12], [12, ... ]
+    #     13],                    14],
+
+    # using list comprehension  
+    # to compute all possible permutations 
+    perm = [[i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12]
+            for i1  in simtrk_idxs[0]
+            for i2  in simtrk_idxs[1]
+            for i3  in simtrk_idxs[2]
+            for i4  in simtrk_idxs[3]
+            for i5  in simtrk_idxs[4]
+            for i6  in simtrk_idxs[5]
+            for i7  in simtrk_idxs[6]
+            for i8  in simtrk_idxs[7]
+            for i9  in simtrk_idxs[8]
+            for i10 in simtrk_idxs[9]
+            for i11 in simtrk_idxs[10]
+            for i12 in simtrk_idxs[11]
+          ] 
+
+    matched_sim_trk_idxs = []
+
+    # For each combination get the highest occurrence
+    # Check that the highest occurence is not -1 (no match)
+    # And check that the highest occurence is more than 9 (75% of 12)
+    for elem in perm:
+        print elem
+        idx = max(elem,key=elem.count)
+        if idx < 0:
+            continue
+        count = elem.count(idx)
+        if count > 9:
+            matched_sim_trk_idxs.append(idx)
+
+    return matched_sim_trk_idxs
+
+##############################################################
+#
+# Misc. or old
+#
+##############################################################
 
 #_____________________________________________________________
 # Checks whether a segment is from a true track or not
@@ -186,54 +317,6 @@ def isTrueSegment(sg, t):
     common_trk_idx = [value for value in innerMD_trk_idx if value in outerMD_trk_idx]
 
     return len(common_trk_idx) > 0
-
-#_____________________________________________________________
-# Good barrel tracks is where at least one sim hit with correct pdgid land on each layer
-# Does not require pair of hits land on each layer.
-# Does not require that the paired hits land on module pairs.
-# Does not care whether a single layer has 4 hits
-# Only one sim hit with correct pdgid is needed per layer to pass the requirement
-# Input: TTree event, and sim trk index
-def goodBarrelTracks(t, simtrk_idx):
-
-    # List of layer index with the simhit with correct pdgid
-    # Check this later to get the list
-    layer_idx_with_hits = []
-
-    # Loop over the sim hit index
-    for simhitidx in t.sim_simHitIdx[simtrk_idx]:
-
-        # If not a correct sim hit skip
-        if t.simhit_particle[simhitidx] != t.sim_pdgId[simtrk_idx]:
-            continue
-
-        # Check it is barrel
-        if t.simhit_subdet[simhitidx] != 5:
-            continue
-
-        # Add the layer index
-        layer_idx_with_hits.append(t.simhit_layer[simhitidx])
-
-    if sorted(list(set(layer_idx_with_hits))) == [1, 2, 3, 4, 5, 6]:
-        return True
-    else:
-        return False
-
-#_____________________________________________________________
-# Get list of goodBarrelTracks
-def listOfGoodBarrelTracks(t):
-
-    list_of_good_barrel_tracks = []
-
-    # Loop over sim tracks
-    for simtrk_idx, pt in enumerate(t.sim_pt):
-
-        # Ask whether this is a good denominator
-        if goodBarrelTracks(t, simtrk_idx):
-
-            list_of_good_barrel_tracks.append(Track(t, simtrk_idx))
-
-    return list_of_good_barrel_tracks
 
 
 #_____________________________________________________________
