@@ -148,6 +148,7 @@ SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_w
 SAMPLETAG=pu200_w_truth_pdgid13
 PDGID=13
 PTBOUND=0
+NEVENTS=-1
 DOPARALLEL=true
 fi
 
@@ -156,6 +157,7 @@ SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_w
 SAMPLETAG=pu200_w_truth_pdgid211
 PDGID=211
 PTBOUND=0
+NEVENTS=-1
 DOPARALLEL=true
 fi
 
@@ -164,6 +166,7 @@ SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_w
 SAMPLETAG=pu200_w_truth_pdgid11
 PDGID=11
 PTBOUND=0
+NEVENTS=-1
 DOPARALLEL=true
 fi
 
@@ -172,6 +175,7 @@ SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_w
 SAMPLETAG=pu200_w_truth_charged
 PDGID=0
 PTBOUND=0
+NEVENTS=-1
 DOPARALLEL=true
 fi
 
@@ -250,7 +254,34 @@ if [ ! -d "${OUTPUTDIR}" ]; then
 
 else
 
+    #
+    # Plotting
+    #
+    cd ${OUTPUTDIR}
+    python ${TRACKLOOPERBASE}/python/plot.py 8 ${OUTPUTFILE} ${SAMPLETAG}
+
+    echo "$3" > description.txt
+
+    # Creating html for easier efficiency plots viewing
+    echo ""
+    
+    echo "Creating HTML from markdown"
+    cd ${OUTPUTDIR}/
+    sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG} mtv_eff
+    
+    echo ""
+    
+    function getlink {
+        echo ${PWD/\/home\/users\/phchang\/public_html/http:\/\/snt:tas@uaf-10.t2.ucsd.edu\/~$USER/}/$1
+    }
+    
+    export -f getlink
+    echo ">>> results are in ${OUTPUTDIR}"
+    echo ">>> results can also be viewed via following link:"
+    echo ">>>   $(getlink)"
+
     echo "The command has been already ran before"
+    echo "So I re-ran the plotting only"
     echo "i.e. $OUTPUTDIR already exists"
     echo "Delete $OUTPUTDIR to re-run"
 

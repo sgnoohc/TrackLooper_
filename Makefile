@@ -1,6 +1,6 @@
 # Simple makefile
 
-EXES=bin/doAnalysis bin/mtv bin/tracklet
+EXES=bin/doAnalysis bin/mtv bin/tracklet bin/sdl
 
 SOURCES=$(wildcard src/*.cc) $(wildcard SDL/*.cc)
 OBJECTS=$(SOURCES:.cc=.o)
@@ -30,6 +30,9 @@ bin/mtv: bin/mtv.o $(OBJECTS)
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
 bin/tracklet: bin/tracklet.o $(OBJECTS)
+	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
+
+bin/sdl: bin/sdl.o $(OBJECTS)
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
 %.o: %.cc

@@ -123,14 +123,14 @@ void StudyMTVEfficiency::doStudy_v2(SDL::Event& event, std::vector<std::tuple<un
     vector<float>& tc_all_sim_track_dxy_mtv     = tc_all_track_dxy_mtv    [0];
 
     // Renaming the variables so I don't get confused
-    vector<float>& tc_notmatched_trackcandidate_pt_mtv  = tc_matched_track_pt_mtv [0];
-    vector<float>& tc_all_trackcandidate_pt_mtv         = tc_all_track_pt_mtv     [0];
-    vector<float>& tc_notmatched_trackcandidate_eta_mtv = tc_matched_track_eta_mtv[0];
-    vector<float>& tc_all_trackcandidate_eta_mtv        = tc_all_track_eta_mtv    [0];
-    vector<float>& tc_notmatched_trackcandidate_phi_mtv = tc_matched_track_phi_mtv[0];
-    vector<float>& tc_all_trackcandidate_phi_mtv        = tc_all_track_phi_mtv    [0];
-    vector<float>& tc_notmatched_trackcandidate_dxy_mtv = tc_matched_track_dxy_mtv[0];
-    vector<float>& tc_all_trackcandidate_dxy_mtv        = tc_all_track_dxy_mtv    [0];
+    vector<float>& tc_notmatched_trackcandidate_pt_mtv  = tc_matched_track_pt_mtv [1];
+    vector<float>& tc_all_trackcandidate_pt_mtv         = tc_all_track_pt_mtv     [1];
+    vector<float>& tc_notmatched_trackcandidate_eta_mtv = tc_matched_track_eta_mtv[1];
+    vector<float>& tc_all_trackcandidate_eta_mtv        = tc_all_track_eta_mtv    [1];
+    vector<float>& tc_notmatched_trackcandidate_phi_mtv = tc_matched_track_phi_mtv[1];
+    vector<float>& tc_all_trackcandidate_phi_mtv        = tc_all_track_phi_mtv    [1];
+    vector<float>& tc_notmatched_trackcandidate_dxy_mtv = tc_matched_track_dxy_mtv[1];
+    vector<float>& tc_all_trackcandidate_dxy_mtv        = tc_all_track_dxy_mtv    [1];
 
     // The denominators are selected here
     for (unsigned int isimtrk = 0; isimtrk < trk.sim_pt().size(); ++isimtrk)
@@ -170,6 +170,28 @@ void StudyMTVEfficiency::doStudy_v2(SDL::Event& event, std::vector<std::tuple<un
             if (std::find(numer_trk_idxs.begin(), numer_trk_idxs.end(), matched_simtrk_idx) == numer_trk_idxs.end())
                 numer_trk_idxs.push_back(matched_simtrk_idx);
         }
+
+        float inner_betaPt_2nd = tc->innerTrackletPtr()->getRecoVar("betaPt_2nd");
+        float outer_betaPt_2nd = tc->outerTrackletPtr()->getRecoVar("betaPt_2nd");
+        float pt_estimate = (inner_betaPt_2nd + outer_betaPt_2nd) / 2.;
+
+        SDL::Hit innermosthit = (*(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()));
+        SDL::Hit outermosthit = (*(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()));
+
+        SDL::Hit fullseg = outermosthit - innermosthit;
+
+        float eta_estimate = copysign(-std::log(std::tan(std::atan(fullseg.rt() / abs(fullseg.z())) / 2.)), fullseg.z());
+
+        tc_all_trackcandidate_pt_mtv.push_back(pt_estimate);
+        tc_all_trackcandidate_eta_mtv.push_back(eta_estimate);
+
+        // if there is a matched one
+        if (matched_simtrk_idxs.size() == 0)
+        {
+            tc_notmatched_trackcandidate_pt_mtv.push_back(pt_estimate);
+            tc_notmatched_trackcandidate_eta_mtv.push_back(eta_estimate);
+        }
+
     }
 
     // Loop over to fill the efficiency related numerator object
