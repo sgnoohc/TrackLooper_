@@ -24,6 +24,7 @@
 
 #include "trkCore.h"
 
+#include "src/print_module_centroid.h"
 #include "src/build_module_map.h"
 #include "src/mtv.h"
 #include "src/tracklet.h"

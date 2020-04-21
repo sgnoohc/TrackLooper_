@@ -188,6 +188,15 @@ NEVENTS=-1
 DOPARALLEL=false
 fi
 
+if [[ $1 == "17" ]]; then
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_10_pt0p5_50_5cm_cube.root
+SAMPLETAG=pt0p5_50_5cm_cube
+PDGID=13
+PTBOUND=7
+NEVENTS=-1
+DOPARALLEL=false
+fi
+
 JOBTAG=$2
 
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
