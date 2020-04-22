@@ -168,12 +168,19 @@ int main(int argc, char** argv)
     ana.verbose = result["verbose"].as<int>();
 
     //_______________________________________________________________________________
-    // --job_index
-    ana.mode = result["mode"].as<int>();
+    // --mode
+    if (result.count("mode"))
+    {
+        ana.mode = result["mode"].as<int>();
+    }
+    else
+    {
+        std::cout << options.help() << std::endl;
+        std::cout << "ERROR: --mode was not recognized! Check your arguments." << std::endl;
+        exit(1);
+    }
 
-    //
     // Printing out the option settings overview
-    //
     std::cout <<  "=========================================================" << std::endl;
     std::cout <<  " Setting of the analysis job based on provided arguments " << std::endl;
     std::cout <<  "---------------------------------------------------------" << std::endl;
@@ -185,11 +192,6 @@ int main(int argc, char** argv)
     std::cout <<  " ana.job_index: " << ana.job_index <<  std::endl;
     std::cout <<  "=========================================================" << std::endl;
 
-    //********************************************************************************
-    //
-    // 2. Opening input baby files
-    //
-    //********************************************************************************
     // Create the TChain that holds the TTree's of the baby ntuples
     ana.events_tchain = RooUtil::FileUtil::createTChain(ana.input_tree_name, ana.input_file_list_tstring);
     ana.looper.init(ana.events_tchain, &trk, ana.n_events);
@@ -203,28 +205,7 @@ int main(int argc, char** argv)
     // Create TTreeX instance that will take care of the interface part of TTree
     ana.tx = new RooUtil::TTreeX(ana.output_ttree);
 
-    // // Print cut structure
-    // ana.cutflow.printCuts();
-
-    // pt_boundaries
-    std::vector<float> pt_boundaries;
-    if (ana.ptbound_mode == 0)
-        pt_boundaries = {0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10, 15., 25, 50};
-    else if (ana.ptbound_mode == 1)
-        pt_boundaries = {0.988, 0.99, 0.992, 0.994, 0.996, 0.998, 1.0, 1.002, 1.004, 1.006, 1.008, 1.01, 1.012}; // lowpt
-    else if (ana.ptbound_mode == 2)
-        pt_boundaries = {0.955, 0.96, 0.965, 0.97, 0.975, 0.98, 0.985, 0.99, 0.995, 1.00, 1.005, 1.01, 1.015, 1.02, 1.025, 1.03, 1.035, 1.04, 1.045, 1.05}; // pt 0p95 1p05
-    else if (ana.ptbound_mode == 3)
-        pt_boundaries = {0.5, 0.6, 0.7, 0.8, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.2, 1.5}; // lowpt
-    else if (ana.ptbound_mode == 4)
-        pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0}; // lowpt
-    else if (ana.ptbound_mode == 5)
-        pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.24, 1.28, 1.32, 1.36, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0}; // lowpt
-    else if (ana.ptbound_mode == 6)
-        pt_boundaries = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0, 3.0, 4.0, 5.0}; // lowpt
-    else if (ana.ptbound_mode == 7)
-        pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50}; // lowpt
-
+    // Run depending on the mode
     switch (ana.mode)
     {
         case 0: build_module_map(); break;
@@ -234,305 +215,11 @@ int main(int argc, char** argv)
         case 4: tracklet(); break;
         default:
                 std::cout << options.help() << std::endl;
-                std::cout << "Warning: --mode was not recognized... Doing nothing..." << std::endl;
+                std::cout << "ERROR: --mode was not recognized! Check your arguments." << std::endl;
+                exit(1);
                 break;
     }
 
-    //---
-
     return 0;
-
-    //// List of studies to perform
-    //std::vector<Study*> studies;
-
-    //studies.push_back(new StudyMTVEfficiency("MTVEfficiency", pt_boundaries, ana.pdg_id));
-
-    //// book the studies
-    //for (auto& study : studies)
-    //{
-    //    study->bookStudy();
-    //}
-
-    //// Book Histograms
-    //ana.cutflow.bookHistograms(ana.histograms); // if just want to book everywhere
-
-    //// SDL::endcapGeometry.load("scripts/endcap_orientation_data.txt");
-    //SDL::endcapGeometry.load("scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
-    //SDL::tiltedGeometry.load("scripts/tilted_orientation_data.txt");
-    //SDL::moduleConnectionMap.load("scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
-
-    //// Looping input file
-    //while (ana.looper.nextEvent())
-    //{
-
-    //    if (ana.specific_event_index >= 0)
-    //    {
-    //        if ((int)ana.looper.getCurrentEventIndex() != ana.specific_event_index)
-    //            continue;
-    //    }
-
-    //    // If splitting jobs are requested then determine whether to process the event or not based on remainder
-    //    if (result.count("job_index") and result.count("nsplit_jobs"))
-    //    {
-    //        if (ana.looper.getNEventsProcessed() % ana.nsplit_jobs != (unsigned int) ana.job_index)
-    //            continue;
-    //    }
-
-    //    if (ana.verbose) std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
-
-    //    // <--------------------------
-    //    // <--------------------------
-    //    // <--------------------------
-    //    //
-    //    // ***************************
-    //    // Testing SDL Implementations
-    //    // ***************************
-    //    //
-
-    //    // *************************************************
-    //    // Reconstructed hits and formation of mini-doublets
-    //    // *************************************************
-
-    //    // Main instance that will hold modules, hits, minidoublets, etc. (i.e. main data structure)
-    //    SDL::Event event;
-
-    //    // Each SDL::Event object in simtrkevents will hold single sim-track related hits
-    //    // It will be a vector of tuple of <sim_track_index, SDL::Event*>.
-    //    std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents;
-
-    //    TStopwatch my_timer;
-
-    //    // Adding hits to modules
-    //    for (unsigned int ihit = 0; ihit < trk.ph2_x().size(); ++ihit)
-    //    {
-
-    //        if (not (trk.ph2_subdet()[ihit] == 5))
-    //            continue;
-
-    //        // Takes two arguments, SDL::Hit, and detId
-    //        // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
-    //        event.addHitToModule(
-    //                // a hit
-    //                SDL::Hit(trk.ph2_x()[ihit], trk.ph2_y()[ihit], trk.ph2_z()[ihit], ihit),
-    //                // add to module with "detId"
-    //                trk.ph2_detId()[ihit]
-    //                );
-
-    //    }
-
-    //    float elapsed = 0;
-
-    //    // ----------------
-    //    if (ana.verbose != 0) std::cout << "Summary of hits" << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits: " << event.getNumberOfHits() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits in layer 1: " << event.getNumberOfHitsByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits in layer 2: " << event.getNumberOfHitsByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits in layer 3: " << event.getNumberOfHitsByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits in layer 4: " << event.getNumberOfHitsByLayerBarrel(3) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits in layer 5: " << event.getNumberOfHitsByLayerBarrel(4) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits in layer 6: " << event.getNumberOfHitsByLayerBarrel(5) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 1: " << event.getNumberOfHitsByLayerBarrelUpperModule(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 2: " << event.getNumberOfHitsByLayerBarrelUpperModule(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 3: " << event.getNumberOfHitsByLayerBarrelUpperModule(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 4: " << event.getNumberOfHitsByLayerBarrelUpperModule(3) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 5: " << event.getNumberOfHitsByLayerBarrelUpperModule(4) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 6: " << event.getNumberOfHitsByLayerBarrelUpperModule(5) << std::endl;
-    //    // ----------------
-
-
-    //    // ----------------
-    //    if (ana.verbose != 0) std::cout << "Reco Mini-Doublet start" << std::endl;
-    //    my_timer.Start();
-    //    event.createMiniDoublets();
-    //    // event.createPseudoMiniDoubletsFromAnchorModule(); // Useless.....
-    //    float md_elapsed = my_timer.RealTime();
-    //    if (ana.verbose != 0) std::cout << "Reco Mini-doublet processing time: " << md_elapsed << " secs" << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced: " << event.getNumberOfMiniDoublets() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 1: " << event.getNumberOfMiniDoubletsByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 2: " << event.getNumberOfMiniDoubletsByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 3: " << event.getNumberOfMiniDoubletsByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 4: " << event.getNumberOfMiniDoubletsByLayerBarrel(3) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 5: " << event.getNumberOfMiniDoubletsByLayerBarrel(4) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 6: " << event.getNumberOfMiniDoubletsByLayerBarrel(5) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered: " << event.getNumberOfMiniDoubletCandidates() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 1: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 2: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 3: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 4: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(3) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 5: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(4) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 6: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(5) << std::endl;
-    //    // ----------------
-
-    //    // ----------------
-    //    if (ana.verbose != 0) std::cout << "Reco Segment start" << std::endl;
-    //    my_timer.Start(kFALSE);
-    //    event.createSegmentsWithModuleMap();
-    //    float sg_elapsed = my_timer.RealTime();
-    //    if (ana.verbose != 0) std::cout << "Reco Segment processing time: " << sg_elapsed - md_elapsed << " secs" << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments produced: " << event.getNumberOfSegments() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments produced layer 1-2: " << event.getNumberOfSegmentsByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments produced layer 2-3: " << event.getNumberOfSegmentsByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments produced layer 3-4: " << event.getNumberOfSegmentsByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments produced layer 4-5: " << event.getNumberOfSegmentsByLayerBarrel(3) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments produced layer 5-6: " << event.getNumberOfSegmentsByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Segments produced layer 6: " << event.getNumberOfSegmentsByLayerBarrel(5) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments considered: " << event.getNumberOfSegmentCandidates() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments considered layer 1-2: " << event.getNumberOfSegmentCandidatesByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments considered layer 2-3: " << event.getNumberOfSegmentCandidatesByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments considered layer 3-4: " << event.getNumberOfSegmentCandidatesByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments considered layer 4-5: " << event.getNumberOfSegmentCandidatesByLayerBarrel(3) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Segments considered layer 5-6: " << event.getNumberOfSegmentCandidatesByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Segments considered layer 6: " << event.getNumberOfSegmentCandidatesByLayerBarrel(5) << std::endl;
-    //    // ----------------
-
-    //    if (ana.verbose != 0) std::cout << "Printing connection information" << std::endl;
-    //    if (ana.verbose != 0)
-    //    {
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 1);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 2);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 3);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 4);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 1, 5);
-    //        std::cout << "--------" << std::endl;
-
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 1, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 1);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 2);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 3);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 2, 4);
-    //        std::cout << "--------" << std::endl;
-
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 2, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 1, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 1);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 2);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 3, 3);
-    //        std::cout << "--------" << std::endl;
-
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 3, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 2, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 1, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 1);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 4, 2);
-    //        std::cout << "--------" << std::endl;
-
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 4, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 3, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 2, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 1, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 5, 1);
-    //        std::cout << "--------" << std::endl;
-
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 5, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 4, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 3, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 2, true);
-    //        printMiniDoubletConnectionMultiplicitiesBarrel(event, 6, 1, true);
-    //        std::cout << "--------" << std::endl;
-    //    }
-
-    //    // ----------------
-    //    if (ana.verbose != 0) std::cout << "Reco Triplet start" << std::endl;
-    //    my_timer.Start(kFALSE);
-    //    event.createTriplets();
-    //    float tp_elapsed = my_timer.RealTime();
-    //    if (ana.verbose != 0) std::cout << "Reco Triplet processing time: " << tp_elapsed - sg_elapsed << " secs" << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets produced: " << event.getNumberOfTriplets() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets produced layer 1-2-3: " << event.getNumberOfTripletsByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets produced layer 2-3-4: " << event.getNumberOfTripletsByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets produced layer 3-4-5: " << event.getNumberOfTripletsByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets produced layer 4-5-6: " << event.getNumberOfTripletsByLayerBarrel(3) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Triplets produced layer 5: " << event.getNumberOfTripletsByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Triplets produced layer 6: " << event.getNumberOfTripletsByLayerBarrel(5) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets considered: " << event.getNumberOfTripletCandidates() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets considered layer 1-2-3: " << event.getNumberOfTripletCandidatesByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets considered layer 2-3-4: " << event.getNumberOfTripletCandidatesByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets considered layer 3-4-5: " << event.getNumberOfTripletCandidatesByLayerBarrel(2) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Triplets considered layer 4-5-6: " << event.getNumberOfTripletCandidatesByLayerBarrel(3) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Triplets considered layer 5: " << event.getNumberOfTripletCandidatesByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Triplets considered layer 6: " << event.getNumberOfTripletCandidatesByLayerBarrel(5) << std::endl;
-    //    // ----------------
-
-    //    // ----------------
-    //    if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
-    //    my_timer.Start(kFALSE);
-    //    // event.createTracklets();
-    //    event.createTrackletsWithModuleMap();
-    //    // event.createTrackletsViaNavigation();
-    //    float tl_elapsed = my_timer.RealTime();
-    //    if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed - tp_elapsed << " secs" << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets produced: " << event.getNumberOfTracklets() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 1-2-3-4: " << event.getNumberOfTrackletsByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 2-3-4-5: " << event.getNumberOfTrackletsByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 3-4-5-6: " << event.getNumberOfTrackletsByLayerBarrel(2) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 4: " << event.getNumberOfTrackletsByLayerBarrel(3) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 5: " << event.getNumberOfTrackletsByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 6: " << event.getNumberOfTrackletsByLayerBarrel(5) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets considered: " << event.getNumberOfTrackletCandidates() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 1-2-3-4: " << event.getNumberOfTrackletCandidatesByLayerBarrel(0) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 2-3-4-5: " << event.getNumberOfTrackletCandidatesByLayerBarrel(1) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 3-4-5-6: " << event.getNumberOfTrackletCandidatesByLayerBarrel(2) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 4: " << event.getNumberOfTrackletCandidatesByLayerBarrel(3) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 5: " << event.getNumberOfTrackletCandidatesByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 6: " << event.getNumberOfTrackletCandidatesByLayerBarrel(5) << std::endl;
-    //    // ----------------
-
-    //    // ----------------
-    //    if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
-    //    my_timer.Start(kFALSE);
-    //    // event.createTrackCandidatesFromTriplets();
-    //    // event.createTrackCandidates();
-    //    event.createTrackCandidatesFromTracklets();
-    //    float tc_elapsed = my_timer.RealTime();
-    //    if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed - tl_elapsed << " secs" << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of TrackCandidates produced: " << event.getNumberOfTrackCandidates() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 1-2-3-4-5-6: " << event.getNumberOfTrackCandidatesByLayerBarrel(0) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 2: " << event.getNumberOfTrackCandidatesByLayerBarrel(1) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 3: " << event.getNumberOfTrackCandidatesByLayerBarrel(2) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 4: " << event.getNumberOfTrackCandidatesByLayerBarrel(3) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 5: " << event.getNumberOfTrackCandidatesByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates produced layer 6: " << event.getNumberOfTrackCandidatesByLayerBarrel(5) << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of TrackCandidates considered: " << event.getNumberOfTrackCandidateCandidates() << std::endl;
-    //    if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 1-2-3-4-5-6: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(0) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 2: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(1) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 3: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(2) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 4: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(3) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 5: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(4) << std::endl;
-    //    // if (ana.verbose != 0) std::cout << "# of TrackCandidates considered layer 6: " << event.getNumberOfTrackCandidateCandidatesByLayerBarrel(5) << std::endl;
-    //    // ----------------
-
-    //    if (ana.verbose != 0) std::cout << "Reco SDL end" << std::endl;
-
-
-    //    // ********************************************************************************************
-    //    // Perform various studies with reco events and sim-track-matched-reco-hits-based mini-doublets
-    //    // ********************************************************************************************
-
-    //    for (auto& study : studies)
-    //    {
-    //        study->doStudy(event, simtrkevents);
-    //    }
-
-
-    //    // ************************************************
-    //    // Now fill all the histograms booked by each study
-    //    // ************************************************
-
-    //    // Fill all the histograms
-    //    ana.cutflow.fill();
-
-    //    // <--------------------------
-    //    // <--------------------------
-    //    // <--------------------------
-    //}
-
-    // // Writing output file
-    // ana.cutflow.saveOutput();
-
-    // // Writing ttree output to file
-    // ana.output_ttree->Write();
-
-    // // The below can be sometimes crucial
-    // delete ana.output_tfile;
 }
 

@@ -14,6 +14,7 @@
 #include "SDL/ModuleConnectionMap.h"
 #include "SDL/Event.h"
 #include "SDL/TrackCandidate.h"
+#include <cppitertools/itertools.hpp>
 
 float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
@@ -35,5 +36,20 @@ void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer
 
 std::vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc);
 void perm(vector<int> intermediate, size_t n, vector<vector<int>>& va);
+
+// Confiuration helper
+std::vector<float> getPtBounds();
+
+// Looper helper
+bool goodEvent();
+
+// Track helper
+bool inTimeTrackWithPdgId(int isimtrk, int pdgid);
+
+// Steering SDL
+void loadMaps();
+void runSDL(SDL::Event& event);
+void addOuterTrackerHits(SDL::Event& event);
+void addOuterTrackerHitsFromSimTrack(SDL::Event& event, int isimtrk);
 
 #endif

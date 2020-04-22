@@ -371,6 +371,7 @@ int main(int argc, char** argv)
         if (ana.verbose != 0) std::cout << "Reco Segment start" << std::endl;
         my_timer.Start(kFALSE);
         event.createSegmentsWithModuleMap();
+        // event.createSegments();
         float sg_elapsed = my_timer.RealTime();
         if (ana.verbose != 0) std::cout << "Reco Segment processing time: " << sg_elapsed - md_elapsed << " secs" << std::endl;
         if (ana.verbose != 0) std::cout << "# of Segments produced: " << event.getNumberOfSegments() << std::endl;
