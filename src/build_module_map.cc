@@ -11,20 +11,8 @@ void build_module_map()
     while (ana.looper.nextEvent())
     {
 
-        if (ana.specific_event_index >= 0)
-        {
-            if ((int)ana.looper.getCurrentEventIndex() != ana.specific_event_index)
-                continue;
-        }
-
-        // If splitting jobs are requested then determine whether to process the event or not based on remainder
-        if (ana.nsplit_jobs > 0 and ana.job_index > 0)
-        {
-            if (ana.looper.getNEventsProcessed() % ana.nsplit_jobs != (unsigned int) ana.job_index)
-                continue;
-        }
-
-        if (ana.verbose) std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
+        if (not (goodEvent()))
+            continue;
 
         // for (auto&& [isimtrk, simhitidxs] : iter::enumerate(trk.sim_simHitIdx()))
         // {
