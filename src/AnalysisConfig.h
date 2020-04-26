@@ -10,6 +10,9 @@ class AnalysisConfig
 
 public:
 
+    // Analysis run mode
+    int mode;
+
     // TString that holds the input file list (comma separated)
     TString input_file_list_tstring;
 

@@ -61,9 +61,13 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     num = f.Get(num_name)
     den = f.Get(den_name)
 
-    if "_eta" in output_name:
-        num.Rebin(2)
-        den.Rebin(2)
+    # if "_eta" in output_name:
+    #     num.Rebin(2)
+    #     den.Rebin(2)
+
+    if "_phi" in output_name:
+        num.Rebin(5)
+        den.Rebin(5)
 
     suffix = ""
     if tag != "":
@@ -385,6 +389,13 @@ if drawTLSelPlots:
                 extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
                 )
 
+            p.dump_plot(fnames=[filename],
+                dirname="plots/tracklet{}".format(suffix),
+                dogrep=False,
+                filter_pattern="Root__tl_{}_deltaBeta_4thCorr_slava".format(tlcombo),
+                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+                )
+
             # p.dump_plot(fnames=[filename],
             #     dirname="plots/tracklet{}".format(suffix),
             #     dogrep=False,
@@ -435,12 +446,12 @@ if drawTLSelPlots:
             #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
             #     )
 
-            # p.dump_plot(fnames=[filename],
-            #     dirname="plots/tracklet{}".format(suffix),
-            #     dogrep=False,
-            #     filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
-            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-            #     )
+            p.dump_plot(fnames=[filename],
+                dirname="plots/tracklet{}".format(suffix),
+                dogrep=False,
+                filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
+                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+                )
 
             # p.dump_plot(fnames=[filename],
             #     dirname="plots/tracklet{}".format(suffix),
@@ -673,47 +684,47 @@ if drawTLSelPlots:
             #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
             #     )
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow)
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow, "_maxzoom", "")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom", "")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "", "")
 
 
 if drawTCplots:
@@ -922,14 +933,17 @@ if drawMTVplots:
    plot_eff("Root__tc_matched_track_eta_mtv", "Root__tc_all_track_eta_mtv", "tc_eff_eta_mtv.pdf", "mtveff", tag)
    plot_eff("Root__tc_matched_track_eta_mtv", "Root__tc_all_track_eta_mtv", "tc_eff_etazoom_mtv.pdf", "mtveff", tag)
    plot_eff("Root__tc_matched_track_dxy_mtv", "Root__tc_all_track_dxy_mtv", "tc_eff_dxy_mtv.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_pt_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_ptzoom_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_eta_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_etazoom_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_dxy_mtv_eta0_0p4", "Root__tc_all_track_dxy_mtv_eta0_0p4", "tc_eff_dxy_mtv_eta0_0p4.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_pt_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_ptzoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_eta_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_etazoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
-   plot_eff("Root__tc_matched_track_dxy_mtv_eta0p4_0p8", "Root__tc_all_track_dxy_mtv_eta0p4_0p8", "tc_eff_dxy_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tc_matched_track_phi_mtv", "Root__tc_all_track_phi_mtv", "tc_eff_phi_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_notmatched_trackcandidate_pt_mtv", "Root__tc_all_trackcandidate_pt_mtv", "tc_fr_pt_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tc_notmatched_trackcandidate_eta_mtv", "Root__tc_all_trackcandidate_eta_mtv", "tc_fr_eta_mtv.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_pt_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0_0p4", "Root__tc_all_track_pt_mtv_eta0_0p4", "tc_eff_ptzoom_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_eta_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0_0p4", "Root__tc_all_track_eta_mtv_eta0_0p4", "tc_eff_etazoom_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_dxy_mtv_eta0_0p4", "Root__tc_all_track_dxy_mtv_eta0_0p4", "tc_eff_dxy_mtv_eta0_0p4.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_pt_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_pt_mtv_eta0p4_0p8", "Root__tc_all_track_pt_mtv_eta0p4_0p8", "tc_eff_ptzoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_eta_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_etazoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   # plot_eff("Root__tc_matched_track_dxy_mtv_eta0p4_0p8", "Root__tc_all_track_dxy_mtv_eta0p4_0p8", "tc_eff_dxy_mtv_eta0p4_0p8.pdf", "mtveff", tag)
 

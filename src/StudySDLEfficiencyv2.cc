@@ -34,22 +34,24 @@ void StudySDLEfficiencyv2::bookStudy()
 
     const int eta_nbins = 200;
 
+    const float dxymax = 50;
+
     for (int ii = 0; ii < nlayers; ++ii)
     {
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return md_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return md_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return md_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return md_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -60,16 +62,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return sg_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return sg_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return sg_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return sg_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return sg_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return sg_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return sg_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -80,16 +82,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tl_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tl_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tl_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tl_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tl_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tl_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tl_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -100,16 +102,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tc_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tc_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tc_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tc_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tc_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tc_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -10, 10, [&, ii]() { return tc_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_all_track_dz_mtv_by_layer[ii]; } );
     }
