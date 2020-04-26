@@ -7,30 +7,30 @@ StudyLinkedSegments::StudyLinkedSegments(const char* studyName)
 
 void StudyLinkedSegments::bookStudy()
 {
-    ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_barrel"),500,0,500,[&](){return BarrelLinkedSegmentOccupancy;});
-    ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_barrel"),5000,0,500,[&](){return averageBarrelLinkedSegmentOccupancy;});
-    ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_endcap"),500,0,500,[&](){return EndcapLinkedSegmentOccupancy;});
-    ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_endcap"),5000,0,500,[&](){return averageEndcapLinkedSegmentOccupancy;});
+    ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_barrel"),5000,0,5000,[&](){return BarrelLinkedSegmentOccupancy;});
+    ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_barrel"),50000,0,5000,[&](){return averageBarrelLinkedSegmentOccupancy;});
+    ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_endcap"),5000,0,5000,[&](){return EndcapLinkedSegmentOccupancy;});
+    ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_endcap"),50000,0,5000,[&](){return averageEndcapLinkedSegmentOccupancy;});
 
     for(int i = 0; i<6;i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_barrel_for_layer_%d",i+1),500,0,500,[&,i](){return LayerBarrelLinkedSegmentOccupancy[i];});
-        ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_barrel_for_layer_%d",i+1),5000,0,500,[&,i](){return averageLayerBarrelLinkedSegmentOccupancy[i];});
+        ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_barrel_for_layer_%d",i+1),5000,0,5000,[&,i](){return LayerBarrelLinkedSegmentOccupancy[i];});
+        ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_barrel_for_layer_%d",i+1),50000,0,5000,[&,i](){return averageLayerBarrelLinkedSegmentOccupancy[i];});
 
-        ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_endcap_for_layer_%d",i+1),500,0,500,[&,i](){return LayerEndcapLinkedSegmentOccupancy[i];});
-        ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_endcap_for_layer_%d",i+1),5000,0,500,[&,i](){return averageLayerEndcapLinkedSegmentOccupancy[i];});
+        ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_endcap_for_layer_%d",i+1),5000,0,5000,[&,i](){return LayerEndcapLinkedSegmentOccupancy[i];});
+        ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_endcap_for_layer_%d",i+1),50000,0,5000,[&,i](){return averageLayerEndcapLinkedSegmentOccupancy[i];});
 
         for(int j = 0; j<15; j++)
         {
-            ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_layer_%d_ring_%d",i+1,j+1),500,0,500,[&,i,j](){return EndcapLayerRingLinkedSegmentOccupancy[i][j];});
+            ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_layer_%d_ring_%d",i+1,j+1),5000,0,5000,[&,i,j](){return EndcapLayerRingLinkedSegmentOccupancy[i][j];});
         }
 
     }
 
     for(int i = 0; i<15; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_endcap_for_ring_%d",i+1),500,0,500,[&,i](){return EndcapRingLinkedSegmentOccupancy[i];});
-        ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_endcap_for_ring_%d",i+1),5000,0,500,[&,i](){return averageEndcapRingLinkedSegmentOccupancy[i];});
+        ana.histograms.addVecHistogram(TString::Format("Linked_Segment_occupancy_in_endcap_for_ring_%d",i+1),5000,0,5000,[&,i](){return EndcapRingLinkedSegmentOccupancy[i];});
+        ana.histograms.addHistogram(TString::Format("average_Linked_Segment_occupancy_in_endcap_for_ring_%d",i+1),50000,0,5000,[&,i](){return averageEndcapRingLinkedSegmentOccupancy[i];});
     }
 }
 
@@ -81,7 +81,19 @@ void StudyLinkedSegments::doStudy(SDL::Event &event, std::vector<std::tuple<unsi
 
     for(auto &module:moduleList)
     {
-        std::vector<unsigned int> connectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuleDetIds(module->detId());
+        std::vector<unsigned int> lowerConnectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuleDetIds(module->detId());
+        std::vector<unsigned int> connectedModuleDetIds;
+
+        for(auto &lowerConnectedModuleId:lowerConnectedModuleDetIds)
+        {
+            SDL::Module &lowerConnectedModule = event.getModule(lowerConnectedModuleId);
+            std::vector<unsigned int> upperConnectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuleDetIds(module->detId());
+            for(auto &connectedModuleId:upperConnectedModuleDetIds)
+            {
+                connectedModuleDetIds.push_back(connectedModuleId);
+            }
+        }
+
         int connectedModules = 0, connectedModuleOccupancy = 0;
         for(auto &connectedModuleId:connectedModuleDetIds)
         {
