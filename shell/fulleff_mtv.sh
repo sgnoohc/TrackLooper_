@@ -29,6 +29,7 @@ usage() {
     echo "           14 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 11"
     echo "           15 : pu200 ttbar (500 evt) with doAnalysis option --pdg_id == 1 (1 means all charged particle)"
     echo "           16 : pt 0.5 to 50  hundred-mu-gun sample"
+    echo "           17 : 5 cm 'cube' with pt 0.5 to 50 ten-mu-gun"
     exit
 }
 

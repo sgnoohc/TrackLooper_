@@ -14,7 +14,25 @@
 #include "SDL/ModuleConnectionMap.h"
 #include "SDL/Event.h"
 #include "SDL/TrackCandidate.h"
+#include "SDL/Tracklet.h"
 #include <cppitertools/itertools.hpp>
+
+enum TrackletType {
+    BB1BB3 = 0,
+    BB2BB4,
+    BB3BB5,
+    BB1BE3,
+    BB2BE4,
+    BB3BE5,
+    BB1EE3,
+    BB2EE4,
+    BB3EE5,
+    BE1EE3,
+    BE2EE4,
+    BE3EE5,
+    EE1EE3,
+    EE2EE4,
+};
 
 float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
@@ -46,10 +64,28 @@ bool goodEvent();
 // Track helper
 bool inTimeTrackWithPdgId(int isimtrk, int pdgid);
 
+// Tracklet helper
+TrackletType getTrackletCategory(SDL::Tracklet& tl);
+int getNPSModules(SDL::Tracklet& tl);
+
 // Steering SDL
 void loadMaps();
-void runSDL(SDL::Event& event);
 void addOuterTrackerHits(SDL::Event& event);
 void addOuterTrackerHitsFromSimTrack(SDL::Event& event, int isimtrk);
+void runSDL(SDL::Event& event);
+
+// Running pieces
+void runMiniDoublet(SDL::Event& event);
+void runSegment(SDL::Event& event);
+void runTriplet(SDL::Event& event);
+
+// Printing SDL information
+void printHitSummary(SDL::Event& event);
+void printMiniDoubletSummary(SDL::Event& event);
+void printSegmentSummary(SDL::Event& event);
+void printTrackletSummary(SDL::Event& event);
+void printTripletSummary(SDL::Event& event);
+void printTrackCandidateSummary(SDL::Event& event);
+void printMiniDoubletConnectionMultiplicitiesSummary(SDL::Event& event);
 
 #endif
