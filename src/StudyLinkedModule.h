@@ -18,27 +18,46 @@ class StudyLinkedModule : public Study
     const char *studyname;
     std::vector<float> BarrelLinkedModuleOccupancy;
     std::vector<float> EndcapLinkedModuleOccupancy;
+    std::vector<float> nBarrelLinkedModules;
+    std::vector<float> nEndcapLinkedModules;
+
     float averageBarrelLinkedModuleOccupancy;
     float averageEndcapLinkedModuleOccupancy;
-    int nBarrelLinkedModules,nEndcapLinkedModules;
+    int averagenBarrelLinkedModules;
+    int averagenEndcapLinkedModules;
 
     std::vector<std::vector<float>> LayerBarrelLinkedModuleOccupancy;
-    std::vector<int> nLayerBarrelLinkedModules;
+    std::vector<std::vector<float>> nBarrelLinkedModules;
+
     std::vector<float> averageLayerBarrelLinkedModuleOccupancy;
+    std::vector<int> averagenLayerBarrelLinkedModules;
+
     std::vector<std::vector<float>> LayerEndcapLinkedModuleOccupancy;
-    std::vector<int> nLayerEndcapLinkedModules;
+    std::vector<std::vector<floiat>> nEndcapLinkedModules;
+
     std::vector<float> averageLayerEndcapLinkedModuleOccupancy;
+    std::vector<int> averagenLayerEndcapLinkedModules;
+
     std::vector<std::vector<float>> RingEndcapLinkedModuleOccupancy;
-    std::vector<int> nRingEndcapLinkedModules;
+    std::vector<std::vector<float>> nRingEndcapLinkedModules;
+
     std::vector<float> averageEndcapRingLinkedModuleOccupancy;
+    std::vector<int> averagenRingEndcapLinkedModules;
 
     std::vector<std::vector<float>> EndcapInnerRingLinkedModuleOccupancy;
+    std::vector<std::vector<float>> nEndcapInnerRingLinkedModules;
+
     std::vector<float> averageEndcapInnerRingLinkedModuleOccupancy;
-    std::vector<int> nInnerRingEndcapLinkedModules;
-    std::vector<float> averageEndcapOuterRingLinkedModuleOccupancy;
+    std::vector<int> averagenInnerRingEndcapLinkedModules;
+
     std::vector<std::vector<float>> EndcapOuterRingLinkedModuleOccupancy;
-    std::vector<int> nOuterRingEndcapLinkedModules;
+    std::vector<std::vector<float>> nEndcapOuterRingLinkedModuleOccupancy;
+
+    std::vector<float> averageEndcapOuterRingLinkedModuleOccupancy;
+    std::vector<int> averagenOuterRingEndcapLinkedModules;
+
     std::vector<std::vector<std::vector<float>>> EndcapLayerRingLinkedModuleOccupancy;
+    std::vector<std::vector<std::vector<float>>> nEndcapLayerRingLinkedModules;
 
     StudyLinkedModule(const char* studyName);
     virtual void bookStudy();
