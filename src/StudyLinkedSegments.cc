@@ -87,7 +87,7 @@ void StudyLinkedSegments::doStudy(SDL::Event &event, std::vector<std::tuple<unsi
         for(auto &lowerConnectedModuleId:lowerConnectedModuleDetIds)
         {
             SDL::Module &lowerConnectedModule = event.getModule(lowerConnectedModuleId);
-            std::vector<unsigned int> upperConnectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuleDetIds(module->detId());
+            std::vector<unsigned int> upperConnectedModuleDetIds = SDL::moduleConnectionMap.getConnectedModuleDetIds(lowerConnectedModule.detId());
             for(auto &connectedModuleId:upperConnectedModuleDetIds)
             {
                 connectedModuleDetIds.push_back(connectedModuleId);
