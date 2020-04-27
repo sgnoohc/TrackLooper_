@@ -389,6 +389,13 @@ if drawTLSelPlots:
                 extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
                 )
 
+            p.dump_plot(fnames=[filename],
+                dirname="plots/tracklet{}".format(suffix),
+                dogrep=False,
+                filter_pattern="Root__tl_{}_deltaBeta_4thCorr_slava".format(tlcombo),
+                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow, "xaxis_ndivisions":405},
+                )
+
             # p.dump_plot(fnames=[filename],
             #     dirname="plots/tracklet{}".format(suffix),
             #     dogrep=False,
@@ -439,12 +446,12 @@ if drawTLSelPlots:
             #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
             #     )
 
-            # p.dump_plot(fnames=[filename],
-            #     dirname="plots/tracklet{}".format(suffix),
-            #     dogrep=False,
-            #     filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
-            #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
-            #     )
+            p.dump_plot(fnames=[filename],
+                dirname="plots/tracklet{}".format(suffix),
+                dogrep=False,
+                filter_pattern="Root__tl_{}_deltaBeta_4thCorr_standard".format(tlcombo),
+                extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":False, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
+                )
 
             # p.dump_plot(fnames=[filename],
             #     dirname="plots/tracklet{}".format(suffix),
@@ -677,47 +684,47 @@ if drawTLSelPlots:
             #     extraoptions={"yaxis_log":False, "legend_smart":False, "print_yield":True, "remove_overflow":do_und_ov_flow, "remove_underflow":do_und_ov_flow},
             #     )
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow)
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow)
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow)
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow, "_maxzoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt10", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt20", suffix, do_und_ov_flow, "_maxzoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt50", suffix, do_und_ov_flow, "_maxzoom", "")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "_zoom", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "_zoom", "")
 
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "", "")
-            # pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt1p5peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt2p5peak", suffix, do_und_ov_flow, "", "")
+            pos_neg_tracklet_comparison(filename, tlcombo, "pt3peak", suffix, do_und_ov_flow, "", "")
 
 
 if drawTCplots:

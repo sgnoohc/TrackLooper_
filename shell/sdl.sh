@@ -28,6 +28,8 @@ usage() {
     echo "           13 : pu200 ttbar (500 evt) with sdl option --pdg_id == 211"
     echo "           14 : pu200 ttbar (500 evt) with sdl option --pdg_id == 11"
     echo "           15 : pu200 ttbar (500 evt) with sdl option --pdg_id == 1 (1 means all charged particle)"
+    echo "           17 : 5 cm 'cube' with pt 0.5 to 50 ten-mu-gun"
+    echo "           18 : 50 cm 'cube' with pt 0.5 to 50 ten-mu-gun"
     exit
 }
 
@@ -145,6 +147,20 @@ SAMPLE=/nfs-7/userdata/bsathian/SDL_trackingNtuple/ttbar_highPU/trackingNtuple_w
 SAMPLETAG=pu200_w_truth_charged
 PDGID=11
 PTBOUND=0
+fi
+
+if [[ $1 == "17" ]]; then
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_10_pt0p5_50_5cm_cube.root
+SAMPLETAG=pt0p5_50_5cm_cube
+PDGID=13
+PTBOUND=7
+fi
+
+if [[ $1 == "18" ]]; then
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_10_pt0p5_50_50cm_cube.root
+SAMPLETAG=pt0p5_50_50cm_cube
+PDGID=13
+PTBOUND=7
 fi
 
 JOBTAG=$2
