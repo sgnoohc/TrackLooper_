@@ -13,6 +13,7 @@ folder_prefix = "/home/users/bsathian/public_html/SDL/SDL_Occupancies_20200407/S
 
 mdf = open("temp.md","w")
 mdf.write("% Segment Occupancy summary\n")
+mdf.write("### 99% of the distribution between lower and upper limits\n")
 mdf.write("| Region | Lower limit &nbsp; &nbsp; | Upper limit &nbsp; &nbsp; | Link|\n")
 mdf.write("| :---: | :---: | :---: | :---: |\n")
 

@@ -12,6 +12,7 @@ if len(sys.argv) > 1:
 
 mdf = open("temp.md","w")
 mdf.write("% Tracklet Occupancy summary\n")
+mdf.write("### 99% of the distribution between lower and upper limits\n")
 mdf.write("| Region | Lower limit &nbsp; &nbsp; | Upper limit &nbsp; &nbsp; | Link|\n")
 mdf.write("| :---: | :---: | :---: | :---: |\n")
 
@@ -51,7 +52,7 @@ def plot_occupancy(hist,prefix):
     if nonzero_flag == False :
         mdf.write("|{}|{}|{}|[plot]({})|\n".format(prefix,0,0,url))
     else:
-        mdf.write("|{}|{}|{}|[plot]({})|\n".format(prefix,xaxis_range[0],xaxis_range[1],url))
+        mdf.write("|{}|{}|{}|[plot]({})|\n".format(prefix,xaxis_range[0],summary_upper_limit,url))
 
     ply.plot_hist(
         bgs = [hist],
@@ -97,7 +98,7 @@ for i in range(1,16):
 
 for i in range(1,6):
     for j in range(1,16):
-        endcap_layer_ring_occupancy_hists[i-1].append(f.Get("Root__Linked_MD_occupancy_layer_{}_ring_{}".format(i,j)))
+        endcap_layer_ring_occupancy_hists[i-1].append(f.Get("Root__Tracklet_occupancy_layer_{}_ring_{}".format(i,j)))
 
 
 barrel_occupancy_hist = f.Get("Root__Tracklet_occupancy_in_barrel")

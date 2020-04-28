@@ -10,6 +10,7 @@ if len(sys.argv) > 1:
 
 mdf = open("temp.md","w")
 mdf.write("% Linked Segment Occupancy summary\n")
+mdf.write("### 99% of the distribution between lower and upper limits\n")
 mdf.write("| Region | Lower limit &nbsp; &nbsp; | Upper limit &nbsp; &nbsp; | Link|\n")
 mdf.write("| :---: | :---: | :---: | :---: |\n")
 
@@ -41,8 +42,12 @@ def plot_occupancy(hist,prefix):
 
     if nonzero_flag == False :
         mdf.write("|{}|{}|{}|[plot]({})|\n".format(prefix,0,0,url))
-    else:
+    
+    elif summary_upper_limit > 0:
         mdf.write("|{}|{}|{}|[plot]({})|\n".format(prefix,xaxis_range[0],summary_upper_limit,url))
+    else:
+        mdf.write("|{}|{}|> {}|[plot]({})|\n".format(prefix,xaxis_range[0],hist.GetBinLowEdge(hist.GetNbinsX()),url))
+
 
     ply.plot_hist(
         bgs = [hist],
