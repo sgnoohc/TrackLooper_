@@ -4,6 +4,7 @@
 #include "TString.h"
 #include "rooutil.h"
 #include "trktree.h"
+#include "SDL/ModuleConnectionMap.h"
 
 class AnalysisConfig
 {
@@ -90,6 +91,8 @@ public:
     std::map<int, std::array<float, 6>> moduleBoundaries;
     std::map<int, std::vector<std::vector<float>>> moduleSimHits;
     std::map<int, int> modulePopulation;
+
+    SDL::ModuleConnectionMap moduleConnectiongMapLoose;
 };
 
 extern AnalysisConfig ana;
