@@ -63,7 +63,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         rm ${SAMPLETYPE}_*_${TAG}.root
         NJOBS=1
         for i in $(seq 0 $((NJOBS-1))); do
-            echo "time ./bin/sdl -m 4 -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p95_1p05_10MuGun.root -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 1 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >  .jobs.txt
+            echo "time ./bin/sdl -m 4 -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_pt0p95_1p05_10MuGun.root -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 0 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >  .jobs.txt
         done
     fi
 
@@ -73,7 +73,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         NJOBS=20
         echo "" > .jobs.txt
         for i in $(seq 0 $((NJOBS-1))); do
-            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 1 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
+            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 0 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
         done
     fi
 
@@ -83,7 +83,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         NJOBS=20
         echo "" > .jobs.txt
         for i in $(seq 0 $((NJOBS-1))); do
-            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 1 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
+            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 0 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
         done
     fi
 
@@ -94,7 +94,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         SAMPLEPATH=/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
         echo "" > .jobs.txt
         for i in $(seq 0 $((NJOBS-1))); do
-            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${SAMPLEPATH} -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 1 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
+            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${SAMPLEPATH} -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 0 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
         done
     fi
 
@@ -105,7 +105,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         SAMPLEPATH=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_ensemble_muon_guns.root
         echo "" > .jobs.txt
         for i in $(seq 0 $((NJOBS-1))); do
-            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${SAMPLEPATH} -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 1 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
+            echo "time ./bin/sdl -m 4 -j ${NJOBS} -I ${i} -i ${SAMPLEPATH} -n -1 -t trackingNtuple/tree -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -v 0 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log  2>&1 " >>  .jobs.txt
         done
     fi
 

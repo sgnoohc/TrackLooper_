@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 TRACKLOOPERBASE=$(dirname $DIR)
 
-trap "kill 0" EXIT
+# trap "kill 0" EXIT
 
 TRACKINGNTUPLEDIR=/home/users/phchang/public_html/analysis/sdl/trackingNtuple
 
