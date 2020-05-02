@@ -67,6 +67,7 @@ bool inTimeTrackWithPdgId(int isimtrk, int pdgid);
 // Tracklet helper
 TrackletType getTrackletCategory(SDL::Tracklet& tl);
 int getNPSModules(SDL::Tracklet& tl);
+std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl);
 
 // Steering SDL
 void loadMaps();

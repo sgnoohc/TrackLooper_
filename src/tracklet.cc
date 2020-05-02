@@ -27,6 +27,7 @@ void tracklet()
     // // studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3AllPS", StudyTrackletSelection::kStudySelEE1EE3AllPS));
     // // studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3All2S", StudyTrackletSelection::kStudySelEE1EE3All2S));
 
+    ana.tx->createBranch<int>("event");
     ana.tx->createBranch<int>("category");
     ana.tx->createBranch<int>("nPS");
     ana.tx->createBranch<float>("deltaBetaDefault");
@@ -40,6 +41,39 @@ void tracklet()
     ana.tx->createBranch<vector<float>>("betaAv");
     ana.tx->createBranch<vector<float>>("betaPt");
     ana.tx->createBranch<vector<float>>("dBeta");
+    ana.tx->createBranch<float>("dBetaCut2");
+    ana.tx->createBranch<float>("matched_trk_pt");
+    ana.tx->createBranch<int>("matched_trk_charge");
+    ana.tx->createBranch<float>("matched_trk_eta");
+    ana.tx->createBranch<float>("matched_trk_phi");
+    ana.tx->createBranch<float>("matched_trk_pca_pt");
+    ana.tx->createBranch<float>("matched_trk_pca_dz");
+    ana.tx->createBranch<float>("matched_trk_pca_dxy");
+    ana.tx->createBranch<float>("matched_trk_pca_phi");
+    ana.tx->createBranch<float>("matched_trk_pca_eta");
+    ana.tx->createBranch<float>("matched_trk_pca_cotTheta");
+    ana.tx->createBranch<float>("matched_trk_pca_lambda");
+    ana.tx->createBranch<float>("matched_trk_px");
+    ana.tx->createBranch<float>("matched_trk_py");
+    ana.tx->createBranch<float>("matched_trk_pz");
+    ana.tx->createBranch<float>("simvtx_x");
+    ana.tx->createBranch<float>("simvtx_y");
+    ana.tx->createBranch<float>("simvtx_z");
+    ana.tx->createBranch<vector<int>>("module_detId");
+    ana.tx->createBranch<vector<int>>("module_subdet");
+    ana.tx->createBranch<vector<int>>("module_layer");
+    ana.tx->createBranch<vector<int>>("module_ring");
+    ana.tx->createBranch<vector<int>>("module_module");
+    ana.tx->createBranch<vector<int>>("module_rod");
+    ana.tx->createBranch<vector<int>>("module_isPS");
+    ana.tx->createBranch<vector<int>>("azimuthal_direction_module_idx");
+    ana.tx->createBranch<vector<int>>("transverse_direction_module_idx");
+    ana.tx->createBranch<vector<float>>("x");
+    ana.tx->createBranch<vector<float>>("y");
+    ana.tx->createBranch<vector<float>>("z");
+    ana.tx->createBranch<vector<float>>("true_x");
+    ana.tx->createBranch<vector<float>>("true_y");
+    ana.tx->createBranch<vector<float>>("true_z");
 
     // book the studies
     for (auto& study : studies)
@@ -99,6 +133,7 @@ void tracklet()
 
             for (auto& tl : layerPtr->getTrackletPtrs())
             {
+                // ana.tx->setBranch<int>("event", event_idx);
                 ana.tx->setBranch<int>("category", getTrackletCategory(*tl));
                 ana.tx->setBranch<int>("nPS", getNPSModules(*tl));
                 ana.tx->setBranch<float>("deltaBetaDefault", tl->getDeltaBeta());
@@ -107,6 +142,7 @@ void tracklet()
                 ana.tx->setBranch<int>("betacormode", tl->getRecoVar("betacormode"));
                 ana.tx->setBranch<int>("getPassBitsDefaultAlgo", tl->getPassBitsDefaultAlgo());
                 ana.tx->setBranch<int>("passDeltaAlphaOut", tl->getPassBitsDefaultAlgo() & (1 << SDL::Tracklet::TrackletSelection::dBeta));
+                ana.tx->setBranch<float>("dBetaCut2", tl->getRecoVar("dBetaCut2"));
                 ana.tx->pushbackToBranch<float>("betaIn", tl->getRecoVar("betaIn_0th"));
                 ana.tx->pushbackToBranch<float>("betaOut", tl->getRecoVar("betaOut_0th"));
                 ana.tx->pushbackToBranch<float>("betaAv", tl->getRecoVar("betaAv_0th"));
@@ -132,6 +168,71 @@ void tracklet()
                 ana.tx->pushbackToBranch<float>("betaAv", tl->getRecoVar("betaAv_4th"));
                 ana.tx->pushbackToBranch<float>("betaPt", tl->getRecoVar("betaPt_4th"));
                 ana.tx->pushbackToBranch<float>("dBeta", tl->getRecoVar("dBeta_4th"));
+                std::vector<int> matched_sim_trk_idxs = matchedSimTrkIdxs(*tl);
+                if (matched_sim_trk_idxs.size() > 0)
+                {
+                    ana.tx->setBranch<float>("matched_trk_pt", trk.sim_pt()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<int>("matched_trk_charge", trk.sim_q()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_eta", trk.sim_eta()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_phi", trk.sim_phi()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_pt", trk.sim_pca_pt()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_dz", trk.sim_pca_dz()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_dxy", trk.sim_pca_dxy()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_phi", trk.sim_pca_phi()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_eta", trk.sim_pca_eta()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_cotTheta", trk.sim_pca_cotTheta()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pca_lambda", trk.sim_pca_lambda()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_px", trk.sim_px()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_py", trk.sim_py()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("matched_trk_pz", trk.sim_pz()[matched_sim_trk_idxs[0]]);
+                    ana.tx->setBranch<float>("simvtx_x", trk.simvtx_x()[trk.sim_parentVtxIdx()[matched_sim_trk_idxs[0]]]);
+                    ana.tx->setBranch<float>("simvtx_y", trk.simvtx_y()[trk.sim_parentVtxIdx()[matched_sim_trk_idxs[0]]]);
+                    ana.tx->setBranch<float>("simvtx_z", trk.simvtx_z()[trk.sim_parentVtxIdx()[matched_sim_trk_idxs[0]]]);
+                }
+
+                vector<const SDL::Module*> modules = {
+                    &(tl->innerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()->getModule()),
+                    &(tl->outerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()->getModule()),
+                    &(tl->innerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule()),
+                    &(tl->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule())};
+
+                for (auto& modptr : modules)
+                {
+                    ana.tx->pushbackToBranch<int>("module_detId" , modptr->detId() ) ;
+                    ana.tx->pushbackToBranch<int>("module_subdet" , modptr->subdet() ) ;
+                    ana.tx->pushbackToBranch<int>("module_layer" , modptr->layer() ) ;
+                    ana.tx->pushbackToBranch<int>("module_ring" , modptr->ring() ) ;
+                    ana.tx->pushbackToBranch<int>("module_module" , modptr->module() ) ;
+                    ana.tx->pushbackToBranch<int>("module_rod" , modptr->rod() ) ;
+                    ana.tx->pushbackToBranch<int>("module_isPS" , modptr->moduleType() == SDL::Module::PS ) ;
+                    ana.tx->pushbackToBranch<int>("azimuthal_direction_module_idx", modptr->subdet() == 5 ? modptr->rod() : modptr->module());
+                    ana.tx->pushbackToBranch<int>("transverse_direction_module_idx", modptr->subdet() == 5 ? modptr->layer() : modptr->ring());
+                }
+
+                vector<const SDL::Hit*> hits = {
+                    tl->innerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr(),
+                    tl->outerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr(),
+                    tl->innerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr(),
+                    tl->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()};
+
+                for (auto& hitptr : hits)
+                {
+                    ana.tx->pushbackToBranch<float>("x", hitptr->x());
+                    ana.tx->pushbackToBranch<float>("y", hitptr->y());
+                    ana.tx->pushbackToBranch<float>("z", hitptr->z());
+
+                    int hitidx = hitptr->idx();
+
+                    if (trk.ph2_simHitIdx()[hitidx].size() > 0)
+                    {
+
+                        ana.tx->pushbackToBranch<float>("true_x", trk.simhit_x()[trk.ph2_simHitIdx()[hitidx][0]]);
+                        ana.tx->pushbackToBranch<float>("true_y", trk.simhit_y()[trk.ph2_simHitIdx()[hitidx][0]]);
+                        ana.tx->pushbackToBranch<float>("true_z", trk.simhit_z()[trk.ph2_simHitIdx()[hitidx][0]]);
+
+                    }
+                }
+
                 ana.tx->fill();
                 ana.tx->clear();
             }

@@ -276,27 +276,27 @@ bool checkModuleConnectionsAreGood(std::array<std::vector<unsigned int>, 6>& lay
     // Dumbest possible solution
     for (auto& module0 : layers_good_paired_modules[0])
     {
-        const std::vector<unsigned int>& connectedModule1s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module0);
+        const std::vector<unsigned int>& connectedModule1s = ana.moduleConnectiongMapLoose.getConnectedModuleDetIds(module0);
         for (auto& module1 : layers_good_paired_modules[1])
         {
             if (std::find(connectedModule1s.begin(), connectedModule1s.end(), module1) == connectedModule1s.end())
                 break;
-            const std::vector<unsigned int>& connectedModule2s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module1);
+            const std::vector<unsigned int>& connectedModule2s = ana.moduleConnectiongMapLoose.getConnectedModuleDetIds(module1);
             for (auto& module2 : layers_good_paired_modules[2])
             {
                 if (std::find(connectedModule2s.begin(), connectedModule2s.end(), module2) == connectedModule2s.end())
                     break;
-                const std::vector<unsigned int>& connectedModule3s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module2);
+                const std::vector<unsigned int>& connectedModule3s = ana.moduleConnectiongMapLoose.getConnectedModuleDetIds(module2);
                 for (auto& module3 : layers_good_paired_modules[3])
                 {
                     if (std::find(connectedModule3s.begin(), connectedModule3s.end(), module3) == connectedModule3s.end())
                         break;
-                    const std::vector<unsigned int>& connectedModule4s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module3);
+                    const std::vector<unsigned int>& connectedModule4s = ana.moduleConnectiongMapLoose.getConnectedModuleDetIds(module3);
                     for (auto& module4 : layers_good_paired_modules[4])
                     {
                         if (std::find(connectedModule4s.begin(), connectedModule4s.end(), module4) == connectedModule4s.end())
                             break;
-                        const std::vector<unsigned int>& connectedModule5s = SDL::moduleConnectionMap.getConnectedModuleDetIds(module4);
+                        const std::vector<unsigned int>& connectedModule5s = ana.moduleConnectiongMapLoose.getConnectedModuleDetIds(module4);
                         for (auto& module5 : layers_good_paired_modules[5])
                         {
                             if (std::find(connectedModule5s.begin(), connectedModule5s.end(), module5) == connectedModule5s.end())
@@ -1174,12 +1174,111 @@ int getNPSModules(SDL::Tracklet& tl)
     return nPS;
 }
 
+std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl)
+{
+    std::vector<int> hitidxs = {
+        tl.innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tl.innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tl.innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tl.innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tl.outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tl.outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tl.outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tl.outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+        };
+
+    std::vector<vector<int>> simtrk_idxs;
+    std::vector<int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto& hitidx : hitidxs)
+    {
+        std::vector<int> simtrk_idxs_per_hit;
+        for (auto& simhit_idx : trk.ph2_simHitIdx()[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+        if (simtrk_idxs_per_hit.size() == 0)
+        {
+            simtrk_idxs_per_hit.push_back(-1);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), -1) == unique_idxs.end())
+                unique_idxs.push_back(-1);
+        }
+        simtrk_idxs.push_back(simtrk_idxs_per_hit);
+    }
+
+    // // print
+    // std::cout << "va print" << std::endl;
+    // for (auto& vec : simtrk_idxs)
+    // {
+    //     for (auto& idx : vec)
+    //     {
+    //         std::cout << idx << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << "va print end" << std::endl;
+
+    // Compute all permutations
+    std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm = [&](vector<vector<int>>& result, vector<int> intermediate, size_t n, vector<vector<int>>& va)
+    {
+        if (va.size() > n)
+        {
+            for (auto x : va[n])
+            {
+                intermediate.push_back(x);
+                perm(result, intermediate, n+1, va);
+            }
+        }
+        else
+        {
+            result.push_back(intermediate);
+        }
+    };
+
+    vector<vector<int>> allperms;
+    perm(allperms, vector<int>(), 0, simtrk_idxs);
+
+    // for (auto& iperm : allperms)
+    // {
+    //     for (auto& idx : iperm)
+    //         std::cout << idx << " ";
+    //     std::cout << std::endl;
+    // }
+
+    std::vector<int> matched_sim_trk_idxs;
+    for (auto& trkidx_perm : allperms)
+    {
+        std::vector<int> counts;
+        for (auto& unique_idx : unique_idxs)
+        {
+            int cnt = std::count(trkidx_perm.begin(), trkidx_perm.end(), unique_idx);
+            counts.push_back(cnt);
+        }
+        auto result = std::max_element(counts.begin(), counts.end());
+        int rawidx = std::distance(counts.begin(), result);
+        int trkidx = unique_idxs[rawidx];
+        if (trkidx < 0)
+            continue;
+        if (counts[rawidx] >= 8)
+            matched_sim_trk_idxs.push_back(trkidx);
+    }
+
+    return matched_sim_trk_idxs;
+
+}
+
 //__________________________________________________________________________________________
 void loadMaps()
 {
     SDL::endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
     SDL::tiltedGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/tilted_orientation_data.txt");
-    SDL::moduleConnectionMap.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+    // SDL::moduleConnectionMap.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+    // SDL::moduleConnectionMap.load("data/module_connection_2020_0429.txt");
+    SDL::moduleConnectionMap.load("data/module_connection.txt");
+    ana.moduleConnectiongMapLoose.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
 }
 
 

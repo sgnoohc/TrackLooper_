@@ -2,11 +2,11 @@
 
 import ROOT as r
 import numpy as n
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.animation as animation
+# import matplotlib
+# matplotlib.use('Agg')
+# import matplotlib.pyplot as plt
+# from mpl_toolkits.mplot3d import Axes3D
+# import matplotlib.animation as animation
 import math
 
 def get_centroid(points):
@@ -330,9 +330,11 @@ def draw_all_hits():
 
 def save_planes(t):
 
-    fout = r.TFile("phase2.root", "recreate")
+    fout = r.TFile("data/phase2.root", "recreate")
     c = r.TCanvas()
     c.SetCanvasSize(800, 800)
+
+    geom_data = dict()
 
     h = r.TH3D("h", "", 1, -300, 300, 1, -300, 300, 1, -300, 300)
     h.Draw("AXIS")
@@ -344,12 +346,17 @@ def save_planes(t):
         if index % 100 == 0:
             print index
 
-        save_plane(event, lines)
+        save_plane(event, lines, geom_data)
+
+    import json
+
+    points_out = open("data/phase2.txt", "w")
+    points_out.write(json.dumps(geom_data, sort_keys=True, indent=4, separators=(',', ': ')))
 
     c.Write()
     fout.Close()
 
-def save_plane(event, lines):
+def save_plane(event, lines, fileout):
 
     # # if not ((event.side == 1 or event.side == 2) and event.subdet == 5):
     # # if not ((event.side == 2) and event.subdet == 5 and event.layer == 1):
@@ -371,8 +378,8 @@ def save_plane(event, lines):
     # Obtain centroid
     centroid = get_centroid(points)
     phi = n.arctan2(centroid[1], centroid[0])
-    if phi > 0 and phi < 2.1:
-        return
+    # if phi > 0 and phi < 2.1:
+    #     return
 
     if event.subdet == 5 and event.side != 3:
 
@@ -390,6 +397,13 @@ def save_plane(event, lines):
     # Get the most likely point of the 4 corners
     # points_4_corner = find_4_corners(points, normal_vec)
     points_4_corner = guess_4_corner(points, normal_vec, isEndcap, isFlat, isPS)
+
+    # write to txt file
+    corners = []
+    for i in [0, 1, 2, 3]:
+        corners.append([points_4_corner[i][2], points_4_corner[i][0], points_4_corner[i][1]])
+    # fileout.write("{}: [{}],\n".format(event.detId, ",".join(corners)))
+    fileout[event.detId] = corners
 
     # Draw TPolyLine3D
     line = r.TPolyLine3D()
@@ -585,10 +599,10 @@ def write_centroids(t):
 
 if __name__ == "__main__":
 
-    f = r.TFile("debug.root")
+    f = r.TFile("data/all_sim_hits_2020_0428.root")
     t = f.Get("tree")
 
-    # save_planes(t)
+    save_planes(t)
 
-    write_centroids(t)
+    # write_centroids(t)
 

@@ -180,7 +180,7 @@ def goodBarrelTracks(t, simtrk_idx, pdgid=0):
     for simhitidx in t.sim_simHitIdx[simtrk_idx]:
 
         # If not a correct sim hit skip
-        if t.simhit_particle[simhitidx] != t.sim_pdgId[simtrk_idx]:
+        if t.simhit_particle[simhitidx] != abs(t.sim_pdgId[simtrk_idx]):
             continue
 
         # Check it is barrel
