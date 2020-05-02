@@ -8,6 +8,29 @@ import pickle
 import numpy as np
 import math
 
+def get_track_point(pt, eta, phi, vx, vy, vz, charge, t):
+    # print(pt, eta, phi, vx, vy, vz, charge)
+
+    # Reference point for sim track is based on simvtx_x,y,z (which I think is same as point of closest approach, but I am not 100% sure.)
+    # N.B. Signs of the values are kind of disorganized... readers be aware
+    radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
+    ref_vec = np.array([vx, vy, vz]) # reference point vector
+    lam = math.copysign(math.pi/2.-2.*math.atan(math.exp(-abs(eta))), eta) # lambda
+
+    # print(lam, eta)
+
+    # tangent_vec = np.array([math.cos(phi), math.sin(phi), math.sin(lam)]) # Tangential vector at reference point
+    inward_radial_vec = radius * np.array([-math.sin(phi), math.cos(phi), 0]) # reference point to center vector
+    center_vec = ref_vec + inward_radial_vec # center of the helix
+
+    # print(lam, eta, radius)
+    x = center_vec[0] + radius * np.sin(phi + t)
+    y = center_vec[1] - radius * np.cos(phi + t)
+    z = center_vec[2] - radius * charge * np.tan(lam) * t
+    r = np.sqrt(x**2 + y**2)
+    return np.array([x, y, z])
+
+
 def get_track_points(pt, eta, phi, vx, vy, vz, charge):
     print(pt, eta, phi, vx, vy, vz, charge)
 

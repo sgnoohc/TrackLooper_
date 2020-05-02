@@ -50,8 +50,8 @@ if __name__ == "__main__":
     # print(centroid) # [-8.77723, 24.1215, -38.5147] 
 
     # Normal vector obtain via cross vector between two vectors from centroid to two end points on a boundary
-    vec1_on_module = centroid - boundary_points[0]
-    vec2_on_module = centroid - boundary_points[2]
+    vec1_on_module = centroid - np.array([boundary_points[0][1], boundary_points[0][2], boundary_points[0][0]])
+    vec2_on_module = centroid - np.array([boundary_points[1][1], boundary_points[1][2], boundary_points[1][0]])
     norm_vec = np.cross(vec1_on_module, vec2_on_module)
     norm_vec = norm_vec / np.linalg.norm(norm_vec)
 
@@ -99,8 +99,8 @@ if __name__ == "__main__":
     sdlDisplay.display_detector_xy(ax_xy)
 
     # Draw the intersection point
-    ax_xy.scatter(intersection_point[0], intersection_point[1], s=0.2)
     ax_xy.scatter(true_hits[0:4,0], true_hits[0:4,1], s=0.2)
+    ax_xy.scatter(intersection_point[0], intersection_point[1], s=0.2)
 
     sdlmath.draw_track_xy(ax_xy, 1.1325262784957886, -1.224777340888977, 1.841907024383545, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -1)
 
@@ -114,23 +114,13 @@ if __name__ == "__main__":
     sdlDisplay.display_detector_rz(ax_rz, color=1)
 
     # Draw the intersection point
-    ax_rz.scatter(intersection_point[2], math.sqrt(intersection_point[0]**2 + intersection_point[1]**2), s=0.2)
     ax_rz.scatter(true_hits[0:4,2], np.sqrt(true_hits[0:4,0]**2 + true_hits[0:4,1]**2), s=0.2)
+    ax_rz.scatter(intersection_point[2], math.sqrt(intersection_point[0]**2 + intersection_point[1]**2), s=0.2)
 
     sdlmath.draw_track_rz(ax_rz, 1.1325262784957886, -1.224777340888977, 1.841907024383545, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -1)
 
     print("saving figure")
     plt.savefig("detrz.pdf")
-
-
-
-
-
-
-
-
-
-
 
     # fig_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/figxy.pickle'))
     # ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))

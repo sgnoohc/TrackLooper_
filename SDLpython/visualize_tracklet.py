@@ -94,94 +94,99 @@ if __name__ == "__main__":
 
     # plt.savefig("detrz.pdf")
 
-    ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
+    # ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
 
-    for index, event in enumerate(tqdm(t)):
+    # for index, event in enumerate(tqdm(t)):
 
-        if event.category != 0:
-            continue
-
-        if index > 10000:
-            break
-
-        reco_hits = np.array([ [x, y, z, math.sqrt(x**2 + y**2)] for x, y, z in zip(event.x, event.y, event.z) ])
-
-        draw_tracklet_xy(ax_xy, reco_hits, useRecoStyle=True, drawChords=False)
-
-    ax_xy.set_xlim(-150, 150)
-    ax_xy.set_ylim(-150, 150)
-
-    plt.savefig("detxy.pdf")
-
-    # for event in t:
-    #     if event.category != 2:
-    #         continue
-    #     if event.matched_trk_pt < 0:
-    #     # if abs(event.matched_trk_pt - 1.1) > 0.05:
-    #         continue
-    #     # if event.nPS != 0:
-    #     #     continue
-
-    #     if event.betaIn[0] * event.betaOut[0] > 0:
+    #     if event.category != 0:
     #         continue
 
-    #     if len(event.true_x) < 4:
-    #         continue
-    #     # if len(event.true_x) >= 4:
-    #     #     continue
+    #     if index > 10000:
+    #         break
 
     #     reco_hits = np.array([ [x, y, z, math.sqrt(x**2 + y**2)] for x, y, z in zip(event.x, event.y, event.z) ])
 
-    #     true_hits = []
-    #     if len(event.true_x) >= 4:
-    #         true_hits = np.array([ [x, y, z, math.sqrt(x**2 + y**2)] for x, y, z in zip(event.true_x, event.true_y, event.true_z) ])
+    #     draw_tracklet_xy(ax_xy, reco_hits, useRecoStyle=True, drawChords=False)
 
-    #     detids = [ int(x) for x in event.module_detId ]
+    # ax_xy.set_xlim(-150, 150)
+    # ax_xy.set_ylim(-150, 150)
 
-    #     pt = event.matched_trk_pt
-    #     phi = event.matched_trk_phi
-    #     eta = event.matched_trk_eta
-    #     vx = event.simvtx_x
-    #     vy = event.simvtx_y
-    #     vz = event.simvtx_z
-    #     charge = event.matched_trk_charge
+    # plt.savefig("detxy.pdf")
 
-    #     print(event.betaIn)
-    #     print(event.betaOut)
-    #     print(event.dBeta)
+    for event in t:
+        if event.category != 0:
+            continue
+        # if event.matched_trk_pt < 0:
+        if abs(event.matched_trk_pt - 1.1) > 0.05:
+            continue
+        # if event.nPS != 0:
+        #     continue
 
-    #     print(pt)
-    #     print(np.linalg.norm(reco_hits[3][0:2] - reco_hits[0][0:2]) * 2.99792458e-3 * 3.8 / 2. / np.sin(event.betaIn))
-    #     print(np.linalg.norm(reco_hits[3][0:2] - reco_hits[0][0:2]) * 2.99792458e-3 * 3.8 / 2. / np.sin(event.betaOut))
+        # if event.betaIn[0] * event.betaOut[0] > 0:
+        #     continue
 
-    #     h, k, radius = get_circle([reco_hits[0], reco_hits[2], reco_hits[3]])
-    #     print(h, k)
-    #     print(2.99792458e-3 * 3.8 * radius)
-    #     h, k, radius = get_circle([reco_hits[0], reco_hits[1], reco_hits[3]])
-    #     print(h, k)
-    #     print(2.99792458e-3 * 3.8 * radius)
+        if len(event.true_x) < 4:
+            continue
+        # if len(event.true_x) >= 4:
+        #     continue
 
-    #     sdlDisplay = SDLDisplay.getDefaultSDLDisplay()
+        reco_hits = np.array([ [x, y, z, math.sqrt(x**2 + y**2)] for x, y, z in zip(event.x, event.y, event.z) ])
 
-    #     sdlDisplay.set_detector_xy_collection(detids)
-    #     sdlDisplay.set_detector_rz_collection(detids)
+        true_hits = []
+        if len(event.true_x) >= 4:
+            true_hits = np.array([ [x, y, z, math.sqrt(x**2 + y**2)] for x, y, z in zip(event.true_x, event.true_y, event.true_z) ])
 
-    #     ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
-    #     sdlmath.draw_track_xy(ax_xy, pt, eta, phi, vx, vy, vz, charge)
-    #     sdlDisplay.display_detector_xy(ax_xy)
-    #     if len(true_hits):
-    #         draw_tracklet_xy(ax_xy, true_hits, useRecoStyle=False)
-    #     draw_tracklet_xy(ax_xy, reco_hits, useRecoStyle=True)
+        detids = [ int(x) for x in event.module_detId ]
 
-    #     plt.savefig("detxy.pdf")
+        pt = event.matched_trk_pt
+        phi = event.matched_trk_phi
+        eta = event.matched_trk_eta
+        vx = event.simvtx_x
+        vy = event.simvtx_y
+        vz = event.simvtx_z
+        charge = event.matched_trk_charge
 
-    #     ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
-    #     sdlmath.draw_track_rz(ax_rz, pt, eta, phi, vx, vy, vz, charge)
-    #     sdlDisplay.display_detector_rz(ax_rz)
-    #     if len(true_hits):
-    #         draw_tracklet_rz(ax_rz, true_hits, useRecoStyle=False)
-    #     draw_tracklet_rz(ax_rz, reco_hits, useRecoStyle=True)
+        print(pt, phi, eta, vx, vy, vz, charge)
+        print(pt, eta, phi, vx, vy, vz, charge)
+        print(detids)
+        print(true_hits)
 
-    #     plt.savefig("detrz.pdf")
+        print(event.betaIn)
+        print(event.betaOut)
+        print(event.dBeta)
 
-    #     break
+        print(pt)
+        print(np.linalg.norm(reco_hits[3][0:2] - reco_hits[0][0:2]) * 2.99792458e-3 * 3.8 / 2. / np.sin(event.betaIn))
+        print(np.linalg.norm(reco_hits[3][0:2] - reco_hits[0][0:2]) * 2.99792458e-3 * 3.8 / 2. / np.sin(event.betaOut))
+
+        h, k, radius = get_circle([reco_hits[0], reco_hits[2], reco_hits[3]])
+        print(h, k)
+        print(2.99792458e-3 * 3.8 * radius)
+        h, k, radius = get_circle([reco_hits[0], reco_hits[1], reco_hits[3]])
+        print(h, k)
+        print(2.99792458e-3 * 3.8 * radius)
+
+        sdlDisplay = SDLDisplay.getDefaultSDLDisplay()
+
+        sdlDisplay.set_detector_xy_collection(detids)
+        sdlDisplay.set_detector_rz_collection(detids)
+
+        ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
+        sdlmath.draw_track_xy(ax_xy, pt, eta, phi, vx, vy, vz, charge)
+        sdlDisplay.display_detector_xy(ax_xy)
+        if len(true_hits):
+            draw_tracklet_xy(ax_xy, true_hits, useRecoStyle=False)
+        draw_tracklet_xy(ax_xy, reco_hits, useRecoStyle=True)
+
+        plt.savefig("detxy.pdf")
+
+        ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
+        sdlmath.draw_track_rz(ax_rz, pt, eta, phi, vx, vy, vz, charge)
+        sdlDisplay.display_detector_rz(ax_rz)
+        if len(true_hits):
+            draw_tracklet_rz(ax_rz, true_hits, useRecoStyle=False)
+        draw_tracklet_rz(ax_rz, reco_hits, useRecoStyle=True)
+
+        plt.savefig("detrz.pdf")
+
+        break

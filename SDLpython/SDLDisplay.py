@@ -39,7 +39,7 @@ class SDLDisplay:
         p = PatchCollection(self.patches_rz, cmap=matplotlib.cm.jet, alpha=0.4)
 
         if color:
-            colors = np.ones(len(self.patches_xy)) * color
+            colors = np.ones(len(self.patches_rz)) * color
             p.set_array(np.array(colors))
 
         ax.add_collection(p)

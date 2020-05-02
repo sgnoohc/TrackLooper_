@@ -35,7 +35,7 @@ def isOKConn(detid1, detid2):
     centroid_rt2 = math.sqrt(centroid_vec2[0]**2 + centroid_vec2[1]**2)
 
     if centroid_rt1 - 15 > centroid_rt2:
-        False
+        return False
 
     # Barrel Barrel
     if layer1 ==  1 and layer2 ==  2: return True
