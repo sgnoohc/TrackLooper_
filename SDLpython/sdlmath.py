@@ -32,6 +32,23 @@ def get_track_points(pt, eta, phi, vx, vy, vz, charge):
     rs = np.sqrt(xs**2 + ys**2)
     return xs, ys, zs, rs
 
+
+def construct_helix_from_points(pt,vx,vy,vz,mx,my,mz,charge):
+
+    radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
+    R = abs(radius) #For geometrical calculations
+
+    t = 2 * np.arcsin(sqrt( (vx - mx) **2 + (vy - my) **2 )/(2*R))
+    phi = np.arctan((vx - mx)/(my-vy)) - t/2
+    cx = vx - radius * cos(phi)
+    cy = vx + radius * sin(phi)
+    cz = vz
+    lam = np.arctan((vz - mz)/(radius * charge * t))
+
+    return ([cx,cy,cz],phi,t,lam)
+
+
+
 def draw_track_xy(ax, pt, eta, phi, vx, vy, vz, charge):
     xs, ys, zs, rs = get_track_points(pt, eta, phi, vx, vy, vz, charge)
     # ax.scatter(0, 0)
