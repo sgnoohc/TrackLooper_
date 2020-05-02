@@ -16,7 +16,6 @@ def get_track_points(pt, eta, phi, vx, vy, vz, charge):
     radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
     ref_vec = np.array([vx, vy, vz]) # reference point vector
     lam = math.copysign(math.pi/2.-2.*math.atan(math.exp(-abs(eta))), eta) # lambda
-
     print(lam, eta)
 
     # tangent_vec = np.array([math.cos(phi), math.sin(phi), math.sin(lam)]) # Tangential vector at reference point
@@ -24,7 +23,6 @@ def get_track_points(pt, eta, phi, vx, vy, vz, charge):
     center_vec = ref_vec + inward_radial_vec # center of the helix
 
     # print(lam, eta, radius)
-
     t = np.linspace(0, 2.*np.pi, 1000)
     xs = center_vec[0] + radius * np.sin(phi + t)
     ys = center_vec[1] - radius * np.cos(phi + t)
@@ -32,16 +30,42 @@ def get_track_points(pt, eta, phi, vx, vy, vz, charge):
     rs = np.sqrt(xs**2 + ys**2)
     return xs, ys, zs, rs
 
+def get_track_point(pt, eta, phi, vx, vy, vz, charge,t):
+    print(pt, eta, phi, vx, vy, vz, charge)
+
+    # Reference point for sim track is based on simvtx_x,y,z (which I think is same as point of closest approach, but I am not 100% sure.)
+    # N.B. Signs of the values are kind of disorganized... readers be aware
+    radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
+    ref_vec = np.array([vx, vy, vz]) # reference point vector
+    lam = math.copysign(math.pi/2.-2.*math.atan(math.exp(-abs(eta))), eta) # lambda
+    print(lam, eta)
+
+    # tangent_vec = np.array([math.cos(phi), math.sin(phi), math.sin(lam)]) # Tangential vector at reference point
+    inward_radial_vec = radius * np.array([-math.sin(phi), math.cos(phi), 0]) # reference point to center vector
+    center_vec = ref_vec + inward_radial_vec # center of the helix
+    print("center at",center_vec)
+    xs = center_vec[0] + radius * np.sin(phi + t)
+    ys = center_vec[1] - radius * np.cos(phi + t)
+    zs = center_vec[2] - radius * charge * np.tan(lam) * t
+    rs = np.sqrt(xs**2 + ys**2)
+    return xs, ys, zs, rs
+
+
 
 def construct_helix_from_points(pt,vx,vy,vz,mx,my,mz,charge):
+    '''Clarification : phi was derived assuming a negatively charged particle would start
+    at the first quadrant. However the way signs are set up in the get_track_point function
+    implies the particle actually starts out in the fourth quadrant, and phi is measured from
+    the y axis as opposed to x axis in the expression provided in this function. Hence I tucked
+    in an extra pi/2 to account for these effects'''
 
     radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
     R = abs(radius) #For geometrical calculations
 
-    t = 2 * np.arcsin(sqrt( (vx - mx) **2 + (vy - my) **2 )/(2*R))
-    phi = np.arctan((vx - mx)/(my-vy)) - t/2
-    cx = vx - radius * cos(phi)
-    cy = vx + radius * sin(phi)
+    t = 2 * np.arcsin(np.sqrt( (vx - mx) **2 + (vy - my) **2 )/(2*R))
+    phi = np.pi/2 + np.arctan((vx - mx)/(my-vy)) - t/2
+    cx = vx - radius * np.sin(phi)
+    cy = vy + radius * np.cos(phi)
     cz = vz
     lam = np.arctan((vz - mz)/(radius * charge * t))
 
