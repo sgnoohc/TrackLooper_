@@ -8,82 +8,126 @@ import pickle
 import numpy as np
 import math
 
-def get_track_point(pt, eta, phi, vx, vy, vz, charge, t):
-    # print(pt, eta, phi, vx, vy, vz, charge)
+class Helix:
+    def __init__(self, center, radius, phi, lam, charge):
+        self.center_ = center
+        self.radius_ = radius
+        self.phi_ = self.Phi_mpi_pi(phi)
+        self.lam_ = lam
+        self.charge_ = charge
+    def center(self): return self.center_
+    def radius(self): return self.radius_
+    def phi(self): return self.phi_
+    def lam(self): return self.lam_
+    def charge(self): return self.charge_
+    def __str__(self):
+        rtnstr = [
+        "Helix():",
+        "  center = {}".format(self.center()),
+        "  radius = {}".format(self.radius()),
+        "  phi    = {}".format(self.phi()),
+        "  lam    = {}".format(self.lam()),
+        "  charge = {}".format(self.charge()),
+        ]
+        return "\n".join(rtnstr)
+    def Phi_mpi_pi(self, phi):
+        f = phi
+        while f >= math.pi: f -= 2. * math.pi;
+        while f < -math.pi: f += 2. * math.pi;
+        return f
 
-    # Reference point for sim track is based on simvtx_x,y,z (which I think is same as point of closest approach, but I am not 100% sure.)
-    # N.B. Signs of the values are kind of disorganized... readers be aware
-    radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
-    ref_vec = np.array([vx, vy, vz]) # reference point vector
-    lam = math.copysign(math.pi/2.-2.*math.atan(math.exp(-abs(eta))), eta) # lambda
-
-    # print(lam, eta)
-
-    # tangent_vec = np.array([math.cos(phi), math.sin(phi), math.sin(lam)]) # Tangential vector at reference point
-    inward_radial_vec = radius * np.array([-math.sin(phi), math.cos(phi), 0]) # reference point to center vector
-    center_vec = ref_vec + inward_radial_vec # center of the helix
-
-    # print(lam, eta, radius)
-    x = center_vec[0] + radius * np.sin(phi + t)
-    y = center_vec[1] - radius * np.cos(phi + t)
-    z = center_vec[2] - radius * charge * np.tan(lam) * t
+def get_helix_point(helix, t):
+    x = helix.center()[0] - charge * helix.radius() * np.sin(helix.phi() - (charge) * t)
+    y = helix.center()[1] + charge * helix.radius() * np.cos(helix.phi() - (charge) * t)
+    z = helix.center()[2] +          helix.radius() * np.tan(helix.lam()) * t
     r = np.sqrt(x**2 + y**2)
-    return np.array([x, y, z])
+    return (x, y, z, r)
 
-def get_track_points(pt, eta, phi, vx, vy, vz, charge):
-    print(pt, eta, phi, vx, vy, vz, charge)
-
-    # Reference point for sim track is based on simvtx_x,y,z (which I think is same as point of closest approach, but I am not 100% sure.)
-    # N.B. Signs of the values are kind of disorganized... readers be aware
-    radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
-    ref_vec = np.array([vx, vy, vz]) # reference point vector
-    lam = math.copysign(math.pi/2.-2.*math.atan(math.exp(-abs(eta))), eta) # lambda
-    print(lam, eta)
-
-    # tangent_vec = np.array([math.cos(phi), math.sin(phi), math.sin(lam)]) # Tangential vector at reference point
-    inward_radial_vec = radius * np.array([-math.sin(phi), math.cos(phi), 0]) # reference point to center vector
-    center_vec = ref_vec + inward_radial_vec # center of the helix
-
-    # print(lam, eta, radius)
-    t = np.linspace(0, 2.*np.pi, 1000)
-    xs = center_vec[0] + radius * np.sin(phi + t)
-    ys = center_vec[1] - radius * np.cos(phi + t)
-    zs = center_vec[2] - radius * charge * np.tan(lam) * t
-    rs = np.sqrt(xs**2 + ys**2)
+def get_helix_points(helix):
+    xs = []
+    ys = []
+    zs = []
+    rs = []
+    for t in np.linspace(0, 2.*np.pi, 1000):
+        x, y, z, r = get_helix_point(helix, t)
+        if r > 120:
+            break
+        xs.append(x)
+        ys.append(y)
+        zs.append(z)
+        rs.append(r)
+    xs = np.array(xs)
+    ys = np.array(ys)
+    zs = np.array(zs)
+    rs = np.array(rs)
     return xs, ys, zs, rs
 
-def construct_helix_from_points(pt,vx,vy,vz,mx,my,mz,charge):
+def construct_helix_from_kinematics(pt, eta, phi, vx, vy, vz, charge):
+
+    print(pt, eta, phi, vx, vy, vz, charge)
+
+    # Radius based on pt
+    radius = pt / (2.99792458e-3 * 3.8)
+
+    # reference point vector which for sim track is the vertex point
+    ref_vec = np.array([vx, vy, vz]) # reference point vector
+
+    # The reference to center vector
+    inward_radial_vec = charge * radius * np.array([math.sin(phi), -math.cos(phi), 0]) # reference point to center vector
+
+    # The center point
+    center_vec = ref_vec + inward_radial_vec # center of the helix
+
+    # The lambda
+    lam = math.copysign(math.pi/2. - 2. * math.atan(math.exp(-abs(eta))), eta) # lambda
+
+    return Helix(center_vec, radius, phi, lam, charge)
+
+def construct_helix_from_points(pt, vx, vy, vz, mx, my, mz, charge):
     '''Clarification : phi was derived assuming a negatively charged particle would start
     at the first quadrant. However the way signs are set up in the get_track_point function
     implies the particle actually starts out in the fourth quadrant, and phi is measured from
     the y axis as opposed to x axis in the expression provided in this function. Hence I tucked
     in an extra pi/2 to account for these effects'''
+    # print(pt,vx,vy,vz,mx,my,mz,charge)
 
-    radius = pt / (2.99792458e-3 * 3.8) * (charge) * -1 # signed radius of the helix (by charge)
+    radius = pt / (2.99792458e-3 * 3.8)
     R = abs(radius) #For geometrical calculations
 
     t = 2 * np.arcsin(np.sqrt( (vx - mx) **2 + (vy - my) **2 )/(2*R))
-    phi = np.pi/2 + np.arctan((vx - mx)/(my-vy)) - t/2
-    cx = vx - radius * np.sin(phi)
-    cy = vy + radius * np.cos(phi)
+    phi = np.pi/2 + np.arctan((vy-my)/(vx-mx)) + ((vy-my)/(vx-mx) < 0) * (np.pi) +charge *  t/2 + (my-vy < 0) * (np.pi/2) - (my-vy > 0) * (np.pi/2)
+    cx = vx + charge *  radius * np.sin(phi)
+    cy = vy - charge *  radius * np.cos(phi)
     cz = vz
-    lam = np.arctan((vz - mz)/(radius * charge * t))
+    lam = np.arctan((mz - vz)/( radius * t))
 
-    return ([cx,cy,cz],phi,t,lam)
+    return Helix(np.array([cx,cy,cz]), radius, phi, lam, charge)
 
+def draw_track_xy(ax, pt, eta, phi, vx, vy, vz, charge, verbose=False):
+    if verbose:
+        print("draw_track_xy: pt, eta, phi, vx, vy, vz, charge = ", pt, eta, phi, vx, vy, vz, charge)
+    helix = construct_helix_from_kinematics(pt, eta, phi, vx, vy, vz, charge)
+    print(helix)
+    xs, ys, zs, rs = get_helix_points(helix)
+    ax.scatter(helix.center()[0], helix.center()[1])
+    ax.plot(xs, ys, linewidth=0.2, color=(1,0,0))
 
+def draw_track_rz(ax, pt, eta, phi, vx, vy, vz, charge, verbose=False):
+    if verbose:
+        print("draw_track_rz: pt, eta, phi, vx, vy, vz, charge = ", pt, eta, phi, vx, vy, vz, charge)
+    helix = construct_helix_from_kinematics(pt, eta, phi, vx, vy, vz, charge)
+    print(helix)
+    xs, ys, zs, rs = get_helix_points(helix)
+    ax.plot(zs, rs, linewidth=0.2, color=(1,0,0))
 
-def draw_track_xy(ax, pt, eta, phi, vx, vy, vz, charge):
-    xs, ys, zs, rs = get_track_points(pt, eta, phi, vx, vy, vz, charge)
-    # ax.scatter(0, 0)
-    # ax.scatter(vx, vy)
-    # ax.plot([0, vx], [0, vy])
-    # ax.plot([0, -dxy * math.sin(phi)], [0, dxy * math.cos(phi)])
-    ax.plot(xs, ys, linewidth=0.2)
-
-def draw_track_rz(ax, pt, eta, phi, vx, vy, vz, charge):
-    xs, ys, zs, rs = get_track_points(pt, eta, phi, vx, vy, vz, charge)
-    ax.plot(zs, rs, linewidth=0.2)
+def draw_track_xy_from_points(ax, pt, vx, vy, vz, mx, my, mz, charge, verbose=False):
+    if verbose:
+        print("draw_track_xy_from_points: pt, vx, vy, vz, mx, my, mz, charge = ", pt, vx, vy, vz, mx, my, mz, charge)
+    helix = construct_helix_from_points(pt, vx, vy, vz, mx, my, mz, charge)
+    print(helix)
+    xs, ys, zs, rs = get_helix_points(helix)
+    ax.scatter(helix.center()[0], helix.center()[1])
+    ax.plot(xs, ys, linewidth=0.2, color=(1,0,0))
 
 #_____________________________________________________________
 # Good barrel tracks is where at least one sim hit with correct pdgid land on each layer
@@ -125,36 +169,19 @@ def goodBarrelTracks(t, simtrk_idx, pdgid=0):
 
 if __name__ == "__main__":
 
-    # matched_trk_pt  = 1.85262
-    # matched_trk_charge = 1
-    # matched_trk_eta = -2.3464
-    # matched_trk_phi = -0.777617
-    # matched_trk_pca_pt = 1.85262
-    # matched_trk_pca_dz = 2.5632
-    # matched_trk_pca_dxy = 0.00028104
-    # matched_trk_pca_phi = -0.777611
-    # matched_trk_pca_eta = -2.3464
-    # matched_trk_pca_cotTheta = -5.1761
-    # matched_trk_pca_lambda = -1.37995
-    # matched_trk_px  = 1.32015
-    # matched_trk_py  = -1.29977
-    # matched_trk_pz  = -9.58936
-    # simvtx_x        = 0.000887035
-    # simvtx_y        = -0.000470091
-    # simvtx_z        = 2.57786
-
     import ROOT as r
     import sys
 
-    # f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root")
-    f = r.TFile("/nfs-7/userdata/phchang/trackingNtuple/trackingNtuple_10_pt0p5_50_50cm_cube.root")
+    f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root")
+    # f = r.TFile("/nfs-7/userdata/phchang/trackingNtuple/trackingNtuple_10_pt0p5_50_50cm_cube.root")
     tree = f.Get("trackingNtuple").Get("tree")
 
     ntrk = 0
+    itrk_sel = int(sys.argv[1])
     for index, event in enumerate(tree):
         for itrk, dxy in enumerate(event.sim_pca_dxy):
 
-            if not (index == 0 and itrk == 1):
+            if not (index == 0 and itrk == itrk_sel):
                 continue
 
             ntrk += 1
@@ -183,28 +210,19 @@ if __name__ == "__main__":
 
             print("Track info read from the TTree:")
             print(index, itrk)
-            print(xs)
-            print(ys)
-            print(zs)
-
-            # xs, ys, zs, rs = get_track_points(pt, eta, phi, vx, vy, vz, charge)
-
-            ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
-            draw_track_rz(ax_rz, pt, eta, phi, vx, vy, vz, charge)
-            plt.scatter(zs, np.sqrt(np.array(xs)**2 + np.array(ys)**2), s=0.1)
-            plt.savefig("detrz.pdf")
 
             ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
-            draw_track_xy(ax_xy, pt, eta, phi, vx, vy, vz, charge)
-            # ax_xy.set_ylim(-0.01, 0.01)
-            # ax_xy.set_xlim(-0.01, 0.01)
+            draw_track_xy(ax_xy, pt, eta, phi, vx, vy, vz, charge, verbose=True)
+            draw_track_xy_from_points(ax_xy, pt, vx, vy, vz, xs[0], ys[0], zs[0], charge, verbose=True)
             plt.scatter(xs, ys, s=0.1)
             plt.savefig("detxy.pdf")
 
-            if index == 0 and itrk == 1:
-                sys.exit()
+            # ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
+            # draw_track_rz(ax_rz, pt, eta, phi, vx, vy, vz, charge, verbose=True)
+            # # draw_track_rz_from_points(ax_rz, pt, vx, vy, vz, xs[0], ys[0], zs[0], charge, verbose=True)
+            # plt.scatter(zs, np.sqrt(np.array(xs)**2+np.array(ys)**2), s=0.1)
+            # plt.savefig("detrz.pdf")
 
-    # ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
-    # draw_track_rz(ax_rz, 1.85262, -0.777617, -2.3464, 0.000887035, -0.000470091, 2.57786, 1)
-    # plt.savefig("detrz.pdf")
+            if index == 0 and itrk == itrk_sel:
+                sys.exit()
 
