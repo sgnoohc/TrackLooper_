@@ -7,6 +7,7 @@ from matplotlib.collections import LineCollection
 import pickle
 import numpy as np
 import math
+from scipy import optimize
 
 class Helix:
     def __init__(self, center, radius, phi, lam, charge):
@@ -37,9 +38,22 @@ class Helix:
         return f
 
 def get_helix_point(helix, t):
-    x = helix.center()[0] - charge * helix.radius() * np.sin(helix.phi() - (charge) * t)
-    y = helix.center()[1] + charge * helix.radius() * np.cos(helix.phi() - (charge) * t)
-    z = helix.center()[2] +          helix.radius() * np.tan(helix.lam()) * t
+    x = helix.center()[0] - helix.charge() * helix.radius() * np.sin(helix.phi() - (helix.charge()) * t)
+    y = helix.center()[1] + helix.charge() * helix.radius() * np.cos(helix.phi() - (helix.charge()) * t)
+    z = helix.center()[2] +                  helix.radius() * np.tan(helix.lam()) * t
+    r = np.sqrt(x**2 + y**2)
+    return (x, y, z, r)
+
+def get_helix_point_from_radius(helix, r):
+    def h(t):
+        x = helix.center()[0] - helix.charge() * helix.radius() * np.sin(helix.phi() - (helix.charge()) * t)
+        y = helix.center()[1] + helix.charge() * helix.radius() * np.cos(helix.phi() - (helix.charge()) * t)
+        return math.sqrt(x**2 + y**2)
+    res = optimize.minimize_scalar(lambda t: abs(h(t) - r), bounds=(0, math.pi), method='bounded')
+    t = res.x
+    x = helix.center()[0] - helix.charge() * helix.radius() * np.sin(helix.phi() - (helix.charge()) * t)
+    y = helix.center()[1] + helix.charge() * helix.radius() * np.cos(helix.phi() - (helix.charge()) * t)
+    z = helix.center()[2] +                  helix.radius() * np.tan(helix.lam()) * t
     r = np.sqrt(x**2 + y**2)
     return (x, y, z, r)
 
@@ -126,8 +140,16 @@ def draw_track_xy_from_points(ax, pt, vx, vy, vz, mx, my, mz, charge, verbose=Fa
     helix = construct_helix_from_points(pt, vx, vy, vz, mx, my, mz, charge)
     print(helix)
     xs, ys, zs, rs = get_helix_points(helix)
-    ax.scatter(helix.center()[0], helix.center()[1])
+    ax.scatter(helix.center()[0], helix.center()[1], s=0.4)
     ax.plot(xs, ys, linewidth=0.2, color=(1,0,0))
+
+def draw_track_rz_from_points(ax, pt, vx, vy, vz, mx, my, mz, charge, verbose=False):
+    if verbose:
+        print("draw_track_rz_from_points: pt, vx, vy, vz, mx, my, mz, charge = ", pt, vx, vy, vz, mx, my, mz, charge)
+    helix = construct_helix_from_points(pt, vx, vy, vz, mx, my, mz, charge)
+    print(helix)
+    xs, ys, zs, rs = get_helix_points(helix)
+    ax.plot(zs, rs, linewidth=0.2, color=(1,0,0))
 
 #_____________________________________________________________
 # Good barrel tracks is where at least one sim hit with correct pdgid land on each layer
@@ -215,6 +237,10 @@ if __name__ == "__main__":
             draw_track_xy(ax_xy, pt, eta, phi, vx, vy, vz, charge, verbose=True)
             draw_track_xy_from_points(ax_xy, pt, vx, vy, vz, xs[0], ys[0], zs[0], charge, verbose=True)
             plt.scatter(xs, ys, s=0.1)
+            helix = construct_helix_from_kinematics(pt, eta, phi, vx, vy, vz, charge)
+            for r in [20, 30, 50, 80]:
+                point_on_radius = get_helix_point_from_radius(helix, r)
+                plt.scatter(point_on_radius[0], point_on_radius[1])
             plt.savefig("detxy.pdf")
 
             # ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))

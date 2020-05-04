@@ -23,11 +23,11 @@ class SDLDisplay:
 
     def display_detector_xy(self, ax, color=None):
 
-        p = PatchCollection(self.patches_xy, cmap=matplotlib.cm.jet, alpha=0.4)
+        p = PatchCollection(self.patches_xy, cmap=matplotlib.cm.jet, alpha=0.4, facecolors=color)
 
-        if color:
-            colors = np.ones(len(self.patches_xy)) * color
-            p.set_array(np.array(colors))
+        # if color:
+        #     colors = np.ones(len(self.patches_xy)) * color
+        #     p.set_array(np.array(colors))
 
         ax.add_collection(p)
         # ax.autoscale()
@@ -36,11 +36,11 @@ class SDLDisplay:
 
     def display_detector_rz(self, ax, color=None):
 
-        p = PatchCollection(self.patches_rz, cmap=matplotlib.cm.jet, alpha=0.4)
+        p = PatchCollection(self.patches_rz, cmap=matplotlib.cm.jet, alpha=0.4, facecolors=color)
 
-        if color:
-            colors = np.ones(len(self.patches_rz)) * color
-            p.set_array(np.array(colors))
+        # if color:
+        #     colors = np.ones(len(self.patches_rz)) * color
+        #     p.set_array(np.array(colors))
 
         ax.add_collection(p)
         # ax.autoscale()

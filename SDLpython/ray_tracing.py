@@ -102,7 +102,8 @@ if __name__ == "__main__":
     ax_xy.scatter(true_hits[0:4,0], true_hits[0:4,1], s=0.2)
     ax_xy.scatter(intersection_point[0], intersection_point[1], s=0.2)
 
-    sdlmath.draw_track_xy(ax_xy, 1.1325262784957886, -1.224777340888977, 1.841907024383545, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -1)
+    # sdlmath.draw_track_xy(ax_xy, 1.1325262784957886, -1.224777340888977, 1.841907024383545, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -1)
+    sdlmath.draw_track_xy_from_points(ax_xy, 1.1325262784957886, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -10.48864269, 24.35284233, -38.05117416, -1)
 
     print("saving figure")
     plt.savefig("detxy.pdf")
@@ -117,7 +118,8 @@ if __name__ == "__main__":
     ax_rz.scatter(true_hits[0:4,2], np.sqrt(true_hits[0:4,0]**2 + true_hits[0:4,1]**2), s=0.2)
     ax_rz.scatter(intersection_point[2], math.sqrt(intersection_point[0]**2 + intersection_point[1]**2), s=0.2)
 
-    sdlmath.draw_track_rz(ax_rz, 1.1325262784957886, -1.224777340888977, 1.841907024383545, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -1)
+    # sdlmath.draw_track_rz(ax_rz, 1.1325262784957886, -1.224777340888977, 1.841907024383545, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -1)
+    sdlmath.draw_track_rz_from_points(ax_rz, 1.1325262784957886, -0.000797238782979548, -0.0006373987998813391, 3.2855265140533447, -10.48864269, 24.35284233, -38.05117416, -1)
 
     print("saving figure")
     plt.savefig("detrz.pdf")
