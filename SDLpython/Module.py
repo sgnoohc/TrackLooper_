@@ -26,6 +26,12 @@ class Module:
     def isInverted(self): return int(self.moduleSDL.isInverted())
     def moduleType(self): return int(self.moduleSDL.moduleType())
     def moduleLayerType(self): return int(self.moduleSDL.moduleLayerType())
+    def plusPhiDetId(self): return int(self.detid) # Not implemented
+    def minusPhiDetId(self): return int(self.detid) # Not implemented
+    def plusEtaDetId(self): return int(self.detid) # Not implemented
+    def minusEtaDetId(self): return int(self.detid) # Not implemented
+    def plusRDetId(self): return int(self.detid) # Not implemented
+    def minusRDetId(self): return int(self.detid) # Not implemented
 
     def __str__(self):
         return "detid={} logicalLayer={} side={} moduleType={} ring={}".format(self.detId(), self.logicalLayer(), self.side(), self.moduleType(), self.ring())
