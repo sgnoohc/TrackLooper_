@@ -169,9 +169,9 @@ class Module:
 
 if __name__ == "__main__":
 
-    if sys.argv[1]:
+    try:
         module = Module(int(sys.argv[1]))
-    else:
+    except:
         module = Module(443354118)
     print(module.subdet())
     print(module.layer())
