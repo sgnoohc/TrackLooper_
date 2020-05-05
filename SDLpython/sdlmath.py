@@ -76,6 +76,16 @@ def get_helix_points(helix):
     rs = np.array(rs)
     return xs, ys, zs, rs
 
+def get_square_point_at_radius_from_helices(helices, r, t1, t2):
+    ''' t1 and t2 are the two parameters to define the point on square. Assumes
+    helices are length 4 and also in order to create a square going from
+    0->1->2->3->0'''
+    point1 = get_helix_point_from_radius(helices[0], r)
+    point2 = get_helix_point_from_radius(helices[1], r)
+    point3 = get_helix_point_from_radius(helices[2], r)
+    point4 = get_helix_point_from_radius(helices[3], r)
+
+
 def construct_helix_from_kinematics(pt, eta, phi, vx, vy, vz, charge):
 
     print(pt, eta, phi, vx, vy, vz, charge)

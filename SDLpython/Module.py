@@ -23,7 +23,7 @@ class Module:
         5:{1:28,2:28,3:32,4:36,5:36,6:40,7:44,8:52,9:56,10:64,11:72,12:76},
     }
     maxBarrelFlatZModules = {1:7,2:11,3:15,4:24,5:24,6:24}
-    maxBarrelTiltedZModules = 12
+    maxBarrelTiltedZModules = {1:12,2:12,3:12,4:12,5:12,6:12}
 
     maxRings = {1:15,2:15,3:12,4:12,5:12}
 
