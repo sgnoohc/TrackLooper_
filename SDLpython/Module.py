@@ -47,19 +47,19 @@ class Module:
         plusPhiDetId = int(self.detid)
         if self.isBarrelFlat():
             if self.rod() == self.maxBarrelxyModules[self.layer()]:
-                plusPhiDetId -= (self.maxBarrelxyModules[self.layer()]-1)<<10
+                plusPhiDetId -= (self.maxBarrelxyModules[self.layer()] - 1) << 10
             else:
                 plusPhiDetId += 1<<10
 
         elif self.isBarrelTilted():
             if self.module() == self.maxBarrelxyModules[self.layer()]:
-                plusPhiDetId -= (self.maxBarrelxyModules[self.layer()-1]<<2)
+                plusPhiDetId -= (self.maxBarrelxyModules[self.layer()] - 1) << 2
             else:
                 plusPhiDetId += 1<<2
 
         else: #endcap
             if self.module() == self.maxEndcapxyModules[self.layer()][self.ring()]:
-                plusPhiDetId -= (self.maxEndcapxyModules[self.layer()][self.ring()] -1) << 2
+                plusPhiDetId -= (self.maxEndcapxyModules[self.layer()][self.ring()] - 1) << 2
             else:
                 plusPhiDetId += 1<<2
 
@@ -69,19 +69,19 @@ class Module:
         minusPhiDetId = int(self.detid)
         if self.isBarrelFlat():
             if self.rod() == 1:
-                minusPhiDetId += (self.maxBarrelxyModules[self.layer()]-1)<<10
+                minusPhiDetId += (self.maxBarrelxyModules[self.layer()] - 1) << 10
             else:
                 minusPhiDetId -= 1<<10
 
         elif self.isBarrelTilted():
             if self.module() == 1:
-                minusPhiDetId += (self.maxBarrelxyModules[self.layer()-1]<<2)
+                minusPhiDetId += (self.maxBarrelxyModules[self.layer()] - 1) << 2
             else:
                 minusPhiDetId -= 1<<2
 
         else: #endcap
             if self.module() == 1:
-                minusPhiDetId += (self.maxEndcapxyModules[self.layer()][self.ring()] -1) << 2
+                minusPhiDetId += (self.maxEndcapxyModules[self.layer()][self.ring()] - 1) << 2
             else:
                 minusPhiDetId -= 1<<2
 
