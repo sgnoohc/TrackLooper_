@@ -391,6 +391,7 @@ int main(int argc, char** argv)
         studies.push_back(new StudyMDOccupancy("studyMDOccupancy"));
         studies.push_back(new StudyLinkedModule("studyLinkedModule"));
         studies.push_back(new StudySegmentOccupancy("studySegmentOccupancy"));
+        /*
         studies.push_back(new StudyTrackletSelection("studySelTlBB1BB3", StudyTrackletSelection::kStudySelBB1BB3));
         studies.push_back(new StudyTrackletSelection("studySelTlBB2BB4", StudyTrackletSelection::kStudySelBB2BB4));
         studies.push_back(new StudyTrackletSelection("studySelTlBB3BB5", StudyTrackletSelection::kStudySelBB3BB5));
@@ -399,11 +400,12 @@ int main(int argc, char** argv)
         studies.push_back(new StudyTrackletSelection("studySelTlBB3BE5", StudyTrackletSelection::kStudySelBB3BE5));
         studies.push_back(new StudyTrackletSelection("studySelTlBB1EE3", StudyTrackletSelection::kStudySelBB1EE3));
         studies.push_back(new StudyTrackletSelection("studySelTlEE1EE3", StudyTrackletSelection::kStudySelEE1EE3));
-        // studies.push_back(new StudyTripletSelection("studySelTPBB1BB2", StudyTripletSelection::kStudySelBB1BB2));
-        // studies.push_back(new StudyTripletSelection("studySelTPBB2BB3", StudyTripletSelection::kStudySelBB2BB3));
-        // studies.push_back(new StudyTripletSelection("studySelTPBB3BB4", StudyTripletSelection::kStudySelBB3BB4));
-        // studies.push_back(new StudyTripletSelection("studySelTPBB4BB5", StudyTripletSelection::kStudySelBB4BB5));
-        // studies.push_back(new StudyTrackCandidateSelection("studySelTCAll", StudyTrackCandidateSelection::kStudySelAll, pt_boundaries));
+        studies.push_back(new StudyTripletSelection("studySelTPBB1BB2", StudyTripletSelection::kStudySelBB1BB2));
+        studies.push_back(new StudyTripletSelection("studySelTPBB2BB3", StudyTripletSelection::kStudySelBB2BB3));
+        studies.push_back(new StudyTripletSelection("studySelTPBB3BB4", StudyTripletSelection::kStudySelBB3BB4));
+        studies.push_back(new StudyTripletSelection("studySelTPBB4BB5", StudyTripletSelection::kStudySelBB4BB5));
+        studies.push_back(new StudyTrackCandidateSelection("studySelTCAll", StudyTrackCandidateSelection::kStudySelAll, pt_boundaries));*/
+        studies.push_back(new StudyChargeClassification("StudyChargeClassification"));
     }
 
     // book the studies
