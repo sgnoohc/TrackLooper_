@@ -44,7 +44,7 @@
 #include "StudySDLSegmentDebugNtupleWriter.h"
 #include "StudySDLTrackletDebugNtupleWriter.h"
 #include "StudySDLTrackCandidateDebugNtupleWriter.h"
-#include "StudyChargeClassificaiton.h"
+#include "StudyChargeClassification.h"
 #include "constants.h"
 
 #include "AnalysisConfig.h"
