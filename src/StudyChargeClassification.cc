@@ -7,6 +7,12 @@ StudyChargeClassification :: StudyChargeClassification(const char* studyName)
 
 void StudyChargeClassification::bookStudy()
 {
+    //pt bins
+    for(int i = 0; i <=10; i++)
+    {
+        ptbins.push_back( 0.5 + i * (2.0-0.5)/10.0) ; 
+    }
+
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives"),ptbins,[&](){return truePositives;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives"),ptbins,[&](){return trueNegatives;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives"),ptbins,[&](){return falsePositives;});
@@ -52,12 +58,7 @@ void StudyChargeClassification::bookStudy()
 
 void StudyChargeClassification::resetVariables()
 {
-    //pt bins
-    for(int i = 0; i <=10; i++)
-    {
-        ptbins.push_back( 0.5 + i * (2.0-0.5)/10.0) ; 
-    }
-
+    
     truePositives.clear();
     trueNegatives.clear();
     falsePositives.clear();
