@@ -104,7 +104,7 @@ void StudyChargeClassification::resetVariables()
         truePositivesByBarrelLayer.push_back(std::vector<float>());
         falsePositivesByBarrelLayer.push_back(std::vector<float>());
         trueNegativesByBarrelLayer.push_back(std::vector<float>());
-        falseNegativesByBarrelLyaer.push_back(std::vector<float>());
+        falseNegativesByBarrelLayer.push_back(std::vector<float>());
 
         truePositivesByEndcapLayer.push_back(std::vector<float>());
         falsePositivesByEndcapLayer.push_back(std::vector<float>());
@@ -118,10 +118,10 @@ void StudyChargeClassification::resetVariables()
 
         for(size_t j = 1; j< 15; j++)
         {
-            truePositivesByEndcapLayerRing.back_().push_back(vector<float>());
-            falsePositivesByEndcapLayerRing.back_().push_back(vector<float>());
-            trueNegativesByEndcapLayerRing.back_().push_back(vector<float>());
-            falseNegativesByEndcapLayerRing.back_().push_back(vector<float>());
+            truePositivesByEndcapLayerRing.back().push_back(vector<float>());
+            falsePositivesByEndcapLayerRing.back().push_back(vector<float>());
+            trueNegativesByEndcapLayerRing.back().push_back(vector<float>());
+            falseNegativesByEndcapLayerRing.back().push_back(vector<float>());
         }
     }
 }
@@ -158,7 +158,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     else
                     {
                         truePositivesEndcap.push_back(simPt);
-                        truePositivesEndcapLayer.push_back(simPt);
+                        truePositivesByEndcapLayer.at(module->layer()-1).push_back(simPt);
                         truePositivesByEndcapLayerRing[module->layer()-1][module->ring()-1].push_back(simPt);
                     }
                 }
@@ -174,7 +174,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     else
                     {
                         trueNegativesEndcap.push_back(simPt);
-                        trueNegativesEndcapLayer.push_back(simPt);
+                        trueNegativesByEndcapLayer.at(module->layer()-1).push_back(simPt);
                         trueNegativesByEndcapLayerRing[module->layer()-1][module->ring()-1].push_back(simPt);
                     }
                 }
@@ -191,7 +191,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     else
                     {
                         falseNegativesEndcap.push_back(simPt);
-                        falseNegativesEndcapLayer.push_back(simPt);
+                        falseNegativesByEndcapLayer.at(module->layer()-1).push_back(simPt);
                         falseNegativesByEndcapLayerRing[module->layer()-1][module->ring()-1].push_back(simPt);
                     }
 
@@ -208,7 +208,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     else
                     {
                         falsePositivesEndcap.push_back(simPt);
-                        falsePositivesEndcapLayer.push_back(simPt);
+                        falsePositivesByEndcapLayer.at(module->layer()-1).push_back(simPt);
                         falsePositivesByEndcapLayerRing[module->layer()-1][module->ring()-1].push_back(simPt);
                     }
 
