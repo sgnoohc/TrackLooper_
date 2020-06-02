@@ -113,15 +113,15 @@ void StudyChargeClassification::resetVariables()
 
         truePositivesByEndcapLayerRing.push_back(std::vector<std::vector<float>>());
         falsePositivesByEndcapLayerRing.push_back(std::vector<std::vector<float>>());
-        trueNegativesByEndcapLayerRing.push_back(std::vector<vector<float>>());
-        falseNegativesByEndcapLayerRing.push_back(std::vector<std::vvector<float>>());
+        trueNegativesByEndcapLayerRing.push_back(std::vector<std::vector<float>>());
+        falseNegativesByEndcapLayerRing.push_back(std::vector<std::vector<float>>());
 
         for(size_t j = 1; j< 15; j++)
         {
-            truePositivesByEndcapLayerRing.back().push_back(vector<float>());
-            falsePositivesByEndcapLayerRing.back().push_back(vector<float>());
-            trueNegativesByEndcapLayerRing.back().push_back(vector<float>());
-            falseNegativesByEndcapLayerRing.back().push_back(vector<float>());
+            truePositivesByEndcapLayerRing.back().push_back(std::vector<float>());
+            falsePositivesByEndcapLayerRing.back().push_back(std::vector<float>());
+            trueNegativesByEndcapLayerRing.back().push_back(std::vector<float>());
+            falseNegativesByEndcapLayerRing.back().push_back(std::vector<float>());
         }
     }
 }
