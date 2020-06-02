@@ -7,20 +7,20 @@ StudyChargeClassification :: StudyChargeClassification(const char* studyName)
 
 void StudyChargeClassification::bookStudy()
 {
-    ana.histograms.addVecHistograms(TString::Format("md_charge_true_positives"),ptbins,[&](){return truePositives;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_true_negatives"),ptbins,[&](){return trueNegatives;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_false_positives"),ptbins,[&](){return falsePositives;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_false_negatives"),ptbins,[&](){return falseNegatives;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives"),ptbins,[&](){return truePositives;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives"),ptbins,[&](){return trueNegatives;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives"),ptbins,[&](){return falsePositives;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives"),ptbins,[&](){return falseNegatives;});
 
-    ana.histograms.addVecHistograms(TString::Format("md_charge_true_positives_barrel"),ptbins,[&](){return truePositivesBarrel;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_true_negatives_barrel"),ptbins,[&](){return trueNegativesBarrel;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_false_positives_barrel"),ptbins,[&](){return falsePositivesBarrel;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_false_negatives_barrel"),ptbins,[&](){return falseNegativesBarrel;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel"),ptbins,[&](){return truePositivesBarrel;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel"),ptbins,[&](){return trueNegativesBarrel;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel"),ptbins,[&](){return falsePositivesBarrel;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel"),ptbins,[&](){return falseNegativesBarrel;});
 
-    ana.histograms.addVecHistograms(TString::Format("md_charge_true_positives_endcap"),ptbins,[&](){return truePositivesEndcap;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_true_negatives_endcap"),ptbins,[&](){return trueNegativesEndcap;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_false_positives_endcap"),ptbins,[&](){return falsePositivesEndcap;});
-    ana.histograms.addVecHistograms(TString::Format("md_charge_false_negatives_endcap"),ptbins,[&](){return falseNegativesEndcap;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap"),ptbins,[&](){return truePositivesEndcap;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap"),ptbins,[&](){return trueNegativesEndcap;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap"),ptbins,[&](){return falsePositivesEndcap;});
+    ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap"),ptbins,[&](){return falseNegativesEndcap;});
 
     for(size_t i = 0; i < 6; i++)
     {
