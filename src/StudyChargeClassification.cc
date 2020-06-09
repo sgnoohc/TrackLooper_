@@ -10,13 +10,14 @@ void StudyChargeClassification::bookStudy()
     //pt bins
     for(int i = 0; i <=250; i++)
     {
-        ptbins.push_back( 0.5 + i * (50.0-0.5)/100.0) ; 
+        ptbins.push_back( 0.5 + i * (50.0-0.5)/250) ; 
     }
 
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives"),ptbins,[&](){return truePositives;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives"),ptbins,[&](){return trueNegatives;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives"),ptbins,[&](){return falsePositives;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives"),ptbins,[&](){return falseNegatives;});
+    ana.histograms.addVecHistogram(TString::Format("track_pt"),ptbins,[&](){return trackPt;});
 
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel"),ptbins,[&](){return truePositivesBarrel;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel"),ptbins,[&](){return trueNegativesBarrel;});
@@ -28,6 +29,7 @@ void StudyChargeClassification::bookStudy()
     ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap"),ptbins,[&](){return falsePositivesEndcap;});
     ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap"),ptbins,[&](){return falseNegativesEndcap;});
 
+
     for(size_t i = 0; i < 6; i++)
     {
         ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_layer_%d",i+1),ptbins,[&,i](){return truePositivesByLayer[i];});
@@ -35,7 +37,7 @@ void StudyChargeClassification::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_layer_%d",i+1),ptbins,[&,i](){return falseNegativesByLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_layer_%d",i+1),ptbins,[&,i](){return falsePositivesByLayer[i];});
 
-         ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_layer_%d",i+1),ptbins,[&,i](){return truePositivesByBarrelLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_layer_%d",i+1),ptbins,[&,i](){return truePositivesByBarrelLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_layer_%d",i+1),ptbins,[&,i](){return trueNegativesByBarrelLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_layer_%d",i+1),ptbins,[&,i](){return falseNegativesByBarrelLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_layer_%d",i+1),ptbins,[&,i](){return falsePositivesByBarrelLayer[i];});
@@ -51,7 +53,6 @@ void StudyChargeClassification::bookStudy()
             ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return falsePositivesByEndcapLayerRing[i][j];});
             ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return trueNegativesByEndcapLayerRing[i][j];});
             ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return falseNegativesByEndcapLayerRing[i][j];});
-
         }
     }
 }
@@ -93,6 +94,8 @@ void StudyChargeClassification::resetVariables()
     falsePositivesByEndcapLayerRing.clear();
     trueNegativesByEndcapLayerRing.clear();
     falseNegativesByEndcapLayerRing.clear();
+
+    trackPt.clear();
 
     //fill the small vectors inside the big ones
     for(size_t i = 1; i<= 6; i++)
@@ -137,6 +140,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
         unsigned int& isimtrk = std::get<0>(matchedTrack);
         float simPt = std::min((double) trk.sim_pt()[isimtrk], 49.999);
         int simCharge = trk.sim_q()[isimtrk];
+        trackPt.push_back(simPt);
 
         for(auto& module:moduleList)
         {
@@ -215,6 +219,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     }
 
                 }
+
             }
         }
     }

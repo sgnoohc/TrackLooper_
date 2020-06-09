@@ -23,6 +23,7 @@ class StudyChargeClassification : public Study
         std::vector<float> trueNegatives;
         std::vector<float> falsePositives;
         std::vector<float> falseNegatives;
+        std::vector<float> trackPt;
 
         std::vector<float> truePositivesBarrel;
         std::vector<float> trueNegativesBarrel;
