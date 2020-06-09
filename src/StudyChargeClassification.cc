@@ -32,27 +32,27 @@ void StudyChargeClassification::bookStudy()
 
     for(size_t i = 0; i < 6; i++)
     {
-        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_layer_%d",i+1),ptbins,[&,i](){return truePositivesByLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_layer_%d",i+1),ptbins,[&,i](){return trueNegativesByLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_layer_%d",i+1),ptbins,[&,i](){return falseNegativesByLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_layer_%d",i+1),ptbins,[&,i](){return falsePositivesByLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByLayer[i];});
 
-        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_layer_%d",i+1),ptbins,[&,i](){return truePositivesByBarrelLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_layer_%d",i+1),ptbins,[&,i](){return trueNegativesByBarrelLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_layer_%d",i+1),ptbins,[&,i](){return falseNegativesByBarrelLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_layer_%d",i+1),ptbins,[&,i](){return falsePositivesByBarrelLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByBarrelLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByBarrelLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByBarrelLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByBarrelLayer[i];});
 
-        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap_layer_%d",i+1),ptbins,[&,i](){return truePositivesByEndcapLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap_layer_%d",i+1),ptbins,[&,i](){return trueNegativesByEndcapLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap_layer_%d",i+1),ptbins,[&,i](){return falseNegativesByEndcapLayer[i];});
-        ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap_layer_%d",i+1),ptbins,[&,i](){return falsePositivesByEndcapLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByEndcapLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByEndcapLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByEndcapLayer[i];});
+        ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByEndcapLayer[i];});
 
         for(size_t j = 0; j < 15; j++)
         {
-            ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return truePositivesByEndcapLayerRing[i][j];});
-            ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return falsePositivesByEndcapLayerRing[i][j];});
-            ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return trueNegativesByEndcapLayerRing[i][j];});
-            ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap_layer_%d_ring_%d",i+1,j+1),ptbins,[&,i,j](){return falseNegativesByEndcapLayerRing[i][j];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap_layer_%ld_ring_%ld",i+1,j+1),ptbins,[&,i,j](){return truePositivesByEndcapLayerRing[i][j];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap_layer_%ld_ring_%ld",i+1,j+1),ptbins,[&,i,j](){return falsePositivesByEndcapLayerRing[i][j];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap_layer_%ld_ring_%ld",i+1,j+1),ptbins,[&,i,j](){return trueNegativesByEndcapLayerRing[i][j];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap_layer_%ld_ring_%ld",i+1,j+1),ptbins,[&,i,j](){return falseNegativesByEndcapLayerRing[i][j];});
         }
     }
 }
