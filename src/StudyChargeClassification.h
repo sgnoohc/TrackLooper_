@@ -1,5 +1,5 @@
-#ifndef StudySegmentOccupancy_h
-#define StudySegmentOccupancy_h
+#ifndef StudyChargeClassification_h
+#define StudyChargeClassification_h
 
 #include "SDL/Event.h"
 #include "Study.h"

@@ -8,9 +8,9 @@ StudyChargeClassification :: StudyChargeClassification(const char* studyName)
 void StudyChargeClassification::bookStudy()
 {
     //pt bins
-    for(int i = 0; i <=10; i++)
+    for(int i = 0; i <=250; i++)
     {
-        ptbins.push_back( 0.5 + i * (2.0-0.5)/10.0) ; 
+        ptbins.push_back( 0.5 + i * (50.0-0.5)/100.0) ; 
     }
 
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives"),ptbins,[&](){return truePositives;});
@@ -95,7 +95,7 @@ void StudyChargeClassification::resetVariables()
     falseNegativesByEndcapLayerRing.clear();
 
     //fill the small vectors inside the big ones
-    for(size_t i = 1; i< 6; i++)
+    for(size_t i = 1; i<= 6; i++)
     {
         truePositivesByLayer.push_back(std::vector<float>());
         trueNegativesByLayer.push_back(std::vector<float>());
@@ -117,7 +117,7 @@ void StudyChargeClassification::resetVariables()
         trueNegativesByEndcapLayerRing.push_back(std::vector<std::vector<float>>());
         falseNegativesByEndcapLayerRing.push_back(std::vector<std::vector<float>>());
 
-        for(size_t j = 1; j< 15; j++)
+        for(size_t j = 1; j<= 15; j++)
         {
             truePositivesByEndcapLayerRing.back().push_back(std::vector<float>());
             falsePositivesByEndcapLayerRing.back().push_back(std::vector<float>());
@@ -142,6 +142,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
         {
             //get the mini-doublets that correspond to this track
             std::vector<SDL::MiniDoublet*> matchedMDs = module->getMiniDoubletPtrs();
+
             for(auto& md:matchedMDs)
             {
                 float dPhiChange = md->getDeltaPhiChange(); 

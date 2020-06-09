@@ -120,8 +120,17 @@ void StudyTrackletOccupancy::doStudy(SDL::Event &event, std::vector<std::tuple<u
             nBarrelLayerModules.at(module->layer()-1) ++;
             if((module->getTrackletPtrs()).size() != 0)
             {
-            BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getTrackletPtrs().size()));
+            	BarrelLayerOccupancy.at(module->layer()-1).push_back((module->getTrackletPtrs().size()));
             }
+
+/*            if((module->layer() == 4 or module->layer() == 5) and (module->getTrackletPtrs().size() != 0))
+            {
+		std::cout<<"Tracklets found in module "<< module->layer();
+		for(auto &tracklet:module->getTrackletPtrs())
+		{
+		    SDL::cout<<*tracklet;
+		}
+	    }*/
         }
         else if(module->subdet() == SDL::Module::Endcap) //endcap module
         {
