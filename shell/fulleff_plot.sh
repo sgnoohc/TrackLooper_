@@ -25,6 +25,7 @@ echo "<== Submitted parallel jobs ..."
 wait
 
 echo "<== Creating summary plots ..."
+echo "python ${TRACKLOOPERBASE}/python/plot_summary.py ${SAMPLETAG} > plot_summary.log 2>&1"
 python ${TRACKLOOPERBASE}/python/plot_summary.py ${SAMPLETAG} > plot_summary.log 2>&1 
 
 # cp -r plots_${SAMPLETAG}/ results/${SAMPLETAG}_${JOBTAG}/plots_${SAMPLETAG}

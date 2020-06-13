@@ -19,39 +19,70 @@ if [[ ${EFFTYPE} == *"algo_eff"* ]]; then
     echo "" >> ${MDFILE}.md
     echo "### Track Candidate Algorithmic Efficiency plots" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "  ![](plots_${SAMPLE}/tceff/summary_tc_algo_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/tceff/summary_tc_algo_eff_pt.png){width=${width}px}" >> ${MDFILE}.md
+    if [[ ${SAMPLE} == *"cm_cube"* ]]; then
+        echo "  ![](plots_${SAMPLE}/tceff/summary_tc_algo_eff_dxy.png){width=${width}px}" >> ${MDFILE}.md
+    fi
     echo "" >> ${MDFILE}.md
     echo "### Tracklet Algorithmic Efficiency plots" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_pt_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_pt_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_pt_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_pt_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_pt_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_pt_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    if [[ ${SAMPLE} == *"cm_cube"* ]]; then
+        echo "" >> ${MDFILE}.md
+        echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_dxy_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_dxy_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_dxy_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_dxy_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_dxy_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Tracklet algorithmic efficiencies](plots_${SAMPLE}/tleff/summary_tl_algo_eff_dxy_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    fi
     echo "" >> ${MDFILE}.md
     echo "### Segment Algorithmic Efficiency plots" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_pt_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_pt_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_pt_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_pt_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_pt_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_pt_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    if [[ ${SAMPLE} == *"cm_cube"* ]]; then
+        echo "" >> ${MDFILE}.md
+        echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_dxy_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_dxy_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_dxy_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_dxy_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_dxy_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Segment algorithmic efficiencies](plots_${SAMPLE}/sgeff/summary_sg_algo_eff_dxy_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    fi
     echo "" >> ${MDFILE}.md
     echo "### Mini-Doublet Algorithmic Efficiency plots" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
-    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_pt_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_pt_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_pt_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_pt_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_pt_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_pt_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    if [[ ${SAMPLE} == *"cm_cube"* ]]; then
+        echo "" >> ${MDFILE}.md
+        echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_dxy_bbbbbb.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_dxy_bbbbbe.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_dxy_bbbbee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_dxy_bbbeee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_dxy_bbeeee.png){width=${width}px}" >> ${MDFILE}.md
+        echo "  ![Mini-doublet algorithmic efficiencies](plots_${SAMPLE}/mdeff/summary_md_algo_eff_dxy_beeeee.png){width=${width}px}" >> ${MDFILE}.md
+    fi
     # echo "   * Mini-doublet algorithmic efficiency: [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/${EFFTYPE}/${MDFILE}/plots_${SAMPLE}/mdeff/?summary)" >> ${MDFILE}.md
     # echo "   * Segment algorithmic efficiency: [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/${EFFTYPE}/${MDFILE}/plots_${SAMPLE}/sgeff/?summary)" >> ${MDFILE}.md
     # echo "   * Tracklet algorithmic efficiency: [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/${EFFTYPE}/${MDFILE}/plots_${SAMPLE}/tleff/?summary)" >> ${MDFILE}.md
     # echo "   * Track candidate algorithmic efficiency: [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/${EFFTYPE}/${MDFILE}/plots_${SAMPLE}/tceff/?summary)" >> ${MDFILE}.md
-    echo "-------------------------------------------------" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "--------------------------------------------------------------------------------------------------------------" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
