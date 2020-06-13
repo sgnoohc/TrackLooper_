@@ -122,6 +122,332 @@ bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit)
 
 }
 
+
+//__________________________________________________________________________________________
+// Currently the denominator tracks for computing algorithmic efficiency are defined as sim track
+// with a sequence of 12 reco hits that is expected to be able to create track candidate with
+// current algorithm This definition will evolve as the project develops
+std::tuple<bool, bool, int, int> getDenomSimTrackTypeForAlgoEff(float isimtrk)
+{
+
+    // Read track parameters
+    float vx = trk.simvtx_x()[0];
+    float vy = trk.simvtx_y()[0];
+    float vz = trk.simvtx_z()[0];
+    float pt = trk.sim_pt()[isimtrk];
+    float eta = trk.sim_eta()[isimtrk];
+    float phi = trk.sim_phi()[isimtrk];
+    float charge = trk.sim_q()[isimtrk];
+
+    // Construct helix object
+    SDLMath::Helix helix(pt, eta, phi, vx, vy, vz, charge);
+
+    // std::cout <<  " pt: " << pt <<  " eta: " << eta <<  " phi: " << phi <<  " vx: " << vx <<  " vy: " << vy <<  " vz: " << vz <<  " charge: " << charge <<  std::endl;
+
+    // List of detids
+    std::vector<unsigned int> lower_module_detids;
+    std::vector<unsigned int> upper_module_detids;
+
+    // List of pdgids
+    std::vector<int> lower_module_pdgids;
+    std::vector<int> upper_module_pdgids;
+
+    // List of layers
+    std::vector<unsigned int> lower_module_layers;
+    std::vector<unsigned int> upper_module_layers;
+
+    // List of n reco hits
+    std::vector<int> lower_module_nrecos;
+    std::vector<int> upper_module_nrecos;
+
+    // List of n reco hits
+    std::vector<float> lower_module_hit_xs;
+    std::vector<float> upper_module_hit_xs;
+    std::vector<float> lower_module_hit_ys;
+    std::vector<float> upper_module_hit_ys;
+    std::vector<float> lower_module_hit_zs;
+    std::vector<float> upper_module_hit_zs;
+    std::vector<float> lower_module_hit_rs;
+    std::vector<float> upper_module_hit_rs;
+
+    // Array to store the modules
+    std::array<std::vector<SDL::Module>, 6> layers_modules_barrel; // Watch out for duplicates in this vector, do not count with this for unique count.
+    std::array<std::vector<SDL::Module>, 6> layers_modules_endcap; // Watch out for duplicates in this vector, do not count with this for unique count.
+
+    // sim hit selection
+    // - Must be same pdgid as the parent particle
+    // - expected radius based on helix is < 2% away
+    for (unsigned int isimhit = 0; isimhit < trk.sim_simHitIdx()[isimtrk].size(); ++isimhit)
+    {
+
+        unsigned int isimhitidx = trk.sim_simHitIdx()[isimtrk][isimhit];
+
+        // if (not (trk.simhit_particle()[isimhitidx] == trk.sim_pdgId()[isimtrk]))
+        //     continue;
+
+        if (not (trk.simhit_subdet()[isimhitidx] == 4 or trk.simhit_subdet()[isimhitidx] == 5))
+            continue;
+
+        // Sim hit vector
+        std::vector<float> point = {trk.simhit_x()[isimhitidx], trk.simhit_y()[isimhitidx], trk.simhit_z()[isimhitidx]};
+
+        // Inferring parameter t of helix parametric function via z position
+        float t = helix.infer_t(point);
+
+        // If the best fit is more than pi parameter away then it's a returning hit and should be ignored
+        if (not (t <= M_PI))
+            continue;
+
+        // Expected hit position with given z
+        auto [x, y, z, r] = helix.get_helix_point(t);
+
+        // ( expected_r - simhit_r ) / expected_r
+        float drfrac = abs(helix.compare_radius(point)) / r;
+
+        // Require that the simhit is within 2% of the expected radius
+        if (not (drfrac < 0.02))
+            continue;
+
+        // Require that the simhit contains a matched reco
+        if (not (trk.simhit_hitIdx()[isimhitidx].size() > 0))
+            continue;
+
+        // Sim hit detid
+        unsigned int simhit_detid = trk.simhit_detId()[isimhitidx];
+        int simhit_pdgid = trk.simhit_particle()[isimhitidx];
+        int simhit_layer = 6 * (trk.simhit_subdet()[isimhitidx] == 4) + trk.simhit_layer()[isimhitidx];
+        int simhit_nreco = trk.simhit_hitIdx()[isimhitidx].size();
+        float simhit_hit_x = trk.simhit_x()[isimhitidx];
+        float simhit_hit_y = trk.simhit_y()[isimhitidx];
+        float simhit_hit_z = trk.simhit_z()[isimhitidx];
+        float simhit_hit_r = sqrt(simhit_hit_x * simhit_hit_x + simhit_hit_y * simhit_hit_y);
+
+        SDL::Module module(simhit_detid);
+
+        if (module.isLower())
+        {
+            lower_module_detids.push_back(simhit_detid);
+            lower_module_pdgids.push_back(simhit_pdgid);
+            lower_module_layers.push_back(simhit_layer);
+            lower_module_nrecos.push_back(simhit_nreco);
+            lower_module_hit_xs.push_back(simhit_hit_x);
+            lower_module_hit_ys.push_back(simhit_hit_y);
+            lower_module_hit_zs.push_back(simhit_hit_z);
+            lower_module_hit_rs.push_back(simhit_hit_r);
+        }
+        else
+        {
+            upper_module_detids.push_back(simhit_detid);
+            upper_module_pdgids.push_back(simhit_pdgid);
+            upper_module_layers.push_back(simhit_layer);
+            upper_module_nrecos.push_back(simhit_nreco);
+            upper_module_hit_xs.push_back(simhit_hit_x);
+            upper_module_hit_ys.push_back(simhit_hit_y);
+            upper_module_hit_zs.push_back(simhit_hit_z);
+            upper_module_hit_rs.push_back(simhit_hit_r);
+        }
+
+
+        // // list of reco hit matched to this sim hit
+        // for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[isimhitidx].size(); ++irecohit)
+        // {
+        //     // Get the recohit type
+        //     int recohittype = trk.simhit_hitType()[isimhitidx][irecohit];
+
+        //     // Consider only ph2 hits (i.e. outer tracker hits)
+        //     if (recohittype == 4)
+        //     {
+
+        //         int ihit = trk.simhit_hitIdx()[isimhitidx][irecohit];
+
+        //         unsigned int detid = trk.ph2_detId()[ihit];
+
+        //         SDL::Module module(detid);
+
+        //         if (module.isLower())
+        //         {
+        //             lower_module_detids.push_back(detid);
+        //             lower_module_pdgids.push_back(simhit_pdgid);
+        //             lower_module_layers.push_back(module.layer());
+        //         }
+        //         else
+        //         {
+        //             upper_module_detids.push_back(detid);
+        //             upper_module_pdgids.push_back(simhit_pdgid);
+        //             upper_module_layers.push_back(module.layer());
+        //         }
+
+        //         // if (trk.ph2_subdet()[ihit] == 5)
+        //         // {
+        //         //     layers_modules_barrel[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+        //         // }
+        //         // if (trk.ph2_subdet()[ihit] == 4)
+        //         // {
+        //         //     layers_modules_endcap[trk.ph2_layer()[ihit] - 1].push_back(SDL::Module(trk.ph2_detId()[ihit]));
+        //         // }
+
+        //     }
+
+        // }
+
+    }
+
+    std::vector<unsigned int> matched_lower_module_detids;
+
+    for (auto& lower_module_detid : lower_module_detids)
+    {
+        SDL::Module lower_module(lower_module_detid);
+
+        if (std::find(upper_module_detids.begin(), upper_module_detids.end(), lower_module.partnerDetId()) != upper_module_detids.end())
+        {
+            matched_lower_module_detids.push_back(lower_module_detid);
+        }
+    }
+
+    std::vector<unsigned int> matched_layers;
+
+    for (auto& matched_lower_module_detid : matched_lower_module_detids)
+    {
+        SDL::Module matched_lower_module(matched_lower_module_detid);
+        unsigned int layer = matched_lower_module.layer();
+        unsigned int subdet = matched_lower_module.subdet();
+        matched_layers.push_back(layer + 6 * (subdet == 4));
+    }
+
+    std::vector<int> matched_unique_layers;
+    std::vector<int> matched_unique_barrel_layers;
+    std::vector<int> matched_unique_endcap_layers;
+    for (auto&& i : iter::unique_justseen(matched_layers))
+    {
+        matched_unique_layers.push_back(i);
+        if (i < 7)
+            matched_unique_barrel_layers.push_back(i);
+        else                      
+            matched_unique_endcap_layers.push_back(i);
+    }
+
+    bool has_missing_hits = false;
+
+    if (matched_unique_barrel_layers.size() > 0)
+    {
+        // std::cout <<  " matched_unique_barrel_layers.back(): " << matched_unique_barrel_layers.back() <<  std::endl;
+        // std::cout <<  " matched_unique_barrel_layers.size(): " << matched_unique_barrel_layers.size() <<  std::endl;
+
+        if (matched_unique_barrel_layers.back() != matched_unique_barrel_layers.size())
+        {
+            has_missing_hits = true;
+        }
+    }
+
+    if (matched_unique_endcap_layers.size() > 0)
+    {
+
+        // std::cout <<  " (matched_unique_endcap_layers.back()-6): " << (matched_unique_endcap_layers.back()-6) <<  std::endl;
+        // std::cout <<  " matched_unique_endcap_layers.size(): " << matched_unique_endcap_layers.size() <<  std::endl;
+
+        if ((matched_unique_endcap_layers.back() - 6) != matched_unique_endcap_layers.size())
+        {
+            has_missing_hits = true;
+        }
+    }
+
+    int nbarrel = matched_unique_barrel_layers.size();
+    int nendcap = matched_unique_endcap_layers.size();
+
+    bool is_clean_punch_through = has_missing_hits ? false : nbarrel + nendcap >= 6;
+
+    bool verbose = has_missing_hits;
+
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 8) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 9) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(),10) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(),11) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+
+    if (verbose)
+    {
+
+        std::cout << "lower_module_detids: ";
+        for (auto& lower_module_detid : lower_module_detids) std::cout << std::setw(10) << lower_module_detid << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_pdgids: ";
+        for (auto& lower_module_pdgid : lower_module_pdgids) std::cout << std::setw(10) << lower_module_pdgid << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_layers: ";
+        for (auto& lower_module_layer : lower_module_layers) std::cout << std::setw(10) << lower_module_layer << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_nrecos: ";
+        for (auto& lower_module_nreco : lower_module_nrecos) std::cout << std::setw(10) << lower_module_nreco << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_xs: ";
+        for (auto& lower_module_hit_x : lower_module_hit_xs) std::cout << std::setw(10) << lower_module_hit_x << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_ys: ";
+        for (auto& lower_module_hit_y : lower_module_hit_ys) std::cout << std::setw(10) << lower_module_hit_y << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_zs: ";
+        for (auto& lower_module_hit_z : lower_module_hit_zs) std::cout << std::setw(10) << lower_module_hit_z << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_rs: ";
+        for (auto& lower_module_hit_r : lower_module_hit_rs) std::cout << std::setw(10) << lower_module_hit_r << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_detids: ";
+        for (auto& upper_module_detid : upper_module_detids) std::cout << std::setw(10) << upper_module_detid << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_pdgids: ";
+        for (auto& upper_module_pdgid : upper_module_pdgids) std::cout << std::setw(10) << upper_module_pdgid << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_layers: ";
+        for (auto& upper_module_layer : upper_module_layers) std::cout << std::setw(10) << upper_module_layer << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_nrecos: ";
+        for (auto& upper_module_nreco : upper_module_nrecos) std::cout << std::setw(10) << upper_module_nreco << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_xs: ";
+        for (auto& upper_module_hit_x : upper_module_hit_xs) std::cout << std::setw(10) << upper_module_hit_x << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_ys: ";
+        for (auto& upper_module_hit_y : upper_module_hit_ys) std::cout << std::setw(10) << upper_module_hit_y << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_zs: ";
+        for (auto& upper_module_hit_z : upper_module_hit_zs) std::cout << std::setw(10) << upper_module_hit_z << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_rs: ";
+        for (auto& upper_module_hit_r : upper_module_hit_rs) std::cout << std::setw(10) << upper_module_hit_r << " ";
+        std::cout << std::endl;
+
+        std::cout << "matched_lower_module_detids: ";
+        for (auto& matched_lower_module_detid : matched_lower_module_detids) std::cout << matched_lower_module_detid << " ";
+        std::cout << std::endl;
+
+        std::cout << "matched_layers: ";
+        for (auto&& i : matched_layers) std::cout << i << " ";
+        std::cout << std::endl;
+
+        std::cout << "matched_unique_layers: ";
+        for (auto&& i : matched_unique_layers) std::cout << i << " ";
+        std::cout << std::endl;
+
+    }
+
+    return std::make_tuple(has_missing_hits, is_clean_punch_through, nbarrel, nendcap);
+
+}
+
 //__________________________________________________________________________________________
 bool hasAll12HitsWithNBarrelUsingModuleMap(unsigned int isimtrk, int nbarrel, bool usesimhits)
 {
@@ -639,9 +965,8 @@ bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned
 }
 
 
-
 //__________________________________________________________________________________________
-bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs)
+bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs, bool verbose)
 {
     std::vector<unsigned int> sim_trk_ihits;
     for (auto& i_simhit_idx : trk.sim_simHitIdx()[isimtrk])
@@ -652,14 +977,42 @@ bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs)
         }
     }
 
+    std::sort(sim_trk_ihits.begin(), sim_trk_ihits.end());
+    std::sort(hit_idxs.begin(), hit_idxs.end());
+
     std::vector<unsigned int> v_intersection;
- 
+
     std::set_intersection(sim_trk_ihits.begin(), sim_trk_ihits.end(),
                           hit_idxs.begin(), hit_idxs.end(),
                           std::back_inserter(v_intersection));
 
+    if (verbose)
+    {
+        if (v_intersection.size() > ana.nmatch_threshold)
+        {
+            std::cout << "Matched" << std::endl;
+        }
+        else
+        {
+            std::cout << "Not matched" << std::endl;
+        }
+        std::cout << "sim_trk_ihits: ";
+        for (auto& i_simhit_idx : sim_trk_ihits)
+            std::cout << i_simhit_idx << " ";
+        std::cout << std::endl;
+
+        std::cout << "     hit_idxs: ";
+        for (auto& i_hit_idx : hit_idxs)
+            std::cout << i_hit_idx << " ";
+        std::cout << std::endl;
+    }
+
+    int nhits = hit_idxs.size();
+
+    float factor = nhits / 12.;
+ 
     // If 75% of 12 hits have been found than it is matched
-    return (v_intersection.size() > 9);
+    return (v_intersection.size() > ana.nmatch_threshold * factor);
 }
 
 //__________________________________________________________________________________________
@@ -691,7 +1044,7 @@ bool is75percentFromSimMatchedHits(std::vector<unsigned int> hitidxs, int pdgid)
                           std::back_inserter(v_intersection));
 
     // If 75% of 12 hits have been found than it is matched
-    return (v_intersection.size() >= 9);
+    return (v_intersection.size() >= ana.nmatch_threshold);
 
 }
 
@@ -947,6 +1300,89 @@ void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer
 }
 
 //__________________________________________________________________________________________
+std::vector<unsigned int> getHitIdxListTrackCandidate(SDL::TrackCandidate* tc)
+{
+    std::vector<unsigned int> hit_idxs;
+    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+    return hit_idxs;
+}
+
+//__________________________________________________________________________________________
+std::vector<unsigned int> getModuleListTrackCandidate(SDL::TrackCandidate* tc)
+{
+    std::vector<unsigned int> module_ids;
+    module_ids.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    return module_ids;
+}
+
+//__________________________________________________________________________________________
+int getNBarrelTrackCandidate(SDL::TrackCandidate* tc)
+{
+
+    int nbarrel = 0;
+    if ( (tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    return nbarrel;
+
+}
+
+//__________________________________________________________________________________________
+vector<unsigned int> allMatchedSimTrkIdxs(SDL::TrackCandidate* tc)
+{
+
+    std::vector<int> hitidxs = {
+        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+        };
+
+    std::vector<unsigned int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto& hitidx : hitidxs)
+    {
+        for (auto& simhit_idx : trk.ph2_simHitIdx()[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            // simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+    }
+
+    return unique_idxs;
+
+}
+
+//__________________________________________________________________________________________
 vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
 {
 
@@ -1040,7 +1476,7 @@ vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
         int trkidx = unique_idxs[rawidx];
         if (trkidx < 0)
             continue;
-        if (counts[rawidx] > 9)
+        if (counts[rawidx] > ana.nmatch_threshold)
             matched_sim_trk_idxs.push_back(trkidx);
     }
 
@@ -1098,7 +1534,7 @@ bool inTimeTrackWithPdgId(int isimtrk, int pdgid)
     // Then select all charged particle
     if (pdgid == 0)
     {
-        // Select only muon tracks
+        // Select all charged particle tracks
         if (abs(trk.sim_q()[isimtrk]) == 0)
             return false;
     }
@@ -1275,10 +1711,19 @@ void loadMaps()
 {
     SDL::endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
     SDL::tiltedGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/tilted_orientation_data.txt");
+
+    SDL::moduleConnectionMap.load("data/module_connection_combined_2020_0520_helixray.txt");
+    ana.moduleConnectiongMapLoose.load("data/module_connection_combined_2020_0520_helixray.txt");
+
     // SDL::moduleConnectionMap.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+    // ana.moduleConnectiongMapLoose.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+
     // SDL::moduleConnectionMap.load("data/module_connection_2020_0429.txt");
-    SDL::moduleConnectionMap.load("data/module_connection.txt");
-    ana.moduleConnectiongMapLoose.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/module_connection_map_data_10_e0_200_100_pt0p8_2p0_400_pt0p8_2p0_nolossers_dxy35cm_endcaplayer2.txt");
+    // ana.moduleConnectiongMapLoose.load("data/module_connection_2020_0429.txt");
+
+    // SDL::moduleConnectionMap.load("data/module_connection_tracing_2020_0514.txt");
+    // SDL::moduleConnectionMap.load("data/module_connection_combined_2020_0518_helixray.txt");
+
 }
 
 
@@ -1593,6 +2038,278 @@ void runSDL(SDL::Event& event)
     printTrackletSummary(event);
     runTrackCandidate(event);
     printTrackCandidateSummary(event);
+
+}
+
+//__________________________________________________________________________________________
+void printSimTrack(int isimtrk)
+{
+
+    float vx = trk.simvtx_x()[0];
+    float vy = trk.simvtx_y()[0];
+    float vz = trk.simvtx_z()[0];
+    float pt = trk.sim_pt()[isimtrk];
+    float eta = trk.sim_eta()[isimtrk];
+    float phi = trk.sim_phi()[isimtrk];
+    float charge = trk.sim_q()[isimtrk];
+
+    // Construct helix object
+    SDLMath::Helix helix(pt, eta, phi, vx, vy, vz, charge);
+
+    std::cout <<  " pt: " << pt <<  " eta: " << eta <<  " phi: " << phi <<  " vx: " << vx <<  " vy: " << vy <<  " vz: " << vz <<  " charge: " << charge <<  std::endl;
+
+    // List of detids
+    std::vector<unsigned int> lower_module_detids;
+    std::vector<unsigned int> upper_module_detids;
+
+    // List of pdgids
+    std::vector<int> lower_module_pdgids;
+    std::vector<int> upper_module_pdgids;
+
+    // List of layers
+    std::vector<unsigned int> lower_module_layers;
+    std::vector<unsigned int> upper_module_layers;
+
+    // List of n reco hits
+    std::vector<int> lower_module_nrecos;
+    std::vector<int> upper_module_nrecos;
+
+    // List of n reco hits
+    std::vector<float> lower_module_hit_xs;
+    std::vector<float> upper_module_hit_xs;
+    std::vector<float> lower_module_hit_ys;
+    std::vector<float> upper_module_hit_ys;
+    std::vector<float> lower_module_hit_zs;
+    std::vector<float> upper_module_hit_zs;
+    std::vector<float> lower_module_hit_rs;
+    std::vector<float> upper_module_hit_rs;
+
+    // sim hit selection
+    // - Must be same pdgid as the parent particle
+    // - expected radius based on helix is < 2% away
+    for (unsigned int isimhit = 0; isimhit < trk.sim_simHitIdx()[isimtrk].size(); ++isimhit)
+    {
+
+        unsigned int isimhitidx = trk.sim_simHitIdx()[isimtrk][isimhit];
+
+        // if (not (trk.simhit_particle()[isimhitidx] == trk.sim_pdgId()[isimtrk]))
+        //     continue;
+
+        if (not (trk.simhit_subdet()[isimhitidx] == 4 or trk.simhit_subdet()[isimhitidx] == 5))
+            continue;
+
+        // Sim hit vector
+        std::vector<float> point = {trk.simhit_x()[isimhitidx], trk.simhit_y()[isimhitidx], trk.simhit_z()[isimhitidx]};
+
+        // Inferring parameter t of helix parametric function via z position
+        float t = helix.infer_t(point);
+
+        // If the best fit is more than pi parameter away then it's a returning hit and should be ignored
+        if (not (t <= M_PI))
+            continue;
+
+        // Expected hit position with given z
+        auto [x, y, z, r] = helix.get_helix_point(t);
+
+        // ( expected_r - simhit_r ) / expected_r
+        float drfrac = abs(helix.compare_radius(point)) / r;
+
+        // Require that the simhit is within 2% of the expected radius
+        if (not (drfrac < 0.02))
+            continue;
+
+        // Require that the simhit contains a matched reco
+        if (not (trk.simhit_hitIdx()[isimhitidx].size() > 0))
+            continue;
+
+        // Sim hit detid
+        unsigned int simhit_detid = trk.simhit_detId()[isimhitidx];
+        int simhit_pdgid = trk.simhit_particle()[isimhitidx];
+        int simhit_layer = 6 * (trk.simhit_subdet()[isimhitidx] == 4) + trk.simhit_layer()[isimhitidx];
+        int simhit_nreco = trk.simhit_hitIdx()[isimhitidx].size();
+        float simhit_hit_x = trk.simhit_x()[isimhitidx];
+        float simhit_hit_y = trk.simhit_y()[isimhitidx];
+        float simhit_hit_z = trk.simhit_z()[isimhitidx];
+        float simhit_hit_r = sqrt(simhit_hit_x * simhit_hit_x + simhit_hit_y * simhit_hit_y);
+
+        SDL::Module module(simhit_detid);
+
+        if (module.isLower())
+        {
+            lower_module_detids.push_back(simhit_detid);
+            lower_module_pdgids.push_back(simhit_pdgid);
+            lower_module_layers.push_back(simhit_layer);
+            lower_module_nrecos.push_back(simhit_nreco);
+            lower_module_hit_xs.push_back(simhit_hit_x);
+            lower_module_hit_ys.push_back(simhit_hit_y);
+            lower_module_hit_zs.push_back(simhit_hit_z);
+            lower_module_hit_rs.push_back(simhit_hit_r);
+        }
+        else
+        {
+            upper_module_detids.push_back(simhit_detid);
+            upper_module_pdgids.push_back(simhit_pdgid);
+            upper_module_layers.push_back(simhit_layer);
+            upper_module_nrecos.push_back(simhit_nreco);
+            upper_module_hit_xs.push_back(simhit_hit_x);
+            upper_module_hit_ys.push_back(simhit_hit_y);
+            upper_module_hit_zs.push_back(simhit_hit_z);
+            upper_module_hit_rs.push_back(simhit_hit_r);
+        }
+
+    }
+
+    std::vector<unsigned int> matched_lower_module_detids;
+
+    for (auto& lower_module_detid : lower_module_detids)
+    {
+        SDL::Module lower_module(lower_module_detid);
+
+        if (std::find(upper_module_detids.begin(), upper_module_detids.end(), lower_module.partnerDetId()) != upper_module_detids.end())
+        {
+            matched_lower_module_detids.push_back(lower_module_detid);
+        }
+    }
+
+    std::vector<unsigned int> matched_layers;
+
+    for (auto& matched_lower_module_detid : matched_lower_module_detids)
+    {
+        SDL::Module matched_lower_module(matched_lower_module_detid);
+        unsigned int layer = matched_lower_module.layer();
+        unsigned int subdet = matched_lower_module.subdet();
+        matched_layers.push_back(layer + 6 * (subdet == 4));
+    }
+
+    std::vector<int> matched_unique_layers;
+    std::vector<int> matched_unique_barrel_layers;
+    std::vector<int> matched_unique_endcap_layers;
+    for (auto&& i : iter::unique_justseen(matched_layers))
+    {
+        matched_unique_layers.push_back(i);
+        if (i < 7)
+            matched_unique_barrel_layers.push_back(i);
+        else                      
+            matched_unique_endcap_layers.push_back(i);
+    }
+
+    bool has_missing_hits = false;
+
+    if (matched_unique_barrel_layers.size() > 0)
+    {
+        // std::cout <<  " matched_unique_barrel_layers.back(): " << matched_unique_barrel_layers.back() <<  std::endl;
+        // std::cout <<  " matched_unique_barrel_layers.size(): " << matched_unique_barrel_layers.size() <<  std::endl;
+
+        if (matched_unique_barrel_layers.back() != matched_unique_barrel_layers.size())
+        {
+            has_missing_hits = true;
+        }
+    }
+
+    if (matched_unique_endcap_layers.size() > 0)
+    {
+
+        // std::cout <<  " (matched_unique_endcap_layers.back()-6): " << (matched_unique_endcap_layers.back()-6) <<  std::endl;
+        // std::cout <<  " matched_unique_endcap_layers.size(): " << matched_unique_endcap_layers.size() <<  std::endl;
+
+        if ((matched_unique_endcap_layers.back() - 6) != matched_unique_endcap_layers.size())
+        {
+            has_missing_hits = true;
+        }
+    }
+
+    int nbarrel = matched_unique_barrel_layers.size();
+    int nendcap = matched_unique_endcap_layers.size();
+
+    bool is_clean_punch_through = has_missing_hits ? false : nbarrel + nendcap >= 6;
+
+    bool verbose = true;
+
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 8) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 9) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(),10) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+    // if (std::find(matched_unique_layers.begin(), matched_unique_layers.end(),11) != matched_unique_layers.end() and std::find(matched_unique_layers.begin(), matched_unique_layers.end(), 7) == matched_unique_layers.end()) verbose = true;
+
+    if (verbose)
+    {
+
+        std::cout << "lower_module_detids: ";
+        for (auto& lower_module_detid : lower_module_detids) std::cout << std::setw(10) << lower_module_detid << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_pdgids: ";
+        for (auto& lower_module_pdgid : lower_module_pdgids) std::cout << std::setw(10) << lower_module_pdgid << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_layers: ";
+        for (auto& lower_module_layer : lower_module_layers) std::cout << std::setw(10) << lower_module_layer << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_nrecos: ";
+        for (auto& lower_module_nreco : lower_module_nrecos) std::cout << std::setw(10) << lower_module_nreco << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_xs: ";
+        for (auto& lower_module_hit_x : lower_module_hit_xs) std::cout << std::setw(10) << lower_module_hit_x << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_ys: ";
+        for (auto& lower_module_hit_y : lower_module_hit_ys) std::cout << std::setw(10) << lower_module_hit_y << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_zs: ";
+        for (auto& lower_module_hit_z : lower_module_hit_zs) std::cout << std::setw(10) << lower_module_hit_z << " ";
+        std::cout << std::endl;
+
+        std::cout << "lower_module_hit_rs: ";
+        for (auto& lower_module_hit_r : lower_module_hit_rs) std::cout << std::setw(10) << lower_module_hit_r << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_detids: ";
+        for (auto& upper_module_detid : upper_module_detids) std::cout << std::setw(10) << upper_module_detid << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_pdgids: ";
+        for (auto& upper_module_pdgid : upper_module_pdgids) std::cout << std::setw(10) << upper_module_pdgid << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_layers: ";
+        for (auto& upper_module_layer : upper_module_layers) std::cout << std::setw(10) << upper_module_layer << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_nrecos: ";
+        for (auto& upper_module_nreco : upper_module_nrecos) std::cout << std::setw(10) << upper_module_nreco << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_xs: ";
+        for (auto& upper_module_hit_x : upper_module_hit_xs) std::cout << std::setw(10) << upper_module_hit_x << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_ys: ";
+        for (auto& upper_module_hit_y : upper_module_hit_ys) std::cout << std::setw(10) << upper_module_hit_y << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_zs: ";
+        for (auto& upper_module_hit_z : upper_module_hit_zs) std::cout << std::setw(10) << upper_module_hit_z << " ";
+        std::cout << std::endl;
+
+        std::cout << "upper_module_hit_rs: ";
+        for (auto& upper_module_hit_r : upper_module_hit_rs) std::cout << std::setw(10) << upper_module_hit_r << " ";
+        std::cout << std::endl;
+
+        std::cout << "matched_lower_module_detids: ";
+        for (auto& matched_lower_module_detid : matched_lower_module_detids) std::cout << matched_lower_module_detid << " ";
+        std::cout << std::endl;
+
+        std::cout << "matched_layers: ";
+        for (auto&& i : matched_layers) std::cout << i << " ";
+        std::cout << std::endl;
+
+        std::cout << "matched_unique_layers: ";
+        for (auto&& i : matched_unique_layers) std::cout << i << " ";
+        std::cout << std::endl;
+
+    }
 
 }
 

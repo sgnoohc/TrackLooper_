@@ -92,21 +92,21 @@ else
     echo "" >> ${MDFILE}.md
     echo "### Track Candidate" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "#### Efficiency (eta plots with pt > 1.5 and the rest have |eta| < 0.8)" >> ${MDFILE}.md
+    echo "#### Efficiency" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_eff)" >> ${MDFILE}.md
-    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_eff)" >> ${MDFILE}.md
-    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_eff)" >> ${MDFILE}.md
-    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_eff)" >> ${MDFILE}.md
-    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_eff)" >> ${MDFILE}.md
+    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv.*_eff)" >> ${MDFILE}.md
+    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv.*_eff)" >> ${MDFILE}.md
+    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv.*_eff)" >> ${MDFILE}.md
+    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv.*_eff)" >> ${MDFILE}.md
+    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv.*_eff)" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "#### Numerator and Denominator overlay (eta plots with pt > 1.5 and the rest have |eta| < 0.8)" >> ${MDFILE}.md
+    echo "#### Numerator and Denominator overlay" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv_numden)" >> ${MDFILE}.md
-    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv_numden)" >> ${MDFILE}.md
-    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv_numden)" >> ${MDFILE}.md
-    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv_numden)" >> ${MDFILE}.md
-    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv_numden)" >> ${MDFILE}.md
+    echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv.*_numden)" >> ${MDFILE}.md
+    echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv.*_numden)" >> ${MDFILE}.md
+    echo "   * [eta](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_eta_mtv.*_numden)" >> ${MDFILE}.md
+    echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv.*_numden)" >> ${MDFILE}.md
+    echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv.*_numden)" >> ${MDFILE}.md
     # echo "" >> ${MDFILE}.md
     # echo "#### Efficiency (eta plots with pt > 1.5 and the rest have |eta| < 0.4)" >> ${MDFILE}.md
     # echo "" >> ${MDFILE}.md

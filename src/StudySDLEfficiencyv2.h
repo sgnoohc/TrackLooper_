@@ -2,6 +2,7 @@
 #define StudySDLEfficiencyv2_h
 
 #include "SDL/Event.h"
+#include "SDL/Module.h"
 
 #include "Study.h"
 
@@ -15,6 +16,7 @@
 #include "AnalysisConfig.h"
 
 #include "trkCore.h"
+
 
 class StudySDLEfficiencyv2 : public Study
 {

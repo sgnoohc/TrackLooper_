@@ -165,9 +165,19 @@ fi
 
 JOBTAG=$2
 
+MODE=mtv_eff
+MODENUMBER=2
+# MODE=algo_eff
+# MODENUMBER=3
+
+# If MTV-like then turn off any pdgid requirement for particle track defn
+if [[ ${MODE} == "mtv_eff" ]]; do
+    PDGID=0
+done
+
 OUTPUTFILEBASENAME=fulleff_${SAMPLETAG}
 OUTPUTFILE=fulleff_${SAMPLETAG}.root
-OUTPUTDIR=${TRACKLOOPERBASE}/results/algo_eff/${SAMPLETAG}_${JOBTAG}/
+OUTPUTDIR=${TRACKLOOPERBASE}/results/${MODE}/${SAMPLETAG}_${JOBTAG}/
 
 # Only if the directory does not exist one runs it again
 if [ ! -d "${OUTPUTDIR}" ]; then
@@ -179,7 +189,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     
     NJOBS=16
     for i in $(seq 0 $((NJOBS-1))); do
-        (set -x ;$TRACKLOOPERBASE/bin/sdl -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m 3 -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
+        (set -x ;$TRACKLOOPERBASE/bin/sdl -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1) &
     done
     
     sleep 1
@@ -201,14 +211,20 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     cd ../
 
     # plotting
-    sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
+    if [[ ${MODE} == *"mtv_eff"* ]]; then
+        cd ${TRACKLOOPERBASE}/results/mtv_eff/${SAMPLETAG}_${JOBTAG}/
+        echo "python ${TRACKLOOPERBASE}/python/plot.py 8 fulleff_${SAMPLETAG}.root ${SAMPLETAG}" > plot.log
+        python ${TRACKLOOPERBASE}/python/plot.py 8 fulleff_${SAMPLETAG}.root ${SAMPLETAG} >> plot.log
+    else
+        sh $DIR/fulleff_plot.sh ${SAMPLETAG} ${JOBTAG}
+    fi
 
     # Creating html for easier efficiency plots viewing
     echo ""
     
     echo "Creating HTML from markdown"
     cd ${OUTPUTDIR}/
-    sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG} algo_eff
+    sh $DIR/write_markdown.sh ${SAMPLETAG} "$3" ${JOBTAG} ${MODE}
     
     echo ""
     
