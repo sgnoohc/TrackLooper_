@@ -233,7 +233,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                         else if(module->layer() <= 3)
                         {
                             truePositivesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
-                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                             {
                                 truePositivesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
                             }
@@ -266,7 +266,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                         else if(module->layer() <= 3)
                         {
                             trueNegativesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
-                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                             {
                                 trueNegativesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
                             }
@@ -301,7 +301,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                         else if(module->layer() <= 3)
                         {
                             falseNegativesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
-                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                             {
                                 falseNegativesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
                             }
@@ -335,7 +335,7 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                         else if(module->layer() <= 3)
                         {
                             falsePositivesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
-                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            if(SDL::MiniDoublet::isNormalTiltedModules(*module))
                             {
                                 falsePositivesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
                             }
