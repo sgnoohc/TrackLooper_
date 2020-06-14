@@ -41,12 +41,35 @@ void StudyChargeClassification::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByBarrelLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByBarrelLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByBarrelLayer[i];});
+        
+        if(i < 3)
+        {
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_central_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByBarrelCentralLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_central_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByBarrelCentralLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_central_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByBarrelCentralLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_central_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByBarrelCentralLayer[i];});
+
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_tilted_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByBarrelTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_tilted_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByBarrelTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_tilted_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByBarrelTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_tilted_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByBarrelTiltedLayer[i];});
+
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_tighter_tilted_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByBarrelTighterTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_tighter_tilted_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByBarrelTighterTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_tighter_tilted_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByBarrelTighterTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_tighter_tilted_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByBarrelTighterTiltedLayer[i];});
+
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_barrel_looser_tilted_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByBarrelLooserTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_barrel_looser_tilted_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByBarrelLooserTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_barrel_looser_tilted_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByBarrelLooserTiltedLayer[i];});
+            ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_barrel_looser_tilted_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByBarrelLooserTiltedLayer[i];});
+        }
 
         ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap_layer_%ld",i+1),ptbins,[&,i](){return truePositivesByEndcapLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_true_negatives_endcap_layer_%ld",i+1),ptbins,[&,i](){return trueNegativesByEndcapLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_negatives_endcap_layer_%ld",i+1),ptbins,[&,i](){return falseNegativesByEndcapLayer[i];});
         ana.histograms.addVecHistogram(TString::Format("md_charge_false_positives_endcap_layer_%ld",i+1),ptbins,[&,i](){return falsePositivesByEndcapLayer[i];});
-
+        
         for(size_t j = 0; j < 15; j++)
         {
             ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives_endcap_layer_%ld_ring_%ld",i+1,j+1),ptbins,[&,i,j](){return truePositivesByEndcapLayerRing[i][j];});
@@ -85,6 +108,26 @@ void StudyChargeClassification::resetVariables()
     trueNegativesByBarrelLayer.clear();
     falseNegativesByBarrelLayer.clear();
 
+    truePositivesByBarrelCentralLayer.clear();
+    falsePositivesByBarrelCentralLayer.clear();
+    trueNegativesByBarrelCentralLayer.clear();
+    falseNegativesByBarrelCentralLayer.clear();
+
+    truePositivesByBarrelTiltedLayer.clear();
+    falsePositivesByBarrelTiltedLayer.clear();
+    trueNegativesByBarrelTiltedLayer.clear();
+    falseNegativesByBarrelTiltedLayer.clear();
+
+    truePositivesByBarrelTighterTiltedLayer.clear();
+    falsePositivesByBarrelTighterTiltedLayer.clear();
+    trueNegativesByBarrelTighterTiltedLayer.clear();
+    falseNegativesByBarrelTighterTiltedLayer.clear();
+
+    truePositivesByBarrelLooserTiltedLayer.clear();
+    falsePositivesByBarrelLooserTiltedLayer.clear();
+    trueNegativesByBarrelLooserTiltedLayer.clear();
+    falseNegativesByBarrelLooserTiltedLayer.clear();
+
     truePositivesByEndcapLayer.clear();
     falsePositivesByEndcapLayer.clear();
     trueNegativesByEndcapLayer.clear();
@@ -109,6 +152,29 @@ void StudyChargeClassification::resetVariables()
         falsePositivesByBarrelLayer.push_back(std::vector<float>());
         trueNegativesByBarrelLayer.push_back(std::vector<float>());
         falseNegativesByBarrelLayer.push_back(std::vector<float>());
+
+        if(i<=3)
+        {
+            truePositivesByBarrelCentralLayer.push_back(std::vector<float>());
+            falsePositivesByBarrelCentralLayer.push_back(std::vector<float>());
+            trueNegativesByBarrelCentralLayer.push_back(std::vector<float>());
+            falseNegativesByBarrelCentralLayer.push_back(std::vector<float>());
+
+            truePositivesByBarrelTiltedLayer.push_back(std::vector<float>());
+            falsePositivesByBarrelTiltedLayer.push_back(std::vector<float>());
+            trueNegativesByBarrelTiltedLayer.push_back(std::vector<float>());
+            falseNegativesByBarrelTiltedLayer.push_back(std::vector<float>());
+
+            truePositivesByBarrelTighterTiltedLayer.push_back(std::vector<float>());
+            falsePositivesByBarrelTighterTiltedLayer.push_back(std::vector<float>());
+            trueNegativesByBarrelTighterTiltedLayer.push_back(std::vector<float>());
+            falseNegativesByBarrelTighterTiltedLayer.push_back(std::vector<float>());
+
+            truePositivesByBarrelLooserTiltedLayer.push_back(std::vector<float>());
+            falsePositivesByBarrelLooserTiltedLayer.push_back(std::vector<float>());
+            trueNegativesByBarrelLooserTiltedLayer.push_back(std::vector<float>());
+            falseNegativesByBarrelLooserTiltedLayer.push_back(std::vector<float>()); 
+        }
 
         truePositivesByEndcapLayer.push_back(std::vector<float>());
         falsePositivesByEndcapLayer.push_back(std::vector<float>());
@@ -160,6 +226,22 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     {
                         truePositivesBarrel.push_back(simPt);
                         truePositivesByBarrelLayer.at(module->layer()-1).push_back(simPt);
+                        if(module->side() == SDL::Module::Center and module->layer() <= 3)
+                        {
+                            truePositivesByBarrelCentralLayer.at(module->layer()-1).push_back(simPt);
+                        }
+                        else if(module->layer() <= 3)
+                        {
+                            truePositivesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            {
+                                truePositivesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                            else
+                            {
+                                truePositivesByBarrelLooserTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                        }
                     }
                     else
                     {
@@ -176,6 +258,24 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     {
                         trueNegativesBarrel.push_back(simPt);
                         trueNegativesByBarrelLayer.at(module->layer()-1).push_back(simPt);
+
+                        if(module->side() == SDL::Module::Center and module->layer() <= 3)
+                        {
+                            trueNegativesByBarrelCentralLayer.at(module->layer()-1).push_back(simPt);
+                        }
+                        else if(module->layer() <= 3)
+                        {
+                            trueNegativesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            {
+                                trueNegativesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                            else
+                            {
+                                trueNegativesByBarrelLooserTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                        }
+
                     }
                     else
                     {
@@ -193,6 +293,23 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     {
                         falseNegativesBarrel.push_back(simPt);
                         falseNegativesByBarrelLayer.at(module->layer()-1).push_back(simPt);
+
+                        if(module->side() == SDL::Module::Center and module->layer() <= 3)
+                        {
+                            falseNegativesByBarrelCentralLayer.at(module->layer()-1).push_back(simPt);
+                        }
+                        else if(module->layer() <= 3)
+                        {
+                            falseNegativesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            {
+                                falseNegativesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                            else
+                            {
+                                falseNegativesByBarrelLooserTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                        }
                     }
                     else
                     {
@@ -210,6 +327,23 @@ void StudyChargeClassification::doStudy(SDL::Event &event, std::vector<std::tupl
                     {
                         falsePositivesBarrel.push_back(simPt);
                         falsePositivesByBarrelLayer.at(module->layer()-1).push_back(simPt);
+                        
+                        if(module->side() == SDL::Module::Center and module->layer() <= 3)
+                        {
+                            falsePositivesByBarrelCentralLayer.at(module->layer()-1).push_back(simPt);
+                        }
+                        else if(module->layer() <= 3)
+                        {
+                            falsePositivesByBarrelTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            if(SDL::MiniDoublet::isNormalTiltedModules(module))
+                            {
+                                falsePositivesByBarrelTighterTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                            else
+                            {
+                                falsePositivesByBarrelLooserTiltedLayer.at(module->layer()-1).push_back(simPt);
+                            }
+                        }
                     }
                     else
                     {

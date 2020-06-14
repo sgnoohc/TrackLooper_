@@ -46,6 +46,26 @@ class StudyChargeClassification : public Study
         std::vector<std::vector<float>> falsePositivesByBarrelLayer;
         std::vector<std::vector<float>> falseNegativesByBarrelLayer;
 
+        std::vector<std::vector<float>> truePositivesByBarrelCentralLayer;
+        std::vector<std::vector<float>> trueNegativesByBarrelCentralLayer;
+        std::vector<std::vector<float>> falsePositivesByBarrelCentralLayer;
+        std::vector<std::vector<float>> falseNegativesByBarrelCentralLayer;
+
+        std::vector<std::vector<float>> truePositivesByBarrelTiltedLayer;
+        std::vector<std::vector<float>> trueNegativesByBarrelTiltedLayer;
+        std::vector<std::vector<float>> falsePositivesByBarrelTiltedLayer;
+        std::vector<std::vector<float>> falseNegativesByBarrelTiltedLayer;
+
+        std::vector<std::vector<float>> truePositivesByBarrelTighterTiltedLayer;
+        std::vector<std::vector<float>> trueNegativesByBarrelTighterTiltedLayer;
+        std::vector<std::vector<float>> falsePositivesByBarrelTighterTiltedLayer;
+        std::vector<std::vector<float>> falseNegativesByBarrelTighterTiltedLayer;
+
+        std::vector<std::vector<float>> truePositivesByBarrelLooserTiltedLayer;
+        std::vector<std::vector<float>> trueNegativesByBarrelLooserTiltedLayer;
+        std::vector<std::vector<float>> falsePositivesByBarrelLooserTiltedLayer;
+        std::vector<std::vector<float>> falseNegativesByBarrelLooserTiltedLayer;
+
         std::vector<std::vector<float>> truePositivesByEndcapLayer;
         std::vector<std::vector<float>> trueNegativesByEndcapLayer;
         std::vector<std::vector<float>> falsePositivesByEndcapLayer;
