@@ -32,9 +32,9 @@ void StudySDLEfficiencyv2::bookStudy()
 
     const float etamax = 2.5;
 
-    const int eta_nbins = 200;
+    const int eta_nbins = 50;
 
-    const float dxymax = 50;
+    const float dxymax = 10;
 
     for (int ii = 0; ii < nlayers; ++ii)
     {
@@ -42,16 +42,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return md_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return md_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return md_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return md_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return md_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return md_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return md_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("md_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return md_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -62,16 +62,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return sg_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return sg_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return sg_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return sg_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return sg_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return sg_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return sg_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return sg_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return sg_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("sg_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return sg_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -82,16 +82,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tl_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tl_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tl_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tl_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tl_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tl_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tl_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tl_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tl_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tl_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tl_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -102,16 +102,16 @@ void StudySDLEfficiencyv2::bookStudy()
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_pt_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tc_all_track_pt_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_matched_track_eta_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_matched_track_dxy_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_all_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tc_matched_track_dxy_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tc_all_track_dxy_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_matched_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dz_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_all_track_dz_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tc_matched_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_pt_mtv_by_layer%d", eff_modename, ii), pt_boundaries, [&, ii]() { return tc_all_track_pt_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_matched_track_eta_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_eta_mtv_by_layer%d", eff_modename, ii), eta_nbins, -1*etamax, etamax, [&, ii]() { return tc_all_track_eta_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_matched_track_dxy_mtv_by_layer[ii]; } );
-        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, dxymax, [&, ii]() { return tc_all_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tc_matched_track_dxy_mtv_by_layer[ii]; } );
+        ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dxy_mtv_by_layer%d", eff_modename, ii), 50, -1*dxymax, 2.5*dxymax, [&, ii]() { return tc_all_track_dxy_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_matched_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_matched_track_dz_mtv_by_layer[ii]; } );
         ana.histograms.addVecHistogram(TString::Format("tc_%s_all_track_dz_mtv_by_layer%d", eff_modename, ii), 50, -20, 20, [&, ii]() { return tc_all_track_dz_mtv_by_layer[ii]; } );
     }
@@ -292,6 +292,38 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
         // Unpack the tuple (sim_track_index, SDL::Event containing reco hits only matched to the given sim track)
         unsigned int& isimtrk = std::get<0>(simtrkevent);
         SDL::Event& trackevent = *(std::get<1>(simtrkevent));
+
+        // auto [has_missing_hits, is_clean_punch_through, nbarrel, nendcap] = getDenomSimTrackTypeForAlgoEff(isimtrk);
+
+        // switch (eff_mode)
+        // {
+        //     case kStudySDLBBBBBB:
+        //         if (not (nbarrel == 6 and is_clean_punch_through))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBBBBE:
+        //         if (not (nbarrel == 5 and is_clean_punch_through))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBBBEE:
+        //         if (not (nbarrel == 4 and is_clean_punch_through))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBBEEE:
+        //         if (not (nbarrel == 3 and is_clean_punch_through))
+        //             continue;
+        //         break;
+        //     case kStudySDLBBEEEE:
+        //         if (not (nbarrel == 2 and is_clean_punch_through))
+        //             continue;
+        //         break;
+        //     case kStudySDLBEEEEE:
+        //         if (not (nbarrel == 1 and is_clean_punch_through))
+        //             continue;
+        //         break;
+        //     default:
+        //         break;
+        // }
 
         switch (eff_mode)
         {
@@ -559,6 +591,99 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
             {
                 sg_all_track_dxy_by_layer[i].push_back(dxy);
                 if (sg_trackmatch_by_layer[i]) sg_matched_track_dxy_by_layer[i].push_back(dxy);
+            }
+
+        }
+
+        if (eff_mode == kStudySDLBEEEEE)
+        {
+
+            if (not sg_trackmatch_by_layer[0] and pt >= 1.5)
+            {
+
+                std::cout << "======================================" << std::endl;
+                std::cout << "DEBUGDEBUGDEBUG: Found trk not matched" << std::endl;
+                std::cout << "======================================" << std::endl;
+
+                bool has_layer2_barrel = false;
+                int nmu = 0;
+                std::vector<unsigned int> modules;
+
+                float _pt = trk.sim_pt()[isimtrk];
+                float _eta = trk.sim_eta()[isimtrk];
+                float _phi = trk.sim_phi()[isimtrk];
+                float _charge = trk.sim_q()[isimtrk];
+                float _vx = trk.simvtx_x()[0];
+                float _vy = trk.simvtx_y()[0];
+                float _vz = trk.simvtx_z()[0];
+
+                std::cout <<  " _pt: " << _pt <<  " _eta: " << _eta <<  " _phi: " << _phi <<  " _vx: " << _vx <<  " _vy: " << _vy <<  " _vz: " << _vz <<  " _charge: " << _charge <<  std::endl;
+
+                std::cout <<  " hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,2): " << hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,2) <<  std::endl;
+                std::cout <<  " hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,3): " << hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,3) <<  std::endl;
+                std::cout <<  " hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,4): " << hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,4) <<  std::endl;
+                std::cout <<  " hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,5): " << hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,5) <<  std::endl;
+                std::cout <<  " hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,6): " << hasAll12HitsWithNBarrelUsingModuleMap(isimtrk,6) <<  std::endl;
+
+                for (auto& isimhit : trk.sim_simHitIdx()[isimtrk])
+                {
+
+                    nmu = 0;
+
+                    if (trk.simhit_subdet()[isimhit] == 4 or trk.simhit_subdet()[isimhit] == 5)
+                    {
+                        std::cout << "===============================================" << std::endl;
+                        SDL::Module module(trk.simhit_detId()[isimhit]);
+                        std::cout <<  " module.layer(): " << module.layer() <<  std::endl;
+                        std::cout <<  " module.subdet(): " << module.subdet() <<  std::endl;
+                        modules.push_back(module.detId());
+                        if (module.isLower())
+                        {
+                            std::cout << trk.simhit_detId()[isimhit] << std::endl;
+                        }
+                        else
+                        {
+                            std::cout << "upper:" << trk.simhit_detId()[isimhit] << std::endl;
+                        }
+
+                        std::cout <<  " trk.simhit_particle()[isimhit]: " << trk.simhit_particle()[isimhit] <<  std::endl;
+
+                        if (module.layer() == 2 and module.subdet() == 5)
+                        {
+                            std::cout << "HAS LAYER 2 BARREL HIT" << std::endl;
+                            has_layer2_barrel = true;
+                        }
+
+                        if (abs(trk.simhit_particle()[isimhit]) == 13)
+                        {
+                            nmu++;
+                        }
+
+                        for (unsigned int irecohit = 0; irecohit < trk.simhit_hitIdx()[isimhit].size(); ++irecohit)
+                        {
+                            std::cout <<  " trk.simhit_hitIdx()[isimhit][irecohit]: " << trk.simhit_hitIdx()[isimhit][irecohit] <<  std::endl;
+                            SDL::Module recomodule(trk.ph2_detId()[trk.simhit_hitIdx()[isimhit][irecohit]]);
+                            std::cout <<  " recomodule.detId(): " << recomodule.detId() <<  std::endl;
+                            std::cout <<  " recomodule.layer(): " << recomodule.layer() <<  std::endl;
+                            std::cout <<  " recomodule.subdet(): " << recomodule.subdet() <<  std::endl;
+                        }
+                    }
+                }
+
+                if (has_layer2_barrel)
+                {
+                    std::cout << "DEBUGDEBUGDEBUG: HAS LAYER2 BARREL" << std::endl;
+                    std::cout << "DEBUGDEBUGDEBUG: NMU" << nmu << std::endl;
+                }
+                else
+                {
+                    std::cout << "DEBUG1 ======" << std::endl;
+                    for (auto& module : modules)
+                    {
+                        std::cout << "DEBUG1 " << module << std::endl;
+                    }
+                }
+
             }
 
         }

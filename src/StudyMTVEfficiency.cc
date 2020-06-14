@@ -17,7 +17,7 @@ StudyMTVEfficiency::StudyMTVEfficiency(
 
     dz_thresh = 30;
 
-    pt_thresh = 0.9;
+    pt_thresh = 1.5;
 
 }
 
@@ -91,7 +91,7 @@ void StudyMTVEfficiency::bookStudy_v2()
 
 void StudyMTVEfficiency::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
-    doStudy_v2(event, simtrkevents);
+    doStudy_v1(event, simtrkevents);
 }
 
 void StudyMTVEfficiency::doStudy_v2(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
@@ -343,7 +343,9 @@ void StudyMTVEfficiency::doStudy_v1(SDL::Event& event, std::vector<std::tuple<un
         // Track Candidate
         // *****************
 
-        float etamaxbound = etabounds[5];
+        // float etamaxbound = etabounds[0];
+        float etamaxbound = 2.4;
+        // float etamaxbound = 0.8;
 
         if (abs(eta) < etamaxbound and abs(dxy) < dxy_thresh)
         {

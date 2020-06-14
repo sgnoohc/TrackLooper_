@@ -47,6 +47,9 @@ public:
     // pdg id of the particles to compute efficincies on
     int pdg_id;
 
+    // nmatch threshold of the hits to compute matching for MTV-like plots
+    int nmatch_threshold;
+
     // verbose of the particles to compute efficincies on
     int verbose;
 

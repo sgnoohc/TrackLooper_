@@ -15,6 +15,7 @@
 #include "SDL/Event.h"
 #include "SDL/TrackCandidate.h"
 #include "SDL/Tracklet.h"
+#include "SDLMath.h"
 #include <cppitertools/itertools.hpp>
 
 enum TrackletType {
@@ -37,11 +38,12 @@ enum TrackletType {
 float simhit_p(unsigned int simhitidx);
 float hitAngle(unsigned int simhitidx);
 bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit);
+std::tuple<bool, bool, int, int> getDenomSimTrackTypeForAlgoEff(float isimtrk);
 bool goodBarrelTrack(unsigned int isimtrk, int pdgid=0);
 bool hasAll12HitsInBarrel(unsigned int isimtrk);
 bool hasAll12HitsWithNBarrel(unsigned int isimtrk, int nbarrel);
 bool hasAll12HitsWithNBarrelUsingModuleMap(unsigned int isimtrk, int nbarrel, bool usesimhits=false);
-bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs);
+bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs, bool verbose=false);
 bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned int isimtrk);
 bool is75percentFromSimMatchedHits(std::vector<unsigned int> hit_idxs, int pdgid);
 TVector3 linePropagateR(const TVector3& r3, const TVector3& p3, double rDest, int& status, bool useClosest = true, bool verbose = false);
@@ -52,6 +54,10 @@ bool checkModuleConnectionsAreGood(std::array<std::vector<unsigned int>, 6>& lay
 void fitCircle(std::vector<float> x, std::vector<float> y);
 void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer, int depth, bool goinside=false);
 
+std::vector<unsigned int> getHitIdxListTrackCandidate(SDL::TrackCandidate* tc);
+std::vector<unsigned int> getModuleListTrackCandidate(SDL::TrackCandidate* tc);
+int getNBarrelTrackCandidate(SDL::TrackCandidate* tc);
+std::vector<unsigned int> allMatchedSimTrkIdxs(SDL::TrackCandidate* tc);
 std::vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc);
 void perm(vector<int> intermediate, size_t n, vector<vector<int>>& va);
 
@@ -88,5 +94,8 @@ void printTrackletSummary(SDL::Event& event);
 void printTripletSummary(SDL::Event& event);
 void printTrackCandidateSummary(SDL::Event& event);
 void printMiniDoubletConnectionMultiplicitiesSummary(SDL::Event& event);
+
+//
+void printSimTrack(int isimtrk);
 
 #endif

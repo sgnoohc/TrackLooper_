@@ -21,6 +21,7 @@ int main(int argc, char** argv)
         ("i,input"          , "Comma separated input file list OR if just a directory is provided it will glob all in the directory BUT must end with '/' for the path", cxxopts::value<std::string>()->default_value("Pt2GeV_STANDARD_SAMPLE"))
         ("t,tree"           , "Name of the tree in the root file to open and loop over"                                             , cxxopts::value<std::string>()->default_value("trackingNtuple/tree"))
         ("o,output"         , "Output file name"                                                                                    , cxxopts::value<std::string>())
+        ("N,nmatch"         , "N match for MTV-like plots"                                                                          , cxxopts::value<int>()->default_value("9"))
         ("n,nevents"        , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
         ("x,event_index"    , "specific event index to process"                                                                     , cxxopts::value<int>()->default_value("-1"))
         ("p,ptbound_mode"   , "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
@@ -84,6 +85,10 @@ int main(int argc, char** argv)
             ana.output_tfile = new TFile("debug.root", "recreate");
         }
     }
+
+    //_______________________________________________________________________________
+    // --nmatch
+    ana.nmatch_threshold = result["nmatch"].as<int>();
 
     //_______________________________________________________________________________
     // --nevents

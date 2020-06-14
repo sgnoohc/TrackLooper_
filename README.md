@@ -11,6 +11,7 @@
 
 ## Running efficiency plot
 
+    sh shell/sdl.sh 1 2020_0514 "Straight ray tracing only with 10 cm luminous region"
 
 ## Obtaining detector geometry via the centroids
 
