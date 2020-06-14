@@ -10,7 +10,7 @@ void StudyChargeClassification::bookStudy()
     //pt bins
     for(int i = 0; i <=250; i++)
     {
-        ptbins.push_back( 0.5 + i * (50.0-0.5)/250) ; 
+        ptbins.push_back(i * (50.0-0.5)/250) ; 
     }
 
     ana.histograms.addVecHistogram(TString::Format("md_charge_true_positives"),ptbins,[&](){return truePositives;});
