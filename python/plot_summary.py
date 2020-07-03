@@ -21,6 +21,11 @@ def set_axis(eff, xmin=0.8, variable="pt"):
         eff.GetXaxis().SetMoreLogLabels()
         eff.GetXaxis().SetRangeUser(xmin, eff.GetXaxis().GetXmax())
         print "here"
+    elif variable == "ptzoom":
+        eff.GetXaxis().SetTitleOffset(eff.GetXaxis().GetTitleOffset() * 1.2)
+        eff.GetXaxis().SetMoreLogLabels()
+        eff.GetXaxis().SetRangeUser(xmin, eff.GetXaxis().GetXmax())
+        print "here"
     elif variable == "dxy":
         # eff.Set(eff.GetN() + 1)
         # eff.SetPoint(eff.GetN()-1, 20, 0)
@@ -99,6 +104,9 @@ def draw(tfile, nlayer, objname, objnamelong, xmin=0.8, variable="pt"):
         if variable == "pt":
             if effs_x[0].GetXaxis().GetXmax() > 4:
                 c1.SetLogx()
+        elif variable == "ptzoom":
+            if effs_x[0].GetXaxis().GetXmax() > 4:
+                c1.SetLogx()
         else:
             c1.SetLogx(0)
         c1.SetGrid()
@@ -135,6 +143,9 @@ def draw_tc(tfile, objname, objnamelong, variable="pt"):
     if variable == "pt":
         if effs_x[0].GetXaxis().GetXmax() > 7:
             c1.SetLogx()
+    elif variable == "ptzoom":
+        if effs_x[0].GetXaxis().GetXmax() > 7:
+            c1.SetLogx()
     else:
         c1.SetLogx(0)
     c1.SetGrid()
@@ -154,6 +165,7 @@ draw(md_tfile, 6, "md", "Mini-Doublet", 0.5, "dxy") # 0.5 does nothing
 draw(sg_tfile, 5, "sg", "Segment", 0.5, "dxy") # 0.5 does nothing
 draw(tl_tfile, 3, "tl", "Tracklet", 0.5, "dxy") # 0.5 does nothing
 draw_tc(tc_tfile, "tc", "Track Candidate", "pt")
+draw_tc(tc_tfile, "tc", "Track Candidate", "ptzoom")
 draw_tc(tc_tfile, "tc", "Track Candidate", "eta")
 draw_tc(tc_tfile, "tc", "Track Candidate", "dxy")
 

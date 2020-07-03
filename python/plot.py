@@ -142,6 +142,7 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     else:
         title = "#eta"
     eff.GetXaxis().SetTitle(title)
+    eff.GetYaxis().SetTitle("Efficiency")
     eff.GetXaxis().SetTitleSize(0.05)
     eff.GetXaxis().SetLabelSize(0.05)
     eff.GetYaxis().SetLabelSize(0.05)
@@ -193,6 +194,14 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         eff.GetYaxis().SetRangeUser(0.0, 1.1)
     if "fr_eta" in output_name:
         eff.GetYaxis().SetRangeUser(0.0, yaxis_max + 0.02)
+    if "eff_eta" in output_name and "tl_" in output_name:
+        eff.GetYaxis().SetRangeUser(0.0, 1.005)
+    if "_etazoom_mtv" in output_name:
+        eff.GetYaxis().SetRangeUser(0.9, 1.005)
+    if "md_eff_b" in output_name and "eta" in output_name:
+        eff.GetYaxis().SetRangeUser(0.0, 1.01)
+    if "tl_eff_b" in output_name and "eta" in output_name:
+        eff.GetYaxis().SetRangeUser(0.0, 1.01)
     c1.SetGrid()
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.pdf")))
     c1.SaveAs("plots{}/{}/{}".format(suffix, dirname, output_name.replace(".pdf", "_eff.png")))
@@ -974,4 +983,9 @@ if drawMTVplots:
    # plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_eta_mtv_eta0p4_0p8.pdf", "mtveff", tag)
    # plot_eff("Root__tc_matched_track_eta_mtv_eta0p4_0p8", "Root__tc_all_track_eta_mtv_eta0p4_0p8", "tc_eff_etazoom_mtv_eta0p4_0p8.pdf", "mtveff", tag)
    # plot_eff("Root__tc_matched_track_dxy_mtv_eta0p4_0p8", "Root__tc_all_track_dxy_mtv_eta0p4_0p8", "tc_eff_dxy_mtv_eta0p4_0p8.pdf", "mtveff", tag)
+   plot_eff("Root__tl_matched_track_pt_mtv", "Root__tl_all_track_pt_mtv", "tl_eff_pt_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tl_matched_track_pt_mtv", "Root__tl_all_track_pt_mtv", "tl_eff_ptzoom_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tl_matched_track_eta_mtv", "Root__tl_all_track_eta_mtv", "tl_eff_eta_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tl_matched_track_eta_mtv", "Root__tl_all_track_eta_mtv", "tl_eff_etazoom_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tl_matched_track_dxy_mtv", "Root__tl_all_track_dxy_mtv", "tl_eff_dxy_mtv.pdf", "mtveff", tag)
 

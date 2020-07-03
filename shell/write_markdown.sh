@@ -187,11 +187,37 @@ if [[ ${EFFTYPE} == *"algo_eff"* ]]; then
     echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/${EFFTYPE}/${MDFILE}/plots_${SAMPLE}/tceff/?tc_eff_bbbbbb_dxy_by_layer._numden)" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
 else
-    echo "# MTV-like efficiency" >> ${MDFILE}.md
+    echo "---" >> ${MDFILE}.md
+    echo "title: MTV-like efficiency" >> ${MDFILE}.md
+    echo "..." >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "## Track Candidate" >> ${MDFILE}.md
+    echo "${DESCRIPTION}" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "### Efficiency" >> ${MDFILE}.md
+    echo "# Track Candidate of 12 Hits (i.e. 6 layers) w/ first barrel layer required" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "## MTV-like Efficiency v. pT, eta, dxy" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_eff_pt_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_eff_eta_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_eff_dxy_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "## MTV-like duplicate v. pT, eta, dxy" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_dup_pt_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_dup_eta_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_dup_dxy_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "## MTV-like Fake-rate v. pT, eta" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_fr_pt_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "  ![](plots_${SAMPLE}/mtveff/tc_fr_eta_mtv_eff.png){width=${width}px}" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "--------------------------------------------------------------------------------------------------------------" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "" >> ${MDFILE}.md
+    echo "# Detailed Efficiency" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
     echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv.*_eff)" >> ${MDFILE}.md
     echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv.*_eff)" >> ${MDFILE}.md
@@ -199,7 +225,7 @@ else
     echo "   * [etazoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_etazoom_mtv.*_eff)" >> ${MDFILE}.md
     echo "   * [dxy](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_dxy_mtv.*_eff)" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
-    echo "### Numerator and Denominator overlay" >> ${MDFILE}.md
+    echo "## Numerator and Denominator overlay" >> ${MDFILE}.md
     echo "" >> ${MDFILE}.md
     echo "   * [pt](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_pt_mtv.*_numden)" >> ${MDFILE}.md
     echo "   * [ptzoom](http://uaf-10.t2.ucsd.edu/~phchang//analysis/sdl/TrackLooper_/results/mtv_eff/${MDFILE}/plots_${SAMPLE}/mtveff/?tc_eff_ptzoom_mtv.*_numden)" >> ${MDFILE}.md

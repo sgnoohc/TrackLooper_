@@ -1303,18 +1303,18 @@ void printMiniDoubletConnectionMultiplicitiesBarrel(SDL::Event& event, int layer
 std::vector<unsigned int> getHitIdxListTrackCandidate(SDL::TrackCandidate* tc)
 {
     std::vector<unsigned int> hit_idxs;
-    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-    hit_idxs.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-    hit_idxs.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+    hit_idxs.push_back(tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
     return hit_idxs;
 }
 
@@ -1322,12 +1322,12 @@ std::vector<unsigned int> getHitIdxListTrackCandidate(SDL::TrackCandidate* tc)
 std::vector<unsigned int> getModuleListTrackCandidate(SDL::TrackCandidate* tc)
 {
     std::vector<unsigned int> module_ids;
-    module_ids.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
-    module_ids.push_back(tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
-    module_ids.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
-    module_ids.push_back(tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
-    module_ids.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
-    module_ids.push_back(tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
+    module_ids.push_back(tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().detId());
     return module_ids;
 }
 
@@ -1336,12 +1336,12 @@ int getNBarrelTrackCandidate(SDL::TrackCandidate* tc)
 {
 
     int nbarrel = 0;
-    if ( (tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
-    if ( (tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
-    if ( (tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
-    if ( (tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
-    if ( (tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
-    if ( (tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
+    if ( (tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule()).subdet() == SDL::Module::Barrel) nbarrel++;
     return nbarrel;
 
 }
@@ -1351,18 +1351,18 @@ vector<unsigned int> allMatchedSimTrkIdxs(SDL::TrackCandidate* tc)
 {
 
     std::vector<int> hitidxs = {
-        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
         };
 
     std::vector<unsigned int> unique_idxs; // to aggregate which ones to count and test
@@ -1387,18 +1387,18 @@ vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
 {
 
     std::vector<int> hitidxs = {
-        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
-        tc->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
         };
 
     std::vector<vector<int>> simtrk_idxs;
@@ -1698,7 +1698,7 @@ std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl)
         int trkidx = unique_idxs[rawidx];
         if (trkidx < 0)
             continue;
-        if (counts[rawidx] >= 8)
+        if (counts[rawidx] > 6)
             matched_sim_trk_idxs.push_back(trkidx);
     }
 
@@ -2004,8 +2004,9 @@ void runTracklet(SDL::Event& event)
     if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
     my_timer.Start(kFALSE);
     // event.createTracklets();
-    // event.createTrackletsWithModuleMap();
-    event.createTrackletsViaNavigation();
+    event.createTrackletsWithModuleMap();
+    event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsViaNavigation();
     float tl_elapsed = my_timer.RealTime();
     if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
 }
