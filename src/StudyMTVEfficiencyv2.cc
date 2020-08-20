@@ -33,7 +33,7 @@ void StudyMTVEfficiencyv2::bookStudy_v1()
 
     const float etamax = 2.5;
 
-    const int eta_nbins = 50;
+    const int eta_nbins = 180;
 
     const float phimax = M_PI;
 
@@ -542,23 +542,40 @@ void StudyMTVEfficiencyv2::doStudy_trackletEfficiency(SDL::Event& event, std::ve
         tl_all_track_dxy_mtv    [i].clear();
     }
 
-    // Barrel layer layer 0
-    SDL::Layer barrelLayer0 = event.getLayer(1, SDL::Layer::Barrel);
-    SDL::Layer barrelLayer1 = event.getLayer(2, SDL::Layer::Barrel);
-    SDL::Layer barrelLayer2 = event.getLayer(3, SDL::Layer::Barrel);
-    SDL::Layer barrelLayer3 = event.getLayer(4, SDL::Layer::Barrel);
-    SDL::Layer barrelLayer4 = event.getLayer(5, SDL::Layer::Barrel);
-    SDL::Layer endcapLayer1 = event.getLayer(1, SDL::Layer::Barrel);
-    SDL::Layer endcapLayer2 = event.getLayer(2, SDL::Layer::Barrel);
-
     std::vector<SDL::Tracklet*> all_tracklets;
-    all_tracklets.insert(all_tracklets.end(), barrelLayer0.getTrackletPtrs().begin(), barrelLayer0.getTrackletPtrs().end());
-    all_tracklets.insert(all_tracklets.end(), barrelLayer1.getTrackletPtrs().begin(), barrelLayer1.getTrackletPtrs().end());
-    all_tracklets.insert(all_tracklets.end(), barrelLayer2.getTrackletPtrs().begin(), barrelLayer2.getTrackletPtrs().end());
-    all_tracklets.insert(all_tracklets.end(), barrelLayer3.getTrackletPtrs().begin(), barrelLayer3.getTrackletPtrs().end());
-    all_tracklets.insert(all_tracklets.end(), barrelLayer4.getTrackletPtrs().begin(), barrelLayer4.getTrackletPtrs().end());
-    all_tracklets.insert(all_tracklets.end(), endcapLayer1.getTrackletPtrs().begin(), endcapLayer1.getTrackletPtrs().end());
-    all_tracklets.insert(all_tracklets.end(), endcapLayer2.getTrackletPtrs().begin(), endcapLayer2.getTrackletPtrs().end());
+
+    const std::vector<SDL::Layer*> layerPtrs = event.getLayerPtrs();
+
+    for (auto& layerPtr : layerPtrs)
+    {
+
+        // Tracklet ptrs
+        const std::vector<SDL::Tracklet*>& trackletPtrs = layerPtr->getTrackletPtrs();
+
+        for (auto& trackletPtr : trackletPtrs)
+        {
+            all_tracklets.push_back(trackletPtr);
+        }
+
+    }
+
+    // // Barrel layer layer 0
+    // SDL::Layer barrelLayer0 = event.getLayer(1, SDL::Layer::Barrel);
+    // SDL::Layer barrelLayer1 = event.getLayer(2, SDL::Layer::Barrel);
+    // SDL::Layer barrelLayer2 = event.getLayer(3, SDL::Layer::Barrel);
+    // // SDL::Layer barrelLayer3 = event.getLayer(4, SDL::Layer::Barrel);
+    // // SDL::Layer barrelLayer4 = event.getLayer(5, SDL::Layer::Barrel);
+    // SDL::Layer endcapLayer1 = event.getLayer(1, SDL::Layer::Barrel);
+    // SDL::Layer endcapLayer2 = event.getLayer(2, SDL::Layer::Barrel);
+
+    // std::vector<SDL::Tracklet*> all_tracklets;
+    // all_tracklets.insert(all_tracklets.end(), barrelLayer0.getTrackletPtrs().begin(), barrelLayer0.getTrackletPtrs().end());
+    // all_tracklets.insert(all_tracklets.end(), barrelLayer1.getTrackletPtrs().begin(), barrelLayer1.getTrackletPtrs().end());
+    // all_tracklets.insert(all_tracklets.end(), barrelLayer2.getTrackletPtrs().begin(), barrelLayer2.getTrackletPtrs().end());
+    // // all_tracklets.insert(all_tracklets.end(), barrelLayer3.getTrackletPtrs().begin(), barrelLayer3.getTrackletPtrs().end());
+    // // all_tracklets.insert(all_tracklets.end(), barrelLayer4.getTrackletPtrs().begin(), barrelLayer4.getTrackletPtrs().end());
+    // all_tracklets.insert(all_tracklets.end(), endcapLayer1.getTrackletPtrs().begin(), endcapLayer1.getTrackletPtrs().end());
+    // all_tracklets.insert(all_tracklets.end(), endcapLayer2.getTrackletPtrs().begin(), endcapLayer2.getTrackletPtrs().end());
 
     //***************************************************************
     // Preselecting Reco Track Candidates that are worth looking into

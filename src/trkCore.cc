@@ -1383,6 +1383,180 @@ vector<unsigned int> allMatchedSimTrkIdxs(SDL::TrackCandidate* tc)
 }
 
 //__________________________________________________________________________________________
+vector<int> matchedSimTrkIdxs(SDL::MiniDoublet* md)
+{
+    std::vector<int> hitidxs = {md->lowerHitPtr()->idx(), md->upperHitPtr()->idx()};
+
+    std::vector<vector<int>> simtrk_idxs;
+    std::vector<int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto& hitidx : hitidxs)
+    {
+        std::vector<int> simtrk_idxs_per_hit;
+        for (auto& simhit_idx : trk.ph2_simHitIdx()[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+        if (simtrk_idxs_per_hit.size() == 0)
+        {
+            simtrk_idxs_per_hit.push_back(-1);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), -1) == unique_idxs.end())
+                unique_idxs.push_back(-1);
+        }
+        simtrk_idxs.push_back(simtrk_idxs_per_hit);
+    }
+
+    // Compute all permutations
+    std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm = [&](vector<vector<int>>& result, vector<int> intermediate, size_t n, vector<vector<int>>& va)
+    {
+        if (va.size() > n)
+        {
+            for (auto x : va[n])
+            {
+                intermediate.push_back(x);
+                perm(result, intermediate, n+1, va);
+            }
+        }
+        else
+        {
+            result.push_back(intermediate);
+        }
+    };
+
+    vector<vector<int>> allperms;
+    perm(allperms, vector<int>(), 0, simtrk_idxs);
+
+    // for (auto& iperm : allperms)
+    // {
+    //     for (auto& idx : iperm)
+    //         std::cout << idx << " ";
+    //     std::cout << std::endl;
+    // }
+
+    std::vector<int> matched_sim_trk_idxs;
+    for (auto& trkidx_perm : allperms)
+    {
+        std::vector<int> counts;
+        for (auto& unique_idx : unique_idxs)
+        {
+            int cnt = std::count(trkidx_perm.begin(), trkidx_perm.end(), unique_idx);
+            counts.push_back(cnt);
+        }
+        auto result = std::max_element(counts.begin(), counts.end());
+        int rawidx = std::distance(counts.begin(), result);
+        int trkidx = unique_idxs[rawidx];
+        if (trkidx < 0)
+            continue;
+        if (counts[rawidx] > 1.5)
+            matched_sim_trk_idxs.push_back(trkidx);
+    }
+
+    return matched_sim_trk_idxs;
+
+}
+
+//__________________________________________________________________________________________
+vector<int> matchedSimTrkIdxs(SDL::Segment* sg, bool matchOnlyAnchor)
+{
+    std::vector<int> hitidxs_all = {
+        sg->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        sg->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        sg->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        sg->outerMiniDoubletPtr()->upperHitPtr()->idx()
+    };
+
+    std::vector<int> hitidxs_onlyAnchor = {
+        sg->innerMiniDoubletPtr()->anchorHitPtr()->idx(),
+        sg->outerMiniDoubletPtr()->anchorHitPtr()->idx()
+    };
+
+    std::vector<int> hitidxs;
+    if (matchOnlyAnchor)
+    {
+        hitidxs = hitidxs_onlyAnchor;
+    }
+    else
+    {
+        hitidxs = hitidxs_all;
+    }
+
+    int threshold = matchOnlyAnchor ? 1 : 3;
+
+    std::vector<vector<int>> simtrk_idxs;
+    std::vector<int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto& hitidx : hitidxs)
+    {
+        std::vector<int> simtrk_idxs_per_hit;
+        for (auto& simhit_idx : trk.ph2_simHitIdx()[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+        if (simtrk_idxs_per_hit.size() == 0)
+        {
+            simtrk_idxs_per_hit.push_back(-1);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), -1) == unique_idxs.end())
+                unique_idxs.push_back(-1);
+        }
+        simtrk_idxs.push_back(simtrk_idxs_per_hit);
+    }
+
+    // Compute all permutations
+    std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm = [&](vector<vector<int>>& result, vector<int> intermediate, size_t n, vector<vector<int>>& va)
+    {
+        if (va.size() > n)
+        {
+            for (auto x : va[n])
+            {
+                intermediate.push_back(x);
+                perm(result, intermediate, n+1, va);
+            }
+        }
+        else
+        {
+            result.push_back(intermediate);
+        }
+    };
+
+    vector<vector<int>> allperms;
+    perm(allperms, vector<int>(), 0, simtrk_idxs);
+
+    // for (auto& iperm : allperms)
+    // {
+    //     for (auto& idx : iperm)
+    //         std::cout << idx << " ";
+    //     std::cout << std::endl;
+    // }
+
+    std::vector<int> matched_sim_trk_idxs;
+    for (auto& trkidx_perm : allperms)
+    {
+        std::vector<int> counts;
+        for (auto& unique_idx : unique_idxs)
+        {
+            int cnt = std::count(trkidx_perm.begin(), trkidx_perm.end(), unique_idx);
+            counts.push_back(cnt);
+        }
+        auto result = std::max_element(counts.begin(), counts.end());
+        int rawidx = std::distance(counts.begin(), result);
+        int trkidx = unique_idxs[rawidx];
+        if (trkidx < 0)
+            continue;
+        if (counts[rawidx] > threshold)
+            matched_sim_trk_idxs.push_back(trkidx);
+    }
+
+    return matched_sim_trk_idxs;
+
+}
+
+//__________________________________________________________________________________________
 vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
 {
 
@@ -1476,6 +1650,7 @@ vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
         int trkidx = unique_idxs[rawidx];
         if (trkidx < 0)
             continue;
+        // if (counts[rawidx] > ana.nmatch_threshold)
         if (counts[rawidx] > ana.nmatch_threshold)
             matched_sim_trk_idxs.push_back(trkidx);
     }
@@ -1610,6 +1785,7 @@ int getNPSModules(SDL::Tracklet& tl)
     return nPS;
 }
 
+//__________________________________________________________________________________________
 std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl)
 {
     std::vector<int> hitidxs = {
@@ -1707,6 +1883,101 @@ std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl)
 }
 
 //__________________________________________________________________________________________
+std::vector<int> matchedSimTrkIdxs(SDL::Triplet* tp)
+{
+    std::vector<int> hitidxs = {
+        tp->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tp->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tp->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tp->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx(),
+        tp->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx(),
+        tp->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
+        };
+
+    std::vector<vector<int>> simtrk_idxs;
+    std::vector<int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto& hitidx : hitidxs)
+    {
+        std::vector<int> simtrk_idxs_per_hit;
+        for (auto& simhit_idx : trk.ph2_simHitIdx()[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+        if (simtrk_idxs_per_hit.size() == 0)
+        {
+            simtrk_idxs_per_hit.push_back(-1);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), -1) == unique_idxs.end())
+                unique_idxs.push_back(-1);
+        }
+        simtrk_idxs.push_back(simtrk_idxs_per_hit);
+    }
+
+    // // print
+    // std::cout << "va print" << std::endl;
+    // for (auto& vec : simtrk_idxs)
+    // {
+    //     for (auto& idx : vec)
+    //     {
+    //         std::cout << idx << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << "va print end" << std::endl;
+
+    // Compute all permutations
+    std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm = [&](vector<vector<int>>& result, vector<int> intermediate, size_t n, vector<vector<int>>& va)
+    {
+        if (va.size() > n)
+        {
+            for (auto x : va[n])
+            {
+                intermediate.push_back(x);
+                perm(result, intermediate, n+1, va);
+            }
+        }
+        else
+        {
+            result.push_back(intermediate);
+        }
+    };
+
+    vector<vector<int>> allperms;
+    perm(allperms, vector<int>(), 0, simtrk_idxs);
+
+    // for (auto& iperm : allperms)
+    // {
+    //     for (auto& idx : iperm)
+    //         std::cout << idx << " ";
+    //     std::cout << std::endl;
+    // }
+
+    std::vector<int> matched_sim_trk_idxs;
+    for (auto& trkidx_perm : allperms)
+    {
+        std::vector<int> counts;
+        for (auto& unique_idx : unique_idxs)
+        {
+            int cnt = std::count(trkidx_perm.begin(), trkidx_perm.end(), unique_idx);
+            counts.push_back(cnt);
+        }
+        auto result = std::max_element(counts.begin(), counts.end());
+        int rawidx = std::distance(counts.begin(), result);
+        int trkidx = unique_idxs[rawidx];
+        if (trkidx < 0)
+            continue;
+        if (counts[rawidx] > 4.5)
+            matched_sim_trk_idxs.push_back(trkidx);
+    }
+
+    return matched_sim_trk_idxs;
+
+}
+
+//__________________________________________________________________________________________
 void loadMaps()
 {
     SDL::endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
@@ -1725,7 +1996,6 @@ void loadMaps()
     // SDL::moduleConnectionMap.load("data/module_connection_combined_2020_0518_helixray.txt");
 
 }
-
 
 //__________________________________________________________________________________________
 void addOuterTrackerHits(SDL::Event& event)
@@ -1798,12 +2068,17 @@ void printHitSummary(SDL::Event& event)
 {
     if (ana.verbose != 0) std::cout << "Summary of hits" << std::endl;
     if (ana.verbose != 0) std::cout << "# of Hits: " << event.getNumberOfHits() << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Hits in layer 1: " << event.getNumberOfHitsByLayerBarrel(0) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Hits in layer 2: " << event.getNumberOfHitsByLayerBarrel(1) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Hits in layer 3: " << event.getNumberOfHitsByLayerBarrel(2) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Hits in layer 4: " << event.getNumberOfHitsByLayerBarrel(3) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Hits in layer 5: " << event.getNumberOfHitsByLayerBarrel(4) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Hits in layer 6: " << event.getNumberOfHitsByLayerBarrel(5) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in barrel layer 1: " << event.getNumberOfHitsByLayerBarrel(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in barrel layer 2: " << event.getNumberOfHitsByLayerBarrel(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in barrel layer 3: " << event.getNumberOfHitsByLayerBarrel(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in barrel layer 4: " << event.getNumberOfHitsByLayerBarrel(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in barrel layer 5: " << event.getNumberOfHitsByLayerBarrel(4) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in barrel layer 6: " << event.getNumberOfHitsByLayerBarrel(5) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in endcap layer 1: " << event.getNumberOfHitsByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in endcap layer 2: " << event.getNumberOfHitsByLayerEndcap(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in endcap layer 3: " << event.getNumberOfHitsByLayerEndcap(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in endcap layer 4: " << event.getNumberOfHitsByLayerEndcap(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Hits in endcap layer 5: " << event.getNumberOfHitsByLayerEndcap(4) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 1: " << event.getNumberOfHitsByLayerBarrelUpperModule(0) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 2: " << event.getNumberOfHitsByLayerBarrelUpperModule(1) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Hits Upper Module in layer 3: " << event.getNumberOfHitsByLayerBarrelUpperModule(2) << std::endl;
@@ -1816,30 +2091,44 @@ void printHitSummary(SDL::Event& event)
 void printMiniDoubletSummary(SDL::Event& event)
 {
     if (ana.verbose != 0) std::cout << "# of Mini-doublets produced: " << event.getNumberOfMiniDoublets() << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 1: " << event.getNumberOfMiniDoubletsByLayerBarrel(0) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 2: " << event.getNumberOfMiniDoubletsByLayerBarrel(1) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 3: " << event.getNumberOfMiniDoubletsByLayerBarrel(2) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 4: " << event.getNumberOfMiniDoubletsByLayerBarrel(3) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 5: " << event.getNumberOfMiniDoubletsByLayerBarrel(4) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced layer 6: " << event.getNumberOfMiniDoubletsByLayerBarrel(5) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced barrel layer 1: " << event.getNumberOfMiniDoubletsByLayerBarrel(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced barrel layer 2: " << event.getNumberOfMiniDoubletsByLayerBarrel(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced barrel layer 3: " << event.getNumberOfMiniDoubletsByLayerBarrel(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced barrel layer 4: " << event.getNumberOfMiniDoubletsByLayerBarrel(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced barrel layer 5: " << event.getNumberOfMiniDoubletsByLayerBarrel(4) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced barrel layer 6: " << event.getNumberOfMiniDoubletsByLayerBarrel(5) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced endcap layer 1: " << event.getNumberOfMiniDoubletsByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced endcap layer 2: " << event.getNumberOfMiniDoubletsByLayerEndcap(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced endcap layer 3: " << event.getNumberOfMiniDoubletsByLayerEndcap(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced endcap layer 4: " << event.getNumberOfMiniDoubletsByLayerEndcap(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets produced endcap layer 5: " << event.getNumberOfMiniDoubletsByLayerEndcap(4) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Mini-doublets considered: " << event.getNumberOfMiniDoubletCandidates() << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 1: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(0) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 2: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(1) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 3: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(2) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 4: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(3) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 5: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(4) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered layer 6: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(5) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered barrel layer 1: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered barrel layer 2: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered barrel layer 3: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered barrel layer 4: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered barrel layer 5: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(4) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered barrel layer 6: " << event.getNumberOfMiniDoubletCandidatesByLayerBarrel(5) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered endcap layer 1: " << event.getNumberOfMiniDoubletCandidatesByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered endcap layer 2: " << event.getNumberOfMiniDoubletCandidatesByLayerEndcap(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered endcap layer 3: " << event.getNumberOfMiniDoubletCandidatesByLayerEndcap(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered endcap layer 4: " << event.getNumberOfMiniDoubletCandidatesByLayerEndcap(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Mini-doublets considered endcap layer 5: " << event.getNumberOfMiniDoubletCandidatesByLayerEndcap(4) << std::endl;
 }
 
 //__________________________________________________________________________________________
 void printSegmentSummary(SDL::Event& event)
 {
     if (ana.verbose != 0) std::cout << "# of Segments produced: " << event.getNumberOfSegments() << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Segments produced layer 1-2: " << event.getNumberOfSegmentsByLayerBarrel(0) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Segments produced layer 2-3: " << event.getNumberOfSegmentsByLayerBarrel(1) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Segments produced layer 3-4: " << event.getNumberOfSegmentsByLayerBarrel(2) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Segments produced layer 4-5: " << event.getNumberOfSegmentsByLayerBarrel(3) << std::endl;
-    if (ana.verbose != 0) std::cout << "# of Segments produced layer 5-6: " << event.getNumberOfSegmentsByLayerBarrel(4) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 1-2: " << event.getNumberOfSegmentsByLayerBarrel(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 2-3: " << event.getNumberOfSegmentsByLayerBarrel(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 3-4: " << event.getNumberOfSegmentsByLayerBarrel(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 4-5: " << event.getNumberOfSegmentsByLayerBarrel(3) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 5-6: " << event.getNumberOfSegmentsByLayerBarrel(4) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced endcap layer 1-2: " << event.getNumberOfSegmentsByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced endcap layer 2-3: " << event.getNumberOfSegmentsByLayerEndcap(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced endcap layer 3-4: " << event.getNumberOfSegmentsByLayerEndcap(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments produced endcap layer 4-5: " << event.getNumberOfSegmentsByLayerEndcap(3) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Segments produced layer 6: " << event.getNumberOfSegmentsByLayerBarrel(5) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments considered: " << event.getNumberOfSegmentCandidates() << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments considered layer 1-2: " << event.getNumberOfSegmentCandidatesByLayerBarrel(0) << std::endl;
@@ -1847,6 +2136,10 @@ void printSegmentSummary(SDL::Event& event)
     if (ana.verbose != 0) std::cout << "# of Segments considered layer 3-4: " << event.getNumberOfSegmentCandidatesByLayerBarrel(2) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments considered layer 4-5: " << event.getNumberOfSegmentCandidatesByLayerBarrel(3) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments considered layer 5-6: " << event.getNumberOfSegmentCandidatesByLayerBarrel(4) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments considered layer 1-2: " << event.getNumberOfSegmentCandidatesByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments considered layer 2-3: " << event.getNumberOfSegmentCandidatesByLayerEndcap(1) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments considered layer 3-4: " << event.getNumberOfSegmentCandidatesByLayerEndcap(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Segments considered layer 4-5: " << event.getNumberOfSegmentCandidatesByLayerEndcap(3) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Segments considered layer 6: " << event.getNumberOfSegmentCandidatesByLayerBarrel(5) << std::endl;
 }
 
@@ -1929,6 +2222,8 @@ void printTrackletSummary(SDL::Event& event)
     if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 1-2-3-4: " << event.getNumberOfTrackletsByLayerBarrel(0) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 2-3-4-5: " << event.getNumberOfTrackletsByLayerBarrel(1) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 3-4-5-6: " << event.getNumberOfTrackletsByLayerBarrel(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 1-2-3-4: " << event.getNumberOfTrackletsByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 2-3-4-5: " << event.getNumberOfTrackletsByLayerEndcap(1) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 4: " << event.getNumberOfTrackletsByLayerBarrel(3) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 5: " << event.getNumberOfTrackletsByLayerBarrel(4) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 6: " << event.getNumberOfTrackletsByLayerBarrel(5) << std::endl;
@@ -1936,6 +2231,8 @@ void printTrackletSummary(SDL::Event& event)
     if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 1-2-3-4: " << event.getNumberOfTrackletCandidatesByLayerBarrel(0) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 2-3-4-5: " << event.getNumberOfTrackletCandidatesByLayerBarrel(1) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 3-4-5-6: " << event.getNumberOfTrackletCandidatesByLayerBarrel(2) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 1-2-3-4: " << event.getNumberOfTrackletCandidatesByLayerEndcap(0) << std::endl;
+    if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 2-3-4-5: " << event.getNumberOfTrackletCandidatesByLayerEndcap(1) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 4: " << event.getNumberOfTrackletCandidatesByLayerBarrel(3) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 5: " << event.getNumberOfTrackletCandidatesByLayerBarrel(4) << std::endl;
     // if (ana.verbose != 0) std::cout << "# of Tracklets considered layer 6: " << event.getNumberOfTrackletCandidatesByLayerBarrel(5) << std::endl;
@@ -2005,7 +2302,7 @@ void runTracklet(SDL::Event& event)
     my_timer.Start(kFALSE);
     // event.createTracklets();
     event.createTrackletsWithModuleMap();
-    event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsWithAGapWithModuleMap();
     // event.createTrackletsViaNavigation();
     float tl_elapsed = my_timer.RealTime();
     if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
@@ -2314,3 +2611,88 @@ void printSimTrack(int isimtrk)
 
 }
 
+//__________________________________________________________________________________________
+float drfracSimHitConsistentWithHelix(int isimtrk, int isimhitidx)
+{
+    // Read track parameters
+    float vx = trk.simvtx_x()[0];
+    float vy = trk.simvtx_y()[0];
+    float vz = trk.simvtx_z()[0];
+    float pt = trk.sim_pt()[isimtrk];
+    float eta = trk.sim_eta()[isimtrk];
+    float phi = trk.sim_phi()[isimtrk];
+    float charge = trk.sim_q()[isimtrk];
+
+    // Construct helix object
+    SDLMath::Helix helix(pt, eta, phi, vx, vy, vz, charge);
+
+    return drfracSimHitConsistentWithHelix(helix, isimhitidx);
+
+}
+
+//__________________________________________________________________________________________
+float drfracSimHitConsistentWithHelix(SDLMath::Helix& helix, int isimhitidx)
+{
+
+    // Sim hit vector
+    std::vector<float> point = {trk.simhit_x()[isimhitidx], trk.simhit_y()[isimhitidx], trk.simhit_z()[isimhitidx]};
+
+    // Inferring parameter t of helix parametric function via z position
+    float t = helix.infer_t(point);
+
+    // If the best fit is more than pi parameter away then it's a returning hit and should be ignored
+    if (not (t <= M_PI))
+        return 999;
+
+    // Expected hit position with given z
+    auto [x, y, z, r] = helix.get_helix_point(t);
+
+    // ( expected_r - simhit_r ) / expected_r
+    float drfrac = abs(helix.compare_radius(point)) / r;
+
+    return drfrac;
+
+}
+
+//__________________________________________________________________________________________
+float distxySimHitConsistentWithHelix(int isimtrk, int isimhitidx)
+{
+    // Read track parameters
+    float vx = trk.simvtx_x()[0];
+    float vy = trk.simvtx_y()[0];
+    float vz = trk.simvtx_z()[0];
+    float pt = trk.sim_pt()[isimtrk];
+    float eta = trk.sim_eta()[isimtrk];
+    float phi = trk.sim_phi()[isimtrk];
+    float charge = trk.sim_q()[isimtrk];
+
+    // Construct helix object
+    SDLMath::Helix helix(pt, eta, phi, vx, vy, vz, charge);
+
+    return distxySimHitConsistentWithHelix(helix, isimhitidx);
+
+}
+
+//__________________________________________________________________________________________
+float distxySimHitConsistentWithHelix(SDLMath::Helix& helix, int isimhitidx)
+{
+
+    // Sim hit vector
+    std::vector<float> point = {trk.simhit_x()[isimhitidx], trk.simhit_y()[isimhitidx], trk.simhit_z()[isimhitidx]};
+
+    // Inferring parameter t of helix parametric function via z position
+    float t = helix.infer_t(point);
+
+    // If the best fit is more than pi parameter away then it's a returning hit and should be ignored
+    if (not (t <= M_PI))
+        return 999;
+
+    // Expected hit position with given z
+    auto [x, y, z, r] = helix.get_helix_point(t);
+
+    // ( expected_r - simhit_r ) / expected_r
+    float distxy = helix.compare_xy(point);
+
+    return distxy;
+
+}

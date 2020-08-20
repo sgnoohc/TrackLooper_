@@ -67,6 +67,12 @@ std::vector<float> getPtBounds();
 // Looper helper
 bool goodEvent();
 
+// MiniDoublet helper
+std::vector<int> matchedSimTrkIdxs(SDL::MiniDoublet* md);
+
+// Segment helper
+std::vector<int> matchedSimTrkIdxs(SDL::Segment* sg, bool matchOnlyAnchor=false);
+
 // Track helper
 bool inTimeTrackWithPdgId(int isimtrk, int pdgid);
 
@@ -74,6 +80,9 @@ bool inTimeTrackWithPdgId(int isimtrk, int pdgid);
 TrackletType getTrackletCategory(SDL::Tracklet& tl);
 int getNPSModules(SDL::Tracklet& tl);
 std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl);
+
+// Triplet helper
+std::vector<int> matchedSimTrkIdxs(SDL::Triplet* tp);
 
 // Steering SDL
 void loadMaps();
@@ -85,6 +94,8 @@ void runSDL(SDL::Event& event);
 void runMiniDoublet(SDL::Event& event);
 void runSegment(SDL::Event& event);
 void runTriplet(SDL::Event& event);
+void runTracklet(SDL::Event& event);
+void runTrackCandidate(SDL::Event& event);
 
 // Printing SDL information
 void printHitSummary(SDL::Event& event);
@@ -97,5 +108,11 @@ void printMiniDoubletConnectionMultiplicitiesSummary(SDL::Event& event);
 
 //
 void printSimTrack(int isimtrk);
+
+// Is good simhit
+float drfracSimHitConsistentWithHelix(int isimtrk, int isimhitidx);
+float drfracSimHitConsistentWithHelix(SDLMath::Helix& helix, int isimhitidx);
+float distxySimHitConsistentWithHelix(int isimtrk, int isimhitidx);
+float distxySimHitConsistentWithHelix(SDLMath::Helix& helix, int isimhitidx);
 
 #endif

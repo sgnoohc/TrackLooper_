@@ -77,7 +77,7 @@ namespace SDLMath
 
             float infer_t(const std::vector<float> point)
             {
-                // Solve for t
+                // Solve for t based on z position
                 float t = (point[2] - center()[2]) / (radius() * tan(lam()));
                 return t;
             }
@@ -88,6 +88,14 @@ namespace SDLMath
                 auto [x, y, z, r] = get_helix_point(t);
                 float point_r = sqrt(point[0]*point[0] + point[1]*point[1]);
                 return (point_r - r);
+            }
+
+            float compare_xy(const std::vector<float> point)
+            {
+                float t = infer_t(point);
+                auto [x, y, z, r] = get_helix_point(t);
+                float xy_dist = sqrt(pow(point[0] - x, 2) + pow(point[1] - y, 2));
+                return xy_dist;
             }
 
     };

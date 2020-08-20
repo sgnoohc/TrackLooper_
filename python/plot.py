@@ -156,6 +156,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
         if yaxis_min > eff.GetY()[i] and eff.GetY()[i] != 0:
             yaxis_min = eff.GetY()[i]
     print yaxis_min
+    if "eta" in output_name:
+        eff.GetXaxis().SetLimits(-2.5, 2.5)
     if "eff_eta" in output_name and "sg_" not in output_name:
         eff.GetYaxis().SetRangeUser(0, 1.005)
     if "eff_z" in output_name and "sg_" not in output_name:
@@ -197,7 +199,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     if "eff_eta" in output_name and "tl_" in output_name:
         eff.GetYaxis().SetRangeUser(0.0, 1.005)
     if "_etazoom_mtv" in output_name:
-        eff.GetYaxis().SetRangeUser(0.9, 1.005)
+        eff.GetYaxis().SetRangeUser(0.0, 1.005)
+        eff.GetXaxis().SetLimits(2, 2.5)
     if "md_eff_b" in output_name and "eta" in output_name:
         eff.GetYaxis().SetRangeUser(0.0, 1.01)
     if "tl_eff_b" in output_name and "eta" in output_name:

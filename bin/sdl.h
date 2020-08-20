@@ -29,5 +29,6 @@
 #include "src/mtv.h"
 #include "src/tracklet.h"
 #include "src/algo_eff.h"
+#include "src/write_sdl_ntuple.h"
 
 #endif

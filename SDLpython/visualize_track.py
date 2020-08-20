@@ -12,17 +12,42 @@ import sdlmath
 import SDLDisplay
 from tqdm import tqdm
 
-f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root")
-t = f.Get("trackingNtuple/tree")
+print "Opening root files ..."
 
-pick_ievent = 15
-pick_itrack = 7
+# f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root")
+# f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root")
+# t = f.Get("trackingNtuple/tree")
+
+import sys
+
+# filepath = "/home/users/phchang/public_html/analysis/sdl/TrackLooper_/results/write_sdl_ntuple/pt0p5_2p0_2020_0710//fulleff_pt0p5_2p0.root"
+filepath = "/home/users/phchang/public_html/analysis/sdl/TrackLooper_/results/write_sdl_ntuple/pu200_w_truthinfo_charged_2020_0801_Chuncheon//fulleff_pu200_w_truthinfo_charged.root"
+treepath = "tree"
+pick_ievent = 0
+pick_itrack = 161717
+
+try:
+    filepath = sys.argv[1]
+    treepath = sys.argv[2]
+    pick_ievent = sys.argv[3]
+    pick_itrack = sys.argv[4]
+except:
+    pass
+
+
+f = r.TFile(filepath)
+t = f.Get(treepath)
+
+print "Opened root files ..."
 
 t.GetEntry(pick_ievent)
+
+print "Statrting ..."
 
 for itrack, pt in enumerate(t.sim_pt):
     if itrack == pick_itrack:
 
+        print "Found the", pick_itrack, "-th track in event", pick_ievent
         pt = t.sim_pt[itrack]
         eta = t.sim_eta[itrack]
         phi = t.sim_phi[itrack]
@@ -79,7 +104,7 @@ sdlmath.draw_track_rz(ax, pt, eta, phi, vx, vy, vz, charge)
 # lc = LineCollection(segments_rz, colors=(1,0,0), linewidth=0.5, alpha=0.4)
 # ax.add_collection(lc)
 plt.scatter(simhit_zs, simhit_rs, s=0.5)
-plt.savefig("detrz_track_visualization.pdf")
+plt.savefig("pdfs/detrz_track_visualization.pdf")
 
 # ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
 ax = pickle.load(file('detxy.pickle'))
@@ -89,9 +114,9 @@ sdlmath.draw_track_xy(ax, pt, eta, phi, vx, vy, vz, charge)
 # lc = LineCollection(segments_xy, colors=(1,0,0), linewidth=0.5, alpha=0.4)
 # ax.add_collection(lc)
 plt.scatter(simhit_xs, simhit_ys, s=0.5)
-plt.savefig("detxy_track_visualization.pdf")
+plt.savefig("pdfs/detxy_track_visualization.pdf")
 
 fig, ax = plt.subplots(figsize=(4. * 2,2.*math.pi))
 sdlDisplay.display_detector_etaphi(ax, color=(0,0,1))
-fig.savefig("detetaphi_track_visualization.pdf")
+fig.savefig("pdfs/detetaphi_track_visualization.pdf")
 

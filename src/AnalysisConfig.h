@@ -90,6 +90,9 @@ public:
     // TTreeX to facilitate writing output to ttree
     RooUtil::TTreeX* tx;
 
+    // Boolean to control whether to write ntuple or not
+    bool write_sdl_ntuple;
+
     // Module boundaries related info
     std::map<int, std::array<float, 6>> moduleBoundaries;
     std::map<int, std::vector<std::vector<float>>> moduleSimHits;

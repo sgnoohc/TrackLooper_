@@ -365,6 +365,65 @@ def goodBarrelTracks(t, simtrk_idx, pdgid=0):
     else:
         return False
 
+def getCenterFromThreePoints(hitA, hitB, hitC):
+
+    # //       C
+    # //
+    # //
+    # //
+    # //    B           d <-- find this point that makes the arc that goes throw a b c
+    # //
+    # //
+    # //     A
+
+    # // Steps:
+    # // 1. Calculate mid-points of lines AB and BC
+    # // 2. Find slopes of line AB and BC
+    # // 3. construct a perpendicular line between AB and BC
+    # // 4. set the two equations equal to each other and solve to find intersection
+
+    xA = hitA[0]
+    yA = hitA[1]
+    xB = hitB[0]
+    yB = hitB[1]
+    xC = hitC[0]
+    yC = hitC[1]
+
+    x_mid_AB = (xA + xB) / 2.
+    y_mid_AB = (yA + yB) / 2.
+
+    x_mid_BC = (xB + xC) / 2.
+    y_mid_BC = (yB + yC) / 2.
+
+    slope_AB_inf = (xB - xA) == 0
+    slope_BC_inf = (xC - xB) == 0
+
+    slope_AB_zero = (yB - yA) == 0
+    slope_BC_zero = (yC - yB) == 0
+
+    slope_AB = 0. if slope_AB_inf else (yB - yA) / (xB - xA)
+    slope_BC = 0. if slope_BC_inf else (yC - yB) / (xC - xB)
+
+    slope_perp_AB = 0. if (slope_AB_inf or slope_AB_zero) else -1. / (slope_AB)
+    slope_perp_BC = 0. if (slope_BC_inf or slope_BC_zero) else -1. / (slope_BC)
+
+    # if ((slope_AB - slope_BC) == 0):
+    #     std::cout <<  " slope_AB_zero: " << slope_AB_zero <<  std::endl;
+    #     std::cout <<  " slope_BC_zero: " << slope_BC_zero <<  std::endl;
+    #     std::cout <<  " slope_AB_inf: " << slope_AB_inf <<  std::endl;
+    #     std::cout <<  " slope_BC_inf: " << slope_BC_inf <<  std::endl;
+    #     std::cout <<  " slope_AB: " << slope_AB <<  std::endl;
+    #     std::cout <<  " slope_BC: " << slope_BC <<  std::endl;
+    #     std::cout << hitA << std::endl;
+    #     std::cout << hitB << std::endl;
+    #     std::cout << hitC << std::endl;
+    #     std::cout << "SDL::MathUtil::getCenterFromThreePoints() function the three points are in straight line!" << std::endl;
+    #     return SDL::Hit();
+
+    x = (slope_AB * slope_BC * (yA - yC) + slope_BC * (xA + xB) - slope_AB * (xB + xC)) / (2. * (slope_BC - slope_AB));
+    y = slope_perp_AB * (x - x_mid_AB) + y_mid_AB;
+
+    return [x, y, 0]
 
 if __name__ == "__main__":
 
