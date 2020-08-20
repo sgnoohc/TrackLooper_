@@ -7,3 +7,7 @@ debug.root
 plots/
 plots_*/
 scripts/moduleconnection*.txt
+*.pyc
+*.pickle
+bin/*
+test*
