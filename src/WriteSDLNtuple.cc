@@ -79,6 +79,15 @@ void WriteSDLNtuple::createMiniDoubletBranches()
     ana.tx->createBranch<vector<float>>("md_sim_eta");
     ana.tx->createBranch<vector<float>>("md_sim_phi");
 
+    ana.tx->createBranch<vector<float>>("md_type");
+    ana.tx->createBranch<vector<float>>("md_dz");
+    ana.tx->createBranch<vector<float>>("md_dzCut");
+    ana.tx->createBranch<vector<float>>("md_drt");
+    ana.tx->createBranch<vector<float>>("md_drtCut");
+    ana.tx->createBranch<vector<float>>("md_miniCut");
+    ana.tx->createBranch<vector<float>>("md_dphi");
+    ana.tx->createBranch<vector<float>>("md_dphiChange");
+
     // Sim track to minidoublet matching
     ana.tx->createBranch<vector<vector<int>>>("sim_mdIdx");
     ana.tx->createBranch<vector<vector<int>>>("sim_mdIdx_isMTVmatch");
@@ -402,6 +411,24 @@ void WriteSDLNtuple::setMiniDoubletBranches(SDL::Event& event)
             ana.tx->pushbackToBranch<float>("md_sim_pt", maxsimpt);
             ana.tx->pushbackToBranch<float>("md_sim_eta", maxsimeta);
             ana.tx->pushbackToBranch<float>("md_sim_phi", maxsimphi);
+
+            float dz = minidoubletPtr->getDz();
+            float dzCut = minidoubletPtr->getRecoVar("dzCut");
+            float drt = minidoubletPtr->getRecoVar("drt");
+            float drtCut = minidoubletPtr->getRecoVar("drtCut");
+            float miniCut = minidoubletPtr->getRecoVar("miniCut");
+            float dphi = minidoubletPtr->getDeltaPhi();
+            float dphichange = minidoubletPtr->getDeltaPhiChange();
+            float type = minidoubletPtr->getRecoVar("type");
+
+            ana.tx->pushbackToBranch<float>("md_type", type);
+            ana.tx->pushbackToBranch<float>("md_dz", dz);
+            ana.tx->pushbackToBranch<float>("md_dzCut", dzCut);
+            ana.tx->pushbackToBranch<float>("md_drt", drt);
+            ana.tx->pushbackToBranch<float>("md_drtCut", drtCut);
+            ana.tx->pushbackToBranch<float>("md_miniCut", miniCut);
+            ana.tx->pushbackToBranch<float>("md_dphi", dphi);
+            ana.tx->pushbackToBranch<float>("md_dphiChange", dphichange);
 
         }
 
@@ -742,18 +769,18 @@ void WriteSDLNtuple::setTrackCandidateBranches(SDL::Event& event)
 
             // hit idx
             std::vector<int> hit_idx;
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
-            hit_idx.push_back(trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->upperHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->idx());
+            hit_idx.push_back(trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx());
             ana.tx->pushbackToBranch<vector<int>>("tc_hitIdx", hit_idx);
 
             // sim track matched index
@@ -762,12 +789,12 @@ void WriteSDLNtuple::setTrackCandidateBranches(SDL::Event& event)
 
             // trackCandidate layers
             std::vector<int> layers;
-            layers.push_back(trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
-            layers.push_back(trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletPtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
-            layers.push_back(trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
-            layers.push_back(trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
-            layers.push_back(trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
-            layers.push_back(trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->outerTrackletPtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
+            layers.push_back(trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
+            layers.push_back(trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
+            layers.push_back(trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
+            layers.push_back(trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->innerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
+            layers.push_back(trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
+            layers.push_back(trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().layer() + 6 * (trackCandidatePtr->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->lowerHitPtr()->getModule().subdet() == SDL::Module::Endcap));
             ana.tx->pushbackToBranch<vector<int>>("tc_layer", layers);
 
             // Sim track to Tracklet matching

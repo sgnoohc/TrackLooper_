@@ -1575,6 +1575,18 @@ vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
         tc->outerTrackletBasePtr()->outerSegmentPtr()->outerMiniDoubletPtr()->upperHitPtr()->idx()
         };
 
+    // Resize the hitidxs so that it is different for different track candidate type
+    // For some cases it has 6 minidoublets, some cases it has 5 minidoublets
+    std::vector<int>::iterator ip; 
+
+    // Using std::unique 
+    ip = std::unique(hitidxs.begin(), hitidxs.end());
+    // Now v becomes {1 3 10 1 3 7 8 * * * * *} 
+    // * means undefined 
+
+    // Resizing the vector so as to remove the undefined terms 
+    hitidxs.resize(std::distance(hitidxs.begin(), ip)); 
+
     std::vector<vector<int>> simtrk_idxs;
     std::vector<int> unique_idxs; // to aggregate which ones to count and test
 
@@ -1636,6 +1648,10 @@ vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
     //     std::cout << std::endl;
     // }
 
+    int nhits = hitidxs.size();
+
+    float factor = nhits / 12.;
+
     std::vector<int> matched_sim_trk_idxs;
     for (auto& trkidx_perm : allperms)
     {
@@ -1679,6 +1695,8 @@ std::vector<float> getPtBounds()
         pt_boundaries = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.0, 3.0, 4.0, 5.0}; // lowpt
     else if (ana.ptbound_mode == 7)
         pt_boundaries = {0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26, 1.28, 1.3, 1.32, 1.34, 1.36, 1.38, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50}; // lowpt
+    else if (ana.ptbound_mode == 8)
+        pt_boundaries = {0, 0.5, 1.0, 3.0, 5.0, 10, 15., 25, 50};
     return pt_boundaries;
 }
 
@@ -2302,7 +2320,23 @@ void runTracklet(SDL::Event& event)
     my_timer.Start(kFALSE);
     // event.createTracklets();
     event.createTrackletsWithModuleMap();
-    // event.createTrackletsWithAGapWithModuleMap();
+    event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsWithTwoGapsWithModuleMap();
+    // event.createTrackletsViaNavigation();
+    float tl_elapsed = my_timer.RealTime();
+    if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
+}
+
+//__________________________________________________________________________________________
+void runTrackletTest_v1(SDL::Event& event)
+{
+    TStopwatch my_timer;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
+    my_timer.Start(kFALSE);
+    // event.createTracklets();
+    event.createTrackletsWithModuleMap();
+    event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsWithTwoGapsWithModuleMap();
     // event.createTrackletsViaNavigation();
     float tl_elapsed = my_timer.RealTime();
     if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
@@ -2322,6 +2356,32 @@ void runTrackCandidate(SDL::Event& event)
 }
 
 //__________________________________________________________________________________________
+void runTrackCandidateTest_v1(SDL::Event& event)
+{
+    TStopwatch my_timer;
+    if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
+    my_timer.Start(kFALSE);
+    // event.createTrackCandidatesFromTriplets();
+    // event.createTrackCandidates();
+    event.createTrackCandidatesTest_v1();
+    float tc_elapsed = my_timer.RealTime();
+    if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed << " secs" << std::endl;
+}
+
+//__________________________________________________________________________________________
+void runTrackCandidateTest_v2(SDL::Event& event)
+{
+    TStopwatch my_timer;
+    if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
+    my_timer.Start(kFALSE);
+    // event.createTrackCandidatesFromTriplets();
+    // event.createTrackCandidates();
+    event.createTrackCandidatesTest_v2();
+    float tc_elapsed = my_timer.RealTime();
+    if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed << " secs" << std::endl;
+}
+
+//__________________________________________________________________________________________
 void runSDL(SDL::Event& event)
 {
 
@@ -2335,6 +2395,42 @@ void runSDL(SDL::Event& event)
     runTracklet(event);
     printTrackletSummary(event);
     runTrackCandidate(event);
+    printTrackCandidateSummary(event);
+
+}
+
+//__________________________________________________________________________________________
+void runSDLTest_v1(SDL::Event& event)
+{
+
+    printHitSummary(event);
+    runMiniDoublet(event);
+    printMiniDoubletSummary(event);
+    runSegment(event);
+    printSegmentSummary(event);
+    runTriplet(event);
+    printTripletSummary(event);
+    runTrackletTest_v1(event);
+    printTrackletSummary(event);
+    runTrackCandidateTest_v1(event);
+    printTrackCandidateSummary(event);
+
+}
+
+//__________________________________________________________________________________________
+void runSDLTest_v2(SDL::Event& event)
+{
+
+    printHitSummary(event);
+    runMiniDoublet(event);
+    printMiniDoubletSummary(event);
+    runSegment(event);
+    printSegmentSummary(event);
+    runTriplet(event);
+    printTripletSummary(event);
+    runTracklet(event);
+    printTrackletSummary(event);
+    runTrackCandidateTest_v2(event);
     printTrackCandidateSummary(event);
 
 }

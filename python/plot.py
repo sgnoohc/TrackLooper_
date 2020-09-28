@@ -61,13 +61,13 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     num = f.Get(num_name)
     den = f.Get(den_name)
 
-    # if "_eta" in output_name:
-    #     num.Rebin(2)
-    #     den.Rebin(2)
+    if "_eta" in output_name:
+        num.Rebin(5)
+        den.Rebin(5)
 
-    # if "_phi" in output_name:
-    #     num.Rebin(5)
-    #     den.Rebin(5)
+    if "_phi" in output_name:
+        num.Rebin(5)
+        den.Rebin(5)
 
     suffix = ""
     if tag != "":
@@ -199,8 +199,8 @@ def plot_eff(num_name, den_name, output_name, dirname="lin", tag=""):
     if "eff_eta" in output_name and "tl_" in output_name:
         eff.GetYaxis().SetRangeUser(0.0, 1.005)
     if "_etazoom_mtv" in output_name:
-        eff.GetYaxis().SetRangeUser(0.0, 1.005)
-        eff.GetXaxis().SetLimits(2, 2.5)
+        eff.GetYaxis().SetRangeUser(0.9, 1.005)
+        # eff.GetXaxis().SetLimits(2, 2.5)
     if "md_eff_b" in output_name and "eta" in output_name:
         eff.GetYaxis().SetRangeUser(0.0, 1.01)
     if "tl_eff_b" in output_name and "eta" in output_name:
@@ -991,4 +991,9 @@ if drawMTVplots:
    plot_eff("Root__tl_matched_track_eta_mtv", "Root__tl_all_track_eta_mtv", "tl_eff_eta_mtv.pdf", "mtveff", tag)
    plot_eff("Root__tl_matched_track_eta_mtv", "Root__tl_all_track_eta_mtv", "tl_eff_etazoom_mtv.pdf", "mtveff", tag)
    plot_eff("Root__tl_matched_track_dxy_mtv", "Root__tl_all_track_dxy_mtv", "tl_eff_dxy_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tp_matched_track_pt_mtv", "Root__tp_all_track_pt_mtv", "tp_eff_pt_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tp_matched_track_pt_mtv", "Root__tp_all_track_pt_mtv", "tp_eff_ptzoom_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tp_matched_track_eta_mtv", "Root__tp_all_track_eta_mtv", "tp_eff_eta_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tp_matched_track_eta_mtv", "Root__tp_all_track_eta_mtv", "tp_eff_etazoom_mtv.pdf", "mtveff", tag)
+   plot_eff("Root__tp_matched_track_dxy_mtv", "Root__tp_all_track_dxy_mtv", "tp_eff_dxy_mtv.pdf", "mtveff", tag)
 

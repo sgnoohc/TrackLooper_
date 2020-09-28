@@ -37,19 +37,20 @@ void write_sdl_ntuple()
 
         // Run the SDL reconstruction on the event
         // runSDL(event);
-    printHitSummary(event);
-    runMiniDoublet(event);
-    printMiniDoubletSummary(event);
-    runSegment(event);
-    printSegmentSummary(event);
-    // event.setLogLevel(SDL::Log_Debug);
-    runTracklet(event);
-    // event.setLogLevel(SDL::Log_Nothing);
-    printTrackletSummary(event);
-    runTriplet(event);
-    printTripletSummary(event);
-    runTrackCandidate(event);
-    printTrackCandidateSummary(event);
+
+        printHitSummary(event);
+        runMiniDoublet(event);
+        printMiniDoubletSummary(event);
+        runSegment(event);
+        printSegmentSummary(event);
+        event.setLogLevel(SDL::Log_Debug);
+        runTracklet(event);
+        event.setLogLevel(SDL::Log_Nothing);
+        printTrackletSummary(event);
+        runTriplet(event);
+        printTripletSummary(event);
+        runTrackCandidateTest_v2(event);
+        printTrackCandidateSummary(event);
 
         // *********************************************************************
         // SDL::Event from each sim track (using only hits from given sim track)

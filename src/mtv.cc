@@ -68,7 +68,8 @@ void mtv()
         addOuterTrackerHits(event);
 
         // Run the SDL reconstruction on the event
-        runSDL(event);
+        // runSDLTest_v1(event);
+        runSDLTest_v2(event);
 
         // *********************************************************************
         // SDL::Event from each sim track (using only hits from given sim track)

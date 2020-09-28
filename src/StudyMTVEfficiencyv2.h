@@ -50,6 +50,15 @@ public:
     std::array<std::vector<float>, 6> tl_matched_track_dxy_mtv;
     std::array<std::vector<float>, 6> tl_all_track_dxy_mtv;
 
+    std::array<std::vector<float>, 6> tp_matched_track_pt_mtv;
+    std::array<std::vector<float>, 6> tp_all_track_pt_mtv;
+    std::array<std::vector<float>, 6> tp_matched_track_eta_mtv;
+    std::array<std::vector<float>, 6> tp_all_track_eta_mtv;
+    std::array<std::vector<float>, 6> tp_matched_track_phi_mtv;
+    std::array<std::vector<float>, 6> tp_all_track_phi_mtv;
+    std::array<std::vector<float>, 6> tp_matched_track_dxy_mtv;
+    std::array<std::vector<float>, 6> tp_all_track_dxy_mtv;
+
     StudyMTVEfficiencyv2(
         const char* studyName,
         std::vector<float> ptbounds,
@@ -59,7 +68,9 @@ public:
     virtual void bookStudy_v1();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
     virtual void doStudy_v1(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+    virtual void doStudy_trackCandidateEfficiency(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
     virtual void doStudy_trackletEfficiency(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
+    virtual void doStudy_tripletEfficiency(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);
 
 };
 

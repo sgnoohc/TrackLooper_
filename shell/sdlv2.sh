@@ -21,6 +21,7 @@ usage() {
     echo ""
     echo "  Options without arguemtns"
     echo "    -m (to do do mtv-like efficiency)"
+    echo "    -w (to write SDL ntuples)"
     echo ""
     echo "  SAMPLEID = 1  : pt 0.5 to 2.0 hundred-mu-gun sample"
     echo "             2  : e 0 to 200 ten-mu-gun sample"
@@ -39,7 +40,8 @@ usage() {
     echo "             15 : pu200 ttbar (500 evt) with sdl option --pdg_id == 0 (0 means all charged particle)"
     echo "             17 : 5 cm 'cube' with pt 0.5 to 50 ten-mu-gun"
     echo "             18 : 50 cm 'cube' with pt 0.5 to 50 ten-mu-gun"
-    echo "             19 : pt 0.5 to 50 ten-mu-gun sample"
+    echo "             19 : ttbar (pu 200?)"
+    echo "             20 : 100 pion gun pt 0.5 to 50 GeV"
     exit
 }
 
@@ -89,8 +91,8 @@ fi
 if [[ ${SAMPLEID} == "2" ]]; then
 SAMPLE=/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
 SAMPLETAG=e200
-    PDGID=13
-    pTBOUND=0
+PDGID=13
+PTBOUND=0
 fi
 
 if [[ ${SAMPLEID} == "3" ]]; then
@@ -143,7 +145,8 @@ PTBOUND=0
 fi
 
 if [[ ${SAMPLEID} == "10" ]]; then
-SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root
+# SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root
+SAMPLE=${TRACKINGNTUPLEDIR}/CMSSW_10_4_0/src/trackingNtuple_100mu_pt0p5_3p0.root
 SAMPLETAG=pt0p5_3p0
 PDGID=13
 PTBOUND=5
@@ -203,12 +206,18 @@ PTBOUND=7
 fi
 
 if [[ ${SAMPLEID} == "19" ]]; then
-SAMPLE=/home/users/phchang/public_html/analysis/sdl/trackingNtuple/private_samples/samplegen/HundredMuPt_0p5_50_pythia8_cfi_GEN_SIM_py__output.root
-SAMPLETAG=pt0p5_50p0
+SAMPLE=/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0_mtd5/src/trackingNtuple_TTbar.root
+SAMPLETAG=ttbar
 PDGID=13
 PTBOUND=7
 fi
 
+if [[ ${SAMPLEID} == "20" ]]; then
+SAMPLE=/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100pion_pt0p5_50p0.root
+SAMPLETAG=pion
+PDGID=211
+PTBOUND=8
+fi
 
 
 ########################################
@@ -223,7 +232,7 @@ if [[ ${DOMTV} == true ]]; then
     #################################################
     # When the option is DOMTV then PDGID is set to 0
     #################################################
-    PDGID=0
+    # PDGID=0
 fi
 
 if [[ ${WRITESDLNTUPLE} == true ]]; then
@@ -250,7 +259,8 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     rm .jobs.txt
     if [[ ${DOPEREVENT} == true ]]; then
         # NJOBS=500
-        NJOBS=36
+        # NJOBS=36
+        NJOBS=1
     else
         NJOBS=16
     fi

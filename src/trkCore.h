@@ -89,13 +89,18 @@ void loadMaps();
 void addOuterTrackerHits(SDL::Event& event);
 void addOuterTrackerHitsFromSimTrack(SDL::Event& event, int isimtrk);
 void runSDL(SDL::Event& event);
+void runSDLTest_v1(SDL::Event& event);
+void runSDLTest_v2(SDL::Event& event);
 
 // Running pieces
 void runMiniDoublet(SDL::Event& event);
 void runSegment(SDL::Event& event);
 void runTriplet(SDL::Event& event);
 void runTracklet(SDL::Event& event);
+void runTrackletTest_v1(SDL::Event& event);
 void runTrackCandidate(SDL::Event& event);
+void runTrackCandidateTest_v1(SDL::Event& event);
+void runTrackCandidateTest_v2(SDL::Event& event);
 
 // Printing SDL information
 void printHitSummary(SDL::Event& event);
