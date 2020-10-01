@@ -44,6 +44,9 @@ void algo_eff()
         // Add hits to the event
         addOuterTrackerHits(event);
 
+        // Add Pixel Seeds to the event
+        addPixelSegments(event);
+
         // Run the SDL reconstruction on the event
         runSDL(event);
 

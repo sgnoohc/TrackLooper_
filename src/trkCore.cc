@@ -117,7 +117,7 @@ bool isMuonCurlingHit(unsigned int isimtrk, unsigned int ith_hit)
         return true;
 
     // If it reaches this point again, we're not sure what this hit is
-    // So we return false 
+    // So we return false
     return false;
 
 }
@@ -322,7 +322,7 @@ std::tuple<bool, bool, int, int> getDenomSimTrackTypeForAlgoEff(float isimtrk)
         matched_unique_layers.push_back(i);
         if (i < 7)
             matched_unique_barrel_layers.push_back(i);
-        else                      
+        else
             matched_unique_endcap_layers.push_back(i);
     }
 
@@ -787,7 +787,7 @@ bool goodBarrelTrack(unsigned int isimtrk, int pdgid)
         if (not (trk.simhit_particle()[simhitidx] == trk.sim_pdgId()[isimtrk]))
             continue;
 
-        // if pdgid is provided then check that the pdgid 
+        // if pdgid is provided then check that the pdgid
         if (pdgid != 0)
             if (not (trk.sim_pdgId()[isimtrk] == abs(pdgid)))
                 continue;
@@ -957,7 +957,7 @@ bool hasAtLeastOneHitPairinEndcapLikeTiltedModule(unsigned short layer, unsigned
             {
                 hasTiltedPairAtLayer = true;
             }
-                
+
         }
     }
 
@@ -1010,7 +1010,7 @@ bool isMTVMatch(unsigned int isimtrk, std::vector<unsigned int> hit_idxs, bool v
     int nhits = hit_idxs.size();
 
     float factor = nhits / 12.;
- 
+
     // If 75% of 12 hits have been found than it is matched
     return (v_intersection.size() > ana.nmatch_threshold * factor);
 }
@@ -1038,7 +1038,7 @@ bool is75percentFromSimMatchedHits(std::vector<unsigned int> hitidxs, int pdgid)
     }
 
     std::vector<unsigned int> v_intersection;
- 
+
     std::set_intersection(hitidxs_w_matched_pdgid.begin(), hitidxs_w_matched_pdgid.end(),
                           hitidxs.begin(), hitidxs.end(),
                           std::back_inserter(v_intersection));
@@ -1058,7 +1058,7 @@ TVector3 linePropagateR(const TVector3& r3, const TVector3& p3, double rDest, in
 
   double pt = p3.Pt();
   double p =  p3.Mag();
-  
+
   // r3 + p3/p*x*|d| = dest : dest.t = rt + d <=> rt^2 + 2*dotPR2D/p*x*|d| + pt^2/p^2*x^2*d^2 = rt^2 + 2*rt*d + d^2
   // 2*dotPR2D/p*|d|* x + pt^2/p^2*d^2* x^2 - ( 2*rt*d + d^2) = 0
   // 2*dotPR2D/p/|d|* x + pt^2/p^2* x^2 - ( 2*rt/d + 1) = 0
@@ -1098,7 +1098,7 @@ std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVe
   double epsilon = 0.001;
   double p = p3.Mag();
   double kap = (2.99792458e-3*3.8*q/p);
-  
+
   auto lastR3 = r3;
   auto lastT3 = p3.Unit();
   int nIts = 7;
@@ -1110,7 +1110,7 @@ std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVe
       return { lineEst, lastT3*p};
     }
     if (q==0) return {lineEst, lastT3*p};
-    
+
     double dir = (lineEst.x() - lastR3.x())*lastT3.x() + (lineEst.y() - lastR3.y())*lastT3.y() > 0 ? 1. : -1;
     double dS = (lineEst - lastR3).Mag()*dir;
     double phi = kap*dS;
@@ -1120,14 +1120,14 @@ std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVe
     }
     double alpha = 1 - sin(phi)/phi;
     double beta = (1 - cos(phi))/phi;
-    
-    TVector3 tau = lastT3; 
-    
+
+    TVector3 tau = lastT3;
+
     TVector3 hEstR3(tau.x()*(1.-alpha) + tau.y()*beta, tau.y()*(1.-alpha) - tau.x()*beta, tau.z());
     hEstR3 *= dS;
     hEstR3 += lastR3;
     lastR3 = hEstR3;
-    
+
     TVector3 hEstT3(tau.x()*cos(phi) + tau.y()*sin(phi), tau.y()*cos(phi) - tau.x()*sin(phi), tau.z());
     lastT3 = hEstT3;
     --nIts;
@@ -1142,7 +1142,7 @@ std::pair<TVector3,TVector3> helixPropagateApproxR(const TVector3& r3, const TVe
   }
   status = (std::abs(lastR3.Perp() - rDest) > epsilon);
   return {lastR3, lastT3*p};
-  
+
 }
 
 
@@ -1188,11 +1188,11 @@ void fitCircle(std::vector<float> xs, std::vector<float> ys)
     fitter.Config().ParSettings(1).SetName("y0");
     fitter.Config().ParSettings(2).SetName("R");
 
-    // do the fit 
+    // do the fit
     bool ok = fitter.FitFCN();
     if (!ok) {
         Error("line3Dfit","Line3D Fit failed");
-    }   
+    }
 
     const ROOT::Fit::FitResult & result = fitter.Result();
 
@@ -1577,15 +1577,15 @@ vector<int> matchedSimTrkIdxs(SDL::TrackCandidate* tc)
 
     // Resize the hitidxs so that it is different for different track candidate type
     // For some cases it has 6 minidoublets, some cases it has 5 minidoublets
-    std::vector<int>::iterator ip; 
+    std::vector<int>::iterator ip;
 
-    // Using std::unique 
+    // Using std::unique
     ip = std::unique(hitidxs.begin(), hitidxs.end());
-    // Now v becomes {1 3 10 1 3 7 8 * * * * *} 
-    // * means undefined 
+    // Now v becomes {1 3 10 1 3 7 8 * * * * *}
+    // * means undefined
 
-    // Resizing the vector so as to remove the undefined terms 
-    hitidxs.resize(std::distance(hitidxs.begin(), ip)); 
+    // Resizing the vector so as to remove the undefined terms
+    hitidxs.resize(std::distance(hitidxs.begin(), ip));
 
     std::vector<vector<int>> simtrk_idxs;
     std::vector<int> unique_idxs; // to aggregate which ones to count and test
@@ -2035,6 +2035,212 @@ void addOuterTrackerHits(SDL::Event& event)
                 // add to module with "detId"
                 detid
                 );
+
+    }
+}
+
+//__________________________________________________________________________________________
+TVector3 r3FromPCA(const TVector3& p3, const float dxy, const float dz){
+  const float pt = p3.Pt();
+  const float p = p3.Mag();
+  const float vz = dz*pt*pt/p/p;
+
+  const float vx = -dxy*p3.y()/pt - p3.x()/p*p3.z()/p*dz;
+  const float vy =  dxy*p3.x()/pt - p3.y()/p*p3.z()/p*dz;
+  return TVector3(vx, vy, vz);
+}
+
+
+//__________________________________________________________________________________________
+void addPixelSegments(SDL::Event& event)
+{
+    for (auto&& [iSeed, _] : iter::enumerate(trk.see_stateTrajGlbPx()))
+    {
+        TVector3 p3LH(trk.see_stateTrajGlbPx()[iSeed], trk.see_stateTrajGlbPy()[iSeed], trk.see_stateTrajGlbPz()[iSeed]);
+        TVector3 r3LH(trk.see_stateTrajGlbX()[iSeed], trk.see_stateTrajGlbY()[iSeed], trk.see_stateTrajGlbZ()[iSeed]);
+        TVector3 p3PCA(trk.see_px()[iSeed], trk.see_py()[iSeed], trk.see_pz()[iSeed]);
+        TVector3 r3PCA(r3FromPCA(p3PCA, trk.see_dxy()[iSeed], trk.see_dz()[iSeed]));
+        auto const& seedHitsV = trk.see_hitIdx()[iSeed];
+        auto const& seedHitTypesV = trk.see_hitType()[iSeed];
+
+        // /// track algorithm; partial copy from TrackBase.h
+        // enum class TrackAlgorithm {
+        //     undefAlgorithm = 0,
+        //     ctf = 1,
+        //     duplicateMerge = 2,
+        //     cosmics = 3,
+        //     initialStep = 4,
+        //     lowPtTripletStep = 5,
+        //     pixelPairStep = 6,
+        //     detachedTripletStep = 7,
+        //     mixedTripletStep = 8,
+        //     pixelLessStep = 9,
+        //     tobTecStep = 10,
+        //     jetCoreRegionalStep = 11,
+        //     conversionStep = 12,
+        //     muonSeededStepInOut = 13,
+        //     muonSeededStepOutIn = 14,
+        //     outInEcalSeededConv = 15, inOutEcalSeededConv = 16,
+        //     nuclInter = 17,
+        //     standAloneMuon = 18, globalMuon = 19, cosmicStandAloneMuon = 20, cosmicGlobalMuon = 21,
+        //     // Phase1
+        //     highPtTripletStep = 22, lowPtQuadStep = 23, detachedQuadStep = 24,
+        //     reservedForUpgrades1 = 25, reservedForUpgrades2 = 26,
+        //     bTagGhostTracks = 27,
+        //     beamhalo = 28,
+        //     gsf = 29
+        // };
+        if (trk.see_algo()[iSeed] != 4)
+            continue;
+
+        int nHits = seedHitsV.size();
+
+        assert(nHits == 4);
+        for (int iH = 0; iH < nHits; ++iH){
+            //FIXME: make this configurable
+            assert(seedHitTypesV[iH] == 0);
+        }
+
+        // float seedSD_mdRef_pixL = HitIndexWithType(trk.see_hitIdx()[iSeed][0], HitType(trk.see_hitType()[iSeed][0])).indexWithType;
+        // float seedSD_mdRef_pixU = HitIndexWithType(trk.see_hitIdx()[iSeed][1], HitType(trk.see_hitType()[iSeed][1])).indexWithType;
+        int seedSD_mdRef_pixL = trk.see_hitIdx()[iSeed][0];
+        int seedSD_mdRef_pixU = trk.see_hitIdx()[iSeed][1];
+        TVector3 seedSD_mdRef_r3 = r3PCA;
+        float seedSD_mdRef_rt = r3PCA.Pt();
+        float seedSD_mdRef_z = r3PCA.Z();
+        float seedSD_mdRef_r = r3PCA.Mag();
+        float seedSD_mdRef_phi = r3PCA.Phi();
+        float seedSD_mdRef_alpha = r3PCA.DeltaPhi(p3PCA);
+        // const int itpRL = simsPerHitAll(seedSD_mdRef_pixL); // TODO: best sim trk idx SO PERHAPS NOT NEEDED
+        // const int itpRU = simsPerHitAll(seedSD_mdRef_pixU); // TODO: best sim trk idx
+        // float seedSD_mdRef_itp = itpRL;
+        // float seedSD_mdRef_ntp = 1;
+        // float seedSD_mdRef_itpLL = itpRL;
+
+        // if (itpRL >= 0 && itpRU >= 0)
+        // {
+        //     if (itpRL == itpRU)
+        //     {
+        //         seedSD_mdRef_ntp = 2;
+        //     }
+        // }
+        // else if (itpRL == -1 && itpRU == -1)
+        // {
+        //     seedSD_mdRef_ntp = 0;
+        // }
+        // else if (itpRU >= 0)
+        // {
+        //     seedSD_mdRef_itp = itpRU;
+        // }
+
+        int seedSD_mdOut_pixL = trk.see_hitIdx()[iSeed][2];
+        int seedSD_mdOut_pixU = trk.see_hitIdx()[iSeed][3];
+        // if (nPix >= 4)
+        //     seedSD_mdOut_pixU = trk.see_hitIdx()[iSeed][3];
+        TVector3 seedSD_mdOut_r3 = r3LH;
+        float seedSD_mdOut_rt = r3LH.Pt();
+        float seedSD_mdOut_z = r3LH.Z();
+        float seedSD_mdOut_r = r3LH.Mag();
+        float seedSD_mdOut_phi = r3LH.Phi();
+        float seedSD_mdOut_alpha = r3LH.DeltaPhi(p3LH);
+        // const int itpOL = simsPerHitAll(seedSD_mdOut_pixL);
+        // const int itpOU = simsPerHitAll(seedSD_mdOut_pixU);
+        // float seedSD_mdOut_itp = itpOL;
+        // float seedSD_mdOut_ntp = 1;
+        // float seedSD_mdOut_itpLL = itpOL;
+        // if (itpOL >= 0 && itpOU >= 0)
+        // {
+        //     if (itpOL == itpOU)
+        //     {
+        //         seedSD_mdOut_ntp = 2;
+        //     }
+        // }
+        // else if (itpOL == -1 && itpOU == -1)
+        // {
+        //     seedSD_mdOut_ntp = 0;
+        // }
+        // else if (itpOU >= 0)
+        // {
+        //     seedSD_mdOut_itp = itpOU;
+        // }
+
+        float seedSD_iRef = iSeed;
+        float seedSD_iOut = iSeed;
+        TVector3 seedSD_r3 = r3LH;
+        float seedSD_rt = r3LH.Pt();
+        float seedSD_rtInv = 1.f / seedSD_rt;
+        float seedSD_z = seedSD_r3.Z();
+        TVector3 seedSD_p3 = p3LH;
+        float seedSD_alpha = r3LH.DeltaPhi(p3LH);
+        float seedSD_dr = (r3LH - r3PCA).Pt();
+        float seedSD_d = seedSD_rt - r3PCA.Pt();
+        float seedSD_zeta = seedSD_p3.Pt() / seedSD_p3.Z();
+
+        // std::map<int, int> tps;
+        // int seedSD_itp = -1;
+        // int seedSD_ntp = 0;
+        // tps[itpRL]++;
+        // tps[itpRU]++;
+        // tps[itpOL]++;
+        // tps[itpOU]++;
+
+        // for (auto m : tps)
+        // {
+        //     if (m.first >= 0 && m.second > seedSD_ntp)
+        //     {
+        //         seedSD_itp = m.first;
+        //         seedSD_ntp = m.second;
+        //     }
+        // }
+
+        // // LL indexing is not very useful for seeds; to it anyways for "full" coverage
+        // int seedSD_itpLL = -1;
+        // int seedSD_ntpLL = 0;
+        // tps.clear();
+        // tps[itpRL]++;
+        // tps[itpOL]++;
+        // for (auto m : tps)
+        // {
+        //     if (m.first >= 0 && m.second > seedSD_ntpLL)
+        //     {
+        //         seedSD_itpLL = m.first;
+        //         seedSD_ntpLL = m.second;
+        //     }
+        // }
+
+        // For this segment in this layer, I need to add this many
+        // I suppose for now... I can have a SDL::Module of ginormous size
+        // with a special detId of ... 1? (does this require Module.h modification?)
+        // SDL::Hit
+        // SDL::Hit
+        // SDL::MiniDoublet
+        // SDL::Hit
+        // SDL::Hit
+        // SDL::MiniDoublet
+        // SDL::Segment
+
+        // std::cout <<  " seedSD_mdRef_rt: " << seedSD_mdRef_rt <<  std::endl;
+        // std::cout <<  " seedSD_mdRef_z: " << seedSD_mdRef_z <<  std::endl;
+        // std::cout <<  " seedSD_mdRef_alpha: " << seedSD_mdRef_alpha <<  std::endl;
+        // std::cout <<  " seedSD_mdOut_rt: " << seedSD_mdOut_rt <<  std::endl;
+        // std::cout <<  " seedSD_mdOut_z: " << seedSD_mdOut_z <<  std::endl;
+        // std::cout <<  " seedSD_mdOut_alpha: " << seedSD_mdOut_alpha <<  std::endl;
+        // std::cout <<  " trk.pix_x()[trk.see_hitIdx()[iSeed][0]]: " << trk.pix_x()[trk.see_hitIdx()[iSeed][0]] <<  std::endl;
+        // std::cout <<  " trk.pix_y()[trk.see_hitIdx()[iSeed][0]]: " << trk.pix_y()[trk.see_hitIdx()[iSeed][0]] <<  std::endl;
+        // std::cout <<  " sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][0]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][0]],2)): " << sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][0]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][0]],2)) <<  std::endl;
+        // std::cout <<  " trk.pix_z()[trk.see_hitIdx()[iSeed][0]]: " << trk.pix_z()[trk.see_hitIdx()[iSeed][0]] <<  std::endl;
+        // std::cout <<  " trk.pix_x()[trk.see_hitIdx()[iSeed][1]]: " << trk.pix_x()[trk.see_hitIdx()[iSeed][1]] <<  std::endl;
+        // std::cout <<  " trk.pix_y()[trk.see_hitIdx()[iSeed][1]]: " << trk.pix_y()[trk.see_hitIdx()[iSeed][1]] <<  std::endl;
+        // std::cout <<  " sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][1]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][1]],2)): " << sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][1]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][1]],2)) <<  std::endl;
+        // std::cout <<  " trk.pix_z()[trk.see_hitIdx()[iSeed][1]]: " << trk.pix_z()[trk.see_hitIdx()[iSeed][1]] <<  std::endl;
+        // std::cout <<  " trk.pix_x()[trk.see_hitIdx()[iSeed][2]]: " << trk.pix_x()[trk.see_hitIdx()[iSeed][2]] <<  std::endl;
+        // std::cout <<  " trk.pix_y()[trk.see_hitIdx()[iSeed][2]]: " << trk.pix_y()[trk.see_hitIdx()[iSeed][2]] <<  std::endl;
+        // std::cout <<  " sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][2]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][2]],2)): " << sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][2]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][2]],2)) <<  std::endl;
+        // std::cout <<  " trk.pix_z()[trk.see_hitIdx()[iSeed][2]]: " << trk.pix_z()[trk.see_hitIdx()[iSeed][2]] <<  std::endl;
+        // std::cout <<  " trk.pix_x()[trk.see_hitIdx()[iSeed][3]]: " << trk.pix_x()[trk.see_hitIdx()[iSeed][3]] <<  std::endl;
+        // std::cout <<  " trk.pix_y()[trk.see_hitIdx()[iSeed][3]]: " << trk.pix_y()[trk.see_hitIdx()[iSeed][3]] <<  std::endl;
+        // std::cout <<  " sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][3]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][3]],2)): " << sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][3]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][3]],2)) <<  std::endl;
+        // std::cout <<  " trk.pix_z()[trk.see_hitIdx()[iSeed][3]]: " << trk.pix_z()[trk.see_hitIdx()[iSeed][3]] <<  std::endl;
 
     }
 }
@@ -2583,7 +2789,7 @@ void printSimTrack(int isimtrk)
         matched_unique_layers.push_back(i);
         if (i < 7)
             matched_unique_barrel_layers.push_back(i);
-        else                      
+        else
             matched_unique_endcap_layers.push_back(i);
     }
 

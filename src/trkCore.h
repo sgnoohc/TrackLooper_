@@ -86,6 +86,8 @@ std::vector<int> matchedSimTrkIdxs(SDL::Triplet* tp);
 
 // Steering SDL
 void loadMaps();
+TVector3 r3FromPCA(const TVector3& p3, const float dxy, const float dz);
+void addPixelSegments(SDL::Event& event);
 void addOuterTrackerHits(SDL::Event& event);
 void addOuterTrackerHitsFromSimTrack(SDL::Event& event, int isimtrk);
 void runSDL(SDL::Event& event);
