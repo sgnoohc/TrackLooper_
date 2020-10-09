@@ -8,7 +8,7 @@ void write_sdl_ntuple()
     // pt_boundaries
     std::vector<float> pt_boundaries = getPtBounds();
 
-    studies.push_back(new WriteSDLNtuple("WriteSDLNtuple"));
+    studies.push_back(new WriteSDLNtuplev2("WriteSDLNtuple"));
 
     // book the studies
     for (auto& study : studies)
@@ -35,20 +35,30 @@ void write_sdl_ntuple()
         // Add hits to the event
         addOuterTrackerHits(event);
 
-        // Run the SDL reconstruction on the event
-        // runSDL(event);
+        // Add pixel segments
+        addPixelSegments(event);
 
+        // Print hit summary
         printHitSummary(event);
+
+        // Run Mini-doublet
         runMiniDoublet(event);
         printMiniDoubletSummary(event);
+
+        // Run Segment
         runSegment(event);
         printSegmentSummary(event);
-        event.setLogLevel(SDL::Log_Debug);
+
+        // Run Tracklet
         runTracklet(event);
-        event.setLogLevel(SDL::Log_Nothing);
+        runTrackletTest_PixelSegment_v1(event);
         printTrackletSummary(event);
+
+        // Run Triplet
         runTriplet(event);
         printTripletSummary(event);
+
+        // Run TrackCandidate
         runTrackCandidateTest_v2(event);
         printTrackCandidateSummary(event);
 

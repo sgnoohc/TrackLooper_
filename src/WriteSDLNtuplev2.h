@@ -1,5 +1,5 @@
-#ifndef WriteSDLNtuple_h
-#define WriteSDLNtuple_h
+#ifndef WriteSDLNtuplev2_h
+#define WriteSDLNtuplev2_h
 
 #include "SDL/Event.h"
 
@@ -22,13 +22,13 @@
 
 #include <cppitertools/itertools.hpp>
 
-class WriteSDLNtuple : public Study
+class WriteSDLNtuplev2 : public Study
 {
 
 public:
     const char* studyname;
 
-    WriteSDLNtuple(const char* studyName);
+    WriteSDLNtuplev2(const char* studyName);
 
     virtual void bookStudy();
     virtual void doStudy(SDL::Event& recoevent, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents);

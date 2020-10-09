@@ -1,13 +1,13 @@
-#include "WriteSDLNtuple.h"
+#include "WriteSDLNtuplev2.h"
 
 //____________________________________________________________________________________________
-WriteSDLNtuple::WriteSDLNtuple(const char* studyName)
+WriteSDLNtuplev2::WriteSDLNtuplev2(const char* studyName)
 {
     studyname = studyName;
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::bookStudy()
+void WriteSDLNtuplev2::bookStudy()
 {
     createHitsSimHitsSimTracksBranches();
     createPixelSeedBranches();
@@ -20,7 +20,7 @@ void WriteSDLNtuple::bookStudy()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createHitsSimHitsSimTracksBranches()
+void WriteSDLNtuplev2::createHitsSimHitsSimTracksBranches()
 {
     // Reco hits
     ana.tx->createBranch<vector<float>>("ph2_x");
@@ -65,7 +65,7 @@ void WriteSDLNtuple::createHitsSimHitsSimTracksBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createPixelSeedBranches()
+void WriteSDLNtuplev2::createPixelSeedBranches()
 {
     ana.tx->createBranch<vector<float>>("see_stateTrajGlbPx");
     ana.tx->createBranch<vector<float>>("see_stateTrajGlbPy");
@@ -87,7 +87,7 @@ void WriteSDLNtuple::createPixelSeedBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createMiniDoubletBranches()
+void WriteSDLNtuplev2::createMiniDoubletBranches()
 {
     // MiniDoublets
     ana.tx->createBranch<vector<vector<int>>>("md_hitIdx");
@@ -121,7 +121,7 @@ void WriteSDLNtuple::createMiniDoubletBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createSegmentBranches()
+void WriteSDLNtuplev2::createSegmentBranches()
 {
     // Segments
     ana.tx->createBranch<vector<vector<int>>>("sg_hitIdx");
@@ -144,7 +144,7 @@ void WriteSDLNtuple::createSegmentBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createTripletBranches()
+void WriteSDLNtuplev2::createTripletBranches()
 {
     // Triplets
     ana.tx->createBranch<vector<vector<int>>>("tp_hitIdx");
@@ -166,7 +166,7 @@ void WriteSDLNtuple::createTripletBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createQuadrupletBranches()
+void WriteSDLNtuplev2::createQuadrupletBranches()
 {
     // Quadruplets
     ana.tx->createBranch<vector<vector<int>>>("qp_hitIdx");
@@ -188,7 +188,7 @@ void WriteSDLNtuple::createQuadrupletBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createPixelQuadrupletBranches()
+void WriteSDLNtuplev2::createPixelQuadrupletBranches()
 {
     // Quadruplets
     ana.tx->createBranch<vector<vector<int>>>("pqp_hitIdx");
@@ -210,7 +210,7 @@ void WriteSDLNtuple::createPixelQuadrupletBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::createTrackCandidateBranches()
+void WriteSDLNtuplev2::createTrackCandidateBranches()
 {
     // Track Candidates
     ana.tx->createBranch<vector<vector<int>>>("tc_hitIdx");
@@ -232,22 +232,22 @@ void WriteSDLNtuple::createTrackCandidateBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
+void WriteSDLNtuplev2::doStudy(SDL::Event& event, std::vector<std::tuple<unsigned int, SDL::Event*>> simtrkevents)
 {
     setHitsSimHitsSimTracksBranches();
     setPixelSeedBranches();
     setMiniDoubletBranches(event);
-    setSegmentBranches(event);
-    setTripletBranches(event);
-    setQuadrupletBranches(event);
-    setPixelQuadrupletBranches(event);
-    setTrackCandidateBranches(event);
+    // setSegmentBranches(event);
+    // setTripletBranches(event);
+    // setQuadrupletBranches(event);
+    // setPixelQuadrupletBranches(event);
+    // setTrackCandidateBranches(event);
     ana.tx->fill();
     ana.tx->clear();
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setHitsSimHitsSimTracksBranches()
+void WriteSDLNtuplev2::setHitsSimHitsSimTracksBranches()
 {
 
     // Reco hits
@@ -368,7 +368,7 @@ void WriteSDLNtuple::setHitsSimHitsSimTracksBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setPixelSeedBranches()
+void WriteSDLNtuplev2::setPixelSeedBranches()
 {
     // Reco pixel seeds
     ana.tx->setBranch<vector<float>>("see_stateTrajGlbPx", trk.see_stateTrajGlbPx());
@@ -391,7 +391,7 @@ void WriteSDLNtuple::setPixelSeedBranches()
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setMiniDoubletBranches(SDL::Event& event)
+void WriteSDLNtuplev2::setMiniDoubletBranches(SDL::Event& event)
 {
 
     // get layer ptrs
@@ -513,7 +513,7 @@ void WriteSDLNtuple::setMiniDoubletBranches(SDL::Event& event)
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setSegmentBranches(SDL::Event& event)
+void WriteSDLNtuplev2::setSegmentBranches(SDL::Event& event)
 {
 
     // get layer ptrs
@@ -612,7 +612,7 @@ void WriteSDLNtuple::setSegmentBranches(SDL::Event& event)
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setTripletBranches(SDL::Event& event)
+void WriteSDLNtuplev2::setTripletBranches(SDL::Event& event)
 {
 
     // get layer ptrs
@@ -712,7 +712,7 @@ void WriteSDLNtuple::setTripletBranches(SDL::Event& event)
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setQuadrupletBranches(SDL::Event& event)
+void WriteSDLNtuplev2::setQuadrupletBranches(SDL::Event& event)
 {
 
     // get layer ptrs
@@ -817,7 +817,7 @@ void WriteSDLNtuple::setQuadrupletBranches(SDL::Event& event)
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setPixelQuadrupletBranches(SDL::Event& event)
+void WriteSDLNtuplev2::setPixelQuadrupletBranches(SDL::Event& event)
 {
 
     // get pixel layer ptrs
@@ -917,7 +917,7 @@ void WriteSDLNtuple::setPixelQuadrupletBranches(SDL::Event& event)
 }
 
 //____________________________________________________________________________________________
-void WriteSDLNtuple::setTrackCandidateBranches(SDL::Event& event)
+void WriteSDLNtuplev2::setTrackCandidateBranches(SDL::Event& event)
 {
 
     // get layer ptrs

@@ -1996,6 +1996,107 @@ std::vector<int> matchedSimTrkIdxs(SDL::Triplet* tp)
 }
 
 //__________________________________________________________________________________________
+std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hittypes)
+{
+    if (hitidxs.size() != hittypes.size())
+    {
+        std::cout << "Error: matched_sim_trk_idxs()   hitidxs and hittypes have different lengths" << std::endl;
+        std::cout << "hitidxs.size(): " << hitidxs.size() << std::endl;
+        std::cout << "hittypes.size(): " << hittypes.size() << std::endl;
+    }
+
+    std::vector<vector<int>> simtrk_idxs;
+    std::vector<int> unique_idxs; // to aggregate which ones to count and test
+
+    for (auto&& [ihit, ihitdata] : iter::enumerate(iter::zip(hitidxs, hittypes)))
+    {
+        auto&& [hitidx, hittype] = ihitdata;
+
+        std::vector<int> simtrk_idxs_per_hit;
+
+        const std::vector<vector<int>>* simHitIdxs;
+
+        if (hittype == 4)
+            simHitIdxs = &trk.ph2_simHitIdx();
+        else
+            simHitIdxs = &trk.pix_simHitIdx();
+
+        for (auto& simhit_idx : (*simHitIdxs)[hitidx])
+        {
+            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+            simtrk_idxs_per_hit.push_back(simtrk_idx);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
+                unique_idxs.push_back(simtrk_idx);
+        }
+
+        if (simtrk_idxs_per_hit.size() == 0)
+        {
+            simtrk_idxs_per_hit.push_back(-1);
+            if (std::find(unique_idxs.begin(), unique_idxs.end(), -1) == unique_idxs.end())
+                unique_idxs.push_back(-1);
+        }
+
+        simtrk_idxs.push_back(simtrk_idxs_per_hit);
+    }
+
+    // print
+    if (ana.verbose != 0)
+    {
+        std::cout << "va print" << std::endl;
+        for (auto& vec : simtrk_idxs)
+        {
+            for (auto& idx : vec)
+            {
+                std::cout << idx << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "va print end" << std::endl;
+    }
+
+    // Compute all permutations
+    std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm =
+        [&](vector<vector<int>>& result, vector<int> intermediate, size_t n, vector<vector<int>>& va)
+    {
+        if (va.size() > n)
+        {
+            for (auto x : va[n])
+            {
+                intermediate.push_back(x);
+                perm(result, intermediate, n+1, va);
+            }
+        }
+        else
+        {
+            result.push_back(intermediate);
+        }
+    };
+
+    vector<vector<int>> allperms;
+    perm(allperms, vector<int>(), 0, simtrk_idxs);
+
+    std::vector<int> matched_sim_trk_idxs;
+    for (auto& trkidx_perm : allperms)
+    {
+        std::vector<int> counts;
+        for (auto& unique_idx : unique_idxs)
+        {
+            int cnt = std::count(trkidx_perm.begin(), trkidx_perm.end(), unique_idx);
+            counts.push_back(cnt);
+        }
+        auto result = std::max_element(counts.begin(), counts.end());
+        int rawidx = std::distance(counts.begin(), result);
+        int trkidx = unique_idxs[rawidx];
+        if (trkidx < 0)
+            continue;
+        if (counts[rawidx] > (((float)hitidxs.size()) * 0.75))
+            matched_sim_trk_idxs.push_back(trkidx);
+    }
+
+    return matched_sim_trk_idxs;
+}
+
+//__________________________________________________________________________________________
 void loadMaps()
 {
     SDL::endcapGeometry.load("/home/users/phchang/public_html/analysis/sdl/TrackLooper_/scripts/endcap_orientation_data_v2.txt"); // centroid values added to the map
@@ -2292,7 +2393,7 @@ void addPixelSegments(SDL::Event& event, int isimtrk)
 
         // if ((ptIn > 0.7) and (fabs(p3LH.Eta()) < 3))
         //     event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, pz, etaErr);
-        event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, px, py, pz, etaErr);
+        event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, px, py, pz, etaErr, iSeed);
 
     }
 }

@@ -6,7 +6,7 @@
 #include "SDL/Event.h"
 #include <cppitertools/itertools.hpp>
 #include "Study.h"
-#include "WriteSDLNtuple.h"
+#include "WriteSDLNtuplev2.h"
 #include "trkCore.h"
 
 void write_sdl_ntuple();
