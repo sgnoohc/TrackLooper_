@@ -16,6 +16,7 @@
 #include "AnalysisConfig.h"
 
 #include "trkCore.h"
+#include <bitset>
 
 
 class StudySDLEfficiencyv2 : public Study
@@ -31,6 +32,7 @@ public:
         kStudySDLBBBEEE,
         kStudySDLBBEEEE,
         kStudySDLBEEEEE,
+        kStudySDLPixel,
     };
 
     const char* studyname;

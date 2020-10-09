@@ -87,12 +87,13 @@ std::vector<int> matchedSimTrkIdxs(SDL::Triplet* tp);
 // Steering SDL
 void loadMaps();
 TVector3 r3FromPCA(const TVector3& p3, const float dxy, const float dz);
-void addPixelSegments(SDL::Event& event);
+void addPixelSegments(SDL::Event& event, int isimtrk = -1);
 void addOuterTrackerHits(SDL::Event& event);
 void addOuterTrackerHitsFromSimTrack(SDL::Event& event, int isimtrk);
 void runSDL(SDL::Event& event);
 void runSDLTest_v1(SDL::Event& event);
 void runSDLTest_v2(SDL::Event& event);
+void runSDLTest_PixelSegments(SDL::Event& event);
 
 // Running pieces
 void runMiniDoublet(SDL::Event& event);
@@ -100,6 +101,7 @@ void runSegment(SDL::Event& event);
 void runTriplet(SDL::Event& event);
 void runTracklet(SDL::Event& event);
 void runTrackletTest_v1(SDL::Event& event);
+void runTrackletTest_PixelSegment_v1(SDL::Event& event);
 void runTrackCandidate(SDL::Event& event);
 void runTrackCandidateTest_v1(SDL::Event& event);
 void runTrackCandidateTest_v2(SDL::Event& event);

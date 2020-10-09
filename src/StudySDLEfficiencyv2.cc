@@ -20,6 +20,7 @@ StudySDLEfficiencyv2::StudySDLEfficiencyv2(
         case kStudySDLBBBEEE: eff_modename = "bbbeee"; break;
         case kStudySDLBBEEEE: eff_modename = "bbeeee"; break;
         case kStudySDLBEEEEE: eff_modename = "beeeee"; break;
+        case kStudySDLPixel: eff_modename = "pixel"; break;
         default: eff_modename = "UNDEFINED"; break;
     }
 
@@ -208,6 +209,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     std::array<float, 6> etabounds_bbbeee = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
     std::array<float, 6> etabounds_bbeeee = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
     std::array<float, 6> etabounds_beeeee = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
+    std::array<float, 6> etabounds_pixel  = {2.5, 2.5, 2.5, 2.5, 2.5, 2.5};
 
     // Eta inner bounds
     std::array<float, 6> etainnerbounds_bbbbbb = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -216,6 +218,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     std::array<float, 6> etainnerbounds_bbbeee = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     std::array<float, 6> etainnerbounds_bbeeee = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     std::array<float, 6> etainnerbounds_beeeee = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    std::array<float, 6> etainnerbounds_pixel  = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     // Select eta bounds
     std::array<float, 6> etabounds;
@@ -225,6 +228,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     if (eff_mode == kStudySDLBBBEEE) etabounds = etabounds_bbbeee;
     if (eff_mode == kStudySDLBBEEEE) etabounds = etabounds_bbeeee;
     if (eff_mode == kStudySDLBEEEEE) etabounds = etabounds_beeeee;
+    if (eff_mode == kStudySDLPixel ) etabounds = etabounds_pixel;
 
     // Select etainner bounds
     std::array<float, 6> etainnerbounds;
@@ -234,6 +238,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     if (eff_mode == kStudySDLBBBEEE) etainnerbounds = etainnerbounds_bbbeee;
     if (eff_mode == kStudySDLBBEEEE) etainnerbounds = etainnerbounds_bbeeee;
     if (eff_mode == kStudySDLBEEEEE) etainnerbounds = etainnerbounds_beeeee;
+    if (eff_mode == kStudySDLPixel ) etainnerbounds = etainnerbounds_pixel;
 
     // Logical layer index maps
     std::vector<int> logical_layer_rawidxmap_bbbbbb = {1, 2, 3, 4, 5, 6};
@@ -242,6 +247,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     std::vector<int> logical_layer_rawidxmap_bbbeee = {1, 2, 3, 1, 2, 3};
     std::vector<int> logical_layer_rawidxmap_bbeeee = {1, 2, 1, 2, 3, 4};
     std::vector<int> logical_layer_rawidxmap_beeeee = {1, 1, 2, 3, 4, 5};
+    std::vector<int> logical_layer_rawidxmap_pixel  = {0, 1, 2, 3, 4, 5};
 
     std::vector<bool> logical_layer_subdetmap_bbbbbb = {true , true  , true  , true  , true  , true};
     std::vector<bool> logical_layer_subdetmap_bbbbbe = {true , true  , true  , true  , true  , false};
@@ -249,6 +255,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     std::vector<bool> logical_layer_subdetmap_bbbeee = {true , true  , true  , false , false , false};
     std::vector<bool> logical_layer_subdetmap_bbeeee = {true , true  , false , false , false , false};
     std::vector<bool> logical_layer_subdetmap_beeeee = {true , false , false , false , false , false};
+    std::vector<bool> logical_layer_subdetmap_pixel  = {true , true  , true  , true  , true  , true};
 
     std::map<std::pair<int, bool>, int> logical_layer_map_bbbbbb;
     std::map<std::pair<int, bool>, int> logical_layer_map_bbbbbe;
@@ -256,6 +263,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     std::map<std::pair<int, bool>, int> logical_layer_map_bbbeee;
     std::map<std::pair<int, bool>, int> logical_layer_map_bbeeee;
     std::map<std::pair<int, bool>, int> logical_layer_map_beeeee;
+    std::map<std::pair<int, bool>, int> logical_layer_map_pixel;
 
     for (unsigned int i = 0; i < 6; ++i)
     {
@@ -265,6 +273,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
         logical_layer_map_bbbeee[std::make_pair(logical_layer_rawidxmap_bbbeee[i], logical_layer_subdetmap_bbbeee[i])] = i;
         logical_layer_map_bbeeee[std::make_pair(logical_layer_rawidxmap_bbeeee[i], logical_layer_subdetmap_bbeeee[i])] = i;
         logical_layer_map_beeeee[std::make_pair(logical_layer_rawidxmap_beeeee[i], logical_layer_subdetmap_beeeee[i])] = i;
+        logical_layer_map_pixel [std::make_pair(logical_layer_rawidxmap_pixel [i], logical_layer_subdetmap_pixel [i])] = i;
     }
 
     // select logical layer map
@@ -275,6 +284,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     if (eff_mode == kStudySDLBBBEEE) logical_layer_map = logical_layer_map_bbbeee;
     if (eff_mode == kStudySDLBBEEEE) logical_layer_map = logical_layer_map_bbeeee;
     if (eff_mode == kStudySDLBEEEEE) logical_layer_map = logical_layer_map_beeeee;
+    if (eff_mode == kStudySDLPixel ) logical_layer_map = logical_layer_map_pixel;
 
     // select logical layer map
     std::vector<bool> logical_layer_subdetmap;
@@ -284,6 +294,7 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
     if (eff_mode == kStudySDLBBBEEE) logical_layer_subdetmap = logical_layer_subdetmap_bbbeee;
     if (eff_mode == kStudySDLBBEEEE) logical_layer_subdetmap = logical_layer_subdetmap_bbeeee;
     if (eff_mode == kStudySDLBEEEEE) logical_layer_subdetmap = logical_layer_subdetmap_beeeee;
+    if (eff_mode == kStudySDLPixel ) logical_layer_subdetmap = logical_layer_subdetmap_pixel;
 
     // Loop over track events
     for (auto& simtrkevent : simtrkevents)
@@ -349,6 +360,10 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
                 break;
             case kStudySDLBEEEEE:
                 if (not (hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 1) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 2) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 3) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 4) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 5) and not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6)))
+                    continue;
+                break;
+            case kStudySDLPixel:
+                if (not hasAll12HitsWithNBarrelUsingModuleMap(isimtrk, 6))
                     continue;
                 break;
             default:
@@ -525,6 +540,39 @@ void StudySDLEfficiencyv2::doStudy(SDL::Event& event, std::vector<std::tuple<uns
                 }
             }
 
+        }
+
+        // Studying Pixel Segment and Tracklets
+        bool pix_sg_trackmatch_by_layer = trackevent.getPixelLayer().getSegmentPtrs().size() > 0;
+        if (ana.verbose != 0)
+        {
+            std::cout <<  " pix_sg_trackmatch_by_layer: " << pix_sg_trackmatch_by_layer <<  std::endl;
+            std::cout <<  " trackevent.getPixelLayer().getTrackletPtrs().size(): " << trackevent.getPixelLayer().getTrackletPtrs().size() <<  std::endl;
+        }
+        for (auto& tlPtr : trackevent.getPixelLayer().getTrackletPtrs())
+        {
+            tlPtr->runTrackletAlgo(SDL::Default_TLAlgo);
+            bool pass = tlPtr->passesTrackletAlgo(SDL::Default_TLAlgo);
+            int passbit = tlPtr->getPassBitsDefaultAlgo();
+            float _pt = trk.sim_pt()[isimtrk];
+            float _eta = trk.sim_eta()[isimtrk];
+            float _dxy = trk.sim_pca_dxy()[isimtrk];
+            float _dz = trk.sim_pca_dz()[isimtrk];
+            float _charge = trk.sim_q()[isimtrk];
+            if (ana.verbose != 0)
+            {
+                std::cout <<  " _pt: " << _pt <<  " _eta: " << _eta <<  " _dxy: " << _dxy <<  " _dz: " << _dz <<  " _charge: " << _charge <<  std::endl;
+                // std::cout <<  " tlPtr->getRecoVar('rawBetaIn'): " << tlPtr->getRecoVar("rawBetaIn") <<  std::endl;
+                // std::cout <<  " tlPtr->getRecoVar('betaIn'): " << tlPtr->getRecoVar("betaIn") <<  std::endl;
+                // std::cout <<  " tlPtr->getRecoVar('betaOut'): " << tlPtr->getRecoVar("betaOut") <<  std::endl;
+                // std::cout <<  " tlPtr->getDeltaBeta(): " << tlPtr->getDeltaBeta() <<  std::endl;
+                // std::cout <<  " tlPtr->getDeltaBetaCut(): " << tlPtr->getDeltaBetaCut() <<  std::endl;
+                // std::cout <<  " pass: " << pass <<  std::endl;
+                // std::bitset<8> x(passbit);
+                // std::cout <<  " passbit: " << x <<  std::endl;
+                std::cout <<  " tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()->getModule().layer(): " << tlPtr->outerSegmentPtr()->innerMiniDoubletPtr()->anchorHitPtr()->getModule().layer() <<  std::endl;
+                std::cout <<  " tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule().layer(): " << tlPtr->outerSegmentPtr()->outerMiniDoubletPtr()->anchorHitPtr()->getModule().layer() <<  std::endl;
+            }
         }
 
         // *****************

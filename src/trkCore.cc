@@ -2052,10 +2052,25 @@ TVector3 r3FromPCA(const TVector3& p3, const float dxy, const float dz){
 
 
 //__________________________________________________________________________________________
-void addPixelSegments(SDL::Event& event)
+void addPixelSegments(SDL::Event& event, int isimtrk)
 {
     for (auto&& [iSeed, _] : iter::enumerate(trk.see_stateTrajGlbPx()))
     {
+
+        if (isimtrk >= 0)
+        {
+            bool match = false;
+            for (auto& seed_simtrkidx : trk.see_simTrkIdx()[iSeed])
+            {
+                if (seed_simtrkidx == isimtrk)
+                {
+                    match = true;
+                }
+            }
+            if (not match)
+                continue;
+        }
+
         TVector3 p3LH(trk.see_stateTrajGlbPx()[iSeed], trk.see_stateTrajGlbPy()[iSeed], trk.see_stateTrajGlbPz()[iSeed]);
         TVector3 r3LH(trk.see_stateTrajGlbX()[iSeed], trk.see_stateTrajGlbY()[iSeed], trk.see_stateTrajGlbZ()[iSeed]);
         TVector3 p3PCA(trk.see_px()[iSeed], trk.see_py()[iSeed], trk.see_pz()[iSeed]);
@@ -2090,16 +2105,27 @@ void addPixelSegments(SDL::Event& event)
         //     beamhalo = 28,
         //     gsf = 29
         // };
-        if (trk.see_algo()[iSeed] != 4)
+        bool good_seed_type = false;
+        if (trk.see_algo()[iSeed] == 4) good_seed_type = true;
+        if (trk.see_algo()[iSeed] == 5) good_seed_type = true;
+        if (trk.see_algo()[iSeed] == 7) good_seed_type = true;
+        if (trk.see_algo()[iSeed] == 22) good_seed_type = true;
+        if (trk.see_algo()[iSeed] == 23) good_seed_type = true;
+        if (trk.see_algo()[iSeed] == 24) good_seed_type = true;
+        if (not good_seed_type)
             continue;
+        // if (trk.see_algo()[iSeed] != 4 and trk.see_algo()[iSeed] != 5)
+        //     continue;
+        // if (trk.see_algo()[iSeed] < 4 and trk.see_algo()[iSeed] > 8)
+        //     continue;
 
         int nHits = seedHitsV.size();
 
-        assert(nHits == 4);
-        for (int iH = 0; iH < nHits; ++iH){
-            //FIXME: make this configurable
-            assert(seedHitTypesV[iH] == 0);
-        }
+        //assert(nHits == 4);
+        //for (int iH = 0; iH < nHits; ++iH){
+        //    //FIXME: make this configurable
+        //    assert(seedHitTypesV[iH] == 0);
+        //}
 
         // float seedSD_mdRef_pixL = HitIndexWithType(trk.see_hitIdx()[iSeed][0], HitType(trk.see_hitType()[iSeed][0])).indexWithType;
         // float seedSD_mdRef_pixU = HitIndexWithType(trk.see_hitIdx()[iSeed][1], HitType(trk.see_hitType()[iSeed][1])).indexWithType;
@@ -2218,7 +2244,6 @@ void addPixelSegments(SDL::Event& event)
         // SDL::Hit
         // SDL::MiniDoublet
         // SDL::Segment
-
         // std::cout <<  " seedSD_mdRef_rt: " << seedSD_mdRef_rt <<  std::endl;
         // std::cout <<  " seedSD_mdRef_z: " << seedSD_mdRef_z <<  std::endl;
         // std::cout <<  " seedSD_mdRef_alpha: " << seedSD_mdRef_alpha <<  std::endl;
@@ -2241,6 +2266,33 @@ void addPixelSegments(SDL::Event& event)
         // std::cout <<  " trk.pix_y()[trk.see_hitIdx()[iSeed][3]]: " << trk.pix_y()[trk.see_hitIdx()[iSeed][3]] <<  std::endl;
         // std::cout <<  " sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][3]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][3]],2)): " << sqrt(pow(trk.pix_x()[trk.see_hitIdx()[iSeed][3]],2)+pow(trk.pix_y()[trk.see_hitIdx()[iSeed][3]],2)) <<  std::endl;
         // std::cout <<  " trk.pix_z()[trk.see_hitIdx()[iSeed][3]]: " << trk.pix_z()[trk.see_hitIdx()[iSeed][3]] <<  std::endl;
+
+        // Inner most hit
+        std::vector<SDL::Hit> hits;
+        int hitidx0 = trk.see_hitIdx()[iSeed][0];
+        // hits.push_back(SDL::Hit(trk.pix_x()[hitidx0], trk.pix_y()[hitidx0], trk.pix_z()[hitidx0], hitidx0));
+        hits.push_back(SDL::Hit(r3PCA.X(), r3PCA.Y(), r3PCA.Z(), hitidx0));
+        int hitidx1 = trk.see_hitIdx()[iSeed][1];
+        // hits.push_back(SDL::Hit(trk.pix_x()[hitidx1], trk.pix_y()[hitidx1], trk.pix_z()[hitidx1], hitidx1));
+        hits.push_back(SDL::Hit(r3PCA.X(), r3PCA.Y(), r3PCA.Z(), hitidx1));
+        int hitidx2 = trk.see_hitIdx()[iSeed][2];
+        // hits.push_back(SDL::Hit(trk.pix_x()[hitidx2], trk.pix_y()[hitidx2], trk.pix_z()[hitidx2], hitidx2));
+        hits.push_back(SDL::Hit(r3LH.X(), r3LH.Y(), r3LH.Z(), hitidx2));
+        int hitidx3 = trk.see_hitIdx()[iSeed][3];
+        // hits.push_back(SDL::Hit(trk.pix_x()[hitidx3], trk.pix_y()[hitidx3], trk.pix_z()[hitidx3], hitidx3));
+        hits.push_back(SDL::Hit(r3LH.X(), r3LH.Y(), r3LH.Z(), hitidx3));
+
+        float pixelSegmentDeltaPhiChange = r3LH.DeltaPhi(p3LH);
+        float ptIn = p3LH.Pt();
+        float ptErr = trk.see_ptErr()[iSeed];
+        float etaErr = trk.see_etaErr()[iSeed];
+        float px = p3LH.X();
+        float py = p3LH.Y();
+        float pz = p3LH.Z();
+
+        // if ((ptIn > 0.7) and (fabs(p3LH.Eta()) < 3))
+        //     event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, pz, etaErr);
+        event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, px, py, pz, etaErr);
 
     }
 }
@@ -2343,6 +2395,7 @@ void printMiniDoubletSummary(SDL::Event& event)
 //__________________________________________________________________________________________
 void printSegmentSummary(SDL::Event& event)
 {
+    if (ana.verbose != 0) std::cout << "# of Pixel Segments: " << event.getPixelLayer().getSegmentPtrs().size() << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments produced: " << event.getNumberOfSegments() << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 1-2: " << event.getNumberOfSegmentsByLayerBarrel(0) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Segments produced barrel layer 2-3: " << event.getNumberOfSegmentsByLayerBarrel(1) << std::endl;
@@ -2442,6 +2495,7 @@ void printTripletSummary(SDL::Event& event)
 void printTrackletSummary(SDL::Event& event)
 {
     // ----------------
+    if (ana.verbose != 0) std::cout << "# of Tracklets produced with pixel segment: " << event.getPixelLayer().getTrackletPtrs().size() << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets produced: " << event.getNumberOfTracklets() << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 1-2-3-4: " << event.getNumberOfTrackletsByLayerBarrel(0) << std::endl;
     if (ana.verbose != 0) std::cout << "# of Tracklets produced layer 2-3-4-5: " << event.getNumberOfTrackletsByLayerBarrel(1) << std::endl;
@@ -2527,6 +2581,23 @@ void runTracklet(SDL::Event& event)
     // event.createTracklets();
     event.createTrackletsWithModuleMap();
     event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsWithTwoGapsWithModuleMap();
+    // event.createTrackletsViaNavigation();
+    float tl_elapsed = my_timer.RealTime();
+    if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
+}
+
+//__________________________________________________________________________________________
+void runTrackletTest_PixelSegment_v1(SDL::Event& event)
+{
+    TStopwatch my_timer;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
+    my_timer.Start(kFALSE);
+    // event.createTracklets();
+    // event.createTrackletsWithModuleMap();
+    // event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsWithPixelAndBarrel();
+    event.createTrackletsWithPixelAndBarrel(SDL::AllComb_TLAlgo);
     // event.createTrackletsWithTwoGapsWithModuleMap();
     // event.createTrackletsViaNavigation();
     float tl_elapsed = my_timer.RealTime();
@@ -2638,6 +2709,24 @@ void runSDLTest_v2(SDL::Event& event)
     printTrackletSummary(event);
     runTrackCandidateTest_v2(event);
     printTrackCandidateSummary(event);
+
+}
+
+//__________________________________________________________________________________________
+void runSDLTest_PixelSegments(SDL::Event& event)
+{
+
+    printHitSummary(event);
+    runMiniDoublet(event);
+    printMiniDoubletSummary(event);
+    runSegment(event);
+    printSegmentSummary(event);
+    runTriplet(event);
+    printTripletSummary(event);
+    runTrackletTest_PixelSegment_v1(event);
+    printTrackletSummary(event);
+    // runTrackCandidateTest_v2(event);
+    // printTrackCandidateSummary(event);
 
 }
 
