@@ -269,7 +269,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         if [[ ${DOPEREVENT} == true ]]; then
             echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -x ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} -v 3 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
         else
-            echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -j ${NJOBS} -I ${i} -i ${SAMPLE} -n 100 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
+            echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
         fi
     done
 
