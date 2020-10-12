@@ -2005,10 +2005,23 @@ std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hi
         std::cout << "hittypes.size(): " << hittypes.size() << std::endl;
     }
 
+    std::vector<std::pair<int, int>> to_check_duplicate;
+    for (auto&& [ihit, ihitdata] : iter::enumerate(iter::zip(hitidxs, hittypes)))
+    {
+        auto&& [hitidx, hittype] = ihitdata;
+        auto item = std::make_pair(hitidx, hittype);
+        if (std::find(to_check_duplicate.begin(), to_check_duplicate.end(), item) == to_check_duplicate.end())
+        {
+            to_check_duplicate.push_back(item);
+        }
+    }
+
+    int nhits_input = to_check_duplicate.size();
+
     std::vector<vector<int>> simtrk_idxs;
     std::vector<int> unique_idxs; // to aggregate which ones to count and test
 
-    for (auto&& [ihit, ihitdata] : iter::enumerate(iter::zip(hitidxs, hittypes)))
+    for (auto&& [ihit, ihitdata] : iter::enumerate(to_check_duplicate))
     {
         auto&& [hitidx, hittype] = ihitdata;
 
@@ -2021,9 +2034,23 @@ std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hi
         else
             simHitIdxs = &trk.pix_simHitIdx();
 
-        for (auto& simhit_idx : (*simHitIdxs)[hitidx])
+        if ( (*simHitIdxs).size() <= hitidx)
         {
-            int simtrk_idx = trk.simhit_simTrkIdx()[simhit_idx];
+                std::cout << (*simHitIdxs).size() << " " << hittype << std::endl;
+                std::cout << hitidx << " " << hittype << std::endl;
+        }
+
+        for (auto& simhit_idx : (*simHitIdxs).at(hitidx))
+        {
+            // std::cout << "  " << trk.simhit_simTrkIdx().size() << std::endl;
+            // std::cout << " " << simhit_idx << std::endl;
+            if (trk.simhit_simTrkIdx().size() <= simhit_idx)
+            {
+                std::cout << (*simHitIdxs).size() << " " << hittype << std::endl;
+                std::cout << hitidx << " " << hittype << std::endl;
+                std::cout << trk.simhit_simTrkIdx().size() << " " << simhit_idx << std::endl;
+            }
+            int simtrk_idx = trk.simhit_simTrkIdx().at(simhit_idx);
             simtrk_idxs_per_hit.push_back(simtrk_idx);
             if (std::find(unique_idxs.begin(), unique_idxs.end(), simtrk_idx) == unique_idxs.end())
                 unique_idxs.push_back(simtrk_idx);
@@ -2089,7 +2116,7 @@ std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hi
         int trkidx = unique_idxs[rawidx];
         if (trkidx < 0)
             continue;
-        if (counts[rawidx] > (((float)hitidxs.size()) * 0.75))
+        if (counts[rawidx] > (((float)nhits_input) * 0.75))
             matched_sim_trk_idxs.push_back(trkidx);
     }
 

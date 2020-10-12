@@ -84,6 +84,9 @@ std::vector<int> matchedSimTrkIdxs(SDL::Tracklet& tl);
 // Triplet helper
 std::vector<int> matchedSimTrkIdxs(SDL::Triplet* tp);
 
+// Generic track matching function
+std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hittypes);
+
 // Steering SDL
 void loadMaps();
 TVector3 r3FromPCA(const TVector3& p3, const float dxy, const float dz);
