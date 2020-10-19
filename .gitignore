@@ -12,3 +12,8 @@ scripts/moduleconnection*.txt
 bin/*
 test*
 workarea/
+.jobs.txt
+dev_plots/
+efficiency/.jobs.txt
+efficiency/efficiency.root
+efficiency/outputs/
