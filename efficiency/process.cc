@@ -20,40 +20,21 @@ int main(int argc, char** argv)
 
     // creating a set of efficiency plots
     std::vector<EfficiencySetDefinition> list_effSetDef;
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_B1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_B1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_B2", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_B2")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_B3", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_B3")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_B4", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_B4")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_B5", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_B5")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_B6", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_B6")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_E1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_E1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_E2", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_E2")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_E3", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_E3")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_E4", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_E4")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("MD_E5", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_MD_E5")[isim].size() > 0;}));
 
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B1B2", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B1B2")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B2B3", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B2B3")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B3B4", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B3B4")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B4B5", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B4B5")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B5B6", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B5B6")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B1E1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B1E1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B2E1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B2E1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B3E1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B3E1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B4E1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B4E1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_B5E1", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_B5E1")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_E1E2", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_E1E2")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_E2E3", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_E2E3")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_E3E4", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_E3E4")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("LS_E4E5", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_LS_E4E5")[isim].size() > 0;}));
+    // Book MD
+    for (auto& md_type : MD_types)
+        list_effSetDef.push_back(EfficiencySetDefinition(TString::Format("MD_%s", md_type.Data()), 13, [&, md_type](int isim) {return ana.tx.getBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_MD_%s", md_type.Data()))[isim].size() > 0;}));
+
+    for (auto& ls_type : LS_types)
+        list_effSetDef.push_back(EfficiencySetDefinition(TString::Format("LS_%s", ls_type.Data()), 13, [&, ls_type](int isim) {return ana.tx.getBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_LS_%s", ls_type.Data()))[isim].size() > 0;}));
 
     list_effSetDef.push_back(EfficiencySetDefinition("pLS_P", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pLS_P")[isim].size() > 0;}));
 
-    list_effSetDef.push_back(EfficiencySetDefinition("pT4_PB1B2", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB1B2")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("pT4_PB2B3", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB2B3")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("pT4_PB3B4", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB3B4")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("pT4_PB4B5", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB4B5")[isim].size() > 0;}));
-    list_effSetDef.push_back(EfficiencySetDefinition("pT4_PB5B6", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB5B6")[isim].size() > 0;}));
+    for (auto& pt4_type : pT4_types)
+        list_effSetDef.push_back(EfficiencySetDefinition(TString::Format("pT4_%s", pt4_type.Data()), 13, [&, pt4_type](int isim) {return ana.tx.getBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_pT4_%s", pt4_type.Data()))[isim].size() > 0;}));
+
+    for (auto& t4_type : T4_types)
+        list_effSetDef.push_back(EfficiencySetDefinition(TString::Format("T4_%s", t4_type.Data()), 13, [&, t4_type](int isim) {return ana.tx.getBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_T4_%s", t4_type.Data()))[isim].size() > 0;}));
 
     bookEfficiencySets(list_effSetDef);
 
@@ -285,43 +266,24 @@ void createSDLVariables()
     ana.tx.createBranch<vector<int>>("sim_hasAll12HitsInBarrel");
 
     // Mini-Doublets
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_B1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_B2");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_B3");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_B4");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_B5");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_B6");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_E1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_E2");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_E3");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_E4");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_MD_E5");
+    for (auto& md_type : MD_types)
+        ana.tx.createBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_MD_%s", md_type.Data()));
 
     // Line segments
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B1B2");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B2B3");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B3B4");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B4B5");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B5B6");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B1E1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B2E1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B3E1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B4E1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_B5E1");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_E1E2");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_E2E3");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_E3E4");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_LS_E4E5");
+    for (auto& ls_type : LS_types)
+        ana.tx.createBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_LS_%s", ls_type.Data()));
 
     // Pixel Line segments
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pLS_P");
 
     // Tracklets with Pixel
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB1B2");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB2B3");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB3B4");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB4B5");
-    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pT4_PB5B6");
+    for (auto& pt4_type : pT4_types)
+        ana.tx.createBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_pT4_%s", pt4_type.Data()));
+
+    // Tracklets
+    for (auto& t4_type : T4_types)
+        ana.tx.createBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_T4_%s", t4_type.Data()));
+
 }
 
 void setSDLVariables()
@@ -384,6 +346,20 @@ void setSDLVariables()
         for (unsigned int ipt4 = 0; ipt4 < pT4_types.size(); ++ipt4)
         {
             ana.tx.pushbackToBranch<vector<int>>(TString::Format("mtv_match_idxs_pT4_%s", pT4_types.at(ipt4).Data()), pT4_idxs.at(ipt4));
+        }
+
+        // Tracklet (T4)
+        std::array<std::vector<int>, n_T4_types> T4_idxs;
+        for (auto& qpIdx : sdl.sim_qpIdx()[isim])
+        {
+            std::vector<int> layers = {sdl.qp_layer()[qpIdx][0], sdl.qp_layer()[qpIdx][1], sdl.qp_layer()[qpIdx][2], sdl.qp_layer()[qpIdx][3]};
+            T4_idxs[T4_types_map[layers]].push_back(qpIdx);
+        }
+
+        // Set the T4 idxs variables
+        for (unsigned int ils = 0; ils < T4_types.size(); ++ils)
+        {
+            ana.tx.pushbackToBranch<vector<int>>(TString::Format("mtv_match_idxs_T4_%s", T4_types.at(ils).Data()), T4_idxs.at(ils));
         }
 
     }
