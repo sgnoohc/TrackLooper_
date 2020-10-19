@@ -24,7 +24,10 @@ EXTRAFLAGS  = -fPIC -ITMultiDrawTreePlayer -Wunused-variable -lTMVA -lEG -lGenVe
 $(EXE): $(OBJECTS) SDL.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $(OBJECTS) $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
-%.o: %.cc
+SDL.o: SDL.cc SDL.h
+	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
+
+process.o: process.cc process.h sdl_types.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
 clean:

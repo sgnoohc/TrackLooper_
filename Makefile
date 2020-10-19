@@ -2,6 +2,7 @@
 
 EXES=bin/doAnalysis bin/mtv bin/tracklet bin/sdl
 
+SUBDIRS := efficiency
 SOURCES=$(wildcard src/*.cc) $(wildcard SDL/*.cc)
 OBJECTS=$(SOURCES:.cc=.o)
 HEADERS=$(SOURCES:.cc=.h)
@@ -21,7 +22,7 @@ CFLAGS      = $(ROOTCFLAGS) -Wall -Wno-unused-function -g -O2 -fPIC -fno-var-tra
 EXTRACFLAGS = $(shell rooutil-config)
 EXTRAFLAGS  = -fPIC -ITMultiDrawTreePlayer -Wunused-variable -lTMVA -lEG -lGenVector -lXMLIO -lMLP -lTreePlayer
 
-all: $(EXES)
+all: $(EXES) $(SUBDIRS)
 
 bin/doAnalysis: bin/doAnalysis.o $(OBJECTS)
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
@@ -38,5 +39,11 @@ bin/sdl: bin/sdl.o $(OBJECTS)
 %.o: %.cc
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
+$(SUBDIRS):
+	$(MAKE) -C $@
+
 clean:
 	rm -f $(OBJECTS) bin/*.o $(EXES)
+	rm -f efficiency/doAnalysis efficiency/*.o
+
+.PHONY: all $(SUBDIRS)

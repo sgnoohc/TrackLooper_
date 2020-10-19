@@ -47,6 +47,9 @@ public:
     // Custom TTree object to hold intermediate variables
     RooUtil::TTreeX tx;
 
+    // pt binning options
+    int ptbound_mode;
+
     AnalysisConfig();
 
 };
@@ -70,6 +73,7 @@ void createSDLVariables();
 void setSDLVariables();
 void printSDLVariables();
 void printSDLVariablesForATrack(int isimtrk);
+std::vector<float> getPtBounds();
 
 
 #endif

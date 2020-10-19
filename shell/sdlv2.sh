@@ -302,11 +302,12 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         mv gitlog ${OUTPUTDIR}
         cd efficiency/
         make -j
-        sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} 
+        sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} ${PTBOUND}
         echo "Plotting standard efficiency plots ..."
-        sh plot.sh ${SAMPLETAG} $(git rev-parse --short HEAD) > ${OUTPUTDIR}/plot.log
+        sh plot.sh ${SAMPLETAG} $(git rev-parse --short HEAD) > ${OUTPUTDIR}/plot.log 2>&1
         echo "Plotting Done!"
         mv plots/ ${OUTPUTDIR}/
+        cp index.html ${OUTPUTDIR}/plots/
         cd ${OUTPUTDIR}
     else
 
@@ -340,7 +341,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         export -f getlink
         echo ">>> results are in ${OUTPUTDIR}"
         echo ">>> results can also be viewed via following link:"
-        echo ">>>   $(getlink plots/mtv_eff)"
+        echo ">>>   $(getlink plots/)"
     else
         export -f getlink
         echo ">>> results are in ${OUTPUTDIR}"
