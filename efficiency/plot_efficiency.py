@@ -3,6 +3,7 @@
 import ROOT as r
 from array import array
 import os
+import sys
 
 def parse_plot_name(output_name):
     rtnstr = ["Efficiency of"]
@@ -20,7 +21,12 @@ def parse_plot_name(output_name):
         rtnstr.append("Triplet")
     elif "TC_" in output_name:
         rtnstr.append("Track Candidate")
-    rtnstr.append(os.path.basename(output_name).split("_")[1])
+    elif "T4s_" in output_name:
+        rtnstr.append("Quadruplet w/ or w/o gap")
+    types = "of type " + os.path.basename(output_name).split("_")[1]
+    if "AllTypes" in types:
+        types = "of all types"
+    rtnstr.append(types)
     return " ".join(rtnstr)
 
 def draw_eff(num, den, output_name, sample_name, version_tag):
@@ -89,9 +95,9 @@ def draw_eff(num, den, output_name, sample_name, version_tag):
 
 if __name__ == "__main__":
 
-    sample_name = "debug"
-    version_tag = "debug_v1"
     root_file_name = "efficiency.root"
+    sample_name = sys.argv[1]
+    version_tag = sys.argv[2]
 
     f = r.TFile(root_file_name)
 

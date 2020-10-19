@@ -7,11 +7,10 @@
     source rooutil/thisrooutil.sh # set rooutil
     source rooutil/root.sh # set ROOT
     make clean;
-    make -j all;
-
-## Running efficiency plot
-
-    sh shell/sdl.sh 1 2020_0514 "Straight ray tracing only with 10 cm luminous region"
+    make -j all; # Make the main SDL binary
+    cd efficiency/
+    make -j # Make the efficiency code binary
+    cd ../
 
 ## Obtaining detector geometry via the centroids
 
@@ -27,4 +26,33 @@ Folloing command creates ```data/conn.txt```.  Afterwards, copy it to a ```conn.
 Then run the following command. (Watch out for the import statements)
 
     python SDLpython/build_module_connection.py
+
+## Running SDL and writing ""SDL tracking ntuple""
+
+Following are list of available sample choices
+
+    SAMPLEID = 1  : pt 0.5 to 2.0 hundred-mu-gun sample
+               2  : e 0 to 200 ten-mu-gun sample
+               3  : pu200 ttbar (252 events without sim info on pileup tracks) with sdl option --pdg_id == 13
+               4  : pu200 ttbar (252 events without sim info on pileup tracks) with sdl option --pdg_id == 211
+               5  : pu200 ttbar (252 events without sim info on pileup tracks) with sdl option --pdg_id == 11
+               6  : DO NOT USE: displaced SUSY stuff (not sure what)
+               7  : pu200 ctau100 of some SUSY? with sdl option --pdg_id == 13
+               8  : pu200 ctau100 of some SUSY? with sdl option --pdg_id == 211
+               9  : pu200 ctau100 of some SUSY? with sdl option --pdg_id == 11
+               10 : pt 0.5 to 3.0 hundred-mu-gun sample
+               11 : pt 0.5 to 5.0 ten-mu-gun sample
+               12 : pu200 ttbar (500 evt) with sdl option --pdg_id == 13
+               13 : pu200 ttbar (500 evt) with sdl option --pdg_id == 211
+               14 : pu200 ttbar (500 evt) with sdl option --pdg_id == 11
+               15 : pu200 ttbar (500 evt) with sdl option --pdg_id == 0 (0 means all charged particle)
+               17 : 5 cm 'cube' with pt 0.5 to 50 ten-mu-gun
+               18 : 50 cm 'cube' with pt 0.5 to 50 ten-mu-gun
+               19 : ttbar (pu 200?)
+               20 : 100 pion gun pt 0.5 to 50 GeV
+
+To run the 100 mu gun 0.5 to 2.0 GeV sample setup
+
+    sh shell/sdlv2.sh -s 1 -t MyTag -d "JobTag"  -w
+
 

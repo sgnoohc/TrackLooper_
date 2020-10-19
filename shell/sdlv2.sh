@@ -255,7 +255,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     rm -f ${OUTPUTDIR}/${OUTPUTFILE}
     rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
     rm -f ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.log
-    
+
     rm .jobs.txt
     if [[ ${DOPEREVENT} == true ]]; then
         # NJOBS=500
@@ -279,12 +279,12 @@ if [ ! -d "${OUTPUTDIR}" ]; then
     xargs.sh .jobs.txt
 
     cp .jobs.txt ${OUTPUTDIR}/jobs.txt
-    
+
     echo "<== Finished parallel jobs ..."
-    
+
     # Hadding outputs
     hadd -f ${OUTPUTDIR}/${OUTPUTFILE} ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_*.root
-    
+
     # Writing some descriptive file
     echo "${DESCRIPTION}" > ${OUTPUTDIR}/description.txt
     git status >> ${OUTPUTDIR}/description.txt
@@ -298,6 +298,16 @@ if [ ! -d "${OUTPUTDIR}" ]; then
 
     if [[ ${WRITESDLNTUPLE} == true ]]; then
         :
+        git status > gitlog; git log >> gitlog; git diff >> gitlog;
+        mv gitlog ${OUTPUTDIR}
+        cd efficiency/
+        make -j
+        sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} 
+        echo "Plotting standard efficiency plots ..."
+        sh plot.sh ${SAMPLETAG} $(git rev-parse --short HEAD) > ${OUTPUTDIR}/plot.log
+        echo "Plotting Done!"
+        mv plots/ ${OUTPUTDIR}/
+        cd ${OUTPUTDIR}
     else
 
         # plotting
@@ -312,24 +322,31 @@ if [ ! -d "${OUTPUTDIR}" ]; then
 
         # Creating html for easier efficiency plots viewing
         echo ""
-        
+
         echo "Creating HTML from markdown"
         cd ${OUTPUTDIR}/
         echo sh $DIR/write_markdown.sh ${SAMPLETAG} "${DESCRIPTION}" ${JOBTAG} ${MODE}
         sh $DIR/write_markdown.sh ${SAMPLETAG} "${DESCRIPTION}" ${JOBTAG} ${MODE}
-        
+
         echo ""
 
     fi
-    
+
     function getlink {
         echo ${PWD/\/home\/users\/phchang\/public_html/http:\/\/snt:tas@uaf-10.t2.ucsd.edu\/~$USER/}/$1
     }
-    
-    export -f getlink
-    echo ">>> results are in ${OUTPUTDIR}"
-    echo ">>> results can also be viewed via following link:"
-    echo ">>>   $(getlink)"
+
+    if [[ ${WRITESDLNTUPLE} == true ]]; then
+        export -f getlink
+        echo ">>> results are in ${OUTPUTDIR}"
+        echo ">>> results can also be viewed via following link:"
+        echo ">>>   $(getlink plots/mtv_eff)"
+    else
+        export -f getlink
+        echo ">>> results are in ${OUTPUTDIR}"
+        echo ">>> results can also be viewed via following link:"
+        echo ">>>   $(getlink)"
+    fi
 
 else
 
