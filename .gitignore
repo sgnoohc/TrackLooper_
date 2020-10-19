@@ -11,3 +11,4 @@ scripts/moduleconnection*.txt
 *.pickle
 bin/*
 test*
+workarea/

@@ -8,8 +8,18 @@ def parse_plot_name(output_name):
     rtnstr = ["Efficiency of"]
     if "MD_" in output_name:
         rtnstr.append("Mini-Doublet")
-    if "LS_" in output_name:
+    elif "LS_" in output_name:
         rtnstr.append("Line Segment")
+    elif "pT4_" in output_name:
+        rtnstr.append("Quadruplet w/ Pixel LS")
+    elif "T4_" in output_name:
+        rtnstr.append("Quadruplet w/o gap")
+    elif "T4x_" in output_name:
+        rtnstr.append("Quadruplet w/ gap")
+    elif "T3_" in output_name:
+        rtnstr.append("Triplet")
+    elif "TC_" in output_name:
+        rtnstr.append("Track Candidate")
     rtnstr.append(os.path.basename(output_name).split("_")[1])
     return " ".join(rtnstr)
 

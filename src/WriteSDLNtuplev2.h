@@ -37,6 +37,7 @@ public:
     void createPixelSeedBranches();
     void createMiniDoubletBranches();
     void createSegmentBranches();
+    void createPixelSegmentBranches();
     void createTripletBranches();
     void createQuadrupletBranches();
     void createPixelQuadrupletBranches();
@@ -46,6 +47,7 @@ public:
     void setPixelSeedBranches();
     void setMiniDoubletBranches(SDL::Event& recoevent);
     void setSegmentBranches(SDL::Event& recoevent);
+    void setPixelSegmentBranches(SDL::Event& recoevent);
     void setTripletBranches(SDL::Event& recoevent);
     void setQuadrupletBranches(SDL::Event& recoevent);
     void setPixelQuadrupletBranches(SDL::Event& recoevent);

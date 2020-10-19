@@ -2066,20 +2066,20 @@ std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hi
         simtrk_idxs.push_back(simtrk_idxs_per_hit);
     }
 
-    // print
-    if (ana.verbose != 0)
-    {
-        std::cout << "va print" << std::endl;
-        for (auto& vec : simtrk_idxs)
-        {
-            for (auto& idx : vec)
-            {
-                std::cout << idx << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "va print end" << std::endl;
-    }
+    // // print
+    // if (ana.verbose != 0)
+    // {
+    //     std::cout << "va print" << std::endl;
+    //     for (auto& vec : simtrk_idxs)
+    //     {
+    //         for (auto& idx : vec)
+    //         {
+    //             std::cout << idx << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    //     std::cout << "va print end" << std::endl;
+    // }
 
     // Compute all permutations
     std::function<void(vector<vector<int>>&, vector<int>, size_t, vector<vector<int>>&)> perm =
@@ -2398,15 +2398,19 @@ void addPixelSegments(SDL::Event& event, int isimtrk)
         // Inner most hit
         std::vector<SDL::Hit> hits;
         int hitidx0 = trk.see_hitIdx()[iSeed][0];
+        int hittype0 = trk.see_hitType()[iSeed][0];
         // hits.push_back(SDL::Hit(trk.pix_x()[hitidx0], trk.pix_y()[hitidx0], trk.pix_z()[hitidx0], hitidx0));
         hits.push_back(SDL::Hit(r3PCA.X(), r3PCA.Y(), r3PCA.Z(), hitidx0));
         int hitidx1 = trk.see_hitIdx()[iSeed][1];
+        int hittype1 = trk.see_hitType()[iSeed][1];
         // hits.push_back(SDL::Hit(trk.pix_x()[hitidx1], trk.pix_y()[hitidx1], trk.pix_z()[hitidx1], hitidx1));
         hits.push_back(SDL::Hit(r3PCA.X(), r3PCA.Y(), r3PCA.Z(), hitidx1));
         int hitidx2 = trk.see_hitIdx()[iSeed][2];
+        int hittype2 = trk.see_hitType()[iSeed][2];
         // hits.push_back(SDL::Hit(trk.pix_x()[hitidx2], trk.pix_y()[hitidx2], trk.pix_z()[hitidx2], hitidx2));
         hits.push_back(SDL::Hit(r3LH.X(), r3LH.Y(), r3LH.Z(), hitidx2));
-        int hitidx3 = trk.see_hitIdx()[iSeed][3];
+        int hitidx3 = trk.see_hitIdx()[iSeed].size() > 3 ? trk.see_hitIdx()[iSeed][3] : trk.see_hitIdx()[iSeed][2]; // repeat last one if triplet
+        int hittype3 = trk.see_hitIdx()[iSeed].size() > 3 ? trk.see_hitType()[iSeed][3] : trk.see_hitIdx()[iSeed][2]; // repeat last one if triplet
         // hits.push_back(SDL::Hit(trk.pix_x()[hitidx3], trk.pix_y()[hitidx3], trk.pix_z()[hitidx3], hitidx3));
         hits.push_back(SDL::Hit(r3LH.X(), r3LH.Y(), r3LH.Z(), hitidx3));
 
@@ -2418,9 +2422,8 @@ void addPixelSegments(SDL::Event& event, int isimtrk)
         float py = p3LH.Y();
         float pz = p3LH.Z();
 
-        // if ((ptIn > 0.7) and (fabs(p3LH.Eta()) < 3))
-        //     event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, pz, etaErr);
-        event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, px, py, pz, etaErr, iSeed);
+        if ((ptIn > 0.7) and (fabs(p3LH.Eta()) < 3))
+            event.addPixelSegmentsToEvent(hits, pixelSegmentDeltaPhiChange, ptIn, ptErr, px, py, pz, etaErr, iSeed);
 
     }
 }
@@ -2719,17 +2722,19 @@ void runTracklet(SDL::Event& event)
 void runTrackletTest_PixelSegment_v1(SDL::Event& event)
 {
     TStopwatch my_timer;
-    if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet with pixel segment start" << std::endl;
     my_timer.Start(kFALSE);
     // event.createTracklets();
     // event.createTrackletsWithModuleMap();
     // event.createTrackletsWithAGapWithModuleMap();
-    // event.createTrackletsWithPixelAndBarrel();
-    event.createTrackletsWithPixelAndBarrel(SDL::AllComb_TLAlgo);
+    if (ana.verbose != 0) event.setLogLevel(SDL::Log_Debug);
+    event.createTrackletsWithPixelAndBarrel();
+    if (ana.verbose != 0) event.setLogLevel(SDL::Log_Nothing);
+    // event.createTrackletsWithPixelAndBarrel(SDL::AllComb_TLAlgo);
     // event.createTrackletsWithTwoGapsWithModuleMap();
     // event.createTrackletsViaNavigation();
     float tl_elapsed = my_timer.RealTime();
-    if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet with pixel segment processing time: " << tl_elapsed << " secs" << std::endl;
 }
 
 //__________________________________________________________________________________________
