@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     sample_name = "debug"
     version_tag = "debug_v1"
-    root_file_name = "debug.root"
+    root_file_name = "efficiency.root"
 
     f = r.TFile(root_file_name)
 
