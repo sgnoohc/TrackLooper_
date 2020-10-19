@@ -7,10 +7,7 @@
     source rooutil/thisrooutil.sh # set rooutil
     source rooutil/root.sh # set ROOT
     make clean;
-    make -j all; # Make the main SDL binary
-    cd efficiency/
-    make -j # Make the efficiency code binary
-    cd ../
+    make -j;
 
 ## Obtaining detector geometry via the centroids
 
