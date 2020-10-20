@@ -49,7 +49,7 @@ std::vector<TString> LS_types = {
     "E4E5",
 };
 
-const int n_pT4_types = 5;
+const int n_pT4_types = 14;
 std::map<std::pair<int, int>, int> pT4_types_map = {
     {{1  , 2}  , 0} , 
     {{2  , 3}  , 1} , 
@@ -73,6 +73,15 @@ std::vector<TString> pT4_types = {
     "PB3B4",
     "PB4B5",
     "PB5B6",
+    "PB1E1",
+    "PB2E1",
+    "PB3E1",
+    "PB4E1",
+    "PB5E1",
+    "PE1E2",
+    "PE2E3",
+    "PE3E4",
+    "PE4E5",
 };
 
 const int n_T4_types = 17;

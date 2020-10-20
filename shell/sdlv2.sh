@@ -89,7 +89,7 @@ PTBOUND=4
 fi
 
 if [[ ${SAMPLEID} == "2" ]]; then
-SAMPLE=/hadoop/cms/store/user/slava77/CMSSW_10_4_0_patch1-tkNtuple/pass-e072c1a/27411.0_TenMuExtendedE_0_200/trackingNtuple.root
+SAMPLE=/nfs-7/userdata/phchang/trackingNtuple/trackingNtuple_10MuGun.root
 SAMPLETAG=e200
 PDGID=13
 PTBOUND=0
