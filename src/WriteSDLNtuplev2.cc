@@ -1076,7 +1076,8 @@ void WriteSDLNtuplev2::setTrackCandidateBranches(SDL::Event& event)
 {
 
     // get layer ptrs
-    const std::vector<SDL::Layer*> layerPtrs = event.getLayerPtrs();
+    std::vector<SDL::Layer*> layerPtrs = event.getLayerPtrs();
+    layerPtrs.push_back(&(event.getPixelLayer()));
 
     // sim track to track candidate matching
     std::vector<vector<int>> sim_tcIdx(trk.sim_pt().size());
@@ -1110,10 +1111,20 @@ void WriteSDLNtuplev2::setTrackCandidateBranches(SDL::Event& event)
             ana.tx->pushbackToBranch<vector<int>>("tc_hitIdx", hit_idx);
 
             std::vector<int> hit_types;
-            hit_types.push_back(4);
-            hit_types.push_back(4);
-            hit_types.push_back(4);
-            hit_types.push_back(4);
+            if (trackCandidatePtr->innerTrackletBasePtr()->innerSegmentPtr()->innerMiniDoubletPtr()->lowerHitPtr()->getModule().detId() == 1)
+            {
+                hit_types.push_back(0);
+                hit_types.push_back(0);
+                hit_types.push_back(0);
+                hit_types.push_back(0);
+            }
+            else
+            {
+                hit_types.push_back(4);
+                hit_types.push_back(4);
+                hit_types.push_back(4);
+                hit_types.push_back(4);
+            }
             hit_types.push_back(4);
             hit_types.push_back(4);
             hit_types.push_back(4);

@@ -76,6 +76,10 @@ def draw_eff(num, den, output_name, sample_name, version_tag):
         eff.GetYaxis().SetRangeUser(yaxis_max - 0.12, yaxis_max + 0.02)
     if "etazoom" in output_name:
         eff.GetYaxis().SetRangeUser(yaxis_max - 0.12, yaxis_max + 0.02)
+    if "ptmaxzoom" in output_name:
+        eff.GetYaxis().SetRangeUser(yaxis_max - 0.02, yaxis_max + 0.02)
+    if "etamaxzoom" in output_name:
+        eff.GetYaxis().SetRangeUser(yaxis_max - 0.02, yaxis_max + 0.02)
     eff.SetTitle(parse_plot_name(output_name))
     # Label
     t = r.TLatex()
@@ -116,4 +120,5 @@ if __name__ == "__main__":
         denom = f.Get(denom_histname)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}zoom.pdf".format(nice_name), sample_name, version_tag)
+        draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}maxzoom.pdf".format(nice_name), sample_name, version_tag)
 

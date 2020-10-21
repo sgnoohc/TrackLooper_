@@ -2792,6 +2792,19 @@ void runTrackCandidateTest_v2(SDL::Event& event)
 }
 
 //__________________________________________________________________________________________
+void runTrackCandidateTest_v3(SDL::Event& event)
+{
+    TStopwatch my_timer;
+    if (ana.verbose != 0) std::cout << "Reco TrackCandidate start" << std::endl;
+    my_timer.Start(kFALSE);
+    // event.createTrackCandidatesFromTriplets();
+    // event.createTrackCandidates();
+    event.createTrackCandidatesTest_v3();
+    float tc_elapsed = my_timer.RealTime();
+    if (ana.verbose != 0) std::cout << "Reco TrackCandidate processing time: " << tc_elapsed << " secs" << std::endl;
+}
+
+//__________________________________________________________________________________________
 void runSDL(SDL::Event& event)
 {
 

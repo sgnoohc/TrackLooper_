@@ -59,7 +59,7 @@ void write_sdl_ntuple()
         printTripletSummary(event);
 
         // Run TrackCandidate
-        runTrackCandidateTest_v2(event);
+        runTrackCandidateTest_v3(event);
         printTrackCandidateSummary(event);
 
         // *********************************************************************

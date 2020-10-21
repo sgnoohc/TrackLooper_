@@ -108,6 +108,7 @@ void runTrackletTest_PixelSegment_v1(SDL::Event& event);
 void runTrackCandidate(SDL::Event& event);
 void runTrackCandidateTest_v1(SDL::Event& event);
 void runTrackCandidateTest_v2(SDL::Event& event);
+void runTrackCandidateTest_v3(SDL::Event& event);
 
 // Printing SDL information
 void printHitSummary(SDL::Event& event);
