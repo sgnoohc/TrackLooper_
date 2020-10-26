@@ -50,6 +50,9 @@ int main(int argc, char** argv)
     for (auto& tc_type : TC_types)
         list_effSetDef.push_back(EfficiencySetDefinition(TString::Format("TC_%s", tc_type.Data()), 13, [&, tc_type](int isim) {return ana.tx.getBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_TC_%s", tc_type.Data()))[isim].size() > 0;}));
     list_effSetDef.push_back(EfficiencySetDefinition("TC_AllTypes", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_AllTypes")[isim].size() > 0;}));
+    list_effSetDef.push_back(EfficiencySetDefinition("TC_Set1Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set1Types")[isim].size() > 0;}));
+    list_effSetDef.push_back(EfficiencySetDefinition("TC_Set2Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set2Types")[isim].size() > 0;}));
+    list_effSetDef.push_back(EfficiencySetDefinition("TC_Set3Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set3Types")[isim].size() > 0;}));
 
 
     bookEfficiencySets(list_effSetDef);
@@ -330,6 +333,9 @@ void createSDLVariables()
     for (auto& tc_type : TC_types)
         ana.tx.createBranch<vector<vector<int>>>(TString::Format("mtv_match_idxs_TC_%s", tc_type.Data()));
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_AllTypes");
+    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set1Types");
+    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set2Types");
+    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set3Types");
 
 }
 
@@ -469,14 +475,29 @@ void setSDLVariables()
         // Track Candidates (TC)
         std::array<std::vector<int>, n_TC_types> TC_idxs;
         std::vector<int> TC_idxs_all;
+        std::vector<int> TC_set1_idxs_all;
+        std::vector<int> TC_set2_idxs_all;
+        std::vector<int> TC_set3_idxs_all;
         for (auto& tcIdx : sdl.sim_tcIdx()[isim])
         {
             const std::vector<int>& layers = sdl.tc_layer()[tcIdx];
             if (TC_types_map.find(layers) != TC_types_map.end())
             {
                 TC_idxs[TC_types_map.at(layers)].push_back(tcIdx);
+                TC_idxs_all.push_back(tcIdx);
             }
-            TC_idxs_all.push_back(tcIdx);
+            if (TC_set1_types_map.find(layers) != TC_set1_types_map.end())
+            {
+                TC_set1_idxs_all.push_back(tcIdx);
+            }
+            if (TC_set2_types_map.find(layers) != TC_set2_types_map.end())
+            {
+                TC_set2_idxs_all.push_back(tcIdx);
+            }
+            if (TC_set3_types_map.find(layers) != TC_set3_types_map.end())
+            {
+                TC_set3_idxs_all.push_back(tcIdx);
+            }
         }
 
         // Set the TC idxs variables
@@ -485,6 +506,9 @@ void setSDLVariables()
             ana.tx.pushbackToBranch<vector<int>>(TString::Format("mtv_match_idxs_TC_%s", TC_types.at(itc).Data()), TC_idxs.at(itc));
         }
         ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_AllTypes", TC_idxs_all);
+        ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set1Types", TC_set1_idxs_all);
+        ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set2Types", TC_set2_idxs_all);
+        ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set3Types", TC_set3_idxs_all);
 
     }
 

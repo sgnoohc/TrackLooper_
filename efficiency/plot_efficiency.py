@@ -26,6 +26,8 @@ def parse_plot_name(output_name):
     types = "of type " + os.path.basename(output_name).split("_")[1]
     if "AllTypes" in types:
         types = "of all types"
+    if "Set1Types" in types:
+        types = "of set 1 types"
     rtnstr.append(types)
     return " ".join(rtnstr)
 
@@ -108,6 +110,10 @@ if __name__ == "__main__":
     num_den_pairs = []
     for key in f.GetListOfKeys():
         if "denom" in key.GetName():
+            continue
+        # if "Set1" not in key.GetName():
+        #     continue
+        if "Set3" not in key.GetName():
             continue
         numer_name = key.GetName()
         denom_name = numer_name.replace("numer", "denom")
