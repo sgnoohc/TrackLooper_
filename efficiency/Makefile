@@ -21,13 +21,13 @@ CFLAGS      = $(ROOTCFLAGS) -Wall -Wno-unused-function -g -O2 -fPIC -fno-var-tra
 EXTRACFLAGS = $(shell rooutil-config)
 EXTRAFLAGS  = -fPIC -ITMultiDrawTreePlayer -Wunused-variable -lTMVA -lEG -lGenVector -lXMLIO -lMLP -lTreePlayer
 
-$(EXE): process.o SDL.o
+$(EXE): process.o SDL.o helper.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
-multiplicity: multiplicity.o SDL.o
+multiplicity: multiplicity.o SDL.o helper.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
-inefficiency: inefficiency.o SDL.o
+inefficiency: inefficiency.o SDL.o helper.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
 SDL.o: SDL.cc SDL.h
@@ -40,6 +40,9 @@ multiplicity.o: multiplicity.cc multiplicity.h sdl_types.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
 inefficiency.o: inefficiency.cc inefficiency.h sdl_types.h
+	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
+
+helper.o: helper.cc helper.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
 all: doAnalysis multiplicity inefficiency

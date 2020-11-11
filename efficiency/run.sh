@@ -1,7 +1,13 @@
 
 if [ -z $1 ];
 then
-    echo "Must provide that path to the SDL ntuple"
+    echo "Must provide the path to the SDL ntuple"
+    exit
+fi
+
+if [ -z $2 ];
+then
+    echo "Must provide the pt bounds setup"
     exit
 fi
 
