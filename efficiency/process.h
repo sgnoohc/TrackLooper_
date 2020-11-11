@@ -50,6 +50,9 @@ public:
     // pt binning options
     int ptbound_mode;
 
+    // pdgid
+    int pdgid;
+
     AnalysisConfig();
 
 };

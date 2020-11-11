@@ -33,6 +33,14 @@ def parse_plot_name(output_name):
 
 def draw_eff(num, den, output_name, sample_name, version_tag):
 
+    if "scalar" in output_name and "ptscalar" not in output_name:
+        num.Rebin(180)
+        den.Rebin(180)
+
+    if "coarse" in output_name and "ptcoarse" not in output_name:
+        num.Rebin(18)
+        den.Rebin(18)
+
     teff = r.TEfficiency(num, den)
     eff = teff.CreateGraph()
     c1 = r.TCanvas()
@@ -111,10 +119,12 @@ if __name__ == "__main__":
     for key in f.GetListOfKeys():
         if "denom" in key.GetName():
             continue
-        # if "Set1" not in key.GetName():
+        # if "Set4" not in key.GetName():
         #     continue
-        if "Set3" not in key.GetName():
-            continue
+        # if "TC_All" not in key.GetName():
+        #     continue
+        # if "pLS_P" not in key.GetName():
+        #     continue
         numer_name = key.GetName()
         denom_name = numer_name.replace("numer", "denom")
         nice_name = numer_name.replace("Root__", "")
@@ -127,4 +137,6 @@ if __name__ == "__main__":
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}zoom.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}maxzoom.pdf".format(nice_name), sample_name, version_tag)
+        draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}scalar.pdf".format(nice_name), sample_name, version_tag)
+        draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}coarse.pdf".format(nice_name), sample_name, version_tag)
 

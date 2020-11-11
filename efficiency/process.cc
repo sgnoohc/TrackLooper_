@@ -53,6 +53,7 @@ int main(int argc, char** argv)
     list_effSetDef.push_back(EfficiencySetDefinition("TC_Set1Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set1Types")[isim].size() > 0;}));
     list_effSetDef.push_back(EfficiencySetDefinition("TC_Set2Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set2Types")[isim].size() > 0;}));
     list_effSetDef.push_back(EfficiencySetDefinition("TC_Set3Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set3Types")[isim].size() > 0;}));
+    list_effSetDef.push_back(EfficiencySetDefinition("TC_Set4Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set4Types")[isim].size() > 0;}));
 
 
     bookEfficiencySets(list_effSetDef);
@@ -117,7 +118,8 @@ void parseArguments(int argc, char** argv)
         ("n,nevents"     , "N events to loop over"                                                                               , cxxopts::value<int>()->default_value("-1"))
         ("j,nsplit_jobs" , "Enable splitting jobs by N blocks (--job_index must be set)"                                         , cxxopts::value<int>())
         ("I,job_index"   , "job_index of split jobs (--nsplit_jobs must be set. index starts from 0. i.e. 0, 1, 2, 3, etc...)"   , cxxopts::value<int>())
-        ("p,ptbound_mode"   , "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
+        ("p,ptbound_mode", "Pt bound mode (i.e. 0 = default, 1 = pt~1, 2 = pt~0.95-1.5, 3 = pt~0.5-1.5, 4 = pt~0.5-2.0"          , cxxopts::value<int>()->default_value("0"))
+        ("g,pdgid"       , "pdgid to parse for efficiency"                                                                       , cxxopts::value<int>()->default_value("13"))
         ("d,debug"       , "Run debug job. i.e. overrides output option to 'debug.root' and 'recreate's the file.")
         ("h,help"        , "Print help")
         ;
@@ -263,6 +265,7 @@ void parseArguments(int argc, char** argv)
     //  3 upto segment is default tracklet is all-comb
     //  4 upto tracklet is default trackcandidate is all-comb
     ana.ptbound_mode = result["ptbound_mode"].as<int>();
+    ana.pdgid = result["pdgid"].as<int>();
 
     //
     // Printing out the option settings overview
@@ -336,6 +339,7 @@ void createSDLVariables()
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set1Types");
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set2Types");
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set3Types");
+    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set4Types");
 
 }
 
@@ -478,6 +482,7 @@ void setSDLVariables()
         std::vector<int> TC_set1_idxs_all;
         std::vector<int> TC_set2_idxs_all;
         std::vector<int> TC_set3_idxs_all;
+        std::vector<int> TC_set4_idxs_all;
         for (auto& tcIdx : sdl.sim_tcIdx()[isim])
         {
             const std::vector<int>& layers = sdl.tc_layer()[tcIdx];
@@ -498,6 +503,10 @@ void setSDLVariables()
             {
                 TC_set3_idxs_all.push_back(tcIdx);
             }
+            if (TC_set4_types_map.find(layers) != TC_set4_types_map.end())
+            {
+                TC_set4_idxs_all.push_back(tcIdx);
+            }
         }
 
         // Set the TC idxs variables
@@ -509,6 +518,7 @@ void setSDLVariables()
         ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set1Types", TC_set1_idxs_all);
         ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set2Types", TC_set2_idxs_all);
         ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set3Types", TC_set3_idxs_all);
+        ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set4Types", TC_set4_idxs_all);
 
     }
 
@@ -593,8 +603,8 @@ void bookEfficiencySet(EfficiencySetDefinition& effset)
     ana.histograms.addVecHistogram(category_name + "_h_numer_pt"  , pt_boundaries     , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_numer_pt"); } );
     ana.histograms.addVecHistogram(category_name + "_h_denom_eta" , 180 , -2.5  , 2.5  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_denom_eta"); } );
     ana.histograms.addVecHistogram(category_name + "_h_numer_eta" , 180 , -2.5  , 2.5  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_numer_eta"); } );
-    ana.histograms.addVecHistogram(category_name + "_h_denom_dxy" , 180 , -10.  , 10.  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_denom_dxy"); } );
-    ana.histograms.addVecHistogram(category_name + "_h_numer_dxy" , 180 , -10.  , 10.  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_numer_dxy"); } );
+    ana.histograms.addVecHistogram(category_name + "_h_denom_dxy" , 180 , -30.  , 30.  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_denom_dxy"); } );
+    ana.histograms.addVecHistogram(category_name + "_h_numer_dxy" , 180 , -30.  , 30.  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_numer_dxy"); } );
     ana.histograms.addVecHistogram(category_name + "_h_denom_dz"  , 180 , -30.  , 30.  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_denom_dz"); } );
     ana.histograms.addVecHistogram(category_name + "_h_numer_dz"  , 180 , -30.  , 30.  , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_numer_dz"); } );
     ana.histograms.addVecHistogram(category_name + "_h_denom_phi" , 180 , -M_PI , M_PI , [&, category_name]() { return ana.tx.getBranchLazy<vector<float>>(category_name + "_denom_phi"); } );
@@ -623,37 +633,36 @@ void fillEfficiencySet(int isimtrk, EfficiencySetDefinition& effset)
     const int& bunch = sdl.sim_bunchCrossing()[isimtrk];
     const int& pdgid = sdl.sim_pdgId()[isimtrk];
 
-    // if (abs(dz) > 30 or abs(dxy) > 2.5 or bunch != 0 or abs(pdgid) != 13)
-    //     return;
-    if (bunch != 0 or abs(pdgid) != 13)
+    if (bunch != 0)
+        return;
+
+    if (ana.pdgid != 0 and abs(pdgid) != abs(ana.pdgid))
         return;
 
     TString category_name = effset.set_name;
 
-    if (category_name.Contains("B6"))
-    {
-    }
+    const float dzthresh = 30;
 
-    if (pt > 1.5 and abs(dz) < 30 and abs(dxy) < 2.5)
+    if (pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_eta", eta);
-    if (abs(eta) < 2.4 and abs(dz) < 30 and abs(dxy) < 2.5)
+    if (abs(eta) < 2.4 and abs(dz) < dzthresh and abs(dxy) < 2.5)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_pt", pt);
-    if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < 30 and abs(dxy) < 2.5)
+    if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_phi", phi);
-    if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < 30)
+    if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_dxy", dxy);
     if (abs(eta) < 2.4 and pt > 1.5 and abs(dxy) < 2.5)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_dz", dz);
 
     if (effset.pass(isimtrk))
     {
-        if (pt > 1.5 and abs(dz) < 30 and abs(dxy) < 2.5)
+        if (pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_eta", eta);
-        if (abs(eta) < 2.4 and abs(dz) < 30 and abs(dxy) < 2.5)
+        if (abs(eta) < 2.4 and abs(dz) < dzthresh and abs(dxy) < 2.5)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_pt", pt);
-        if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < 30 and abs(dxy) < 2.5)
+        if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_phi", phi);
-        if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < 30)
+        if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_dxy", dxy);
         if (abs(eta) < 2.4 and pt > 1.5 and abs(dxy) < 2.5)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_dz", dz);

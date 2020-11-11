@@ -27,6 +27,9 @@ $(EXE): process.o SDL.o
 multiplicity: multiplicity.o SDL.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
+inefficiency: inefficiency.o SDL.o
+	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
+
 SDL.o: SDL.cc SDL.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
@@ -36,7 +39,10 @@ process.o: process.cc process.h sdl_types.h
 multiplicity.o: multiplicity.cc multiplicity.h sdl_types.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
-all: doAnalysis multiplicity
+inefficiency.o: inefficiency.cc inefficiency.h sdl_types.h
+	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
+
+all: doAnalysis multiplicity inefficiency
 
 clean:
 	rm -f $(OBJECTS) $(EXE)

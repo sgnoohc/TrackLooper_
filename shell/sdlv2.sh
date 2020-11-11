@@ -42,6 +42,7 @@ usage() {
     echo "             18 : 50 cm 'cube' with pt 0.5 to 50 ten-mu-gun"
     echo "             19 : ttbar (pu 200?)"
     echo "             20 : 100 pion gun pt 0.5 to 50 GeV"
+    echo "             21 : 1 pion gun pt 0.5 to 50 GeV"
     exit
 }
 
@@ -219,6 +220,13 @@ PDGID=211
 PTBOUND=8
 fi
 
+if [[ ${SAMPLEID} == "21" ]]; then
+SAMPLE=/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_1pion_10k_pt0p5_50p0.root
+SAMPLETAG=pion1_0p5_50
+PDGID=211
+PTBOUND=8
+fi
+
 
 ########################################
 # Mode handling
@@ -302,6 +310,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         mv gitlog ${OUTPUTDIR}
         cd efficiency/
         make -j
+        echo "sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} ${PTBOUND}"
         sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} ${PTBOUND}
         echo "Plotting standard efficiency plots ..."
         sh plot.sh ${SAMPLETAG} $(git rev-parse --short HEAD) > ${OUTPUTDIR}/plot.log 2>&1
