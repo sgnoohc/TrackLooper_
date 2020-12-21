@@ -32,6 +32,14 @@ void WriteSDLNtuplev2::createHitsSimHitsSimTracksBranches()
     ana.tx->createBranch<vector<unsigned int>>("ph2_simType");
     ana.tx->createBranch<vector<int>>("ph2_anchorLayer");
 
+    // Reco hits
+    ana.tx->createBranch<vector<float>>("pix_x");
+    ana.tx->createBranch<vector<float>>("pix_y");
+    ana.tx->createBranch<vector<float>>("pix_z");
+    ana.tx->createBranch<vector<unsigned int>>("pix_detId");
+    ana.tx->createBranch<vector<vector<int>>>("pix_simHitIdx");
+    ana.tx->createBranch<vector<unsigned int>>("pix_simType");
+
     // Sim hits
     ana.tx->createBranch<vector<float>>("simhit_x");
     ana.tx->createBranch<vector<float>>("simhit_y");
@@ -53,6 +61,7 @@ void WriteSDLNtuplev2::createHitsSimHitsSimTracksBranches()
     ana.tx->createBranch<vector<int>>("sim_event");
     ana.tx->createBranch<vector<int>>("sim_pdgId");
     ana.tx->createBranch<vector<int>>("sim_bunchCrossing");
+    ana.tx->createBranch<vector<int>>("sim_parentVtxIdx");
     ana.tx->createBranch<vector<int>>("sim_hasAll12HitsInBarrel");
     ana.tx->createBranch<vector<vector<int>>>("sim_simHitIdx");
     ana.tx->createBranch<vector<vector<int>>>("sim_simHitLayer");
@@ -295,6 +304,14 @@ void WriteSDLNtuplev2::setHitsSimHitsSimTracksBranches()
     }
     ana.tx->setBranch<vector<int>>("ph2_anchorLayer", anchorLayer);
 
+    ana.tx->setBranch<vector<float>>("pix_x", trk.pix_x());
+    ana.tx->setBranch<vector<float>>("pix_y", trk.pix_y());
+    ana.tx->setBranch<vector<float>>("pix_z", trk.pix_z());
+    ana.tx->setBranch<vector<unsigned int>>("pix_detId", trk.pix_detId());
+    ana.tx->setBranch<vector<vector<int>>>("pix_simHitIdx", trk.pix_simHitIdx());
+    vector<unsigned int> pix_simType(trk.pix_simType().begin(), trk.pix_simType().end());
+    ana.tx->setBranch<vector<unsigned int>>("pix_simType", pix_simType);
+
     // Sim hits
     ana.tx->setBranch<vector<float>>("simhit_x", trk.simhit_x());
     ana.tx->setBranch<vector<float>>("simhit_y", trk.simhit_y());
@@ -325,6 +342,7 @@ void WriteSDLNtuplev2::setHitsSimHitsSimTracksBranches()
     ana.tx->setBranch<vector<int>>("sim_event", trk.sim_event());
     ana.tx->setBranch<vector<int>>("sim_pdgId", trk.sim_pdgId());
     ana.tx->setBranch<vector<int>>("sim_bunchCrossing", trk.sim_bunchCrossing());
+    ana.tx->setBranch<vector<int>>("sim_parentVtxIdx", trk.sim_parentVtxIdx());
     vector<int> hasAll12HitsWithNBarrel;
     for (unsigned int isim = 0; isim < trk.sim_pt().size(); ++isim)
         hasAll12HitsWithNBarrel.push_back(hasAll12HitsWithNBarrelUsingModuleMap(isim, 6));

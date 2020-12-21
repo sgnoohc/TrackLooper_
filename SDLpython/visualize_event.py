@@ -13,15 +13,17 @@ import SDLDisplay
 from tqdm import tqdm
 
 # f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_3p0.root")
-f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root")
+# f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root")
 # f = r.TFile("/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_10_pt0p5_5p0.root")
-t = f.Get("trackingNtuple/tree")
+# t = f.Get("trackingNtuple/tree")
+filepath = "/home/users/phchang/public_html/analysis/sdl/trackingNtuple/CMSSW_10_4_0/src/trackingNtuple_100_pt0p5_2p0.root"
+treepath = "trackingNtuple/tree"
 pick_ievent = 9806
 select_itracks = []
 select_irecohits = []
 segment_idxs = []
 
-select_itracks = [32, 28]
+# select_itracks = [32, 28]
 # select_itracks = [85, 1, 59]
 # select_itracks = [36, 52, 37, 53]
 
@@ -154,14 +156,29 @@ select_itracks = [32, 28]
 # [769, 235],
 # ]
 
+import sys
+
+try:
+    filepath = sys.argv[1]
+    treepath = sys.argv[2]
+    pick_ievent = int(sys.argv[3])
+except:
+    pass
+
+print filepath
+print treepath
+print pick_ievent
+
+f = r.TFile(filepath)
+t = f.Get(treepath)
 t.GetEntry(pick_ievent)
 
 sdlDisplay = SDLDisplay.getDefaultSDLDisplay()
 fullSDLDisplay = SDLDisplay.getDefaultSDLDisplay()
-# ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
-ax_rz = pickle.load(file('detrz.pickle'))
-# ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
-ax_xy = pickle.load(file('detxy.pickle'))
+ax_rz = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
+# ax_rz = pickle.load(file('detrz.pickle'))
+ax_xy = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
+# ax_xy = pickle.load(file('detxy.pickle'))
 
 simhit_xs = []
 simhit_ys = []
@@ -187,14 +204,16 @@ for itrack, pt in enumerate(t.sim_pt):
     eta = t.sim_eta[itrack]
     phi = t.sim_phi[itrack]
     charge = t.sim_q[itrack]
-    vx = t.simvtx_x[0]
-    vy = t.simvtx_y[0]
-    vz = t.simvtx_z[0]
+    vtxidx = t.sim_parentVtxIdx[itrack]
+    vx = t.simvtx_x[vtxidx]
+    vy = t.simvtx_y[vtxidx]
+    vz = t.simvtx_z[vtxidx]
+    pdgid = t.sim_pdgId[itrack]
 
-    if abs(eta) > 2.4:
-        continue
+    # if abs(eta) > 2.4:
+    #     continue
 
-    print pt, eta, phi, charge, vx, vy, vz
+    print pt, eta, phi, charge, vx, vy, vz, pdgid
     sdlmath.draw_track_rz(ax_rz, pt, eta, phi, vx, vy, vz, charge)
     sdlmath.draw_track_xy(ax_xy, pt, eta, phi, vx, vy, vz, charge)
 
@@ -213,10 +232,24 @@ for idx, _ in enumerate(t.ph2_x):
         if idx not in select_irecohits:
             continue
 
-    if t.ph2_subdet[idx] == 4 or t.ph2_subdet[idx] == 5:
-        recohit_xs.append(t.ph2_x[idx])
-        recohit_ys.append(t.ph2_y[idx])
-        recohit_zs.append(t.ph2_z[idx])
+    # if t.ph2_subdet[idx] == 4 or t.ph2_subdet[idx] == 5:
+    #     recohit_xs.append(t.ph2_x[idx])
+    #     recohit_ys.append(t.ph2_y[idx])
+    #     recohit_zs.append(t.ph2_z[idx])
+
+    recohit_xs.append(t.ph2_x[idx])
+    recohit_ys.append(t.ph2_y[idx])
+    recohit_zs.append(t.ph2_z[idx])
+
+for idx, _ in enumerate(t.pix_x):
+
+    if len(select_irecohits) > 0:
+        if idx not in select_irecohits:
+            continue
+
+    recohit_xs.append(t.pix_x[idx])
+    recohit_ys.append(t.pix_y[idx])
+    recohit_zs.append(t.pix_z[idx])
 
 rz_segments = []
 xy_segments = []
@@ -238,8 +271,8 @@ recohit_ys = np.array(recohit_ys)
 recohit_zs = np.array(recohit_zs)
 recohit_rs = np.sqrt(recohit_xs**2 + recohit_ys**2)
 
-# ax_rz.scatter(simhit_zs, simhit_rs, s=0.1)
-# ax_xy.scatter(simhit_xs, simhit_ys, s=0.1)
+ax_rz.scatter(simhit_zs, simhit_rs, s=0.1)
+ax_xy.scatter(simhit_xs, simhit_ys, s=0.1)
 ax_rz.scatter(recohit_zs, recohit_rs, s=0.1)
 ax_xy.scatter(recohit_xs, recohit_ys, s=0.1)
 

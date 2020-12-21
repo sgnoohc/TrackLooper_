@@ -11,6 +11,14 @@ then
     exit
 fi
 
+if [ -z $3 ];
+then
+    echo "Setting pdgid to 13"
+    PDGID=13
+else
+    PDGID=$3
+fi
+
 rm .jobs.txt
 NJOBS=16
 
@@ -18,7 +26,7 @@ rm -rf outputs/
 mkdir -p outputs/
 
 for i in $(seq 0 $((NJOBS-1))); do
-    echo "./doAnalysis -i ${1} -p ${2} -t tree -o outputs/output_${i}.root -j ${NJOBS} -I ${i} > outputs/output_${i}.log 2>&1" >> .jobs.txt
+    echo "./doAnalysis -i ${1} -p ${2} -g ${PDGID} -t tree -o outputs/output_${i}.root -j ${NJOBS} -I ${i} > outputs/output_${i}.log 2>&1" >> .jobs.txt
 done
 
 xargs.sh .jobs.txt

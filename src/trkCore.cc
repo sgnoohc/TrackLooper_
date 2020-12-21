@@ -2155,6 +2155,26 @@ void addOuterTrackerHits(SDL::Event& event)
         if (not (subdet == 5 or subdet == 4))
             continue;
 
+        if (abs(ana.pdg_id) != 0)
+        {
+            bool found = false;
+            for (auto& isimhit : trk.ph2_simHitIdx()[ihit])
+            {
+                int isimtrk = trk.simhit_simTrkIdx()[isimhit];
+
+                if (abs(trk.sim_pdgId()[isimtrk]) == ana.pdg_id)
+                {
+                    found = true;
+                    break;
+                }
+
+            }
+
+            if (not found)
+                continue;
+
+        }
+
         // Takes two arguments, SDL::Hit, and detId
         // SDL::Event internally will structure whether we already have the module instance or we need to create a new one.
         event.addHitToModule(
@@ -2191,6 +2211,20 @@ void addPixelSegments(SDL::Event& event, int isimtrk)
             for (auto& seed_simtrkidx : trk.see_simTrkIdx()[iSeed])
             {
                 if (seed_simtrkidx == isimtrk)
+                {
+                    match = true;
+                }
+            }
+            if (not match)
+                continue;
+        }
+
+        if (abs(ana.pdg_id) != 0)
+        {
+            bool match = false;
+            for (auto& seed_simtrkidx : trk.see_simTrkIdx()[iSeed])
+            {
+                if (abs(trk.sim_pdgId()[seed_simtrkidx]) == ana.pdg_id)
                 {
                     match = true;
                 }

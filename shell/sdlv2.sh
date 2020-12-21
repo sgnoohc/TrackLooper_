@@ -246,7 +246,6 @@ fi
 if [[ ${WRITESDLNTUPLE} == true ]]; then
     MODE=write_sdl_ntuple
     MODENUMBER=5
-    PDGID=0
 fi
 
 ##########################################################################################
@@ -266,9 +265,9 @@ if [ ! -d "${OUTPUTDIR}" ]; then
 
     rm .jobs.txt
     if [[ ${DOPEREVENT} == true ]]; then
-        # NJOBS=500
+        NJOBS=500
         # NJOBS=36
-        NJOBS=1
+        # NJOBS=16
     else
         NJOBS=16
     fi
@@ -277,14 +276,14 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         if [[ ${DOPEREVENT} == true ]]; then
             echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -x ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} -v 3 > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
         else
-            echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
-            # echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -j ${NJOBS} -I ${i} -i ${SAMPLE} -n 100 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
+            # echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -j ${NJOBS} -I ${i} -i ${SAMPLE} -n -1 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
+            echo "$TRACKLOOPERBASE/bin/sdl -N ${NMATCH} -j ${NJOBS} -I ${i} -i ${SAMPLE} -n 200 -t trackingNtuple/tree -m ${MODENUMBER} -p ${PTBOUND} -o ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.root -g ${PDGID} > ${OUTPUTDIR}/${OUTPUTFILEBASENAME}_${i}.log 2>&1" >> .jobs.txt
         fi
     done
 
     echo "<== Submitting parallel jobs ..."
 
-    xargs.sh .jobs.txt
+    xargs.sh -n 16 .jobs.txt
 
     cp .jobs.txt ${OUTPUTDIR}/jobs.txt
 
@@ -310,7 +309,7 @@ if [ ! -d "${OUTPUTDIR}" ]; then
         mv gitlog ${OUTPUTDIR}
         cd efficiency/
         make -j
-        echo "sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} ${PTBOUND}"
+        echo "sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} ${PTBOUND} ${PDGID}"
         sh run.sh ${OUTPUTDIR}/${OUTPUTFILE} ${PTBOUND}
         echo "Plotting standard efficiency plots ..."
         sh plot.sh ${SAMPLETAG} $(git rev-parse --short HEAD) > ${OUTPUTDIR}/plot.log 2>&1

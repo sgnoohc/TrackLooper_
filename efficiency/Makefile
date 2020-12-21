@@ -30,6 +30,9 @@ multiplicity: multiplicity.o SDL.o helper.o
 inefficiency: inefficiency.o SDL.o helper.o
 	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
 
+temp: temp.o SDL.o helper.o
+	$(LD) $(CXXFLAGS) $(LDFLAGS) $^ $(ROOTLIBS) $(EXTRAFLAGS) -o $@
+
 SDL.o: SDL.cc SDL.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
@@ -42,10 +45,13 @@ multiplicity.o: multiplicity.cc multiplicity.h sdl_types.h
 inefficiency.o: inefficiency.cc inefficiency.h sdl_types.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
+temp.o: temp.cc sdl_types.h
+	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
+
 helper.o: helper.cc helper.h
 	$(CC) $(CFLAGS) $(EXTRACFLAGS) $< -c -o $@
 
-all: doAnalysis multiplicity inefficiency
+all: doAnalysis multiplicity inefficiency temp
 
 clean:
 	rm -f $(OBJECTS) $(EXE)

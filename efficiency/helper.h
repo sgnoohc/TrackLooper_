@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "cxxopts.h"
 #include "rooutil.h"
+#include <../cppitertools/itertools.hpp>
 
 class AnalysisConfig {
 
@@ -70,5 +71,6 @@ public:
 void parseArguments(int argc, char** argv);
 void initializeInputsAndOutputs();
 std::vector<float> getPtBounds();
+std::vector<int> matchedSimTrkIdxs(std::vector<int> hitidxs, std::vector<int> hittypes);
 
 #endif

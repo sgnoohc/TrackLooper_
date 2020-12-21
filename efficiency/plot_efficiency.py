@@ -5,6 +5,8 @@ from array import array
 import os
 import sys
 
+r.gROOT.SetBatch(True)
+
 def parse_plot_name(output_name):
     rtnstr = ["Efficiency of"]
     if "MD_" in output_name:
@@ -38,8 +40,8 @@ def draw_eff(num, den, output_name, sample_name, version_tag):
         den.Rebin(180)
 
     if "coarse" in output_name and "ptcoarse" not in output_name:
-        num.Rebin(18)
-        den.Rebin(18)
+        num.Rebin(6)
+        den.Rebin(6)
 
     teff = r.TEfficiency(num, den)
     eff = teff.CreateGraph()
@@ -121,9 +123,11 @@ if __name__ == "__main__":
             continue
         # if "Set4" not in key.GetName():
         #     continue
-        # if "TC_All" not in key.GetName():
-        #     continue
+        if "TC_All" not in key.GetName():
+            continue
         # if "pLS_P" not in key.GetName():
+        #     continue
+        # if "pix_P" not in key.GetName():
         #     continue
         numer_name = key.GetName()
         denom_name = numer_name.replace("numer", "denom")
@@ -136,7 +140,9 @@ if __name__ == "__main__":
         denom = f.Get(denom_histname)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}zoom.pdf".format(nice_name), sample_name, version_tag)
+        draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}zoomcoarse.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}maxzoom.pdf".format(nice_name), sample_name, version_tag)
+        draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}maxzoomcoarse.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}scalar.pdf".format(nice_name), sample_name, version_tag)
         draw_eff(numer.Clone(), denom.Clone(), "plots/mtv_eff/{}coarse.pdf".format(nice_name), sample_name, version_tag)
 

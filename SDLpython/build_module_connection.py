@@ -15,7 +15,8 @@ import pickle
 import os
 
 # Centroid database
-centroidDB = Centroid("data/centroid_2020_0428.txt")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 
 def unique_justseen(iterable, key=None):
     "List unique elements, preserving order. Remember only the element just seen."
@@ -66,10 +67,12 @@ def isOKConn(detid1, detid2):
 
 connections = {}
 
-if not os.path.exists("data/module_connection.pickle"):
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if not os.path.exists("{}/data/module_connection.pickle".format(dirpath)):
 
     # Looping over the raw module connection data output from ./bin/sdl
-    raw_data = open("data/conn_2020_0429.txt")
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    raw_data = open("{}/data/conn_2020_0429.txt".format(dirpath))
     lines = raw_data.readlines()
     module_connection_raw_data = []
     for index, line in enumerate(tqdm(lines[1:-1])):
@@ -132,11 +135,13 @@ if not os.path.exists("data/module_connection.pickle"):
     
     # print(connections)
     
-    pickle.dump(connections, file("data/module_connection.pickle", "w"))
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pickle.dump(connections, file("{}/data/module_connection.pickle".format(dirpath), "w"))
 
 else:
 
-    connections = pickle.load(file("data/module_connection.pickle"))
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    connections = pickle.load(file("{}/data/module_connection.pickle".format(dirpath)))
 
 # g = open("data/conn_muon_multiplicity.txt", "w")
 # # Checking what are "not OK" connections
@@ -150,7 +155,8 @@ else:
 import sys
 nconncut = int(sys.argv[1])
 
-f = open("data/module_connection_nmuon{}.txt".format(nconncut), "w")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+f = open("{}/data/module_connection_nmuon{}.txt".format(dirpath).format(nconncut), "w")
 
 for reference in connections:
     nconn = len(connections[reference])

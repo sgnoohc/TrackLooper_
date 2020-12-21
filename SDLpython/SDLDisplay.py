@@ -24,7 +24,8 @@ class SDLDisplay:
 
     def __init__(self, det_geom):
         self.det_geom = det_geom
-        self.centroidDB = Centroid("data/centroid_2020_0428.txt")
+        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 
     # def display_detector_xyz(self, ax, color=None):
 
@@ -77,7 +78,8 @@ class SDLDisplay:
 
     def display_centroid_xy(self):
 
-        f = open("data/centroid_2020_0421.txt")
+        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        f = open("{}/data/centroid_2020_0421.txt".format(dirpath))
         lines = f.readlines()
 
         # figure
@@ -300,7 +302,8 @@ def test2():
 def test3():
 
     from Centroid import Centroid
-    centroidDB = Centroid("data/centroid_2020_0428.txt")
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 
     # figure
     # fig, ax = plt.subplots(figsize=(5.2,2.*math.pi))

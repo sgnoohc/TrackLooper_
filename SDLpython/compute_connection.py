@@ -21,7 +21,8 @@ from matplotlib.collections import LineCollection
 import multiprocessing
 
 # Setting up detector geometry (centroids and boundaries)
-centroidDB = Centroid("data/centroid_2020_0428.txt")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 det_geom = DetectorGeometry("{}/data/phase2_2020_0428.txt".format(dirpath))
 det_geom.buildByLayer()
@@ -328,7 +329,8 @@ def write_connections(docurved=False):
 
     module_map = dict(return_dict)
 
-    f = open("data/module_connection_tracing.txt", "w")
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    f = open("{}/data/module_connection_tracing.txt".format(dirpath), "w")
     print("Writing module connections...")
     for ref_detid in sorted(tqdm(module_map.keys())):
         tar_detids = [str(x) for x in module_map[ref_detid]]
@@ -504,7 +506,8 @@ if __name__ == "__main__":
     # visualize_connection("data/module_connection_tracing.txt", 442245130)
     # visualize_connection("data/module_connection_tracing.txt", 442252378) # one conn
     # visualize_connection("data/module_connection_tracing.txt", 438043654) # 18 conn
-    visualize_connection("data/module_connection_tracing.txt", 438043670) # 18 conn
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    visualize_connection("{}/data/module_connection_tracing.txt".format(dirpath), 438043670) # 18 conn
 
     # visualize_connection_between_reference_and_target(442238042, det_geom.getBarrelLayerDetIds(6) + det_geom.getEndcapLayerDetIds(1))
 

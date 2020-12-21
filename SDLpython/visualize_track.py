@@ -11,6 +11,7 @@ import math
 import sdlmath
 import SDLDisplay
 from tqdm import tqdm
+import os
 
 print "Opening root files ..."
 
@@ -25,8 +26,6 @@ filepath = "/home/users/phchang/public_html/analysis/sdl/TrackLooper_/results/wr
 treepath = "tree"
 pick_ievent = 0
 pick_itrack = 161717
-
-
 
 ## Pion samples
 filepath = "/home/users/phchang/public_html/analysis/sdl/TrackLooper_/results/write_sdl_ntuple/pion_20200925_Test_v2//fulleff_pion.root"
@@ -162,16 +161,13 @@ pick_itrack = 227
 # 9 94
 # Bad  30.09 -0.62 x x x x x x
 
-
-
 try:
     filepath = sys.argv[1]
     treepath = sys.argv[2]
-    pick_ievent = sys.argv[3]
-    pick_itrack = sys.argv[4]
+    pick_ievent = int(sys.argv[3])
+    pick_itrack = int(sys.argv[4])
 except:
     pass
-
 
 f = r.TFile(filepath)
 t = f.Get(treepath)
@@ -203,7 +199,7 @@ for itrack, pt in enumerate(t.sim_pt):
         simhit_pdgids  = []
         simhit_detids  = []
         for _, isimhit in  enumerate(t.sim_simHitIdx[itrack]):
-            if t.simhit_subdet[isimhit] == 4 or t.simhit_subdet[isimhit] == 5:
+            # if t.simhit_subdet[isimhit] == 4 or t.simhit_subdet[isimhit] == 5:
                 simhit_xs.append(t.simhit_x[isimhit])
                 simhit_ys.append(t.simhit_y[isimhit])
                 simhit_zs.append(t.simhit_z[isimhit])
@@ -230,22 +226,26 @@ detids = simhit_detids
 sdlDisplay = SDLDisplay.getDefaultSDLDisplay()
 fullSDLDisplay = SDLDisplay.getDefaultSDLDisplay()
 
-sdlDisplay.set_detector_rz_collection(detids)
-sdlDisplay.set_detector_xy_collection(detids)
-sdlDisplay.set_detector_etaphi_collection(detids)
+# sdlDisplay.set_detector_rz_collection(detids) # To Turn on relevant modules that are hit but not visualized
+# sdlDisplay.set_detector_xy_collection(detids) # To Turn on relevant modules that are hit but not visualized
+# sdlDisplay.set_detector_etaphi_collection(detids) # To Turn on relevant modules that are hit but not visualized
 
-# ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
-ax = pickle.load(file('detrz.pickle'))
+ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detrz.pickle'))
+# ax = pickle.load(file('detrz.pickle'))
 fullSDLDisplay.display_detector_rz(ax)
 sdlDisplay.display_detector_rz(ax, color=(1,0,0))
 sdlmath.draw_track_rz(ax, pt, eta, phi, vx, vy, vz, charge)
 # lc = LineCollection(segments_rz, colors=(1,0,0), linewidth=0.5, alpha=0.4)
 # ax.add_collection(lc)
 plt.scatter(simhit_zs, simhit_rs, s=0.5)
+try:  
+    os.mkdir("pdfs")  
+except OSError as error:  
+    print(error)   
 plt.savefig("pdfs/detrz_track_visualization.pdf")
 
-# ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
-ax = pickle.load(file('detxy.pickle'))
+ax = pickle.load(file('/nfs-7/userdata/phchang/detector_layout_matplotlib_pickle/detxy.pickle'))
+# ax = pickle.load(file('detxy.pickle'))
 fullSDLDisplay.display_detector_xy(ax)
 sdlDisplay.display_detector_xy(ax, color=(0,0,1))
 sdlmath.draw_track_xy(ax, pt, eta, phi, vx, vy, vz, charge)

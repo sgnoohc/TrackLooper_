@@ -7,10 +7,13 @@ from tqdm import tqdm
 connections = {}
 
 # f = open("data/module_connection_tracing_2020_0514.txt")
-f = open("data/module_connection_tracing_2020_0520_helix.txt")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+f = open("{}/data/module_connection_tracing_2020_0520_helix.txt".format(dirpath))
 # g = open("data/module_connection_nmuon1.txt")
-g = open("data/module_connection_tracing_2020_0518_helix.txt")
-h = open("data/module_connection_combined_2020_0520_helixray.txt", "w")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+g = open("{}/data/module_connection_tracing_2020_0518_helix.txt".format(dirpath))
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+h = open("{}/data/module_connection_combined_2020_0520_helixray.txt".format(dirpath), "w")
 
 lines = f.readlines()
 

@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     det_geom = DetectorGeometry("{}/data/phase2_2020_0428.txt".format(dirpath))
-    centroidDB = Centroid("data/centroid_2020_0428.txt")
+    centroidDB = Centroid("{}/data/centroid_2020_0428.txt"format(dirpath))
 
     # pt = 1.1325262784957886
     # eta = -1.224777340888977

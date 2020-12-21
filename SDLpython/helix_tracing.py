@@ -19,7 +19,8 @@ if __name__ == "__main__":
 
     dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     det_geom = DetectorGeometry("{}/data/phase2_2020_0428.txt".format(dirpath))
-    centroidDB = Centroid("data/centroid_2020_0428.txt")
+    dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 
     list_of_detids_xy = det_geom.getDetIds(lambda x: Module(x[0]).subdet() == 5 and Module(x[0]).side() == 3 and Module(x[0]).module() == 4 and Module(x[0]).layer() == 1 and Module(x[0]).isLower() == 1 and Module(x[0]).rod() == 1)
 

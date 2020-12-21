@@ -20,7 +20,8 @@ from matplotlib.collections import LineCollection
 import multiprocessing
 
 # Setting up detector geometry (centroids and boundaries)
-centroidDB = Centroid("data/centroid_2020_0428.txt")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 det_geom = DetectorGeometry("{}/data/phase2_2020_0428.txt".format(dirpath))
 det_geom.buildByLayer()

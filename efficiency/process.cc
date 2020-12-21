@@ -1,4 +1,5 @@
 #include "process.h"
+#include "../src/SDLMath.h"
 
 #include "sdl_types.h"
 
@@ -52,6 +53,7 @@ int main(int argc, char** argv)
     list_effSetDef.push_back(EfficiencySetDefinition("TC_Set3Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set3Types")[isim].size() > 0;}));
     list_effSetDef.push_back(EfficiencySetDefinition("TC_Set4Types", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set4Types")[isim].size() > 0;}));
 
+    list_effSetDef.push_back(EfficiencySetDefinition("pix_P", 13, [&](int isim) {return ana.tx.getBranch<vector<vector<int>>>("mtv_match_idxs_pix_P")[isim].size() > 0;}));
 
     bookEfficiencySets(list_effSetDef);
 
@@ -137,10 +139,38 @@ void createSDLVariables()
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set3Types");
     ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_TC_Set4Types");
 
+    // Pixel Line segments
+    ana.tx.createBranch<vector<vector<int>>>("mtv_match_idxs_pix_P");
+
 }
 
 void setSDLVariables()
 {
+
+
+    // First compute which sim trk idxs are matched to pixel seeds of the choice
+    std::vector<int> unique_simtrkIdx_matched_to_seeds;
+    for (unsigned int iseed = 0; iseed < sdl.see_hitIdx().size(); ++iseed)
+    {
+
+        bool good_seed_type = false;
+        if (sdl.see_algo()[iseed] == 4) good_seed_type = true;
+        if (sdl.see_algo()[iseed] == 5) good_seed_type = true;
+        if (sdl.see_algo()[iseed] == 7) good_seed_type = true;
+        if (sdl.see_algo()[iseed] == 22) good_seed_type = true;
+        if (sdl.see_algo()[iseed] == 23) good_seed_type = true;
+        if (sdl.see_algo()[iseed] == 24) good_seed_type = true;
+        if (not good_seed_type)
+            continue;
+
+        for (auto& isim : sdl.see_simTrkIdx()[iseed])
+        {
+            if (std::find(unique_simtrkIdx_matched_to_seeds.begin(), unique_simtrkIdx_matched_to_seeds.end(), isim) == unique_simtrkIdx_matched_to_seeds.end())
+            {
+                unique_simtrkIdx_matched_to_seeds.push_back(isim);
+            }
+        }
+    }
 
     for (unsigned int isim = 0; isim < sdl.sim_pt().size(); ++isim)
     {
@@ -316,7 +346,17 @@ void setSDLVariables()
         ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set3Types", TC_set3_idxs_all);
         ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_TC_Set4Types", TC_set4_idxs_all);
 
+        // Pixel Line segments
+        std::vector<int> pix_idxs;
+        if (std::find(unique_simtrkIdx_matched_to_seeds.begin(), unique_simtrkIdx_matched_to_seeds.end(), isim) != unique_simtrkIdx_matched_to_seeds.end())
+        {
+            pix_idxs.push_back(1);
+        }
+
+        ana.tx.pushbackToBranch<vector<int>>("mtv_match_idxs_pix_P", pix_idxs);
+
     }
+
 
 }
 
@@ -420,40 +460,92 @@ void fillEfficiencySet(int isimtrk, EfficiencySetDefinition& effset)
     const float& dxy = sdl.sim_pca_dxy()[isimtrk];
     const float& phi = sdl.sim_phi()[isimtrk];
     const int& bunch = sdl.sim_bunchCrossing()[isimtrk];
-    const int& pdgid = sdl.sim_pdgId()[isimtrk];
+    const int& event = sdl.sim_event()[isimtrk];
+    const int& vtxIdx = sdl.sim_parentVtxIdx()[isimtrk];
+    const int& pdgidtrk = sdl.sim_pdgId()[isimtrk];
+    const float& vtx_x = sdl.simvtx_x()[vtxIdx];
+    const float& vtx_y = sdl.simvtx_y()[vtxIdx];
+    const float& vtx_z = sdl.simvtx_z()[vtxIdx];
+    const float& vtx_perp = sqrt(vtx_x * vtx_x + vtx_y * vtx_y);
 
     if (bunch != 0)
         return;
 
-    if (ana.pdgid != 0 and abs(pdgid) != abs(ana.pdgid))
+    if (event != 0)
         return;
+
+    // if (vtxIdx != 0)
+    //     return;
+
+    if (ana.pdgid != 0 and abs(pdgidtrk) != abs(ana.pdgid))
+        return;
+
+    // if (sdl.sim_psgIdx()[isimtrk].size() > 0)
+    // {
+    //     if (sdl.sim_pqpIdx()[isimtrk].size() == 0)
+    //     {
+    //         // std::cout <<  std::endl;
+    //         // std::cout <<  " ana.looper.getCurrentEventIndex(): " << ana.looper.getCurrentEventIndex() <<  std::endl;
+    //         // std::cout <<  " isimtrk: " << isimtrk <<  std::endl;
+    //         int n_OT_hits = 0;
+    //         int n_OT_hits_close = 0;
+    //         SDLMath::Helix helix(pt, eta, phi, sdl.simvtx_x()[vtxIdx], sdl.simvtx_y()[vtxIdx], sdl.simvtx_z()[vtxIdx], sdl.sim_q()[isimtrk]);
+    //         for (auto& isimhit : sdl.sim_simHitIdx()[isimtrk])
+    //         {
+    //             const auto& subdet = sdl.simhit_subdet()[isimhit];
+    //             if (subdet == 4 or subdet == 5)
+    //             {
+    //                 n_OT_hits++;
+    //                 std::vector<float> point = {sdl.simhit_x()[isimhit], sdl.simhit_y()[isimhit], sdl.simhit_z()[isimhit]};
+    //                 float r = sqrt(point[0] * point[0] + point[1] * point[1]);
+    //                 // std::cout <<  " r: " << r <<  std::endl;
+    //                 // std::cout <<  " point[2]: " << point[2] <<  std::endl;
+    //                 float r_diff = helix.compare_radius(point);
+    //                 float xy_diff = helix.compare_xy(point);
+    //                 // std::cout <<  " r_diff: " << r_diff <<  " xy_diff: " << xy_diff <<  std::endl;
+    //                 if (xy_diff < 1.0)
+    //                 {
+    //                     n_OT_hits_close++;
+    //                 }
+    //             }
+
+    //         }
+    //         // std::cout <<  " n_OT_hits: " << n_OT_hits <<  std::endl;
+    //         // std::cout <<  " n_OT_hits_close: " << n_OT_hits_close <<  std::endl;
+    //         if (n_OT_hits_close < 4)
+    //             return;
+    //     }
+    // }
 
     TString category_name = effset.set_name;
 
-    const float dzthresh = 30;
+    // https://github.com/cms-sw/cmssw/blob/7cbdb18ec6d11d5fd17ca66c1153f0f4e869b6b0/SimTracker/Common/python/trackingParticleSelector_cfi.py
+    // https://github.com/cms-sw/cmssw/blob/7cbdb18ec6d11d5fd17ca66c1153f0f4e869b6b0/SimTracker/Common/interface/TrackingParticleSelector.h#L122-L124
+    const float vtx_z_thresh = 30;
+    const float vtx_perp_thresh = 3.5;
 
-    if (pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
+    if (pt > 1.5 and abs(vtx_z) < vtx_z_thresh and abs(vtx_perp) < vtx_perp_thresh)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_eta", eta);
-    if (abs(eta) < 2.4 and abs(dz) < dzthresh and abs(dxy) < 2.5)
+    if (abs(eta) < 2.4 and abs(vtx_z) < vtx_z_thresh and abs(vtx_perp) < vtx_perp_thresh)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_pt", pt);
-    if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
+    if (abs(eta) < 2.4 and pt > 1.5 and abs(vtx_z) < vtx_z_thresh and abs(vtx_perp) < vtx_perp_thresh)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_phi", phi);
-    if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh)
+    if (abs(eta) < 2.4 and pt > 1.5 and abs(vtx_z) < vtx_z_thresh)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_dxy", dxy);
-    if (abs(eta) < 2.4 and pt > 1.5 and abs(dxy) < 2.5)
+    if (abs(eta) < 2.4 and pt > 1.5 and abs(vtx_perp) < vtx_perp_thresh)
         ana.tx.pushbackToBranch<float>(category_name + "_denom_dz", dz);
 
     if (effset.pass(isimtrk))
     {
-        if (pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
+        if (pt > 1.5 and abs(vtx_z) < vtx_z_thresh and abs(vtx_perp) < vtx_perp_thresh)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_eta", eta);
-        if (abs(eta) < 2.4 and abs(dz) < dzthresh and abs(dxy) < 2.5)
+        if (abs(eta) < 2.4 and abs(vtx_z) < vtx_z_thresh and abs(vtx_perp) < vtx_perp_thresh)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_pt", pt);
-        if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh and abs(dxy) < 2.5)
+        if (abs(eta) < 2.4 and pt > 1.5 and abs(vtx_z) < vtx_z_thresh and abs(vtx_perp) < vtx_perp_thresh)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_phi", phi);
-        if (abs(eta) < 2.4 and pt > 1.5 and abs(dz) < dzthresh)
+        if (abs(eta) < 2.4 and pt > 1.5 and abs(vtx_z) < vtx_z_thresh)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_dxy", dxy);
-        if (abs(eta) < 2.4 and pt > 1.5 and abs(dxy) < 2.5)
+        if (abs(eta) < 2.4 and pt > 1.5 and abs(vtx_perp) < vtx_perp_thresh)
             ana.tx.pushbackToBranch<float>(category_name + "_numer_dz", dz);
     }
 }

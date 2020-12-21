@@ -15,3 +15,4 @@ then
 fi
 
 python plot_efficiency.py $1 $2
+cp index.html plots/

@@ -12,7 +12,8 @@ from DetectorGeometry import DetectorGeometry
 import os
 
 # Centroid database
-centroidDB = Centroid("data/centroid_2020_0428.txt")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+centroidDB = Centroid("{}/data/centroid_2020_0428.txt".format(dirpath))
 
 nmod = 0
 for key in centroidDB.data:
@@ -29,7 +30,8 @@ for key in centroidDB.data:
     nmod += 1
 print(nmod)
 
-# f = open("data/module_connection.txt")
+dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# f = open("{}/data/module_connection.txt".format(dirpath))
 # detids = [ int(x.split()[0]) for x in f.readlines() ]
 
 # dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
