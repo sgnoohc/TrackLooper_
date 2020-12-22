@@ -103,6 +103,7 @@ void runMiniDoublet(SDL::Event& event);
 void runSegment(SDL::Event& event);
 void runTriplet(SDL::Event& event);
 void runTracklet(SDL::Event& event);
+void runTrackletWithAGap(SDL::Event& event);
 void runTrackletTest_v1(SDL::Event& event);
 void runTrackletTest_PixelSegment_v1(SDL::Event& event);
 void runTrackCandidate(SDL::Event& event);

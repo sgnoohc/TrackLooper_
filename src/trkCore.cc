@@ -2741,15 +2741,29 @@ void runTriplet(SDL::Event& event)
 void runTracklet(SDL::Event& event)
 {
     TStopwatch my_timer;
-    if (ana.verbose != 0) std::cout << "Reco Tracklet start" << std::endl;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet Without A Gap start" << std::endl;
     my_timer.Start(kFALSE);
     // event.createTracklets();
     event.createTrackletsWithModuleMap();
+    // event.createTrackletsWithAGapWithModuleMap();
+    // event.createTrackletsWithTwoGapsWithModuleMap();
+    // event.createTrackletsViaNavigation();
+    float tl_elapsed = my_timer.RealTime();
+    if (ana.verbose != 0) std::cout << "Reco Tracklet Without A Gap processing time: " << tl_elapsed << " secs" << std::endl;
+}
+
+//__________________________________________________________________________________________
+void runTrackletWithAGap(SDL::Event& event)
+{
+    TStopwatch my_timer;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet With A Gap start" << std::endl;
+    my_timer.Start(kFALSE);
+    // event.createTracklets();
     event.createTrackletsWithAGapWithModuleMap();
     // event.createTrackletsWithTwoGapsWithModuleMap();
     // event.createTrackletsViaNavigation();
     float tl_elapsed = my_timer.RealTime();
-    if (ana.verbose != 0) std::cout << "Reco Tracklet processing time: " << tl_elapsed << " secs" << std::endl;
+    if (ana.verbose != 0) std::cout << "Reco Tracklet With A Gap processing time: " << tl_elapsed << " secs" << std::endl;
 }
 
 //__________________________________________________________________________________________
